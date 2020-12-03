@@ -136,6 +136,44 @@ typedef struct {
 } pd_IdentityId_t;
 
 typedef struct {
+  uint64_t _len;
+  const uint8_t *_ptr;
+} pd_Ticker_t;
+
+typedef struct {
+  uint8_t value;
+} pd_CountryCode_t;
+
+typedef struct {
+  uint8_t value;
+  union {
+    pd_IdentityId_t identity;
+    pd_Ticker_t ticker;
+    uint64_t _len;
+    const uint8_t *_ptr;
+  };
+} pd_Scope_t;
+
+typedef struct {
+  const uint8_t *_ptr;
+} pd_ScopeId_t;
+
+typedef struct {
+  const uint8_t *_ptr;
+} pd_CddId_t;
+
+typedef struct {
+  pd_CountryCode_t country_code;
+  pd_Scope_t scope;
+} pd_TupleCountryCodeScope_t;
+
+typedef struct {
+  pd_Scope_t scope;
+  pd_ScopeId_t scopeId;
+  pd_CddId_t cddId;
+} pd_TupleScopeScopeIdCddId_t;
+
+typedef struct {
   // TODO: Not implemented
   uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
 } pd_ClaimType_t;
@@ -167,8 +205,13 @@ typedef struct {
 } pd_PortfolioNumber_t;
 
 typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+  uint8_t value;
+  union {
+    pd_Scope_t scope;
+    pd_CddId_t cddId;
+    pd_TupleCountryCodeScope_t jurisdiction;
+    pd_TupleScopeScopeIdCddId_t investorUniqueness;
+  };
 } pd_Claim_t;
 
 typedef struct {
@@ -186,11 +229,6 @@ typedef struct {
   uint8_t value;
   pd_VecClaimType_t claims;
 } pd_TrustedFor_t;
-
-typedef struct {
-  uint64_t _len;
-  const uint8_t *_ptr;
-} pd_Ticker_t;
 
 typedef struct {
   uint64_t _len;
@@ -337,6 +375,11 @@ typedef struct {
   const uint8_t *_ptr;
   uint64_t _lenBuffer;
 } pd_VecBeneficiary_t;
+
+typedef struct {
+  uint8_t value;
+  pd_BlockNumber_t blockNumber;
+} pd_MaybeBlock_t;
 
 typedef struct {
   uint8_t value;
@@ -549,8 +592,7 @@ typedef struct {
 } pd_ElectionSize_t;
 
 typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+  uint8_t value;
 } pd_SlashingSwitch_t;
 
 typedef compactInt_t pd_CompactBlockNumber_t;
@@ -602,8 +644,8 @@ typedef struct {
 } pd_OptionBalanceOf_t;
 
 typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+  uint64_t _len;
+  const uint8_t *_ptr;
 } pd_MetaUrl_t;
 
 typedef struct {
@@ -611,16 +653,10 @@ typedef struct {
   pd_MetaUrl_t contained;
 } pd_OptionMetaUrl_t;
 
-typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_MaybeBlock_t;
-
 typedef compactInt_t pd_CompactProposalIndex_t;
 
 typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+  uint32_t value;
 } pd_ProposalIndex_t;
 
 typedef struct {
@@ -634,8 +670,7 @@ typedef struct {
 } pd_VecIdentityId_t;
 
 typedef struct {
-  // TODO: Not implemented
-  uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+  uint8_t value;
 } pd_SkippedCount_t;
 
 typedef struct {

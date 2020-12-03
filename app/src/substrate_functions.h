@@ -44,6 +44,15 @@ parser_error_t _toStringHash(const pd_Hash_t *v, char *outValue,
 // Read functions
 
 parser_error_t _readIdentityId(parser_context_t *c, pd_IdentityId_t *v);
+parser_error_t _readTicker(parser_context_t *c, pd_Ticker_t *v);
+parser_error_t _readCountryCode(parser_context_t *c, pd_CountryCode_t *v);
+parser_error_t _readScope(parser_context_t *c, pd_Scope_t *v);
+parser_error_t _readScopeId(parser_context_t *c, pd_ScopeId_t *v);
+parser_error_t _readCddId(parser_context_t *c, pd_CddId_t *v);
+parser_error_t _readTupleCountryCodeScope(parser_context_t *c,
+                                          pd_TupleCountryCodeScope_t *v);
+parser_error_t _readTupleScopeScopeIdCddId(parser_context_t *c,
+                                           pd_TupleScopeScopeIdCddId_t *v);
 parser_error_t _readClaimType(parser_context_t *c, pd_ClaimType_t *v);
 parser_error_t _readVecClaimType(parser_context_t *c, pd_VecClaimType_t *v);
 parser_error_t _readPalletName(parser_context_t *c, pd_PalletName_t *v);
@@ -58,7 +67,6 @@ parser_error_t _readClaim(parser_context_t *c, pd_Claim_t *v);
 parser_error_t _readVecClaim(parser_context_t *c, pd_VecClaim_t *v);
 parser_error_t _readTargetIdentity(parser_context_t *c, pd_TargetIdentity_t *v);
 parser_error_t _readTrustedFor(parser_context_t *c, pd_TrustedFor_t *v);
-parser_error_t _readTicker(parser_context_t *c, pd_Ticker_t *v);
 parser_error_t _readVecTicker(parser_context_t *c, pd_VecTicker_t *v);
 parser_error_t _readOptionVecTicker(parser_context_t *c,
                                     pd_OptionVecTicker_t *v);
@@ -81,6 +89,7 @@ parser_error_t _readVecTrustedIssuer(parser_context_t *c,
 parser_error_t _readCompactPerBill(parser_context_t *c, pd_CompactPerBill_t *v);
 parser_error_t _readAccountId(parser_context_t *c, pd_AccountId_t *v);
 parser_error_t _readBalance(parser_context_t *c, pd_Balance_t *v);
+parser_error_t _readBlockNumber(parser_context_t *c, pd_BlockNumber_t *v);
 parser_error_t _readPermissions(parser_context_t *c, pd_Permissions_t *v);
 parser_error_t _readPortfolioId(parser_context_t *c, pd_PortfolioId_t *v);
 parser_error_t _readMoment(parser_context_t *c, pd_Moment_t *v);
@@ -88,13 +97,13 @@ parser_error_t _readCondition(parser_context_t *c, pd_Condition_t *v);
 parser_error_t _readVecCondition(parser_context_t *c, pd_VecCondition_t *v);
 parser_error_t _readMotion(parser_context_t *c, pd_Motion_t *v);
 parser_error_t _readVecMotion(parser_context_t *c, pd_VecMotion_t *v);
-parser_error_t _readBlockNumber(parser_context_t *c, pd_BlockNumber_t *v);
 parser_error_t _readValidatorPrefs(parser_context_t *c, pd_ValidatorPrefs_t *v);
 parser_error_t _readSignatory(parser_context_t *c, pd_Signatory_t *v);
 parser_error_t _readVecSignatory(parser_context_t *c, pd_VecSignatory_t *v);
 parser_error_t _readCodeHash(parser_context_t *c, pd_CodeHash_t *v);
 parser_error_t _readBeneficiary(parser_context_t *c, pd_Beneficiary_t *v);
 parser_error_t _readVecBeneficiary(parser_context_t *c, pd_VecBeneficiary_t *v);
+parser_error_t _readMaybeBlock(parser_context_t *c, pd_MaybeBlock_t *v);
 parser_error_t _readAuthorizationData(parser_context_t *c,
                                       pd_AuthorizationData_t *v);
 parser_error_t _readTargetIdAuthorization(parser_context_t *c,
@@ -178,7 +187,6 @@ parser_error_t _readOptionBalanceOf(parser_context_t *c,
                                     pd_OptionBalanceOf_t *v);
 parser_error_t _readMetaUrl(parser_context_t *c, pd_MetaUrl_t *v);
 parser_error_t _readOptionMetaUrl(parser_context_t *c, pd_OptionMetaUrl_t *v);
-parser_error_t _readMaybeBlock(parser_context_t *c, pd_MaybeBlock_t *v);
 parser_error_t _readCompactProposalIndex(parser_context_t *c,
                                          pd_CompactProposalIndex_t *v);
 parser_error_t _readProposalIndex(parser_context_t *c, pd_ProposalIndex_t *v);
@@ -298,6 +306,36 @@ parser_error_t _toStringIdentityId(const pd_IdentityId_t *v, char *outValue,
                                    uint16_t outValueLen, uint8_t pageIdx,
                                    uint8_t *pageCount);
 
+parser_error_t _toStringTicker(const pd_Ticker_t *v, char *outValue,
+                               uint16_t outValueLen, uint8_t pageIdx,
+                               uint8_t *pageCount);
+
+parser_error_t _toStringCountryCode(const pd_CountryCode_t *v, char *outValue,
+                                    uint16_t outValueLen, uint8_t pageIdx,
+                                    uint8_t *pageCount);
+
+parser_error_t _toStringScope(const pd_Scope_t *v, char *outValue,
+                              uint16_t outValueLen, uint8_t pageIdx,
+                              uint8_t *pageCount);
+
+parser_error_t _toStringScopeId(const pd_ScopeId_t *v, char *outValue,
+                                uint16_t outValueLen, uint8_t pageIdx,
+                                uint8_t *pageCount);
+
+parser_error_t _toStringCddId(const pd_CddId_t *v, char *outValue,
+                              uint16_t outValueLen, uint8_t pageIdx,
+                              uint8_t *pageCount);
+
+parser_error_t
+_toStringTupleCountryCodeScope(const pd_TupleCountryCodeScope_t *v,
+                               char *outValue, uint16_t outValueLen,
+                               uint8_t pageIdx, uint8_t *pageCount);
+
+parser_error_t
+_toStringTupleScopeScopeIdCddId(const pd_TupleScopeScopeIdCddId_t *v,
+                                char *outValue, uint16_t outValueLen,
+                                uint8_t pageIdx, uint8_t *pageCount);
+
 parser_error_t _toStringClaimType(const pd_ClaimType_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
                                   uint8_t *pageCount);
@@ -343,10 +381,6 @@ parser_error_t _toStringTargetIdentity(const pd_TargetIdentity_t *v,
 parser_error_t _toStringTrustedFor(const pd_TrustedFor_t *v, char *outValue,
                                    uint16_t outValueLen, uint8_t pageIdx,
                                    uint8_t *pageCount);
-
-parser_error_t _toStringTicker(const pd_Ticker_t *v, char *outValue,
-                               uint16_t outValueLen, uint8_t pageIdx,
-                               uint8_t *pageCount);
 
 parser_error_t _toStringVecTicker(const pd_VecTicker_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
@@ -408,6 +442,10 @@ parser_error_t _toStringBalance(const pd_Balance_t *v, char *outValue,
                                 uint16_t outValueLen, uint8_t pageIdx,
                                 uint8_t *pageCount);
 
+parser_error_t _toStringBlockNumber(const pd_BlockNumber_t *v, char *outValue,
+                                    uint16_t outValueLen, uint8_t pageIdx,
+                                    uint8_t *pageCount);
+
 parser_error_t _toStringPermissions(const pd_Permissions_t *v, char *outValue,
                                     uint16_t outValueLen, uint8_t pageIdx,
                                     uint8_t *pageCount);
@@ -436,10 +474,6 @@ parser_error_t _toStringVecMotion(const pd_VecMotion_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
                                   uint8_t *pageCount);
 
-parser_error_t _toStringBlockNumber(const pd_BlockNumber_t *v, char *outValue,
-                                    uint16_t outValueLen, uint8_t pageIdx,
-                                    uint8_t *pageCount);
-
 parser_error_t _toStringValidatorPrefs(const pd_ValidatorPrefs_t *v,
                                        char *outValue, uint16_t outValueLen,
                                        uint8_t pageIdx, uint8_t *pageCount);
@@ -463,6 +497,10 @@ parser_error_t _toStringBeneficiary(const pd_Beneficiary_t *v, char *outValue,
 parser_error_t _toStringVecBeneficiary(const pd_VecBeneficiary_t *v,
                                        char *outValue, uint16_t outValueLen,
                                        uint8_t pageIdx, uint8_t *pageCount);
+
+parser_error_t _toStringMaybeBlock(const pd_MaybeBlock_t *v, char *outValue,
+                                   uint16_t outValueLen, uint8_t pageIdx,
+                                   uint8_t *pageCount);
 
 parser_error_t _toStringAuthorizationData(const pd_AuthorizationData_t *v,
                                           char *outValue, uint16_t outValueLen,
@@ -722,10 +760,6 @@ parser_error_t _toStringMetaUrl(const pd_MetaUrl_t *v, char *outValue,
 parser_error_t _toStringOptionMetaUrl(const pd_OptionMetaUrl_t *v,
                                       char *outValue, uint16_t outValueLen,
                                       uint8_t pageIdx, uint8_t *pageCount);
-
-parser_error_t _toStringMaybeBlock(const pd_MaybeBlock_t *v, char *outValue,
-                                   uint16_t outValueLen, uint8_t pageIdx,
-                                   uint8_t *pageCount);
 
 parser_error_t _toStringCompactProposalIndex(const pd_CompactProposalIndex_t *v,
                                              char *outValue,

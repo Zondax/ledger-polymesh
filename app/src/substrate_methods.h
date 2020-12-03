@@ -669,90 +669,73 @@ typedef struct {
   pd_BalanceOf_t deposit;
 } pd_pips_set_min_proposal_deposit_t;
 
-#define PD_CALL_PIPS_SET_PROPOSAL_COOL_OFF_PERIOD 2
-typedef struct {
-  pd_BlockNumber_t duration;
-} pd_pips_set_proposal_cool_off_period_t;
-
-#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD 3
+#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD 2
 typedef struct {
   pd_BlockNumber_t duration;
 } pd_pips_set_default_enactment_period_t;
 
-#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY 4
+#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY 3
 typedef struct {
   pd_MaybeBlock_t expiry;
 } pd_pips_set_pending_pip_expiry_t;
 
-#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT 5
+#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT 4
 typedef struct {
   pd_SkippedCount_t new_max;
 } pd_pips_set_max_pip_skip_count_t;
 
-#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT 6
+#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT 5
 typedef struct {
   pd_u32_t new_max;
 } pd_pips_set_active_pip_limit_t;
 
-#define PD_CALL_PIPS_AMEND_PROPOSAL 8
-typedef struct {
-  pd_PipId_t id;
-  pd_OptionUrl_t url;
-  pd_OptionPipDescription_t description;
-} pd_pips_amend_proposal_t;
-
-#define PD_CALL_PIPS_CANCEL_PROPOSAL 9
-typedef struct {
-  pd_PipId_t id;
-} pd_pips_cancel_proposal_t;
-
-#define PD_CALL_PIPS_VOTE 10
+#define PD_CALL_PIPS_VOTE 7
 typedef struct {
   pd_PipId_t id;
   pd_bool_t aye_or_nay;
   pd_BalanceOf_t deposit;
 } pd_pips_vote_t;
 
-#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL 11
+#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL 8
 typedef struct {
   pd_PipId_t id;
 } pd_pips_approve_committee_proposal_t;
 
-#define PD_CALL_PIPS_REJECT_PROPOSAL 12
+#define PD_CALL_PIPS_REJECT_PROPOSAL 9
 typedef struct {
   pd_PipId_t id;
 } pd_pips_reject_proposal_t;
 
-#define PD_CALL_PIPS_PRUNE_PROPOSAL 13
+#define PD_CALL_PIPS_PRUNE_PROPOSAL 10
 typedef struct {
   pd_PipId_t id;
 } pd_pips_prune_proposal_t;
 
-#define PD_CALL_PIPS_RESCHEDULE_EXECUTION 14
+#define PD_CALL_PIPS_RESCHEDULE_EXECUTION 11
 typedef struct {
   pd_PipId_t id;
   pd_OptionBlockNumber_t until;
 } pd_pips_reschedule_execution_t;
 
-#define PD_CALL_PIPS_CLEAR_SNAPSHOT 15
+#define PD_CALL_PIPS_CLEAR_SNAPSHOT 12
 typedef struct {
 } pd_pips_clear_snapshot_t;
 
-#define PD_CALL_PIPS_SNAPSHOT 16
+#define PD_CALL_PIPS_SNAPSHOT 13
 typedef struct {
 } pd_pips_snapshot_t;
 
-#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS 17
+#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS 14
 typedef struct {
   pd_VecTuplePipIdSnapshotResult_t results;
 } pd_pips_enact_snapshot_results_t;
 
-#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP 18
+#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP 15
 typedef struct {
   pd_PipId_t id;
 } pd_pips_execute_scheduled_pip_t;
 
-#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP 19
+#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP 16
 typedef struct {
   pd_IdentityId_t did;
   pd_PipId_t id;
@@ -1940,13 +1923,10 @@ typedef union {
       committeemembership_abdicate_membership;
   pd_pips_set_prune_historical_pips_t pips_set_prune_historical_pips;
   pd_pips_set_min_proposal_deposit_t pips_set_min_proposal_deposit;
-  pd_pips_set_proposal_cool_off_period_t pips_set_proposal_cool_off_period;
   pd_pips_set_default_enactment_period_t pips_set_default_enactment_period;
   pd_pips_set_pending_pip_expiry_t pips_set_pending_pip_expiry;
   pd_pips_set_max_pip_skip_count_t pips_set_max_pip_skip_count;
   pd_pips_set_active_pip_limit_t pips_set_active_pip_limit;
-  pd_pips_amend_proposal_t pips_amend_proposal;
-  pd_pips_cancel_proposal_t pips_cancel_proposal;
   pd_pips_vote_t pips_vote;
   pd_pips_approve_committee_proposal_t pips_approve_committee_proposal;
   pd_pips_reject_proposal_t pips_reject_proposal;
@@ -2226,7 +2206,7 @@ typedef struct {
   pd_Proposal_t call;
 } pd_polymeshcommittee_vote_or_propose_t;
 
-#define PD_CALL_PIPS_PROPOSE 7
+#define PD_CALL_PIPS_PROPOSE 6
 typedef struct {
   pd_Proposal_t proposal;
   pd_BalanceOf_t deposit;
