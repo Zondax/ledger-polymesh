@@ -777,12 +777,6 @@ __Z_INLINE parser_error_t _readMethod_pips_set_min_proposal_deposit(
   return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_pips_set_proposal_cool_off_period(
-    parser_context_t *c, pd_pips_set_proposal_cool_off_period_t *m) {
-  CHECK_ERROR(_readBlockNumber(c, &m->duration))
-  return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_pips_set_default_enactment_period(
     parser_context_t *c, pd_pips_set_default_enactment_period_t *m) {
   CHECK_ERROR(_readBlockNumber(c, &m->duration))
@@ -813,20 +807,6 @@ __Z_INLINE parser_error_t _readMethod_pips_propose(parser_context_t *c,
   CHECK_ERROR(_readBalanceOf(c, &m->deposit))
   CHECK_ERROR(_readOptionUrl(c, &m->url))
   CHECK_ERROR(_readOptionPipDescription(c, &m->description))
-  return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_pips_amend_proposal(
-    parser_context_t *c, pd_pips_amend_proposal_t *m) {
-  CHECK_ERROR(_readPipId(c, &m->id))
-  CHECK_ERROR(_readOptionUrl(c, &m->url))
-  CHECK_ERROR(_readOptionPipDescription(c, &m->description))
-  return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_pips_cancel_proposal(
-    parser_context_t *c, pd_pips_cancel_proposal_t *m) {
-  CHECK_ERROR(_readPipId(c, &m->id))
   return parser_ok;
 }
 
@@ -2586,68 +2566,56 @@ parser_error_t _readMethodBasic(parser_context_t *c, uint8_t moduleIdx,
         c, &method->pips_set_min_proposal_deposit))
     break;
   case 5890: /* module 23 call 2 */
-    CHECK_ERROR(_readMethod_pips_set_proposal_cool_off_period(
-        c, &method->pips_set_proposal_cool_off_period))
-    break;
-  case 5891: /* module 23 call 3 */
     CHECK_ERROR(_readMethod_pips_set_default_enactment_period(
         c, &method->pips_set_default_enactment_period))
     break;
-  case 5892: /* module 23 call 4 */
+  case 5891: /* module 23 call 3 */
     CHECK_ERROR(_readMethod_pips_set_pending_pip_expiry(
         c, &method->pips_set_pending_pip_expiry))
     break;
-  case 5893: /* module 23 call 5 */
+  case 5892: /* module 23 call 4 */
     CHECK_ERROR(_readMethod_pips_set_max_pip_skip_count(
         c, &method->pips_set_max_pip_skip_count))
     break;
-  case 5894: /* module 23 call 6 */
+  case 5893: /* module 23 call 5 */
     CHECK_ERROR(_readMethod_pips_set_active_pip_limit(
         c, &method->pips_set_active_pip_limit))
     break;
-  case 5896: /* module 23 call 8 */
-    CHECK_ERROR(
-        _readMethod_pips_amend_proposal(c, &method->pips_amend_proposal))
-    break;
-  case 5897: /* module 23 call 9 */
-    CHECK_ERROR(
-        _readMethod_pips_cancel_proposal(c, &method->pips_cancel_proposal))
-    break;
-  case 5898: /* module 23 call 10 */
+  case 5895: /* module 23 call 7 */
     CHECK_ERROR(_readMethod_pips_vote(c, &method->pips_vote))
     break;
-  case 5899: /* module 23 call 11 */
+  case 5896: /* module 23 call 8 */
     CHECK_ERROR(_readMethod_pips_approve_committee_proposal(
         c, &method->pips_approve_committee_proposal))
     break;
-  case 5900: /* module 23 call 12 */
+  case 5897: /* module 23 call 9 */
     CHECK_ERROR(
         _readMethod_pips_reject_proposal(c, &method->pips_reject_proposal))
     break;
-  case 5901: /* module 23 call 13 */
+  case 5898: /* module 23 call 10 */
     CHECK_ERROR(
         _readMethod_pips_prune_proposal(c, &method->pips_prune_proposal))
     break;
-  case 5902: /* module 23 call 14 */
+  case 5899: /* module 23 call 11 */
     CHECK_ERROR(_readMethod_pips_reschedule_execution(
         c, &method->pips_reschedule_execution))
     break;
-  case 5903: /* module 23 call 15 */
+  case 5900: /* module 23 call 12 */
     CHECK_ERROR(
         _readMethod_pips_clear_snapshot(c, &method->pips_clear_snapshot))
     break;
-  case 5904: /* module 23 call 16 */
+  case 5901: /* module 23 call 13 */
     CHECK_ERROR(_readMethod_pips_snapshot(c, &method->pips_snapshot))
     break;
-  case 5905: /* module 23 call 17 */
+  case 5902: /* module 23 call 14 */
     CHECK_ERROR(_readMethod_pips_enact_snapshot_results(
         c, &method->pips_enact_snapshot_results))
     break;
-  case 5906: /* module 23 call 18 */
+  case 5903: /* module 23 call 15 */
     CHECK_ERROR(_readMethod_pips_execute_scheduled_pip(
         c, &method->pips_execute_scheduled_pip))
     break;
-  case 5907: /* module 23 call 19 */
+  case 5904: /* module 23 call 16 */
     CHECK_ERROR(_readMethod_pips_expire_scheduled_pip(
         c, &method->pips_expire_scheduled_pip))
     break;
@@ -3790,71 +3758,59 @@ parser_error_t _readMethod(parser_context_t *c, uint8_t moduleIdx,
         c, &method->basic.pips_set_min_proposal_deposit))
     break;
   case 5890: /* module 23 call 2 */
-    CHECK_ERROR(_readMethod_pips_set_proposal_cool_off_period(
-        c, &method->basic.pips_set_proposal_cool_off_period))
-    break;
-  case 5891: /* module 23 call 3 */
     CHECK_ERROR(_readMethod_pips_set_default_enactment_period(
         c, &method->basic.pips_set_default_enactment_period))
     break;
-  case 5892: /* module 23 call 4 */
+  case 5891: /* module 23 call 3 */
     CHECK_ERROR(_readMethod_pips_set_pending_pip_expiry(
         c, &method->basic.pips_set_pending_pip_expiry))
     break;
-  case 5893: /* module 23 call 5 */
+  case 5892: /* module 23 call 4 */
     CHECK_ERROR(_readMethod_pips_set_max_pip_skip_count(
         c, &method->basic.pips_set_max_pip_skip_count))
     break;
-  case 5894: /* module 23 call 6 */
+  case 5893: /* module 23 call 5 */
     CHECK_ERROR(_readMethod_pips_set_active_pip_limit(
         c, &method->basic.pips_set_active_pip_limit))
     break;
-  case 5895: /* module 23 call 7 */
+  case 5894: /* module 23 call 6 */
     CHECK_ERROR(_readMethod_pips_propose(c, &method->nested.pips_propose))
     break;
-  case 5896: /* module 23 call 8 */
-    CHECK_ERROR(
-        _readMethod_pips_amend_proposal(c, &method->basic.pips_amend_proposal))
-    break;
-  case 5897: /* module 23 call 9 */
-    CHECK_ERROR(_readMethod_pips_cancel_proposal(
-        c, &method->basic.pips_cancel_proposal))
-    break;
-  case 5898: /* module 23 call 10 */
+  case 5895: /* module 23 call 7 */
     CHECK_ERROR(_readMethod_pips_vote(c, &method->basic.pips_vote))
     break;
-  case 5899: /* module 23 call 11 */
+  case 5896: /* module 23 call 8 */
     CHECK_ERROR(_readMethod_pips_approve_committee_proposal(
         c, &method->basic.pips_approve_committee_proposal))
     break;
-  case 5900: /* module 23 call 12 */
+  case 5897: /* module 23 call 9 */
     CHECK_ERROR(_readMethod_pips_reject_proposal(
         c, &method->basic.pips_reject_proposal))
     break;
-  case 5901: /* module 23 call 13 */
+  case 5898: /* module 23 call 10 */
     CHECK_ERROR(
         _readMethod_pips_prune_proposal(c, &method->basic.pips_prune_proposal))
     break;
-  case 5902: /* module 23 call 14 */
+  case 5899: /* module 23 call 11 */
     CHECK_ERROR(_readMethod_pips_reschedule_execution(
         c, &method->basic.pips_reschedule_execution))
     break;
-  case 5903: /* module 23 call 15 */
+  case 5900: /* module 23 call 12 */
     CHECK_ERROR(
         _readMethod_pips_clear_snapshot(c, &method->basic.pips_clear_snapshot))
     break;
-  case 5904: /* module 23 call 16 */
+  case 5901: /* module 23 call 13 */
     CHECK_ERROR(_readMethod_pips_snapshot(c, &method->basic.pips_snapshot))
     break;
-  case 5905: /* module 23 call 17 */
+  case 5902: /* module 23 call 14 */
     CHECK_ERROR(_readMethod_pips_enact_snapshot_results(
         c, &method->basic.pips_enact_snapshot_results))
     break;
-  case 5906: /* module 23 call 18 */
+  case 5903: /* module 23 call 15 */
     CHECK_ERROR(_readMethod_pips_execute_scheduled_pip(
         c, &method->basic.pips_execute_scheduled_pip))
     break;
-  case 5907: /* module 23 call 19 */
+  case 5904: /* module 23 call 16 */
     CHECK_ERROR(_readMethod_pips_expire_scheduled_pip(
         c, &method->basic.pips_expire_scheduled_pip))
     break;
@@ -4913,40 +4869,34 @@ const char *_getMethod_Name(uint8_t moduleIdx, uint8_t callIdx) {
   case 5889: /* module 23 call 1 */
     return "Set min proposal deposit";
   case 5890: /* module 23 call 2 */
-    return "Set proposal cool off period";
-  case 5891: /* module 23 call 3 */
     return "Set default enactment period";
-  case 5892: /* module 23 call 4 */
+  case 5891: /* module 23 call 3 */
     return "Set pending pip expiry";
-  case 5893: /* module 23 call 5 */
+  case 5892: /* module 23 call 4 */
     return "Set max pip skip count";
-  case 5894: /* module 23 call 6 */
+  case 5893: /* module 23 call 5 */
     return "Set active pip limit";
-  case 5895: /* module 23 call 7 */
+  case 5894: /* module 23 call 6 */
     return "Propose";
-  case 5896: /* module 23 call 8 */
-    return "Amend proposal";
-  case 5897: /* module 23 call 9 */
-    return "Cancel proposal";
-  case 5898: /* module 23 call 10 */
+  case 5895: /* module 23 call 7 */
     return "Vote";
-  case 5899: /* module 23 call 11 */
+  case 5896: /* module 23 call 8 */
     return "Approve committee proposal";
-  case 5900: /* module 23 call 12 */
+  case 5897: /* module 23 call 9 */
     return "Reject proposal";
-  case 5901: /* module 23 call 13 */
+  case 5898: /* module 23 call 10 */
     return "Prune proposal";
-  case 5902: /* module 23 call 14 */
+  case 5899: /* module 23 call 11 */
     return "Reschedule execution";
-  case 5903: /* module 23 call 15 */
+  case 5900: /* module 23 call 12 */
     return "Clear snapshot";
-  case 5904: /* module 23 call 16 */
+  case 5901: /* module 23 call 13 */
     return "Snapshot";
-  case 5905: /* module 23 call 17 */
+  case 5902: /* module 23 call 14 */
     return "Enact snapshot results";
-  case 5906: /* module 23 call 18 */
+  case 5903: /* module 23 call 15 */
     return "Execute scheduled pip";
-  case 5907: /* module 23 call 19 */
+  case 5904: /* module 23 call 16 */
     return "Expire scheduled pip";
   case 6144: /* module 24 call 0 */
     return "Set vote threshold";
@@ -5555,32 +5505,26 @@ uint8_t _getMethod_NumItems(uint8_t moduleIdx, uint8_t callIdx,
   case 5893: /* module 23 call 5 */
     return 1;
   case 5894: /* module 23 call 6 */
-    return 1;
-  case 5895: /* module 23 call 7 */
     return 4;
-  case 5896: /* module 23 call 8 */
+  case 5895: /* module 23 call 7 */
     return 3;
+  case 5896: /* module 23 call 8 */
+    return 1;
   case 5897: /* module 23 call 9 */
     return 1;
   case 5898: /* module 23 call 10 */
-    return 3;
+    return 1;
   case 5899: /* module 23 call 11 */
-    return 1;
-  case 5900: /* module 23 call 12 */
-    return 1;
-  case 5901: /* module 23 call 13 */
-    return 1;
-  case 5902: /* module 23 call 14 */
     return 2;
+  case 5900: /* module 23 call 12 */
+    return 0;
+  case 5901: /* module 23 call 13 */
+    return 0;
+  case 5902: /* module 23 call 14 */
+    return 1;
   case 5903: /* module 23 call 15 */
-    return 0;
+    return 1;
   case 5904: /* module 23 call 16 */
-    return 0;
-  case 5905: /* module 23 call 17 */
-    return 1;
-  case 5906: /* module 23 call 18 */
-    return 1;
-  case 5907: /* module 23 call 19 */
     return 2;
   case 6144: /* module 24 call 0 */
     return 2;
@@ -6897,14 +6841,14 @@ const char *_getMethod_ItemName(uint8_t moduleIdx, uint8_t callIdx,
   case 5891: /* module 23 call 3 */
     switch (itemIdx) {
     case 0:
-      return "Duration";
+      return "Expiry";
     default:
       return NULL;
     }
   case 5892: /* module 23 call 4 */
     switch (itemIdx) {
     case 0:
-      return "Expiry";
+      return "New max";
     default:
       return NULL;
     }
@@ -6918,13 +6862,6 @@ const char *_getMethod_ItemName(uint8_t moduleIdx, uint8_t callIdx,
   case 5894: /* module 23 call 6 */
     switch (itemIdx) {
     case 0:
-      return "New max";
-    default:
-      return NULL;
-    }
-  case 5895: /* module 23 call 7 */
-    switch (itemIdx) {
-    case 0:
       return "Proposal";
     case 1:
       return "Deposit";
@@ -6935,14 +6872,21 @@ const char *_getMethod_ItemName(uint8_t moduleIdx, uint8_t callIdx,
     default:
       return NULL;
     }
-  case 5896: /* module 23 call 8 */
+  case 5895: /* module 23 call 7 */
     switch (itemIdx) {
     case 0:
       return "Id";
     case 1:
-      return "Url";
+      return "Aye or nay";
     case 2:
-      return "Description";
+      return "Deposit";
+    default:
+      return NULL;
+    }
+  case 5896: /* module 23 call 8 */
+    switch (itemIdx) {
+    case 0:
+      return "Id";
     default:
       return NULL;
     }
@@ -6957,35 +6901,10 @@ const char *_getMethod_ItemName(uint8_t moduleIdx, uint8_t callIdx,
     switch (itemIdx) {
     case 0:
       return "Id";
-    case 1:
-      return "Aye or nay";
-    case 2:
-      return "Deposit";
     default:
       return NULL;
     }
   case 5899: /* module 23 call 11 */
-    switch (itemIdx) {
-    case 0:
-      return "Id";
-    default:
-      return NULL;
-    }
-  case 5900: /* module 23 call 12 */
-    switch (itemIdx) {
-    case 0:
-      return "Id";
-    default:
-      return NULL;
-    }
-  case 5901: /* module 23 call 13 */
-    switch (itemIdx) {
-    case 0:
-      return "Id";
-    default:
-      return NULL;
-    }
-  case 5902: /* module 23 call 14 */
     switch (itemIdx) {
     case 0:
       return "Id";
@@ -6994,31 +6913,31 @@ const char *_getMethod_ItemName(uint8_t moduleIdx, uint8_t callIdx,
     default:
       return NULL;
     }
-  case 5903: /* module 23 call 15 */
+  case 5900: /* module 23 call 12 */
     switch (itemIdx) {
     default:
       return NULL;
     }
-  case 5904: /* module 23 call 16 */
+  case 5901: /* module 23 call 13 */
     switch (itemIdx) {
     default:
       return NULL;
     }
-  case 5905: /* module 23 call 17 */
+  case 5902: /* module 23 call 14 */
     switch (itemIdx) {
     case 0:
       return "Results";
     default:
       return NULL;
     }
-  case 5906: /* module 23 call 18 */
+  case 5903: /* module 23 call 15 */
     switch (itemIdx) {
     case 0:
       return "Id";
     default:
       return NULL;
     }
-  case 5907: /* module 23 call 19 */
+  case 5904: /* module 23 call 16 */
     switch (itemIdx) {
     case 0:
       return "Did";
@@ -9863,15 +9782,6 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     }
   case 5890: /* module 23 call 2 */
     switch (itemIdx) {
-    case 0: /* pips_set_proposal_cool_off_period - duration */;
-      return _toStringBlockNumber(
-          &m->basic.pips_set_proposal_cool_off_period.duration, outValue,
-          outValueLen, pageIdx, pageCount);
-    default:
-      return parser_no_data;
-    }
-  case 5891: /* module 23 call 3 */
-    switch (itemIdx) {
     case 0: /* pips_set_default_enactment_period - duration */;
       return _toStringBlockNumber(
           &m->basic.pips_set_default_enactment_period.duration, outValue,
@@ -9879,7 +9789,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5892: /* module 23 call 4 */
+  case 5891: /* module 23 call 3 */
     switch (itemIdx) {
     case 0: /* pips_set_pending_pip_expiry - expiry */;
       return _toStringMaybeBlock(&m->basic.pips_set_pending_pip_expiry.expiry,
@@ -9887,7 +9797,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5893: /* module 23 call 5 */
+  case 5892: /* module 23 call 4 */
     switch (itemIdx) {
     case 0: /* pips_set_max_pip_skip_count - new_max */;
       return _toStringSkippedCount(
@@ -9896,7 +9806,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5894: /* module 23 call 6 */
+  case 5893: /* module 23 call 5 */
     switch (itemIdx) {
     case 0: /* pips_set_active_pip_limit - new_max */;
       return _toStringu32(&m->basic.pips_set_active_pip_limit.new_max, outValue,
@@ -9904,7 +9814,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5895: /* module 23 call 7 */
+  case 5894: /* module 23 call 6 */
     switch (itemIdx) {
     case 0: /* pips_propose - proposal */;
       return _toStringProposal(&m->nested.pips_propose.proposal, outValue,
@@ -9922,30 +9832,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5896: /* module 23 call 8 */
-    switch (itemIdx) {
-    case 0: /* pips_amend_proposal - id */;
-      return _toStringPipId(&m->basic.pips_amend_proposal.id, outValue,
-                            outValueLen, pageIdx, pageCount);
-    case 1: /* pips_amend_proposal - url */;
-      return _toStringOptionUrl(&m->basic.pips_amend_proposal.url, outValue,
-                                outValueLen, pageIdx, pageCount);
-    case 2: /* pips_amend_proposal - description */;
-      return _toStringOptionPipDescription(
-          &m->basic.pips_amend_proposal.description, outValue, outValueLen,
-          pageIdx, pageCount);
-    default:
-      return parser_no_data;
-    }
-  case 5897: /* module 23 call 9 */
-    switch (itemIdx) {
-    case 0: /* pips_cancel_proposal - id */;
-      return _toStringPipId(&m->basic.pips_cancel_proposal.id, outValue,
-                            outValueLen, pageIdx, pageCount);
-    default:
-      return parser_no_data;
-    }
-  case 5898: /* module 23 call 10 */
+  case 5895: /* module 23 call 7 */
     switch (itemIdx) {
     case 0: /* pips_vote - id */;
       return _toStringPipId(&m->basic.pips_vote.id, outValue, outValueLen,
@@ -9959,7 +9846,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5899: /* module 23 call 11 */
+  case 5896: /* module 23 call 8 */
     switch (itemIdx) {
     case 0: /* pips_approve_committee_proposal - id */;
       return _toStringPipId(&m->basic.pips_approve_committee_proposal.id,
@@ -9967,7 +9854,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5900: /* module 23 call 12 */
+  case 5897: /* module 23 call 9 */
     switch (itemIdx) {
     case 0: /* pips_reject_proposal - id */;
       return _toStringPipId(&m->basic.pips_reject_proposal.id, outValue,
@@ -9975,7 +9862,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5901: /* module 23 call 13 */
+  case 5898: /* module 23 call 10 */
     switch (itemIdx) {
     case 0: /* pips_prune_proposal - id */;
       return _toStringPipId(&m->basic.pips_prune_proposal.id, outValue,
@@ -9983,7 +9870,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5902: /* module 23 call 14 */
+  case 5899: /* module 23 call 11 */
     switch (itemIdx) {
     case 0: /* pips_reschedule_execution - id */;
       return _toStringPipId(&m->basic.pips_reschedule_execution.id, outValue,
@@ -9995,17 +9882,17 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5903: /* module 23 call 15 */
+  case 5900: /* module 23 call 12 */
     switch (itemIdx) {
     default:
       return parser_no_data;
     }
-  case 5904: /* module 23 call 16 */
+  case 5901: /* module 23 call 13 */
     switch (itemIdx) {
     default:
       return parser_no_data;
     }
-  case 5905: /* module 23 call 17 */
+  case 5902: /* module 23 call 14 */
     switch (itemIdx) {
     case 0: /* pips_enact_snapshot_results - results */;
       return _toStringVecTuplePipIdSnapshotResult(
@@ -10014,7 +9901,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5906: /* module 23 call 18 */
+  case 5903: /* module 23 call 15 */
     switch (itemIdx) {
     case 0: /* pips_execute_scheduled_pip - id */;
       return _toStringPipId(&m->basic.pips_execute_scheduled_pip.id, outValue,
@@ -10022,7 +9909,7 @@ parser_error_t _getMethod_ItemValue(pd_Method_t *m, uint8_t moduleIdx,
     default:
       return parser_no_data;
     }
-  case 5907: /* module 23 call 19 */
+  case 5904: /* module 23 call 16 */
     switch (itemIdx) {
     case 0: /* pips_expire_scheduled_pip - did */;
       return _toStringIdentityId(&m->basic.pips_expire_scheduled_pip.did,

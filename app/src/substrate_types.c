@@ -53,6 +53,61 @@ parser_error_t _readCompactProposalIndex(parser_context_t *c,
 parser_error_t _readIdentityId(parser_context_t *c,
                                pd_IdentityId_t *v){GEN_DEF_READARRAY(32)}
 
+parser_error_t _readTicker(parser_context_t *c, pd_Ticker_t *v) {
+  v->_len = 12;
+  GEN_DEF_READARRAY(v->_len)
+}
+
+parser_error_t _readCountryCode(parser_context_t *c, pd_CountryCode_t *v){
+    CHECK_ERROR(_readUInt8(c, &v->value))}
+
+parser_error_t _readScope(parser_context_t *c, pd_Scope_t *v) {
+  CHECK_INPUT();
+  CHECK_ERROR(_readUInt8(c, &v->value))
+  switch (v->value) {
+  case 0:
+    CHECK_ERROR(_readIdentityId(c, &v->identity))
+    break;
+  case 1:
+    CHECK_ERROR(_readTicker(c, &v->ticker))
+    break;
+  case 2: {
+    compactInt_t clen;
+    CHECK_ERROR(_readCompactInt(c, &clen))
+    CHECK_ERROR(_getValue(&clen, &v->_len))
+    GEN_DEF_READARRAY(v->_len)
+    break;
+  }
+  default:
+    return parser_unexpected_value;
+  }
+
+  return parser_ok;
+}
+
+parser_error_t _readScopeId(parser_context_t *c,
+                            pd_ScopeId_t *v){GEN_DEF_READARRAY(32)}
+
+parser_error_t
+    _readCddId(parser_context_t *c, pd_CddId_t *v){GEN_DEF_READARRAY(32)}
+
+parser_error_t _readTupleCountryCodeScope(parser_context_t *c,
+                                          pd_TupleCountryCodeScope_t *v) {
+  CHECK_INPUT();
+  CHECK_ERROR(_readCountryCode(c, &v->country_code))
+  CHECK_ERROR(_readScope(c, &v->scope))
+  return parser_ok;
+}
+
+parser_error_t _readTupleScopeScopeIdCddId(parser_context_t *c,
+                                           pd_TupleScopeScopeIdCddId_t *v) {
+  CHECK_INPUT();
+  CHECK_ERROR(_readScope(c, &v->scope))
+  CHECK_ERROR(_readScopeId(c, &v->scopeId))
+  CHECK_ERROR(_readCddId(c, &v->cddId))
+  return parser_ok;
+}
+
 parser_error_t _readClaimType(parser_context_t *c, pd_ClaimType_t *v) {
   return parser_not_supported;
 }
@@ -90,7 +145,34 @@ parser_error_t _readPortfolioNumber(parser_context_t *c,
 }
 
 parser_error_t _readClaim(parser_context_t *c, pd_Claim_t *v) {
-  return parser_not_supported;
+  CHECK_INPUT();
+  CHECK_ERROR(_readUInt8(c, &v->value))
+  switch (v->value) {
+  case 0: // Accredited
+  case 1: // Affiliate
+  case 2: // BuyLockup
+  case 3: // SellLockup
+  case 5: // KnowYourCustomer
+  case 7: // Exempted
+  case 8: // Blocked
+    CHECK_ERROR(_readScope(c, &v->scope))
+    break;
+  case 4: // CustomerDueDiligence
+    CHECK_ERROR(_readCddId(c, &v->cddId))
+    break;
+  case 6: // Jurisdiction
+    CHECK_ERROR(_readTupleCountryCodeScope(c, &v->jurisdiction))
+    break;
+  case 9: // InvestorUniqueness
+    CHECK_ERROR(_readTupleScopeScopeIdCddId(c, &v->investorUniqueness))
+    break;
+  case 10: // NoData
+    break;
+  default:
+    return parser_unexpected_value;
+  }
+
+  return parser_ok;
 }
 
 parser_error_t _readTargetIdentity(parser_context_t *c,
@@ -129,11 +211,8 @@ parser_error_t _readTrustedFor(parser_context_t *c, pd_TrustedFor_t *v) {
   return parser_ok;
 }
 
-parser_error_t _readTicker(parser_context_t *c,
-                           pd_Ticker_t *v){GEN_DEF_READARRAY(12)}
-
-parser_error_t
-    _readPalletPermissions(parser_context_t *c, pd_PalletPermissions_t *v) {
+parser_error_t _readPalletPermissions(parser_context_t *c,
+                                      pd_PalletPermissions_t *v) {
   CHECK_INPUT();
 
   CHECK_ERROR(_readPalletName(c, &v->palletName))
@@ -269,8 +348,26 @@ parser_error_t _readBeneficiary(parser_context_t *c, pd_Beneficiary_t *v){
     CHECK_ERROR(_readIdentityId(c, &v->identity))
         CHECK_ERROR(_readBalance(c, &v->balance))}
 
-parser_error_t
-    _readAuthorizationData(parser_context_t *c, pd_AuthorizationData_t *v) {
+parser_error_t _readMaybeBlock(parser_context_t *c, pd_MaybeBlock_t *v) {
+  CHECK_INPUT();
+  CHECK_ERROR(_readUInt8(c, &v->value))
+
+  switch (v->value) {
+  case 0:
+    CHECK_INPUT();
+    CHECK_ERROR(_readBlockNumber(c, &v->blockNumber))
+    break;
+  case 1:
+    break;
+  default:
+    return parser_unexpected_value;
+  }
+
+  return parser_ok;
+}
+
+parser_error_t _readAuthorizationData(parser_context_t *c,
+                                      pd_AuthorizationData_t *v) {
   CHECK_INPUT();
 
   CHECK_ERROR(_readUInt8(c, &v->value))
@@ -428,12 +525,16 @@ parser_error_t _readAccountIndex(parser_context_t *c, pd_AccountIndex_t *v) {
   return _readUInt32(c, &v->value);
 }
 
-parser_error_t _readLookupSource(parser_context_t *c, pd_LookupSource_t *v){
+parser_error_t _readLookupSource(parser_context_t *c, pd_LookupSource_t *v) {
+  uint8_t len;
+  CHECK_ERROR(_readUInt8(c, &len))
+  GEN_DEF_READARRAY(32)
+}
 
-    GEN_DEF_READARRAY(32)}
-
-parser_error_t
-    _readMemo(parser_context_t *c, pd_Memo_t *v){GEN_DEF_READARRAY(32)}
+parser_error_t _readMemo(parser_context_t *c, pd_Memo_t *v) {
+  v->_len = 32;
+  GEN_DEF_READARRAY(32)
+}
 
 parser_error_t _readHeader(parser_context_t *c, pd_Header_t *v) {
   return parser_not_supported;
@@ -481,8 +582,14 @@ parser_error_t _readElectionSize(parser_context_t *c, pd_ElectionSize_t *v) {
 
 parser_error_t _readSlashingSwitch(parser_context_t *c,
                                    pd_SlashingSwitch_t *v) {
-  return parser_not_supported;
+  CHECK_INPUT();
+
+  CHECK_ERROR(_readUInt8(c, &v->value));
+  return parser_ok;
 }
+
+parser_error_t _readKeys(parser_context_t *c,
+                         pd_Keys_t *v){GEN_DEF_READARRAY(4 * 32)}
 
 parser_error_t _readHeartbeat(parser_context_t *c, pd_Heartbeat_t *v) {
   return parser_not_supported;
@@ -515,24 +622,27 @@ parser_error_t _readTemplateMetadata(parser_context_t *c,
 }
 
 parser_error_t _readMetaUrl(parser_context_t *c, pd_MetaUrl_t *v) {
-  return parser_not_supported;
+  CHECK_INPUT()
+
+  compactInt_t clen;
+  CHECK_ERROR(_readCompactInt(c, &clen))
+  CHECK_ERROR(_getValue(&clen, &v->_len))
+
+  v->_ptr = c->buffer + c->offset;
+  CTX_CHECK_AND_ADVANCE(c, v->_len);
+
+  return parser_ok;
 }
 
-parser_error_t _readMaybeBlock(parser_context_t *c, pd_MaybeBlock_t *v) {
-  return parser_not_supported;
-}
-
-parser_error_t _readProposalIndex(parser_context_t *c, pd_ProposalIndex_t *v) {
-  return parser_not_supported;
-}
+parser_error_t _readProposalIndex(parser_context_t *c, pd_ProposalIndex_t *v){
+    CHECK_ERROR(_readUInt32(c, &v->value))}
 
 parser_error_t _readMemberCount(parser_context_t *c, pd_MemberCount_t *v) {
   return _readUInt32(c, &v->value);
 }
 
-parser_error_t _readSkippedCount(parser_context_t *c, pd_SkippedCount_t *v) {
-  return parser_not_supported;
-}
+parser_error_t _readSkippedCount(parser_context_t *c, pd_SkippedCount_t *v){
+    CHECK_ERROR(_readUInt8(c, &v->value))}
 
 parser_error_t _readUrl(parser_context_t *c, pd_Url_t *v) {
   CHECK_INPUT()
@@ -608,26 +718,22 @@ parser_error_t _readAssetIdentifier(parser_context_t *c,
   CHECK_INPUT()
 
   CHECK_ERROR(_readUInt8(c, &v->value))
-
   switch (v->value) {
   case 0:
   case 1:
-    GEN_DEF_READARRAY(9)
     v->_len = 9;
     break;
   case 2:
-    GEN_DEF_READARRAY(12)
     v->_len = 12;
     break;
   case 3:
-    GEN_DEF_READARRAY(20)
     v->_len = 20;
     break;
   default:
     return parser_unexpected_value;
   }
 
-  return parser_ok;
+  GEN_DEF_READARRAY(v->_len)
 }
 
 parser_error_t _readFundingRoundName(parser_context_t *c,
@@ -1223,6 +1329,151 @@ parser_error_t _toStringIdentityId(const pd_IdentityId_t *v, char *outValue,
                                    uint8_t *pageCount){
     GEN_DEF_TOSTRING_ARRAY(32)}
 
+parser_error_t
+    _toStringTicker(const pd_Ticker_t *v, char *outValue, uint16_t outValueLen,
+                    uint8_t pageIdx, uint8_t *pageCount) {
+  char bufferUI[v->_len + 1];
+  MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
+
+  asciify(bufferUI);
+  pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+
+  return parser_ok;
+}
+
+parser_error_t _toStringCountryCode(const pd_CountryCode_t *v, char *outValue,
+                                    uint16_t outValueLen, uint8_t pageIdx,
+                                    uint8_t *pageCount) {
+  CLEAN_AND_CHECK()
+  // TODO complete
+  switch (v->value) {
+  case 0:
+    snprintf(outValue, outValueLen, "AF");
+    break;
+  case 1:
+    snprintf(outValue, outValueLen, "AX");
+    break;
+  case 2:
+    snprintf(outValue, outValueLen, "AL");
+    break;
+  case 3:
+    snprintf(outValue, outValueLen, "DZ");
+    break;
+  default:
+    return parser_not_supported;
+  }
+
+  *pageCount = 1;
+  return parser_ok;
+}
+
+parser_error_t _toStringScope(const pd_Scope_t *v, char *outValue,
+                              uint16_t outValueLen, uint8_t pageIdx,
+                              uint8_t *pageCount) {
+  CLEAN_AND_CHECK()
+  switch (v->value) {
+  case 0:
+    _toStringIdentityId(&v->identity, outValue, outValueLen, pageIdx,
+                        pageCount);
+    break;
+  case 1:
+    _toStringTicker(&v->ticker, outValue, outValueLen, pageIdx, pageCount);
+    break;
+  case 2:
+    GEN_DEF_TOSTRING_ARRAY(v->_len)
+    break;
+  default:
+    return parser_unexpected_value;
+  }
+
+  return parser_ok;
+}
+
+parser_error_t _toStringScopeId(const pd_ScopeId_t *v, char *outValue,
+                                uint16_t outValueLen, uint8_t pageIdx,
+                                uint8_t *pageCount){GEN_DEF_TOSTRING_ARRAY(32)}
+
+parser_error_t _toStringCddId(const pd_CddId_t *v, char *outValue,
+                              uint16_t outValueLen, uint8_t pageIdx,
+                              uint8_t *pageCount){GEN_DEF_TOSTRING_ARRAY(32)}
+
+parser_error_t
+    _toStringTupleCountryCodeScope(const pd_TupleCountryCodeScope_t *v,
+                                   char *outValue, uint16_t outValueLen,
+                                   uint8_t pageIdx, uint8_t *pageCount) {
+  CLEAN_AND_CHECK()
+
+  // Index + count pages
+  uint8_t pages[2];
+  CHECK_ERROR(_toStringCountryCode(&v->country_code, outValue, outValueLen, 0,
+                                   &pages[0]))
+  CHECK_ERROR(_toStringScope(&v->scope, outValue, outValueLen, 0, &pages[1]))
+
+  *pageCount = pages[0] + pages[1];
+  if (pageIdx > *pageCount) {
+    return parser_display_idx_out_of_range;
+  }
+
+  if (pageIdx < pages[0]) {
+    CHECK_ERROR(_toStringCountryCode(&v->country_code, outValue, outValueLen, 0,
+                                     &pages[0]))
+    return parser_ok;
+  }
+  pageIdx -= pages[0];
+
+  //////
+  if (pageIdx < pages[1]) {
+    CHECK_ERROR(_toStringScope(&v->scope, outValue, outValueLen, 0, &pages[1]))
+    return parser_ok;
+  }
+
+  return parser_display_idx_out_of_range;
+}
+
+parser_error_t
+_toStringTupleScopeScopeIdCddId(const pd_TupleScopeScopeIdCddId_t *v,
+                                char *outValue, uint16_t outValueLen,
+                                uint8_t pageIdx, uint8_t *pageCount) {
+  CLEAN_AND_CHECK()
+
+  // Index + count pages
+  uint8_t pages[3];
+  CHECK_ERROR(_toStringScope(&v->scope, outValue, outValueLen, 0, &pages[0]))
+  CHECK_ERROR(
+      _toStringScopeId(&v->scopeId, outValue, outValueLen, 0, &pages[1]))
+  CHECK_ERROR(_toStringCddId(&v->cddId, outValue, outValueLen, 0, &pages[2]))
+
+  *pageCount = pages[0] + pages[1] + pages[2];
+  if (pageIdx > *pageCount) {
+    return parser_display_idx_out_of_range;
+  }
+
+  if (pageIdx < pages[0]) {
+    CHECK_ERROR(_toStringScope(&v->scope, outValue, outValueLen, 0, &pages[0]))
+    return parser_ok;
+  }
+  pageIdx -= pages[0];
+
+  //////
+  if (pageIdx < pages[1]) {
+    CHECK_ERROR(
+        _toStringScopeId(&v->scopeId, outValue, outValueLen, 0, &pages[1]))
+    return parser_ok;
+  }
+
+  pageIdx -= pages[1];
+
+  //////
+  if (pageIdx < pages[2]) {
+    CHECK_ERROR(_toStringCddId(&v->cddId, outValue, outValueLen, 0, &pages[2]))
+    return parser_ok;
+  }
+
+  return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringClaimType(const pd_ClaimType_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
                                   uint8_t *pageCount) {
@@ -1267,8 +1518,37 @@ parser_error_t _toStringClaim(const pd_Claim_t *v, char *outValue,
                               uint16_t outValueLen, uint8_t pageIdx,
                               uint8_t *pageCount) {
   CLEAN_AND_CHECK()
+  switch (v->value) {
+  case 0: // Accredited
+  case 1: // Affiliate
+  case 2: // BuyLockup
+  case 3: // SellLockup
+  case 5: // KnowYourCustomer
+  case 7: // Exempted
+  case 8: // Blocked
+    CHECK_ERROR(
+        _toStringScope(&v->scope, outValue, outValueLen, pageIdx, pageCount));
+    break;
+  case 4: // CustomerDueDiligence
+    CHECK_ERROR(
+        _toStringCddId(&v->cddId, outValue, outValueLen, pageIdx, pageCount));
+    break;
+  case 6: // Jurisdiction
+    CHECK_ERROR(_toStringTupleCountryCodeScope(
+        &v->jurisdiction, outValue, outValueLen, pageIdx, pageCount));
+    break;
+  case 9: // InvestorUniqueness
+    CHECK_ERROR(_toStringTupleScopeScopeIdCddId(
+        &v->investorUniqueness, outValue, outValueLen, pageIdx, pageCount));
+    break;
+  case 10: // NoData
+    snprintf(outValue, outValueLen, "NoData");
+    break;
+  default:
+    return parser_unexpected_value;
+  }
 
-  return parser_print_not_supported;
+  return parser_ok;
 }
 
 parser_error_t _toStringTargetIdentity(const pd_TargetIdentity_t *v,
@@ -1304,19 +1584,6 @@ parser_error_t _toStringTrustedFor(const pd_TrustedFor_t *v, char *outValue,
   default:
     return parser_unexpected_value;
   }
-
-  return parser_ok;
-}
-
-parser_error_t _toStringTicker(const pd_Ticker_t *v, char *outValue,
-                               uint16_t outValueLen, uint8_t pageIdx,
-                               uint8_t *pageCount) {
-  char bufferUI[10];
-  MEMSET(outValue, 0, outValueLen);
-  MEMSET(bufferUI, 0, sizeof(bufferUI));
-
-  asciify_ext((const char *)v->_ptr, bufferUI);
-  pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
 }
@@ -1618,6 +1885,25 @@ parser_error_t _toStringBeneficiary(const pd_Beneficiary_t *v, char *outValue,
   }
 
   return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringMaybeBlock(const pd_MaybeBlock_t *v, char *outValue,
+                                   uint16_t outValueLen, uint8_t pageIdx,
+                                   uint8_t *pageCount) {
+  CLEAN_AND_CHECK()
+  switch (v->value) {
+  case 0:
+    _toStringBlockNumber(&v->blockNumber, outValue, outValueLen, pageIdx,
+                         pageCount);
+    break;
+  case 1:
+    snprintf(outValue, outValueLen, "None");
+    break;
+  default:
+    return parser_unexpected_value;
+  }
+
+  return parser_ok;
 }
 
 parser_error_t _toStringAuthorizationData(const pd_AuthorizationData_t *v,
@@ -2038,11 +2324,12 @@ parser_error_t _toStringLookupSource(const pd_LookupSource_t *v, char *outValue,
 parser_error_t _toStringMemo(const pd_Memo_t *v, char *outValue,
                              uint16_t outValueLen, uint8_t pageIdx,
                              uint8_t *pageCount) {
-  char bufferUI[200];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -2171,9 +2458,26 @@ parser_error_t _toStringSlashingSwitch(const pd_SlashingSwitch_t *v,
                                        char *outValue, uint16_t outValueLen,
                                        uint8_t pageIdx, uint8_t *pageCount) {
   CLEAN_AND_CHECK()
+  switch (v->value) {
+  case 0:
+    snprintf(outValue, outValueLen, "Validator");
+    break;
+  case 1:
+    snprintf(outValue, outValueLen, "ValidatorAndNominator");
+    break;
+  case 2:
+    snprintf(outValue, outValueLen, "None");
+    break;
+  default:
+    return parser_unexpected_value;
+  }
 
-  return parser_print_not_supported;
+  return parser_ok;
 }
+
+parser_error_t _toStringKeys(const pd_Keys_t *v, char *outValue,
+                             uint16_t outValueLen, uint8_t pageIdx,
+                             uint8_t *pageCount){GEN_DEF_TOSTRING_ARRAY(4 * 32)}
 
 parser_error_t _toStringHeartbeat(const pd_Heartbeat_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
@@ -2265,25 +2569,21 @@ parser_error_t _toStringTemplateMetadata(const pd_TemplateMetadata_t *v,
 parser_error_t _toStringMetaUrl(const pd_MetaUrl_t *v, char *outValue,
                                 uint16_t outValueLen, uint8_t pageIdx,
                                 uint8_t *pageCount) {
-  CLEAN_AND_CHECK()
+  char bufferUI[v->_len + 1];
+  MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  return parser_print_not_supported;
-}
+  asciify(bufferUI);
+  pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
-parser_error_t _toStringMaybeBlock(const pd_MaybeBlock_t *v, char *outValue,
-                                   uint16_t outValueLen, uint8_t pageIdx,
-                                   uint8_t *pageCount) {
-  CLEAN_AND_CHECK()
-
-  return parser_print_not_supported;
+  return parser_ok;
 }
 
 parser_error_t _toStringProposalIndex(const pd_ProposalIndex_t *v,
                                       char *outValue, uint16_t outValueLen,
                                       uint8_t pageIdx, uint8_t *pageCount) {
-  CLEAN_AND_CHECK()
-
-  return parser_print_not_supported;
+  return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringMemberCount(const pd_MemberCount_t *v, char *outValue,
@@ -2295,19 +2595,19 @@ parser_error_t _toStringMemberCount(const pd_MemberCount_t *v, char *outValue,
 parser_error_t _toStringSkippedCount(const pd_SkippedCount_t *v, char *outValue,
                                      uint16_t outValueLen, uint8_t pageIdx,
                                      uint8_t *pageCount) {
-  CLEAN_AND_CHECK()
-
-  return parser_print_not_supported;
+  uint16_t valu16 = (uint16_t)v->value;
+  return _toStringu16(&valu16, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringUrl(const pd_Url_t *v, char *outValue,
                             uint16_t outValueLen, uint8_t pageIdx,
                             uint8_t *pageCount) {
-  char bufferUI[200];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -2316,11 +2616,12 @@ parser_error_t _toStringUrl(const pd_Url_t *v, char *outValue,
 parser_error_t _toStringPipDescription(const pd_PipDescription_t *v,
                                        char *outValue, uint16_t outValueLen,
                                        uint8_t pageIdx, uint8_t *pageCount) {
-  char bufferUI[200];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -2344,11 +2645,12 @@ _toStringTuplePipIdSnapshotResult(const pd_TuplePipIdSnapshotResult_t *v,
 parser_error_t _toStringAssetName(const pd_AssetName_t *v, char *outValue,
                                   uint16_t outValueLen, uint8_t pageIdx,
                                   uint8_t *pageCount) {
-  char bufferUI[20];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -2387,10 +2689,12 @@ parser_error_t _toStringAssetType(const pd_AssetType_t *v, char *outValue,
     snprintf(outValue, outValueLen, "Derivative");
     break;
   case 9: {
-    char bufferUI[30];
-    MEMSET(outValue, 0, outValueLen);
+    char bufferUI[v->_len + 1];
     MEMSET(bufferUI, 0, sizeof(bufferUI));
-    asciify_ext((const char *)v->_ptr, bufferUI);
+    MEMCPY(bufferUI, v->_ptr, v->_len);
+    MEMSET(outValue, 0, outValueLen);
+
+    asciify(bufferUI);
     pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
     break;
   }
@@ -2401,17 +2705,27 @@ parser_error_t _toStringAssetType(const pd_AssetType_t *v, char *outValue,
 
 parser_error_t _toStringAssetIdentifier(const pd_AssetIdentifier_t *v,
                                         char *outValue, uint16_t outValueLen,
-                                        uint8_t pageIdx, uint8_t *pageCount){
-    GEN_DEF_TOSTRING_ARRAY(v->_len)}
+                                        uint8_t pageIdx, uint8_t *pageCount) {
+  char bufferUI[v->_len + 1];
+  MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
+
+  asciify(bufferUI);
+  pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+
+  return parser_ok;
+}
 
 parser_error_t _toStringFundingRoundName(const pd_FundingRoundName_t *v,
                                          char *outValue, uint16_t outValueLen,
                                          uint8_t pageIdx, uint8_t *pageCount) {
-  char bufferUI[200];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -2700,11 +3014,12 @@ parser_error_t _toStringUniqueCall(const pd_UniqueCall_t *v, char *outValue,
 parser_error_t _toStringPortfolioName(const pd_PortfolioName_t *v,
                                       char *outValue, uint16_t outValueLen,
                                       uint8_t pageIdx, uint8_t *pageCount) {
-  char bufferUI[200];
-  MEMSET(outValue, 0, outValueLen);
+  char bufferUI[v->_len + 1];
   MEMSET(bufferUI, 0, sizeof(bufferUI));
+  MEMCPY(bufferUI, v->_ptr, v->_len);
+  MEMSET(outValue, 0, outValueLen);
 
-  asciify_ext((const char *)v->_ptr, bufferUI);
+  asciify(bufferUI);
   pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
   return parser_ok;
@@ -3459,10 +3774,6 @@ parser_error_t _readCompactBalanceOf(parser_context_t *c,
   return _readCompactBalance(c, v);
 }
 
-parser_error_t _readKeys(parser_context_t *c, pd_Keys_t *v) {
-  GEN_DEF_READARRAY(5 * 32);
-}
-
 ///////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////
@@ -3535,12 +3846,6 @@ parser_error_t _toStringCompactu32(const pd_Compactu32_t *v, char *outValue,
                                    uint8_t *pageCount) {
   return _toStringCompactInt(v, 0, 0, outValue, outValueLen, pageIdx,
                              pageCount);
-}
-
-parser_error_t _toStringKeys(const pd_Keys_t *v, char *outValue,
-                             uint16_t outValueLen, uint8_t pageIdx,
-                             uint8_t *pageCount) {
-  GEN_DEF_TOSTRING_ARRAY(4 * 32);
 }
 
 ///////////////////////////////////

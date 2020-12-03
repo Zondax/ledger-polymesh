@@ -43,13 +43,13 @@ all: bin/app.elf
 include $(BOLOS_SDK)/Makefile.defines
 
 ifndef COIN
-COIN=KSM
+COIN=POLYX
 endif
 
 include $(CURDIR)/Makefile.version
 
 $(info COIN  = [$(COIN)])
-ifeq ($(COIN),KSM)
+ifeq ($(COIN),POLYX)
 # Main app configuration
 DEFINES += APP_STANDARD
 APPNAME = "Polymath"
