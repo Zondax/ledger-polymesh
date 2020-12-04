@@ -34,7 +34,7 @@ TEST(CRYPTO, fillAddress) {
 
     uint16_t addrLen = crypto_fillAddress(buffer, 100);
 
-    EXPECT_THAT(addrLen, ::testing::Eq(79));
+    EXPECT_THAT(addrLen, ::testing::Eq(80));
 
     std::cout << std::endl;
 
@@ -46,7 +46,7 @@ TEST(CRYPTO, fillAddress) {
         ::testing::Eq(crypto_testPubKey));
 
     EXPECT_THAT(std::string(addr),
-                ::testing::Eq("FCYe4qNWg9zBFfTvixwmaDbhRSLBwqCGX2wok1L3aFoSaJ5"));
+                ::testing::Eq("2F59DzFQMauFjqi6z3mBYasrAGsGjn8Q9vaFxaSLg8CgG2hf"));
 
     std::cout << pk << std::endl;
     std::cout << addr << std::endl;
@@ -60,7 +60,7 @@ TEST(CRYPTO, fillAddressTestMnemonic) {
 
     uint16_t addrLen = crypto_fillAddress(buffer, 100);
 
-    EXPECT_THAT(addrLen, ::testing::Eq(79));
+    EXPECT_THAT(addrLen, ::testing::Eq(80));
 
     std::cout << std::endl;
 
@@ -72,7 +72,7 @@ TEST(CRYPTO, fillAddressTestMnemonic) {
                 ::testing::Eq("8d16d62802ca55326ec52bf76a8543b90e2aba5bcf6cd195c0d6fc1ef38fa1b3"));
 
     EXPECT_THAT(std::string(addr),
-                ::testing::Eq("FmK43tjzFGT9F68Sj9EvW6rwBQUAVuA9wNQaYxGLvfcCAxS"));
+                ::testing::Eq("2FdudyJmqA1ihq8mW3wUhWm7Q2qQiLCN3LuijPPGyUcV1S2G"));
 
     std::cout << pk << std::endl;
     std::cout << addr << std::endl;
