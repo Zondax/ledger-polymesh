@@ -2443,7 +2443,20 @@ parser_error_t _toStringPermill(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
+    char bufferUI[100];
+    char ratioBuffer[80];
+    MEMSET(outValue, 0, outValueLen);
+    MEMSET(ratioBuffer, 0, sizeof(ratioBuffer));
+    MEMSET(bufferUI, 0, sizeof(bufferUI));
+    *pageCount = 1;
+
+    if (fpuint64_to_str(ratioBuffer, sizeof(ratioBuffer), v->value, 4) == 0) {
+        return parser_unexpected_value;
+    }
+
+    snprintf(bufferUI, sizeof(bufferUI), "%s%%", ratioBuffer);
+    pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+    return parser_ok;
 }
 
 parser_error_t _toStringCalendarUnit(
@@ -2935,7 +2948,7 @@ parser_error_t _toStringTargetTreatment(
     default:
         return parser_unexpected_value;
     }
-
+    *pageCount = 1;
     return parser_ok;
 }
 
@@ -3690,7 +3703,8 @@ parser_error_t _toStringSettlementType(
     CLEAN_AND_CHECK()
     switch (v->value) {
     case 0:
-        snprintf(outValue, outValueLen, "OnAffirmation");
+        snprintf(outValue, outValueLen, "SettleOnAffirmation");
+        *pageCount = 1;
         break;
     case 1:
         _toStringBlockNumber(&v->blockNumber, outValue, outValueLen, pageIdx, pageCount);
@@ -4760,11 +4774,12 @@ parser_error_t _toStringVenueDetails(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    char bufferUI[200];
-    MEMSET(outValue, 0, outValueLen);
+    char bufferUI[v->_len + 1];
     MEMSET(bufferUI, 0, sizeof(bufferUI));
+    MEMCPY(bufferUI, v->_ptr, v->_len);
+    MEMSET(outValue, 0, outValueLen);
 
-    asciify_ext((const char*)v->_ptr, bufferUI);
+    asciify(bufferUI);
     pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
 
     return parser_ok;
@@ -4792,7 +4807,7 @@ parser_error_t _toStringVenueType(
         snprintf(outValue, outValueLen, "Exchange");
         break;
     }
-
+    *pageCount = 1;
     return parser_ok;
 }
 
