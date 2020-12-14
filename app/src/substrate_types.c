@@ -67,8 +67,10 @@ parser_error_t _readPortfolioNumber(parser_context_t* c, pd_PortfolioNumber_t* v
     return _readUInt64(c, &v->value);
 }
 
-parser_error_t _readCountryCode(parser_context_t* c, pd_CountryCode_t* v){
+parser_error_t _readCountryCode(parser_context_t* c, pd_CountryCode_t* v)
+{
     CHECK_ERROR(_readUInt8(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readScope(parser_context_t* c, pd_Scope_t* v)
@@ -376,8 +378,10 @@ parser_error_t _readChoiceTitle(parser_context_t* c, pd_ChoiceTitle_t* v)
     return parser_ok;
 }
 
-parser_error_t _readPermill(parser_context_t* c, pd_Permill_t* v){
+parser_error_t _readPermill(parser_context_t* c, pd_Permill_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readCalendarUnit(parser_context_t* c, pd_CalendarUnit_t* v)
@@ -455,16 +459,22 @@ parser_error_t _readMetaDescription(parser_context_t* c, pd_MetaDescription_t* v
     return parser_ok;
 }
 
-parser_error_t _readMetaVersion(parser_context_t* c, pd_MetaVersion_t* v){
+parser_error_t _readMetaVersion(parser_context_t* c, pd_MetaVersion_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
-parser_error_t _readPipId(parser_context_t* c, pd_PipId_t* v){
+parser_error_t _readPipId(parser_context_t* c, pd_PipId_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
-parser_error_t _readSnapshotResult(parser_context_t* c, pd_SnapshotResult_t* v){
+parser_error_t _readSnapshotResult(parser_context_t* c, pd_SnapshotResult_t* v)
+{
     CHECK_ERROR(_readUInt8(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readDocumentUri(parser_context_t* c, pd_DocumentUri_t* v)
@@ -603,8 +613,10 @@ parser_error_t _readTax(parser_context_t* c, pd_Tax_t* v)
     return parser_ok;
 }
 
-parser_error_t _readLocalCAId(parser_context_t* c, pd_LocalCAId_t* v){
+parser_error_t _readLocalCAId(parser_context_t* c, pd_LocalCAId_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readBallotTitle(parser_context_t* c, pd_BallotTitle_t* v)
@@ -648,12 +660,15 @@ parser_error_t _readTemplateMetadata(parser_context_t* c, pd_TemplateMetadata_t*
 
 parser_error_t _readCodeHash(parser_context_t* c, pd_CodeHash_t* v)
 {
-    CHECK_ERROR(_readHash(c, &v->hash));
+    CHECK_ERROR(_readHash(c, &v->hash))
+    return parser_ok;
 }
 
-parser_error_t _readBeneficiary(parser_context_t* c, pd_Beneficiary_t* v){
+parser_error_t _readBeneficiary(parser_context_t* c, pd_Beneficiary_t* v)
+{
     CHECK_ERROR(_readIdentityId(c, &v->identity))
-        CHECK_ERROR(_readBalance(c, &v->balance))
+    CHECK_ERROR(_readBalance(c, &v->balance))
+    return parser_ok;
 }
 
 parser_error_t _readMaybeBlock(parser_context_t* c, pd_MaybeBlock_t* v)
@@ -865,6 +880,7 @@ parser_error_t _readMovePortfolioItem(parser_context_t* c, pd_MovePortfolioItem_
 {
     CHECK_ERROR(_readTicker(c, &v->ticker));
     CHECK_ERROR(_readBalance(c, &v->balance));
+    return parser_ok;
 }
 
 parser_error_t _readPriority(parser_context_t* c, pd_Priority_t* v)
@@ -1000,12 +1016,14 @@ parser_error_t _readLookupSource(parser_context_t* c, pd_LookupSource_t* v)
     uint8_t len;
     CHECK_ERROR(_readUInt8(c, &len))
     GEN_DEF_READARRAY(32)
+    return parser_ok;
 }
 
 parser_error_t _readMemo(parser_context_t* c, pd_Memo_t* v)
 {
     v->_len = 32;
     GEN_DEF_READARRAY(32)
+    return parser_ok;
 }
 
 parser_error_t _readHeader(parser_context_t* c, pd_Header_t* v)
@@ -1071,8 +1089,10 @@ parser_error_t _readSlashingSwitch(parser_context_t* c, pd_SlashingSwitch_t* v)
     return parser_ok;
 }
 
-parser_error_t _readKeys(parser_context_t* c, pd_Keys_t* v){
+parser_error_t _readKeys(parser_context_t* c, pd_Keys_t* v)
+{
     GEN_DEF_READARRAY(4 * 32)
+    return parser_ok;
 }
 
 parser_error_t _readHeartbeat(parser_context_t* c, pd_Heartbeat_t* v)
@@ -1080,10 +1100,12 @@ parser_error_t _readHeartbeat(parser_context_t* c, pd_Heartbeat_t* v)
     return parser_not_supported;
 }
 
-parser_error_t _readOfflineSlashingParams(parser_context_t* c, pd_OfflineSlashingParams_t* v){
+parser_error_t _readOfflineSlashingParams(parser_context_t* c, pd_OfflineSlashingParams_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->max_offline_percent))
-        CHECK_ERROR(_readUInt32(c, &v->constant))
-            CHECK_ERROR(_readUInt32(c, &v->max_slash_percent))
+    CHECK_ERROR(_readUInt32(c, &v->constant))
+    CHECK_ERROR(_readUInt32(c, &v->max_slash_percent))
+    return parser_ok;
 }
 
 parser_error_t _readCall(parser_context_t* c, pd_Call_t* v)
@@ -1101,8 +1123,10 @@ parser_error_t _readSchedule(parser_context_t* c, pd_Schedule_t* v)
     return parser_not_supported;
 }
 
-parser_error_t _readProposalIndex(parser_context_t* c, pd_ProposalIndex_t* v){
+parser_error_t _readProposalIndex(parser_context_t* c, pd_ProposalIndex_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readMemberCount(parser_context_t* c, pd_MemberCount_t* v)
@@ -1110,8 +1134,10 @@ parser_error_t _readMemberCount(parser_context_t* c, pd_MemberCount_t* v)
     return _readUInt32(c, &v->value);
 }
 
-parser_error_t _readSkippedCount(parser_context_t* c, pd_SkippedCount_t* v){
+parser_error_t _readSkippedCount(parser_context_t* c, pd_SkippedCount_t* v)
+{
     CHECK_ERROR(_readUInt8(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readUrl(parser_context_t* c, pd_Url_t* v)
@@ -1215,8 +1241,10 @@ parser_error_t _readFundingRoundName(parser_context_t* c, pd_FundingRoundName_t*
     return parser_ok;
 }
 
-parser_error_t _readDocumentId(parser_context_t* c, pd_DocumentId_t* v){
+parser_error_t _readDocumentId(parser_context_t* c, pd_DocumentId_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readEcdsaSignature(parser_context_t* c, pd_EcdsaSignature_t* v){
@@ -1272,9 +1300,11 @@ parser_error_t _readReceiptDetails(parser_context_t* c, pd_ReceiptDetails_t* v)
     return parser_not_supported;
 }
 
-parser_error_t _readPosRatio(parser_context_t* c, pd_PosRatio_t* v){
+parser_error_t _readPosRatio(parser_context_t* c, pd_PosRatio_t* v)
+{
     CHECK_ERROR(_readUInt32(c, &v->numerator))
-        CHECK_ERROR(_readUInt32(c, &v->denominator))
+    CHECK_ERROR(_readUInt32(c, &v->denominator))
+    return parser_ok;
 }
 
 parser_error_t _readProtocolOp(parser_context_t* c, pd_ProtocolOp_t* v)
