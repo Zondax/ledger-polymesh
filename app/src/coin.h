@@ -35,7 +35,7 @@ typedef enum {
 #define VIEW_ADDRESS_OFFSET_ED25519         (PK_LEN_ED25519)
 
 // Coin Specific
-#define PK_ADDRESS_TYPE                     COIN_ADDR_TYPE_POLYMATH
+#define PK_ADDRESS_TYPE                     COIN_ADDR_TYPE_POLYMESH
 #define SUPPORTED_TX_VERSION                LEDGER_MAJOR_VERSION
 #define SUPPORTED_SPEC_VERSION              (2000+LEDGER_MINOR_VERSION)
 #define SUPPORTED_MINIMUM_SPEC_VERSION      2000
@@ -44,7 +44,7 @@ typedef enum {
 #define CRYPTO_BLOB_SKIP_BYTES              0
 
 #define COIN_GENESIS_HASH                   "d561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfac"      // FIXME: Correct this?
-#define COIN_NAME                           "Polymath"
+#define COIN_NAME                           "Polymesh"
 
 #if defined(APP_STANDARD)
 #include "coin_standard.h"

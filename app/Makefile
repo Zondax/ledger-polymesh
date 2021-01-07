@@ -52,12 +52,12 @@ $(info COIN  = [$(COIN)])
 ifeq ($(COIN),POLYX)
 # Main app configuration
 DEFINES += APP_STANDARD
-APPNAME = "Polymath"
+APPNAME = "Polymesh"
 APPPATH = "44'/434'"				# FIXME: update this
 
 else ifeq ($(COIN),Ledgeracio)
 DEFINES += APP_RESTRICTED
-APPNAME = "Polymath_sec"
+APPNAME = "Polymesh_sec"
 APPPATH = "44'/434'"				# FIXME: update this
 
 else
