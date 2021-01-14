@@ -43,7 +43,7 @@ typedef enum {
 #define COIN_AMOUNT_DECIMAL_PLACES          6
 #define CRYPTO_BLOB_SKIP_BYTES              0
 
-#define COIN_GENESIS_HASH                   "d561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfac"      // FIXME: Correct this?
+#define COIN_GENESIS_HASH                   "12fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7"
 #define COIN_NAME                           "Polymesh"
 
 #if defined(APP_STANDARD)
