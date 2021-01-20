@@ -36,8 +36,9 @@ typedef enum {
 
 // Coin Specific
 #define PK_ADDRESS_TYPE                     COIN_ADDR_TYPE_POLYMESH
-#define SUPPORTED_TX_VERSION                LEDGER_MAJOR_VERSION
-#define SUPPORTED_SPEC_VERSION              (2000+LEDGER_MINOR_VERSION)
+#define SUPPORTED_TX_VERSION_CURRENT        LEDGER_MAJOR_VERSION
+#define SUPPORTED_TX_VERSION_PREVIOUS       (LEDGER_MAJOR_VERSION - 1)
+#define SUPPORTED_SPEC_VERSION              (LEDGER_MINOR_VERSION + 2000)
 #define SUPPORTED_MINIMUM_SPEC_VERSION      2000
 
 #define COIN_AMOUNT_DECIMAL_PLACES          6
@@ -45,6 +46,7 @@ typedef enum {
 
 #define COIN_GENESIS_HASH                   "12fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7"
 #define COIN_NAME                           "Polymesh"
+#define COIN_TICKER                         "POLYX"
 
 #if defined(APP_STANDARD)
 #include "coin_standard.h"
