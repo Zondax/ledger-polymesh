@@ -23,7 +23,7 @@ extern "C" {
 
 #define HDPATH_LEN_DEFAULT   5
 #define HDPATH_0_DEFAULT     (0x80000000 | 0x2c)
-#define HDPATH_1_DEFAULT     (0x80000000 | 0x1)       // FIXME: correct this
+#define HDPATH_1_DEFAULT     (0x80000000 | 0x253)
 
 #define PK_LEN_ED25519       32u
 
