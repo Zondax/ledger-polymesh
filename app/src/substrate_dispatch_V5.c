@@ -1876,7 +1876,7 @@ __Z_INLINE parser_error_t _readMethod_sto_invest_V5(
     CHECK_ERROR(_readPortfolioId_V5(c, &m->funding_portfolio))
     CHECK_ERROR(_readTicker_V5(c, &m->offering_asset))
     CHECK_ERROR(_readu64(c, &m->fundraiser_id))
-    CHECK_ERROR(_readBalance(c, &m->investment_amount))
+    CHECK_ERROR(_readBalance(c, &m->purchase_amount))
     CHECK_ERROR(_readOptionBalance(c, &m->max_price))
     CHECK_ERROR(_readOptionReceiptDetails_V5(c, &m->receipt))
     return parser_ok;
@@ -7473,7 +7473,7 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         case 3:
             return "Fundraiser id";
         case 4:
-            return "Investment amount";
+            return "Purchase amount";
         case 5:
             return "Max price";
         case 6:
@@ -11307,9 +11307,9 @@ parser_error_t _getMethod_ItemValue_V5(
                 &m->basic.sto_invest_V5.fundraiser_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 4: /* sto_invest_V5 - investment_amount */;
+        case 4: /* sto_invest_V5 - purchase_amount */;
             return _toStringBalance(
-                &m->basic.sto_invest_V5.investment_amount,
+                &m->basic.sto_invest_V5.purchase_amount,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* sto_invest_V5 - max_price */;

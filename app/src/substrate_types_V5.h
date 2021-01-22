@@ -691,6 +691,11 @@ typedef struct {
 } pd_TransferManager_V5_t;
 
 typedef struct {
+    uint64_t nonce;
+    pd_Call_t call;
+} pd_UniqueCall_V5_t;
+
+typedef struct {
     pd_CompactPerBill_V5_t commission;
 } pd_ValidatorPrefs_V5_t;
 
@@ -957,11 +962,6 @@ typedef struct {
 typedef struct {
     uint8_t value;
 } pd_SlashingSwitch_V5_t;
-
-typedef struct {
-    // TODO: Not implemented
-    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_UniqueCall_V5_t;
 
 typedef struct {
     uint64_t _len;

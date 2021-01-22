@@ -1365,7 +1365,7 @@ typedef struct {
     pd_PortfolioId_V5_t funding_portfolio;
     pd_Ticker_V5_t offering_asset;
     pd_u64_t fundraiser_id;
-    pd_Balance_t investment_amount;
+    pd_Balance_t purchase_amount;
     pd_OptionBalance_t max_price;
     pd_OptionReceiptDetails_V5_t receipt;
 } pd_sto_invest_V5_t;

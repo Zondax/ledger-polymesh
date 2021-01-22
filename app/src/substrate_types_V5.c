@@ -1341,7 +1341,10 @@ parser_error_t _readTupleScopeScopeIdCddId_V5(parser_context_t* c, pd_TupleScope
 
 parser_error_t _readUniqueCall_V5(parser_context_t* c, pd_UniqueCall_V5_t* v)
 {
-    return parser_not_supported;
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt64(c, &v->nonce))
+    CHECK_ERROR(_readCall(c, &v->call))
+    return parser_ok;
 }
 
 parser_error_t _readUrl_V5(parser_context_t* c, pd_Url_V5_t* v)
@@ -4845,7 +4848,30 @@ parser_error_t _toStringUniqueCall_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+
+    // Index + count pages
+    uint8_t pages[2];
+    CHECK_ERROR(_toStringu64(&v->nonce, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringCall(&v->call, outValue, outValueLen, 0, &pages[1]))
+
+    *pageCount = pages[0] + pages[1];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringu64(&v->nonce, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringCall(&v->call, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
 }
 
 parser_error_t _toStringUrl_V5(
