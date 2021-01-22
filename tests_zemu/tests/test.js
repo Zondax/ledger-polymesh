@@ -28,8 +28,8 @@ const APP_SEED = "equip will roof matter pink blind book anxiety banner elbow su
 const sim_options = {
     logging: true,
     start_delay: 3000,
-    custom: `-s "${APP_SEED}"`
-    , X11: true
+    custom: `-s "${APP_SEED}"`,
+    //X11: true
 };
 
 jest.setTimeout(60000)
@@ -125,7 +125,7 @@ describe('Basic checks', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "000009612869d50391018ed73e0dd107000001000000d561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfacd561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfac";
+            let txBlobStr = "0000bd494f87d503ae1103008ed73e0ddd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -137,7 +137,7 @@ describe('Basic checks', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", "sign_basic", 10);
+            await sim.compareSnapshotsAndAccept(".", "sign_basic", 4);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -168,7 +168,7 @@ describe('Basic checks', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "090060b99a68869326e6fc07525dd343f61fa41758169c28cd9d8cf6a777514faff52c3eba74753062d6cefbeea096f3281e61ef7842403723da5a3234c29189afeece84b9d4038b5d490ceb885d0d4fcedc59234cb34dd0cf9eb9cce79d2c157464f601b26bdd489327ee761bd18620a7d036c8161535d6a4c2fe105ddf117c289f0102596125743536eeca69cc77b12286cd71b8d64ac56d316374e2ec98b8d5763c304fbeabbb80a50b5e9108dd849ffa45d26a80d0a0cfe2fbb893a2649a3ff303f1228ae387bd76994909da1dd73810dc8688a0fd898fc3d175f2132cd93c942b50983125698b3aa06cea209a3aaec6ab1b15159a7b7c657d8760262af970895ad1d5038d248ed73e0dd107000001000000d561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfacd561a98b341d86c642c5ac5a8603fc537c136c38472e451c73229a372197cfac";
+            let txBlobStr = "24026bc40000000000000127c1210001000800000000000001000800000000000008cce2bd1bf485643a80bcd14091326632501ef80fcff04d9ca08adedc6e65389c0140e2010000000000424e3d8c4553fcf20ef3694464333dcf9c4d3f0c16c47213221d9f37b9b5d5220140e2010000000000544b52415354000000000000a08601000000000000000000000000005992f519733534fed05d2d98ba21c4da22282d39a5a4a725779a5aacccba8b960140e20100000000006cb4e5edb9a93bdb9ab340c8cb7c0ab4001e19264823a0373d2b510a2661ee6a0140e2010000000000544b52415354420000000000a0860100000000000000000000000000d503ae11030033158139ae28a3dfaac5fe1560a5e9e05cdd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -180,7 +180,7 @@ describe('Basic checks', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", "sign_large_nomination", 25);
+            await sim.compareSnapshotsAndAccept(".", "sign_large_nomination", 24);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
