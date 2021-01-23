@@ -16,7 +16,7 @@
 
 import jest, {expect} from "jest";
 import Zemu from "@zondax/zemu";
-const {newPolymathApp} = require("@zondax/ledger-polkadot");
+const {newPolymeshApp} = require("@zondax/ledger-polkadot");
 
 const ed25519 = require("ed25519-supercop");
 import {blake2bFinal, blake2bInit, blake2bUpdate} from "blakejs";
@@ -48,7 +48,7 @@ describe('Basic checks', function () {
         const sim = new Zemu(APP_PATH);
         try {
             await sim.start(sim_options);
-            const app = newPolymathApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
             const resp = await app.getVersion();
 
             console.log(resp);
@@ -68,7 +68,7 @@ describe('Basic checks', function () {
         const sim = new Zemu(APP_PATH);
         try {
             await sim.start(sim_options);
-            const app = newPolymathApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
 
             const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000);
 
@@ -77,8 +77,8 @@ describe('Basic checks', function () {
             expect(resp.return_code).toEqual(0x9000);
             expect(resp.error_message).toEqual("No errors");
 
-            const expected_address = "2DtHHz6WwfxB7JMzZ7mMw3cxzffBrvU9xTgqYqsaP4EEUGzD";
-            const expected_pk = "3f94b432d8db17738656f93bb685094c3ad308c9607ef4a8807b6930a1304fb4";
+            const expected_address = "2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr";
+            const expected_pk = "c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a";
 
             expect(resp.address).toEqual(expected_address);
             expect(resp.pubKey).toEqual(expected_pk);
@@ -92,7 +92,7 @@ describe('Basic checks', function () {
         const sim = new Zemu(APP_PATH);
         try {
             await sim.start(sim_options);
-            const app = newPolymathApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
 
             const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true);
             // Wait until we are not in the main menu
@@ -106,8 +106,8 @@ describe('Basic checks', function () {
             expect(resp.return_code).toEqual(0x9000);
             expect(resp.error_message).toEqual("No errors");
 
-            const expected_address = "2DtHHz6WwfxB7JMzZ7mMw3cxzffBrvU9xTgqYqsaP4EEUGzD";
-            const expected_pk = "3f94b432d8db17738656f93bb685094c3ad308c9607ef4a8807b6930a1304fb4";
+            const expected_address = "2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr";
+            const expected_pk = "c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a";
 
             expect(resp.address).toEqual(expected_address);
             expect(resp.pubKey).toEqual(expected_pk);
@@ -120,7 +120,7 @@ describe('Basic checks', function () {
         const sim = new Zemu(APP_PATH);
         try {
             await sim.start(sim_options);
-            const app = newPolymathApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
@@ -163,7 +163,7 @@ describe('Basic checks', function () {
         const sim = new Zemu(APP_PATH);
         try {
             await sim.start(sim_options);
-            const app = newPolymathApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
