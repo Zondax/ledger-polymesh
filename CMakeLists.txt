@@ -1,5 +1,5 @@
 #*******************************************************************************
-#*   (c) 2020 Zondax GmbH
+#*   (c) 2021 Zondax GmbH
 #*
 #*  Licensed under the Apache License, Version 2.0 (the "License");
 #*  you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 #*  limitations under the License.
 #********************************************************************************
 cmake_minimum_required(VERSION 3.0)
-project(ledger-polymath VERSION 0.0.0)
+project(ledger-polymesh VERSION 0.0.0)
 enable_testing()
 
 cmake_policy(SET CMP0025 NEW)
@@ -100,6 +100,7 @@ add_definitions(
 #  static libs
 file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/deps/BLAKE2/ref/blake2b-ref.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/deps/ledger-zxlib/src/app_mode.c
         ${CMAKE_CURRENT_SOURCE_DIR}/deps/ledger-zxlib/src/base58.c
         ${CMAKE_CURRENT_SOURCE_DIR}/deps/ledger-zxlib/src/bignum.c
         ${CMAKE_CURRENT_SOURCE_DIR}/deps/ledger-zxlib/src/hexutils.c
@@ -111,8 +112,8 @@ file(GLOB_RECURSE LIB_SRC
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_impl.c
         ${CMAKE_CURRENT_SOURCE_DIR}/app/src/parser_txdef.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/substrate_types.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/substrate_dispatch.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/substrate*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/app/src/substrate*.h
         )
 
 add_library(app_lib STATIC ${LIB_SRC})

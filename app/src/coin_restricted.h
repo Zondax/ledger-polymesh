@@ -28,9 +28,9 @@ extern "C" {
 #define HDPATH_3_DEFAULT     (0x80000000u)
 #define HDPATH_4_DEFAULT     (0x80000000u)
 
-#define MENU_MAIN_APP_LINE1                 "Polymath | sec"
+#define MENU_MAIN_APP_LINE1                 "Polymesh | sec"
 #define MENU_MAIN_APP_LINE2                 "Ledgeracio"
-#define APPVERSION_LINE1                    "Polymath | sec"
+#define APPVERSION_LINE1                    "Polymesh | sec"
 #define APPVERSION_LINE2                    "v" APPVERSION
 
 #ifdef __cplusplus
