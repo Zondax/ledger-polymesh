@@ -815,6 +815,8 @@ typedef compactInt_t pd_CompactGas_V5_t;
 
 typedef compactInt_t pd_CompactMoment_V5_t;
 
+typedef compactInt_t pd_CompactProposalIndex_V5_t;
+
 typedef struct {
     const uint8_t* _ptr;
 } pd_EcdsaSignature_V5_t;

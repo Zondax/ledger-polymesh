@@ -42,6 +42,11 @@ parser_error_t _readCompactMoment_V5(parser_context_t* c, pd_CompactMoment_V5_t*
     return _readCompactInt(c, v);
 }
 
+parser_error_t _readCompactProposalIndex_V5(parser_context_t* c, pd_CompactProposalIndex_V5_t* v)
+{
+    return _readCompactInt(c, v);
+}
+
 parser_error_t _readAccountId_V5(parser_context_t* c, pd_AccountId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
@@ -1762,6 +1767,16 @@ parser_error_t _toStringCompactGas_V5(
 
 parser_error_t _toStringCompactMoment_V5(
     const pd_CompactMoment_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringCompactInt(v, 0, 0, "", outValue, outValueLen, pageIdx, pageCount);
+}
+
+parser_error_t _toStringCompactProposalIndex_V5(
+    const pd_CompactProposalIndex_V5_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

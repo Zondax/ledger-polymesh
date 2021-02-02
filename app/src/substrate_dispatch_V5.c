@@ -1014,6 +1014,14 @@ __Z_INLINE parser_error_t _readMethod_polymeshcommittee_set_expires_after_V5(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_polymeshcommittee_close_V5(
+    parser_context_t* c, pd_polymeshcommittee_close_V5_t* m)
+{
+    CHECK_ERROR(_readHash(c, &m->proposal))
+    CHECK_ERROR(_readCompactProposalIndex_V5(c, &m->index))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_polymeshcommittee_vote_or_propose_V5(
     parser_context_t* c, pd_polymeshcommittee_vote_or_propose_V5_t* m)
 {
@@ -1228,6 +1236,14 @@ __Z_INLINE parser_error_t _readMethod_technicalcommittee_set_expires_after_V5(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_technicalcommittee_close_V5(
+    parser_context_t* c, pd_technicalcommittee_close_V5_t* m)
+{
+    CHECK_ERROR(_readHash(c, &m->proposal))
+    CHECK_ERROR(_readCompactProposalIndex_V5(c, &m->index))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_technicalcommittee_vote_or_propose_V5(
     parser_context_t* c, pd_technicalcommittee_vote_or_propose_V5_t* m)
 {
@@ -1315,6 +1331,14 @@ __Z_INLINE parser_error_t _readMethod_upgradecommittee_set_expires_after_V5(
     parser_context_t* c, pd_upgradecommittee_set_expires_after_V5_t* m)
 {
     CHECK_ERROR(_readMaybeBlock_V5(c, &m->expiry))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_upgradecommittee_close_V5(
+    parser_context_t* c, pd_upgradecommittee_close_V5_t* m)
+{
+    CHECK_ERROR(_readHash(c, &m->proposal))
+    CHECK_ERROR(_readCompactProposalIndex_V5(c, &m->index))
     return parser_ok;
 }
 
@@ -1773,7 +1797,6 @@ __Z_INLINE parser_error_t _readMethod_settlement_affirm_instruction_V5(
 {
     CHECK_ERROR(_readu64(c, &m->instruction_id))
     CHECK_ERROR(_readVecPortfolioId_V5(c, &m->portfolios))
-    CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
 
@@ -1782,7 +1805,6 @@ __Z_INLINE parser_error_t _readMethod_settlement_withdraw_affirmation_V5(
 {
     CHECK_ERROR(_readu64(c, &m->instruction_id))
     CHECK_ERROR(_readVecPortfolioId_V5(c, &m->portfolios))
-    CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
 
@@ -1791,7 +1813,6 @@ __Z_INLINE parser_error_t _readMethod_settlement_reject_instruction_V5(
 {
     CHECK_ERROR(_readu64(c, &m->instruction_id))
     CHECK_ERROR(_readVecPortfolioId_V5(c, &m->portfolios))
-    CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
 
@@ -1801,7 +1822,6 @@ __Z_INLINE parser_error_t _readMethod_settlement_affirm_with_receipts_V5(
     CHECK_ERROR(_readu64(c, &m->instruction_id))
     CHECK_ERROR(_readVecReceiptDetails_V5(c, &m->receipt_details))
     CHECK_ERROR(_readVecPortfolioId_V5(c, &m->portfolios))
-    CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
 
@@ -1849,7 +1869,6 @@ __Z_INLINE parser_error_t _readMethod_settlement_execute_scheduled_instruction_V
     parser_context_t* c, pd_settlement_execute_scheduled_instruction_V5_t* m)
 {
     CHECK_ERROR(_readu64(c, &m->instruction_id))
-    CHECK_ERROR(_readu32(c, &m->legs_count))
     return parser_ok;
 }
 
@@ -1876,7 +1895,7 @@ __Z_INLINE parser_error_t _readMethod_sto_invest_V5(
     CHECK_ERROR(_readPortfolioId_V5(c, &m->funding_portfolio))
     CHECK_ERROR(_readTicker_V5(c, &m->offering_asset))
     CHECK_ERROR(_readu64(c, &m->fundraiser_id))
-    CHECK_ERROR(_readBalance(c, &m->purchase_amount))
+    CHECK_ERROR(_readBalance(c, &m->investment_amount))
     CHECK_ERROR(_readOptionBalance(c, &m->max_price))
     CHECK_ERROR(_readOptionReceiptDetails_V5(c, &m->receipt))
     return parser_ok;
@@ -2074,24 +2093,6 @@ __Z_INLINE parser_error_t _readMethod_portfolio_rename_portfolio_V5(
 {
     CHECK_ERROR(_readPortfolioNumber_V5(c, &m->num))
     CHECK_ERROR(_readPortfolioName_V5(c, &m->to_name))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_confidential_add_range_proof_V5(
-    parser_context_t* c, pd_confidential_add_range_proof_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->target_id))
-    CHECK_ERROR(_readTicker_V5(c, &m->ticker))
-    CHECK_ERROR(_readu64(c, &m->secret_value))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_confidential_add_verify_range_proof_V5(
-    parser_context_t* c, pd_confidential_add_verify_range_proof_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
-    CHECK_ERROR(_readIdentityId_V5(c, &m->prover))
-    CHECK_ERROR(_readTicker_V5(c, &m->ticker))
     return parser_ok;
 }
 
@@ -2723,7 +2724,10 @@ parser_error_t _readMethodBasic_V5(
     case 5634: /* module 22 call 2 */
         CHECK_ERROR(_readMethod_polymeshcommittee_set_expires_after_V5(c, &method->polymeshcommittee_set_expires_after_V5))
         break;
-    case 5636: /* module 22 call 4 */
+    case 5635: /* module 22 call 3 */
+        CHECK_ERROR(_readMethod_polymeshcommittee_close_V5(c, &method->polymeshcommittee_close_V5))
+        break;
+    case 5637: /* module 22 call 5 */
         CHECK_ERROR(_readMethod_polymeshcommittee_vote_V5(c, &method->polymeshcommittee_vote_V5))
         break;
     case 5888: /* module 23 call 0 */
@@ -2804,7 +2808,10 @@ parser_error_t _readMethodBasic_V5(
     case 6402: /* module 25 call 2 */
         CHECK_ERROR(_readMethod_technicalcommittee_set_expires_after_V5(c, &method->technicalcommittee_set_expires_after_V5))
         break;
-    case 6404: /* module 25 call 4 */
+    case 6403: /* module 25 call 3 */
+        CHECK_ERROR(_readMethod_technicalcommittee_close_V5(c, &method->technicalcommittee_close_V5))
+        break;
+    case 6405: /* module 25 call 5 */
         CHECK_ERROR(_readMethod_technicalcommittee_vote_V5(c, &method->technicalcommittee_vote_V5))
         break;
     case 6656: /* module 26 call 0 */
@@ -2837,7 +2844,10 @@ parser_error_t _readMethodBasic_V5(
     case 6914: /* module 27 call 2 */
         CHECK_ERROR(_readMethod_upgradecommittee_set_expires_after_V5(c, &method->upgradecommittee_set_expires_after_V5))
         break;
-    case 6916: /* module 27 call 4 */
+    case 6915: /* module 27 call 3 */
+        CHECK_ERROR(_readMethod_upgradecommittee_close_V5(c, &method->upgradecommittee_close_V5))
+        break;
+    case 6917: /* module 27 call 5 */
         CHECK_ERROR(_readMethod_upgradecommittee_vote_V5(c, &method->upgradecommittee_vote_V5))
         break;
     case 7168: /* module 28 call 0 */
@@ -3118,12 +3128,6 @@ parser_error_t _readMethodBasic_V5(
         break;
     case 10755: /* module 42 call 3 */
         CHECK_ERROR(_readMethod_portfolio_rename_portfolio_V5(c, &method->portfolio_rename_portfolio_V5))
-        break;
-    case 11008: /* module 43 call 0 */
-        CHECK_ERROR(_readMethod_confidential_add_range_proof_V5(c, &method->confidential_add_range_proof_V5))
-        break;
-    case 11009: /* module 43 call 1 */
-        CHECK_ERROR(_readMethod_confidential_add_verify_range_proof_V5(c, &method->confidential_add_verify_range_proof_V5))
         break;
     case 11521: /* module 45 call 1 */
         CHECK_ERROR(_readMethod_scheduler_cancel_V5(c, &method->scheduler_cancel_V5))
@@ -3610,9 +3614,12 @@ parser_error_t _readMethod_V5(
         CHECK_ERROR(_readMethod_polymeshcommittee_set_expires_after_V5(c, &method->basic.polymeshcommittee_set_expires_after_V5))
         break;
     case 5635: /* module 22 call 3 */
-        CHECK_ERROR(_readMethod_polymeshcommittee_vote_or_propose_V5(c, &method->nested.polymeshcommittee_vote_or_propose_V5))
+        CHECK_ERROR(_readMethod_polymeshcommittee_close_V5(c, &method->basic.polymeshcommittee_close_V5))
         break;
     case 5636: /* module 22 call 4 */
+        CHECK_ERROR(_readMethod_polymeshcommittee_vote_or_propose_V5(c, &method->nested.polymeshcommittee_vote_or_propose_V5))
+        break;
+    case 5637: /* module 22 call 5 */
         CHECK_ERROR(_readMethod_polymeshcommittee_vote_V5(c, &method->basic.polymeshcommittee_vote_V5))
         break;
     case 5888: /* module 23 call 0 */
@@ -3697,9 +3704,12 @@ parser_error_t _readMethod_V5(
         CHECK_ERROR(_readMethod_technicalcommittee_set_expires_after_V5(c, &method->basic.technicalcommittee_set_expires_after_V5))
         break;
     case 6403: /* module 25 call 3 */
-        CHECK_ERROR(_readMethod_technicalcommittee_vote_or_propose_V5(c, &method->nested.technicalcommittee_vote_or_propose_V5))
+        CHECK_ERROR(_readMethod_technicalcommittee_close_V5(c, &method->basic.technicalcommittee_close_V5))
         break;
     case 6404: /* module 25 call 4 */
+        CHECK_ERROR(_readMethod_technicalcommittee_vote_or_propose_V5(c, &method->nested.technicalcommittee_vote_or_propose_V5))
+        break;
+    case 6405: /* module 25 call 5 */
         CHECK_ERROR(_readMethod_technicalcommittee_vote_V5(c, &method->basic.technicalcommittee_vote_V5))
         break;
     case 6656: /* module 26 call 0 */
@@ -3733,9 +3743,12 @@ parser_error_t _readMethod_V5(
         CHECK_ERROR(_readMethod_upgradecommittee_set_expires_after_V5(c, &method->basic.upgradecommittee_set_expires_after_V5))
         break;
     case 6915: /* module 27 call 3 */
-        CHECK_ERROR(_readMethod_upgradecommittee_vote_or_propose_V5(c, &method->nested.upgradecommittee_vote_or_propose_V5))
+        CHECK_ERROR(_readMethod_upgradecommittee_close_V5(c, &method->basic.upgradecommittee_close_V5))
         break;
     case 6916: /* module 27 call 4 */
+        CHECK_ERROR(_readMethod_upgradecommittee_vote_or_propose_V5(c, &method->nested.upgradecommittee_vote_or_propose_V5))
+        break;
+    case 6917: /* module 27 call 5 */
         CHECK_ERROR(_readMethod_upgradecommittee_vote_V5(c, &method->basic.upgradecommittee_vote_V5))
         break;
     case 7168: /* module 28 call 0 */
@@ -4017,12 +4030,6 @@ parser_error_t _readMethod_V5(
     case 10755: /* module 42 call 3 */
         CHECK_ERROR(_readMethod_portfolio_rename_portfolio_V5(c, &method->basic.portfolio_rename_portfolio_V5))
         break;
-    case 11008: /* module 43 call 0 */
-        CHECK_ERROR(_readMethod_confidential_add_range_proof_V5(c, &method->basic.confidential_add_range_proof_V5))
-        break;
-    case 11009: /* module 43 call 1 */
-        CHECK_ERROR(_readMethod_confidential_add_verify_range_proof_V5(c, &method->basic.confidential_add_verify_range_proof_V5))
-        break;
     case 11520: /* module 45 call 0 */
         CHECK_ERROR(_readMethod_scheduler_schedule_V5(c, &method->nested.scheduler_schedule_V5))
         break;
@@ -4200,8 +4207,6 @@ const char* _getMethod_ModuleName_V5(uint8_t moduleIdx)
         return "Utility";
     case 42:
         return "Portfolio";
-    case 43:
-        return "Confidential";
     case 45:
         return "Scheduler";
     case 46:
@@ -4485,8 +4490,10 @@ const char* _getMethod_Name_V5(uint8_t moduleIdx, uint8_t callIdx)
     case 5634: /* module 22 call 2 */
         return "Set expires after";
     case 5635: /* module 22 call 3 */
-        return "Vote or propose";
+        return "Close";
     case 5636: /* module 22 call 4 */
+        return "Vote or propose";
+    case 5637: /* module 22 call 5 */
         return "Vote";
     case 5888: /* module 23 call 0 */
         return "Set active members limit";
@@ -4543,8 +4550,10 @@ const char* _getMethod_Name_V5(uint8_t moduleIdx, uint8_t callIdx)
     case 6402: /* module 25 call 2 */
         return "Set expires after";
     case 6403: /* module 25 call 3 */
-        return "Vote or propose";
+        return "Close";
     case 6404: /* module 25 call 4 */
+        return "Vote or propose";
+    case 6405: /* module 25 call 5 */
         return "Vote";
     case 6656: /* module 26 call 0 */
         return "Set active members limit";
@@ -4567,8 +4576,10 @@ const char* _getMethod_Name_V5(uint8_t moduleIdx, uint8_t callIdx)
     case 6914: /* module 27 call 2 */
         return "Set expires after";
     case 6915: /* module 27 call 3 */
-        return "Vote or propose";
+        return "Close";
     case 6916: /* module 27 call 4 */
+        return "Vote or propose";
+    case 6917: /* module 27 call 5 */
         return "Vote";
     case 7168: /* module 28 call 0 */
         return "Set active members limit";
@@ -4756,10 +4767,6 @@ const char* _getMethod_Name_V5(uint8_t moduleIdx, uint8_t callIdx)
         return "Move portfolio funds";
     case 10755: /* module 42 call 3 */
         return "Rename portfolio";
-    case 11008: /* module 43 call 0 */
-        return "Add range proof";
-    case 11009: /* module 43 call 1 */
-        return "Add verify range proof";
     case 11520: /* module 45 call 0 */
         return "Schedule";
     case 11521: /* module 45 call 1 */
@@ -5095,6 +5102,8 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
     case 5635: /* module 22 call 3 */
         return 2;
     case 5636: /* module 22 call 4 */
+        return 2;
+    case 5637: /* module 22 call 5 */
         return 3;
     case 5888: /* module 23 call 0 */
         return 1;
@@ -5153,6 +5162,8 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
     case 6403: /* module 25 call 3 */
         return 2;
     case 6404: /* module 25 call 4 */
+        return 2;
+    case 6405: /* module 25 call 5 */
         return 3;
     case 6656: /* module 26 call 0 */
         return 1;
@@ -5177,6 +5188,8 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
     case 6915: /* module 27 call 3 */
         return 2;
     case 6916: /* module 27 call 4 */
+        return 2;
+    case 6917: /* module 27 call 5 */
         return 3;
     case 7168: /* module 28 call 0 */
         return 1;
@@ -5291,13 +5304,13 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
     case 9219: /* module 36 call 3 */
         return 6;
     case 9220: /* module 36 call 4 */
-        return 3;
+        return 2;
     case 9221: /* module 36 call 5 */
-        return 3;
+        return 2;
     case 9222: /* module 36 call 6 */
-        return 3;
+        return 2;
     case 9223: /* module 36 call 7 */
-        return 4;
+        return 3;
     case 9224: /* module 36 call 8 */
         return 2;
     case 9225: /* module 36 call 9 */
@@ -5309,7 +5322,7 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
     case 9228: /* module 36 call 12 */
         return 2;
     case 9229: /* module 36 call 13 */
-        return 2;
+        return 1;
     case 9472: /* module 37 call 0 */
         return 10;
     case 9473: /* module 37 call 1 */
@@ -5364,10 +5377,6 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 3;
     case 10755: /* module 42 call 3 */
         return 2;
-    case 11008: /* module 43 call 0 */
-        return 3;
-    case 11009: /* module 43 call 1 */
-        return 3;
     case 11520: /* module 45 call 0 */
         return 4;
     case 11521: /* module 45 call 1 */
@@ -6525,13 +6534,22 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 5635: /* module 22 call 3 */
         switch (itemIdx) {
         case 0:
+            return "Proposal";
+        case 1:
+            return "Index";
+        default:
+            return NULL;
+        }
+    case 5636: /* module 22 call 4 */
+        switch (itemIdx) {
+        case 0:
             return "Approve";
         case 1:
             return "Call";
         default:
             return NULL;
         }
-    case 5636: /* module 22 call 4 */
+    case 5637: /* module 22 call 5 */
         switch (itemIdx) {
         case 0:
             return "Proposal";
@@ -6750,13 +6768,22 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 6403: /* module 25 call 3 */
         switch (itemIdx) {
         case 0:
+            return "Proposal";
+        case 1:
+            return "Index";
+        default:
+            return NULL;
+        }
+    case 6404: /* module 25 call 4 */
+        switch (itemIdx) {
+        case 0:
             return "Approve";
         case 1:
             return "Call";
         default:
             return NULL;
         }
-    case 6404: /* module 25 call 4 */
+    case 6405: /* module 25 call 5 */
         switch (itemIdx) {
         case 0:
             return "Proposal";
@@ -6846,13 +6873,22 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 6915: /* module 27 call 3 */
         switch (itemIdx) {
         case 0:
+            return "Proposal";
+        case 1:
+            return "Index";
+        default:
+            return NULL;
+        }
+    case 6916: /* module 27 call 4 */
+        switch (itemIdx) {
+        case 0:
             return "Approve";
         case 1:
             return "Call";
         default:
             return NULL;
         }
-    case 6916: /* module 27 call 4 */
+    case 6917: /* module 27 call 5 */
         switch (itemIdx) {
         case 0:
             return "Proposal";
@@ -7343,8 +7379,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Instruction id";
         case 1:
             return "Portfolios";
-        case 2:
-            return "Max legs count";
         default:
             return NULL;
         }
@@ -7354,8 +7388,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Instruction id";
         case 1:
             return "Portfolios";
-        case 2:
-            return "Max legs count";
         default:
             return NULL;
         }
@@ -7365,8 +7397,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Instruction id";
         case 1:
             return "Portfolios";
-        case 2:
-            return "Max legs count";
         default:
             return NULL;
         }
@@ -7378,8 +7408,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Receipt details";
         case 2:
             return "Portfolios";
-        case 3:
-            return "Max legs count";
         default:
             return NULL;
         }
@@ -7432,8 +7460,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return "Instruction id";
-        case 1:
-            return "Legs count";
         default:
             return NULL;
         }
@@ -7473,7 +7499,7 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         case 3:
             return "Fundraiser id";
         case 4:
-            return "Purchase amount";
+            return "Investment amount";
         case 5:
             return "Max price";
         case 6:
@@ -7693,28 +7719,6 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Num";
         case 1:
             return "To name";
-        default:
-            return NULL;
-        }
-    case 11008: /* module 43 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Target id";
-        case 1:
-            return "Ticker";
-        case 2:
-            return "Secret value";
-        default:
-            return NULL;
-        }
-    case 11009: /* module 43 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Target";
-        case 1:
-            return "Prover";
-        case 2:
-            return "Ticker";
         default:
             return NULL;
         }
@@ -9762,6 +9766,21 @@ parser_error_t _getMethod_ItemValue_V5(
         }
     case 5635: /* module 22 call 3 */
         switch (itemIdx) {
+        case 0: /* polymeshcommittee_close_V5 - proposal */;
+            return _toStringHash(
+                &m->basic.polymeshcommittee_close_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* polymeshcommittee_close_V5 - index */;
+            return _toStringCompactProposalIndex_V5(
+                &m->basic.polymeshcommittee_close_V5.index,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 5636: /* module 22 call 4 */
+        switch (itemIdx) {
         case 0: /* polymeshcommittee_vote_or_propose_V5 - approve */;
             return _toStringbool(
                 &m->nested.polymeshcommittee_vote_or_propose_V5.approve,
@@ -9775,7 +9794,7 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 5636: /* module 22 call 4 */
+    case 5637: /* module 22 call 5 */
         switch (itemIdx) {
         case 0: /* polymeshcommittee_vote_V5 - proposal */;
             return _toStringHash(
@@ -10107,6 +10126,21 @@ parser_error_t _getMethod_ItemValue_V5(
         }
     case 6403: /* module 25 call 3 */
         switch (itemIdx) {
+        case 0: /* technicalcommittee_close_V5 - proposal */;
+            return _toStringHash(
+                &m->basic.technicalcommittee_close_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* technicalcommittee_close_V5 - index */;
+            return _toStringCompactProposalIndex_V5(
+                &m->basic.technicalcommittee_close_V5.index,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6404: /* module 25 call 4 */
+        switch (itemIdx) {
         case 0: /* technicalcommittee_vote_or_propose_V5 - approve */;
             return _toStringbool(
                 &m->nested.technicalcommittee_vote_or_propose_V5.approve,
@@ -10120,7 +10154,7 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 6404: /* module 25 call 4 */
+    case 6405: /* module 25 call 5 */
         switch (itemIdx) {
         case 0: /* technicalcommittee_vote_V5 - proposal */;
             return _toStringHash(
@@ -10257,6 +10291,21 @@ parser_error_t _getMethod_ItemValue_V5(
         }
     case 6915: /* module 27 call 3 */
         switch (itemIdx) {
+        case 0: /* upgradecommittee_close_V5 - proposal */;
+            return _toStringHash(
+                &m->basic.upgradecommittee_close_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* upgradecommittee_close_V5 - index */;
+            return _toStringCompactProposalIndex_V5(
+                &m->basic.upgradecommittee_close_V5.index,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6916: /* module 27 call 4 */
+        switch (itemIdx) {
         case 0: /* upgradecommittee_vote_or_propose_V5 - approve */;
             return _toStringbool(
                 &m->nested.upgradecommittee_vote_or_propose_V5.approve,
@@ -10270,7 +10319,7 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 6916: /* module 27 call 4 */
+    case 6917: /* module 27 call 5 */
         switch (itemIdx) {
         case 0: /* upgradecommittee_vote_V5 - proposal */;
             return _toStringHash(
@@ -11067,11 +11116,6 @@ parser_error_t _getMethod_ItemValue_V5(
                 &m->basic.settlement_affirm_instruction_V5.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 2: /* settlement_affirm_instruction_V5 - max_legs_count */;
-            return _toStringu32(
-                &m->basic.settlement_affirm_instruction_V5.max_legs_count,
-                outValue, outValueLen,
-                pageIdx, pageCount);
         default:
             return parser_no_data;
         }
@@ -11087,11 +11131,6 @@ parser_error_t _getMethod_ItemValue_V5(
                 &m->basic.settlement_withdraw_affirmation_V5.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 2: /* settlement_withdraw_affirmation_V5 - max_legs_count */;
-            return _toStringu32(
-                &m->basic.settlement_withdraw_affirmation_V5.max_legs_count,
-                outValue, outValueLen,
-                pageIdx, pageCount);
         default:
             return parser_no_data;
         }
@@ -11105,11 +11144,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 1: /* settlement_reject_instruction_V5 - portfolios */;
             return _toStringVecPortfolioId_V5(
                 &m->basic.settlement_reject_instruction_V5.portfolios,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* settlement_reject_instruction_V5 - max_legs_count */;
-            return _toStringu32(
-                &m->basic.settlement_reject_instruction_V5.max_legs_count,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11130,11 +11164,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 2: /* settlement_affirm_with_receipts_V5 - portfolios */;
             return _toStringVecPortfolioId_V5(
                 &m->basic.settlement_affirm_with_receipts_V5.portfolios,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* settlement_affirm_with_receipts_V5 - max_legs_count */;
-            return _toStringu32(
-                &m->basic.settlement_affirm_with_receipts_V5.max_legs_count,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11222,11 +11251,6 @@ parser_error_t _getMethod_ItemValue_V5(
                 &m->basic.settlement_execute_scheduled_instruction_V5.instruction_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 1: /* settlement_execute_scheduled_instruction_V5 - legs_count */;
-            return _toStringu32(
-                &m->basic.settlement_execute_scheduled_instruction_V5.legs_count,
-                outValue, outValueLen,
-                pageIdx, pageCount);
         default:
             return parser_no_data;
         }
@@ -11307,9 +11331,9 @@ parser_error_t _getMethod_ItemValue_V5(
                 &m->basic.sto_invest_V5.fundraiser_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 4: /* sto_invest_V5 - purchase_amount */;
+        case 4: /* sto_invest_V5 - investment_amount */;
             return _toStringBalance(
-                &m->basic.sto_invest_V5.purchase_amount,
+                &m->basic.sto_invest_V5.investment_amount,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* sto_invest_V5 - max_price */;
@@ -11670,46 +11694,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 1: /* portfolio_rename_portfolio_V5 - to_name */;
             return _toStringPortfolioName_V5(
                 &m->basic.portfolio_rename_portfolio_V5.to_name,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 11008: /* module 43 call 0 */
-        switch (itemIdx) {
-        case 0: /* confidential_add_range_proof_V5 - target_id */;
-            return _toStringIdentityId_V5(
-                &m->basic.confidential_add_range_proof_V5.target_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* confidential_add_range_proof_V5 - ticker */;
-            return _toStringTicker_V5(
-                &m->basic.confidential_add_range_proof_V5.ticker,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* confidential_add_range_proof_V5 - secret_value */;
-            return _toStringu64(
-                &m->basic.confidential_add_range_proof_V5.secret_value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 11009: /* module 43 call 1 */
-        switch (itemIdx) {
-        case 0: /* confidential_add_verify_range_proof_V5 - target */;
-            return _toStringIdentityId_V5(
-                &m->basic.confidential_add_verify_range_proof_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* confidential_add_verify_range_proof_V5 - prover */;
-            return _toStringIdentityId_V5(
-                &m->basic.confidential_add_verify_range_proof_V5.prover,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* confidential_add_verify_range_proof_V5 - ticker */;
-            return _toStringTicker_V5(
-                &m->basic.confidential_add_verify_range_proof_V5.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:

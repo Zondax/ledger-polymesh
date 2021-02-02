@@ -62,7 +62,6 @@ extern "C" {
 #define PD_CALL_PROTOCOLFEE 40
 #define PD_CALL_UTILITY 41
 #define PD_CALL_PORTFOLIO 42
-#define PD_CALL_CONFIDENTIAL 43
 #define PD_CALL_SCHEDULER 45
 #define PD_CALL_CORPORATEACTION 46
 #define PD_CALL_CORPORATEBALLOT 47
@@ -750,7 +749,13 @@ typedef struct {
     pd_MaybeBlock_V5_t expiry;
 } pd_polymeshcommittee_set_expires_after_V5_t;
 
-#define PD_CALL_POLYMESHCOMMITTEE_VOTE 4
+#define PD_CALL_POLYMESHCOMMITTEE_CLOSE 3
+typedef struct {
+    pd_Hash_t proposal;
+    pd_CompactProposalIndex_V5_t index;
+} pd_polymeshcommittee_close_V5_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_VOTE 5
 typedef struct {
     pd_Hash_t proposal;
     pd_ProposalIndex_V5_t index;
@@ -892,7 +897,13 @@ typedef struct {
     pd_MaybeBlock_V5_t expiry;
 } pd_technicalcommittee_set_expires_after_V5_t;
 
-#define PD_CALL_TECHNICALCOMMITTEE_VOTE 4
+#define PD_CALL_TECHNICALCOMMITTEE_CLOSE 3
+typedef struct {
+    pd_Hash_t proposal;
+    pd_CompactProposalIndex_V5_t index;
+} pd_technicalcommittee_close_V5_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_VOTE 5
 typedef struct {
     pd_Hash_t proposal;
     pd_ProposalIndex_V5_t index;
@@ -952,7 +963,13 @@ typedef struct {
     pd_MaybeBlock_V5_t expiry;
 } pd_upgradecommittee_set_expires_after_V5_t;
 
-#define PD_CALL_UPGRADECOMMITTEE_VOTE 4
+#define PD_CALL_UPGRADECOMMITTEE_CLOSE 3
+typedef struct {
+    pd_Hash_t proposal;
+    pd_CompactProposalIndex_V5_t index;
+} pd_upgradecommittee_close_V5_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_VOTE 5
 typedef struct {
     pd_Hash_t proposal;
     pd_ProposalIndex_V5_t index;
@@ -1284,21 +1301,18 @@ typedef struct {
 typedef struct {
     pd_u64_t instruction_id;
     pd_VecPortfolioId_V5_t portfolios;
-    pd_u32_t max_legs_count;
 } pd_settlement_affirm_instruction_V5_t;
 
 #define PD_CALL_SETTLEMENT_WITHDRAW_AFFIRMATION 5
 typedef struct {
     pd_u64_t instruction_id;
     pd_VecPortfolioId_V5_t portfolios;
-    pd_u32_t max_legs_count;
 } pd_settlement_withdraw_affirmation_V5_t;
 
 #define PD_CALL_SETTLEMENT_REJECT_INSTRUCTION 6
 typedef struct {
     pd_u64_t instruction_id;
     pd_VecPortfolioId_V5_t portfolios;
-    pd_u32_t max_legs_count;
 } pd_settlement_reject_instruction_V5_t;
 
 #define PD_CALL_SETTLEMENT_AFFIRM_WITH_RECEIPTS 7
@@ -1306,7 +1320,6 @@ typedef struct {
     pd_u64_t instruction_id;
     pd_VecReceiptDetails_V5_t receipt_details;
     pd_VecPortfolioId_V5_t portfolios;
-    pd_u32_t max_legs_count;
 } pd_settlement_affirm_with_receipts_V5_t;
 
 #define PD_CALL_SETTLEMENT_CLAIM_RECEIPT 8
@@ -1342,7 +1355,6 @@ typedef struct {
 #define PD_CALL_SETTLEMENT_EXECUTE_SCHEDULED_INSTRUCTION 13
 typedef struct {
     pd_u64_t instruction_id;
-    pd_u32_t legs_count;
 } pd_settlement_execute_scheduled_instruction_V5_t;
 
 #define PD_CALL_STO_CREATE_FUNDRAISER 0
@@ -1365,7 +1377,7 @@ typedef struct {
     pd_PortfolioId_V5_t funding_portfolio;
     pd_Ticker_V5_t offering_asset;
     pd_u64_t fundraiser_id;
-    pd_Balance_t purchase_amount;
+    pd_Balance_t investment_amount;
     pd_OptionBalance_t max_price;
     pd_OptionReceiptDetails_V5_t receipt;
 } pd_sto_invest_V5_t;
@@ -1514,20 +1526,6 @@ typedef struct {
     pd_PortfolioNumber_V5_t num;
     pd_PortfolioName_V5_t to_name;
 } pd_portfolio_rename_portfolio_V5_t;
-
-#define PD_CALL_CONFIDENTIAL_ADD_RANGE_PROOF 0
-typedef struct {
-    pd_IdentityId_V5_t target_id;
-    pd_Ticker_V5_t ticker;
-    pd_u64_t secret_value;
-} pd_confidential_add_range_proof_V5_t;
-
-#define PD_CALL_CONFIDENTIAL_ADD_VERIFY_RANGE_PROOF 1
-typedef struct {
-    pd_IdentityId_V5_t target;
-    pd_IdentityId_V5_t prover;
-    pd_Ticker_V5_t ticker;
-} pd_confidential_add_verify_range_proof_V5_t;
 
 #define PD_CALL_SCHEDULER_CANCEL 1
 typedef struct {
@@ -1811,6 +1809,7 @@ typedef union {
     pd_polymeshcommittee_set_vote_threshold_V5_t polymeshcommittee_set_vote_threshold_V5;
     pd_polymeshcommittee_set_release_coordinator_V5_t polymeshcommittee_set_release_coordinator_V5;
     pd_polymeshcommittee_set_expires_after_V5_t polymeshcommittee_set_expires_after_V5;
+    pd_polymeshcommittee_close_V5_t polymeshcommittee_close_V5;
     pd_polymeshcommittee_vote_V5_t polymeshcommittee_vote_V5;
     pd_committeemembership_set_active_members_limit_V5_t committeemembership_set_active_members_limit_V5;
     pd_committeemembership_disable_member_V5_t committeemembership_disable_member_V5;
@@ -1838,6 +1837,7 @@ typedef union {
     pd_technicalcommittee_set_vote_threshold_V5_t technicalcommittee_set_vote_threshold_V5;
     pd_technicalcommittee_set_release_coordinator_V5_t technicalcommittee_set_release_coordinator_V5;
     pd_technicalcommittee_set_expires_after_V5_t technicalcommittee_set_expires_after_V5;
+    pd_technicalcommittee_close_V5_t technicalcommittee_close_V5;
     pd_technicalcommittee_vote_V5_t technicalcommittee_vote_V5;
     pd_technicalcommitteemembership_set_active_members_limit_V5_t technicalcommitteemembership_set_active_members_limit_V5;
     pd_technicalcommitteemembership_disable_member_V5_t technicalcommitteemembership_disable_member_V5;
@@ -1849,6 +1849,7 @@ typedef union {
     pd_upgradecommittee_set_vote_threshold_V5_t upgradecommittee_set_vote_threshold_V5;
     pd_upgradecommittee_set_release_coordinator_V5_t upgradecommittee_set_release_coordinator_V5;
     pd_upgradecommittee_set_expires_after_V5_t upgradecommittee_set_expires_after_V5;
+    pd_upgradecommittee_close_V5_t upgradecommittee_close_V5;
     pd_upgradecommittee_vote_V5_t upgradecommittee_vote_V5;
     pd_upgradecommitteemembership_set_active_members_limit_V5_t upgradecommitteemembership_set_active_members_limit_V5;
     pd_upgradecommitteemembership_disable_member_V5_t upgradecommitteemembership_disable_member_V5;
@@ -1943,8 +1944,6 @@ typedef union {
     pd_portfolio_delete_portfolio_V5_t portfolio_delete_portfolio_V5;
     pd_portfolio_move_portfolio_funds_V5_t portfolio_move_portfolio_funds_V5;
     pd_portfolio_rename_portfolio_V5_t portfolio_rename_portfolio_V5;
-    pd_confidential_add_range_proof_V5_t confidential_add_range_proof_V5;
-    pd_confidential_add_verify_range_proof_V5_t confidential_add_verify_range_proof_V5;
     pd_scheduler_cancel_V5_t scheduler_cancel_V5;
     pd_scheduler_cancel_named_V5_t scheduler_cancel_named_V5;
     pd_corporateaction_set_max_details_length_V5_t corporateaction_set_max_details_length_V5;
@@ -2028,7 +2027,7 @@ typedef struct {
     pd_bool_t auto_close;
 } pd_multisig_create_proposal_as_key_V5_t;
 
-#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE 3
+#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE 4
 typedef struct {
     pd_bool_t approve;
     pd_Proposal_t call;
@@ -2042,13 +2041,13 @@ typedef struct {
     pd_OptionPipDescription_V5_t description;
 } pd_pips_propose_V5_t;
 
-#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE 3
+#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE 4
 typedef struct {
     pd_bool_t approve;
     pd_Proposal_t call;
 } pd_technicalcommittee_vote_or_propose_V5_t;
 
-#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE 3
+#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE 4
 typedef struct {
     pd_bool_t approve;
     pd_Proposal_t call;
