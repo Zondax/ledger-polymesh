@@ -348,7 +348,7 @@ describe('Basic checks', function () {
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x6984);
-            expect(signatureResponse.error_message).toEqual("Value too many bytes");
+            expect(signatureResponse.error_message).toEqual("Max nesting limit reached");
 
         } finally {
             await sim.close();
