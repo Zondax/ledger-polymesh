@@ -23,7 +23,11 @@ extern "C" {
 #include <stddef.h>
 #include "substrate_methods.h"
 
+#ifdef TARGET_NANOX
+#define MAX_METHOD_SLOTS 6
+#else
 #define MAX_METHOD_SLOTS 3
+#endif
 
 typedef struct {
     pd_CallIndex_t   callIndex;
