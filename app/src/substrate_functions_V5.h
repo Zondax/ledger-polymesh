@@ -56,6 +56,7 @@ parser_error_t _readCompactEraIndex_V5(parser_context_t* c, pd_CompactEraIndex_V
 parser_error_t _readCompactGas_V5(parser_context_t* c, pd_CompactGas_V5_t* v);
 parser_error_t _readCompactMoment_V5(parser_context_t* c, pd_CompactMoment_V5_t* v);
 parser_error_t _readCompactPerBill_V5(parser_context_t* c, pd_CompactPerBill_V5_t* v);
+parser_error_t _readCompactProposalIndex_V5(parser_context_t* c, pd_CompactProposalIndex_V5_t* v);
 parser_error_t _readComplianceRequirement_V5(parser_context_t* c, pd_ComplianceRequirement_V5_t* v);
 parser_error_t _readConditionType_V5(parser_context_t* c, pd_ConditionType_V5_t* v);
 parser_error_t _readCondition_V5(parser_context_t* c, pd_Condition_V5_t* v);
@@ -423,6 +424,13 @@ parser_error_t _toStringCompactMoment_V5(
 
 parser_error_t _toStringCompactPerBill_V5(
     const pd_CompactPerBill_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringCompactProposalIndex_V5(
+    const pd_CompactProposalIndex_V5_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

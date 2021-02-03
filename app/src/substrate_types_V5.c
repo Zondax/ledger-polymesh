@@ -42,6 +42,11 @@ parser_error_t _readCompactMoment_V5(parser_context_t* c, pd_CompactMoment_V5_t*
     return _readCompactInt(c, v);
 }
 
+parser_error_t _readCompactProposalIndex_V5(parser_context_t* c, pd_CompactProposalIndex_V5_t* v)
+{
+    return _readCompactInt(c, v);
+}
+
 parser_error_t _readAccountId_V5(parser_context_t* c, pd_AccountId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
@@ -1770,6 +1775,16 @@ parser_error_t _toStringCompactMoment_V5(
     return _toStringCompactInt(v, 0, 0, "", outValue, outValueLen, pageIdx, pageCount);
 }
 
+parser_error_t _toStringCompactProposalIndex_V5(
+    const pd_CompactProposalIndex_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringCompactInt(v, 0, 0, "", outValue, outValueLen, pageIdx, pageCount);
+}
+
 parser_error_t _toStringAccountId_V5(
     const pd_AccountId_V5_t* v,
     char* outValue,
@@ -2459,7 +2474,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, &pages[1]))
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 
@@ -2467,7 +2482,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, 0, &pages[2]))
+        CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -2475,7 +2490,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[3]) {
-        CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, 0, &pages[3]))
+        CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
     }
 
@@ -2539,7 +2554,7 @@ parser_error_t _toStringComplianceRequirement_V5(
 
     //////
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, 0, &pages[2]))
+        CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -2838,13 +2853,13 @@ parser_error_t _toStringElectionSize_V5(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, 0, &pages[0]))
+        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
 
     if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, 0, &pages[1]))
+        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 

@@ -1,6 +1,6 @@
 import Zemu from "@zondax/zemu";
 import path from "path";
-import newKusamaApp from "@zondax/ledger-polkadot";
+import newPolymeshApp from "@zondax/ledger-polkadot";
 
 const APP_PATH = path.resolve(`./../../app/bin/app.elf`);
 import pkg from 'blakejs';
@@ -13,7 +13,7 @@ const seed = "equip will roof matter pink blind book anxiety banner elbow sun yo
 const SIM_OPTIONS = {
     logging: true,
     start_delay: 4000,
-//    X11: true,
+    X11: true,
     custom: `-s "${seed}" --color LAGOON_BLUE`
 };
 
@@ -94,7 +94,7 @@ async function main() {
 
     try {
         await sim.start(SIM_OPTIONS);
-        const app = newKusamaApp.newKusamaApp(sim.getTransport());
+        const app = newPolymeshApp.newPolymeshApp(sim.getTransport());
 
         ////////////
         /// TIP you can use zemu commands here to take the app to the point where you trigger a breakpoint

@@ -38,6 +38,7 @@ parser_error_t _getMethod_ItemValue(
     uint8_t pageIdx, uint8_t* pageCount);
 
 bool _getMethod_ItemIsExpert(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx, uint8_t itemIdx);
+bool _getMethod_IsNestingSupported(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx);
 
 //Special getters
 pd_VecLookupSource_t* getStakingTargets(const parser_context_t* c);
