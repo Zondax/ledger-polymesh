@@ -29,7 +29,7 @@ typedef struct {
     pd_CallIndex_t   callIndex;
     pd_Method_t method;
 
-    pd_Method_t methodSlot[MAX_METHOD_SLOTS];
+    pd_MethodNested_t methodSlot[MAX_METHOD_SLOTS];
     uint8_t slotIdx;
 
     pd_ExtrinsicEra_t era;

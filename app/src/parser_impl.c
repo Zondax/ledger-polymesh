@@ -366,11 +366,11 @@ parser_error_t _getNextFreeMethodSlot(const parser_context_t *c, pd_Method_t** m
         return parser_unexpected_error;
     }
 
-    if (c->tx_obj->slotIdx + 1 == MAX_METHOD_SLOTS) {
+    if (c->tx_obj->slotIdx == MAX_METHOD_SLOTS) {
         return parser_value_too_many_bytes;
     }
 
-    *method = &c->tx_obj->methodSlot[c->tx_obj->slotIdx];
+    *method = (pd_Method_t *) &c->tx_obj->methodSlot[c->tx_obj->slotIdx];
     c->tx_obj->slotIdx++;
     return parser_ok;
 }
