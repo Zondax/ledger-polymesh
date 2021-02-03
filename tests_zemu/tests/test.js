@@ -202,4 +202,157 @@ describe('Basic checks', function () {
         }
     });
 
+    test('sign utility.batch - depth 1', async function () {
+        const sim = new Zemu(APP_PATH);
+        try {
+            await sim.start(sim_options);
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "29000400002c000000d50391010b63ce64c10c05dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", "sign_utility_batch_d1", 5);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
+    test('sign utility.batch - depth 2', async function () {
+        const sim = new Zemu(APP_PATH);
+        try {
+            await sim.start(sim_options);
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "29000800002c000000000058000000d503910100dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", "sign_utility_batch_d2", 6);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
+    test('sign utility.batch - depth 3', async function () {
+        const sim = new Zemu(APP_PATH);
+        try {
+            await sim.start(sim_options);
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "29000c00002c000000000058000000000084000000d503910103d2029649dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", "sign_utility_batch_d3", 9);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
+    test('sign utility.batch - reject', async function () {
+        const sim = new Zemu(APP_PATH);
+        try {
+            await sim.start(sim_options);
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "29001000002c0000000000580000000000840000000000b0000000d5030000dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x6984);
+            expect(signatureResponse.error_message).toEqual("Value too many bytes");
+
+        } finally {
+            await sim.close();
+        }
+    });
+
 });
