@@ -97,11 +97,21 @@ bool _getMethod_ItemIsExpert(uint32_t transactionVersion, uint8_t moduleIdx, uin
     }
 }
 
+bool _getMethod_IsNestingSupported(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx)
+{
+    switch (transactionVersion) {
+    case 5:
+        return _getMethod_IsNestingSupported_V5(moduleIdx, callIdx);
+    default:
+        return false;
+    }
+}
+
 pd_VecLookupSource_t* getStakingTargets(const parser_context_t* c)
 {
     switch (c->tx_obj->transactionVersion) {
     case 5:
-        return &c->tx_obj->method.V5.basic.staking_nominate_V5.targets;
+        return &c->tx_obj->method.V5.nested.staking_nominate_V5.targets;
     default:
         return NULL;
     }

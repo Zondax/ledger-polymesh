@@ -68,6 +68,66 @@ extern "C" {
 #define PD_CALL_CAPITALDISTRIBUTION 48
 #define PD_CALL_CHECKPOINT 49
 
+#define PD_CALL_STO_CREATE_FUNDRAISER 0
+typedef struct {
+    pd_PortfolioId_V5_t offering_portfolio;
+    pd_Ticker_V5_t offering_asset;
+    pd_PortfolioId_V5_t raising_portfolio;
+    pd_Ticker_V5_t raising_asset;
+    pd_VecPriceTier_V5_t tiers;
+    pd_u64_t venue_id;
+    pd_OptionMoment_V5_t start;
+    pd_OptionMoment_V5_t end;
+    pd_Balance_t minimum_investment;
+    pd_FundraiserName_V5_t fundraiser_name;
+} pd_sto_create_fundraiser_V5_t;
+
+#define PD_CALL_STO_INVEST 1
+typedef struct {
+    pd_PortfolioId_V5_t investment_portfolio;
+    pd_PortfolioId_V5_t funding_portfolio;
+    pd_Ticker_V5_t offering_asset;
+    pd_u64_t fundraiser_id;
+    pd_Balance_t investment_amount;
+    pd_OptionBalance_t max_price;
+    pd_OptionReceiptDetails_V5_t receipt;
+} pd_sto_invest_V5_t;
+
+#define PD_CALL_STO_FREEZE_FUNDRAISER 2
+typedef struct {
+    pd_Ticker_V5_t offering_asset;
+    pd_u64_t fundraiser_id;
+} pd_sto_freeze_fundraiser_V5_t;
+
+#define PD_CALL_STO_UNFREEZE_FUNDRAISER 3
+typedef struct {
+    pd_Ticker_V5_t offering_asset;
+    pd_u64_t fundraiser_id;
+} pd_sto_unfreeze_fundraiser_V5_t;
+
+#define PD_CALL_STO_MODIFY_FUNDRAISER_WINDOW 4
+typedef struct {
+    pd_Ticker_V5_t offering_asset;
+    pd_u64_t fundraiser_id;
+    pd_Moment_V5_t start;
+    pd_OptionMoment_V5_t end;
+} pd_sto_modify_fundraiser_window_V5_t;
+
+#define PD_CALL_STO_STOP 5
+typedef struct {
+    pd_Ticker_V5_t offering_asset;
+    pd_u64_t fundraiser_id;
+} pd_sto_stop_V5_t;
+
+typedef union {
+    pd_sto_create_fundraiser_V5_t sto_create_fundraiser_V5;
+    pd_sto_invest_V5_t sto_invest_V5;
+    pd_sto_freeze_fundraiser_V5_t sto_freeze_fundraiser_V5;
+    pd_sto_unfreeze_fundraiser_V5_t sto_unfreeze_fundraiser_V5;
+    pd_sto_modify_fundraiser_window_V5_t sto_modify_fundraiser_window_V5;
+    pd_sto_stop_V5_t sto_stop_V5;
+} pd_MethodBasic_V5_t;
+
 #define PD_CALL_SYSTEM_FILL_BLOCK 0
 typedef struct {
     pd_Perbill_V5_t _ratio;
@@ -265,6 +325,12 @@ typedef struct {
     pd_Claim_V5_t claim;
     pd_OptionMoment_V5_t expiry;
 } pd_identity_add_claim_V5_t;
+
+#define PD_CALL_IDENTITY_FORWARDED_CALL 12
+typedef struct {
+    pd_IdentityId_V5_t target_did;
+    pd_Proposal_t proposal;
+} pd_identity_forwarded_call_V5_t;
 
 #define PD_CALL_IDENTITY_REVOKE_CLAIM 13
 typedef struct {
@@ -574,16 +640,65 @@ typedef struct {
     pd_OfflineSlashingParams_V5_t params;
 } pd_imonline_set_slashing_params_V5_t;
 
+#define PD_CALL_SUDO_SUDO 0
+typedef struct {
+    pd_Call_t call;
+} pd_sudo_sudo_V5_t;
+
+#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT 1
+typedef struct {
+    pd_Call_t call;
+    pd_Weight_V5_t _weight;
+} pd_sudo_sudo_unchecked_weight_V5_t;
+
 #define PD_CALL_SUDO_SET_KEY 2
 typedef struct {
     pd_LookupSource_t new_;
 } pd_sudo_set_key_V5_t;
+
+#define PD_CALL_SUDO_SUDO_AS 3
+typedef struct {
+    pd_LookupSource_t who;
+    pd_Call_t call;
+} pd_sudo_sudo_as_V5_t;
 
 #define PD_CALL_MULTISIG_CREATE_MULTISIG 0
 typedef struct {
     pd_VecSignatory_V5_t signers;
     pd_u64_t sigs_required;
 } pd_multisig_create_multisig_V5_t;
+
+#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_IDENTITY 1
+typedef struct {
+    pd_AccountId_V5_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V5_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_or_approve_proposal_as_identity_V5_t;
+
+#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_KEY 2
+typedef struct {
+    pd_AccountId_V5_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V5_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_or_approve_proposal_as_key_V5_t;
+
+#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_IDENTITY 3
+typedef struct {
+    pd_AccountId_V5_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V5_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_proposal_as_identity_V5_t;
+
+#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_KEY 4
+typedef struct {
+    pd_AccountId_V5_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V5_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_proposal_as_key_V5_t;
 
 #define PD_CALL_MULTISIG_APPROVE_AS_IDENTITY 5
 typedef struct {
@@ -755,6 +870,12 @@ typedef struct {
     pd_CompactProposalIndex_V5_t index;
 } pd_polymeshcommittee_close_V5_t;
 
+#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE 4
+typedef struct {
+    pd_bool_t approve;
+    pd_Proposal_t call;
+} pd_polymeshcommittee_vote_or_propose_V5_t;
+
 #define PD_CALL_POLYMESHCOMMITTEE_VOTE 5
 typedef struct {
     pd_Hash_t proposal;
@@ -828,6 +949,14 @@ typedef struct {
 typedef struct {
     pd_u32_t limit;
 } pd_pips_set_active_pip_limit_V5_t;
+
+#define PD_CALL_PIPS_PROPOSE 6
+typedef struct {
+    pd_Proposal_t proposal;
+    pd_BalanceOf_t deposit;
+    pd_OptionUrl_V5_t url;
+    pd_OptionPipDescription_V5_t description;
+} pd_pips_propose_V5_t;
 
 #define PD_CALL_PIPS_VOTE 7
 typedef struct {
@@ -903,6 +1032,12 @@ typedef struct {
     pd_CompactProposalIndex_V5_t index;
 } pd_technicalcommittee_close_V5_t;
 
+#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE 4
+typedef struct {
+    pd_bool_t approve;
+    pd_Proposal_t call;
+} pd_technicalcommittee_vote_or_propose_V5_t;
+
 #define PD_CALL_TECHNICALCOMMITTEE_VOTE 5
 typedef struct {
     pd_Hash_t proposal;
@@ -968,6 +1103,12 @@ typedef struct {
     pd_Hash_t proposal;
     pd_CompactProposalIndex_V5_t index;
 } pd_upgradecommittee_close_V5_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE 4
+typedef struct {
+    pd_bool_t approve;
+    pd_Proposal_t call;
+} pd_upgradecommittee_vote_or_propose_V5_t;
 
 #define PD_CALL_UPGRADECOMMITTEE_VOTE 5
 typedef struct {
@@ -1357,57 +1498,6 @@ typedef struct {
     pd_u64_t instruction_id;
 } pd_settlement_execute_scheduled_instruction_V5_t;
 
-#define PD_CALL_STO_CREATE_FUNDRAISER 0
-typedef struct {
-    pd_PortfolioId_V5_t offering_portfolio;
-    pd_Ticker_V5_t offering_asset;
-    pd_PortfolioId_V5_t raising_portfolio;
-    pd_Ticker_V5_t raising_asset;
-    pd_VecPriceTier_V5_t tiers;
-    pd_u64_t venue_id;
-    pd_OptionMoment_V5_t start;
-    pd_OptionMoment_V5_t end;
-    pd_Balance_t minimum_investment;
-    pd_FundraiserName_V5_t fundraiser_name;
-} pd_sto_create_fundraiser_V5_t;
-
-#define PD_CALL_STO_INVEST 1
-typedef struct {
-    pd_PortfolioId_V5_t investment_portfolio;
-    pd_PortfolioId_V5_t funding_portfolio;
-    pd_Ticker_V5_t offering_asset;
-    pd_u64_t fundraiser_id;
-    pd_Balance_t investment_amount;
-    pd_OptionBalance_t max_price;
-    pd_OptionReceiptDetails_V5_t receipt;
-} pd_sto_invest_V5_t;
-
-#define PD_CALL_STO_FREEZE_FUNDRAISER 2
-typedef struct {
-    pd_Ticker_V5_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_freeze_fundraiser_V5_t;
-
-#define PD_CALL_STO_UNFREEZE_FUNDRAISER 3
-typedef struct {
-    pd_Ticker_V5_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_unfreeze_fundraiser_V5_t;
-
-#define PD_CALL_STO_MODIFY_FUNDRAISER_WINDOW 4
-typedef struct {
-    pd_Ticker_V5_t offering_asset;
-    pd_u64_t fundraiser_id;
-    pd_Moment_V5_t start;
-    pd_OptionMoment_V5_t end;
-} pd_sto_modify_fundraiser_window_V5_t;
-
-#define PD_CALL_STO_STOP 5
-typedef struct {
-    pd_Ticker_V5_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_stop_V5_t;
-
 #define PD_CALL_CDDSERVICEPROVIDERS_SET_ACTIVE_MEMBERS_LIMIT 0
 typedef struct {
     pd_MemberCount_V5_t limit;
@@ -1527,16 +1617,50 @@ typedef struct {
     pd_PortfolioName_V5_t to_name;
 } pd_portfolio_rename_portfolio_V5_t;
 
+#define PD_CALL_SCHEDULER_SCHEDULE 0
+typedef struct {
+    pd_BlockNumber_t when;
+    pd_OptionPeriod_V5_t maybe_periodic;
+    pd_Priority_V5_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_V5_t;
+
 #define PD_CALL_SCHEDULER_CANCEL 1
 typedef struct {
     pd_BlockNumber_t when;
     pd_u32_t index;
 } pd_scheduler_cancel_V5_t;
 
+#define PD_CALL_SCHEDULER_SCHEDULE_NAMED 2
+typedef struct {
+    pd_Bytes_t id;
+    pd_BlockNumber_t when;
+    pd_OptionPeriod_V5_t maybe_periodic;
+    pd_Priority_V5_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_named_V5_t;
+
 #define PD_CALL_SCHEDULER_CANCEL_NAMED 3
 typedef struct {
     pd_Bytes_t id;
 } pd_scheduler_cancel_named_V5_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_AFTER 4
+typedef struct {
+    pd_BlockNumber_t after;
+    pd_OptionPeriod_V5_t maybe_periodic;
+    pd_Priority_V5_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_after_V5_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_AFTER 5
+typedef struct {
+    pd_Bytes_t id;
+    pd_BlockNumber_t after;
+    pd_OptionPeriod_V5_t maybe_periodic;
+    pd_Priority_V5_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_named_after_V5_t;
 
 #define PD_CALL_CORPORATEACTION_SET_MAX_DETAILS_LENGTH 0
 typedef struct {
@@ -1723,6 +1847,7 @@ typedef union {
     pd_identity_leave_identity_as_key_V5_t identity_leave_identity_as_key_V5;
     pd_identity_leave_identity_as_identity_V5_t identity_leave_identity_as_identity_V5;
     pd_identity_add_claim_V5_t identity_add_claim_V5;
+    pd_identity_forwarded_call_V5_t identity_forwarded_call_V5;
     pd_identity_revoke_claim_V5_t identity_revoke_claim_V5;
     pd_identity_set_permission_to_signer_V5_t identity_set_permission_to_signer_V5;
     pd_identity_legacy_set_permission_to_signer_V5_t identity_legacy_set_permission_to_signer_V5;
@@ -1779,8 +1904,15 @@ typedef union {
     pd_grandpa_note_stalled_V5_t grandpa_note_stalled_V5;
     pd_imonline_heartbeat_V5_t imonline_heartbeat_V5;
     pd_imonline_set_slashing_params_V5_t imonline_set_slashing_params_V5;
+    pd_sudo_sudo_V5_t sudo_sudo_V5;
+    pd_sudo_sudo_unchecked_weight_V5_t sudo_sudo_unchecked_weight_V5;
     pd_sudo_set_key_V5_t sudo_set_key_V5;
+    pd_sudo_sudo_as_V5_t sudo_sudo_as_V5;
     pd_multisig_create_multisig_V5_t multisig_create_multisig_V5;
+    pd_multisig_create_or_approve_proposal_as_identity_V5_t multisig_create_or_approve_proposal_as_identity_V5;
+    pd_multisig_create_or_approve_proposal_as_key_V5_t multisig_create_or_approve_proposal_as_key_V5;
+    pd_multisig_create_proposal_as_identity_V5_t multisig_create_proposal_as_identity_V5;
+    pd_multisig_create_proposal_as_key_V5_t multisig_create_proposal_as_key_V5;
     pd_multisig_approve_as_identity_V5_t multisig_approve_as_identity_V5;
     pd_multisig_approve_as_key_V5_t multisig_approve_as_key_V5;
     pd_multisig_reject_as_identity_V5_t multisig_reject_as_identity_V5;
@@ -1810,6 +1942,7 @@ typedef union {
     pd_polymeshcommittee_set_release_coordinator_V5_t polymeshcommittee_set_release_coordinator_V5;
     pd_polymeshcommittee_set_expires_after_V5_t polymeshcommittee_set_expires_after_V5;
     pd_polymeshcommittee_close_V5_t polymeshcommittee_close_V5;
+    pd_polymeshcommittee_vote_or_propose_V5_t polymeshcommittee_vote_or_propose_V5;
     pd_polymeshcommittee_vote_V5_t polymeshcommittee_vote_V5;
     pd_committeemembership_set_active_members_limit_V5_t committeemembership_set_active_members_limit_V5;
     pd_committeemembership_disable_member_V5_t committeemembership_disable_member_V5;
@@ -1824,6 +1957,7 @@ typedef union {
     pd_pips_set_pending_pip_expiry_V5_t pips_set_pending_pip_expiry_V5;
     pd_pips_set_max_pip_skip_count_V5_t pips_set_max_pip_skip_count_V5;
     pd_pips_set_active_pip_limit_V5_t pips_set_active_pip_limit_V5;
+    pd_pips_propose_V5_t pips_propose_V5;
     pd_pips_vote_V5_t pips_vote_V5;
     pd_pips_approve_committee_proposal_V5_t pips_approve_committee_proposal_V5;
     pd_pips_reject_proposal_V5_t pips_reject_proposal_V5;
@@ -1838,6 +1972,7 @@ typedef union {
     pd_technicalcommittee_set_release_coordinator_V5_t technicalcommittee_set_release_coordinator_V5;
     pd_technicalcommittee_set_expires_after_V5_t technicalcommittee_set_expires_after_V5;
     pd_technicalcommittee_close_V5_t technicalcommittee_close_V5;
+    pd_technicalcommittee_vote_or_propose_V5_t technicalcommittee_vote_or_propose_V5;
     pd_technicalcommittee_vote_V5_t technicalcommittee_vote_V5;
     pd_technicalcommitteemembership_set_active_members_limit_V5_t technicalcommitteemembership_set_active_members_limit_V5;
     pd_technicalcommitteemembership_disable_member_V5_t technicalcommitteemembership_disable_member_V5;
@@ -1850,6 +1985,7 @@ typedef union {
     pd_upgradecommittee_set_release_coordinator_V5_t upgradecommittee_set_release_coordinator_V5;
     pd_upgradecommittee_set_expires_after_V5_t upgradecommittee_set_expires_after_V5;
     pd_upgradecommittee_close_V5_t upgradecommittee_close_V5;
+    pd_upgradecommittee_vote_or_propose_V5_t upgradecommittee_vote_or_propose_V5;
     pd_upgradecommittee_vote_V5_t upgradecommittee_vote_V5;
     pd_upgradecommitteemembership_set_active_members_limit_V5_t upgradecommitteemembership_set_active_members_limit_V5;
     pd_upgradecommitteemembership_disable_member_V5_t upgradecommitteemembership_disable_member_V5;
@@ -1917,12 +2053,6 @@ typedef union {
     pd_settlement_allow_venues_V5_t settlement_allow_venues_V5;
     pd_settlement_disallow_venues_V5_t settlement_disallow_venues_V5;
     pd_settlement_execute_scheduled_instruction_V5_t settlement_execute_scheduled_instruction_V5;
-    pd_sto_create_fundraiser_V5_t sto_create_fundraiser_V5;
-    pd_sto_invest_V5_t sto_invest_V5;
-    pd_sto_freeze_fundraiser_V5_t sto_freeze_fundraiser_V5;
-    pd_sto_unfreeze_fundraiser_V5_t sto_unfreeze_fundraiser_V5;
-    pd_sto_modify_fundraiser_window_V5_t sto_modify_fundraiser_window_V5;
-    pd_sto_stop_V5_t sto_stop_V5;
     pd_cddserviceproviders_set_active_members_limit_V5_t cddserviceproviders_set_active_members_limit_V5;
     pd_cddserviceproviders_disable_member_V5_t cddserviceproviders_disable_member_V5;
     pd_cddserviceproviders_add_member_V5_t cddserviceproviders_add_member_V5;
@@ -1944,8 +2074,12 @@ typedef union {
     pd_portfolio_delete_portfolio_V5_t portfolio_delete_portfolio_V5;
     pd_portfolio_move_portfolio_funds_V5_t portfolio_move_portfolio_funds_V5;
     pd_portfolio_rename_portfolio_V5_t portfolio_rename_portfolio_V5;
+    pd_scheduler_schedule_V5_t scheduler_schedule_V5;
     pd_scheduler_cancel_V5_t scheduler_cancel_V5;
+    pd_scheduler_schedule_named_V5_t scheduler_schedule_named_V5;
     pd_scheduler_cancel_named_V5_t scheduler_cancel_named_V5;
+    pd_scheduler_schedule_after_V5_t scheduler_schedule_after_V5;
+    pd_scheduler_schedule_named_after_V5_t scheduler_schedule_named_after_V5;
     pd_corporateaction_set_max_details_length_V5_t corporateaction_set_max_details_length_V5;
     pd_corporateaction_reset_caa_V5_t corporateaction_reset_caa_V5;
     pd_corporateaction_set_default_targets_V5_t corporateaction_set_default_targets_V5;
@@ -1970,140 +2104,6 @@ typedef union {
     pd_checkpoint_set_schedules_max_complexity_V5_t checkpoint_set_schedules_max_complexity_V5;
     pd_checkpoint_create_schedule_V5_t checkpoint_create_schedule_V5;
     pd_checkpoint_remove_schedule_V5_t checkpoint_remove_schedule_V5;
-} pd_MethodBasic_V5_t;
-
-#define PD_CALL_IDENTITY_FORWARDED_CALL 12
-typedef struct {
-    pd_IdentityId_V5_t target_did;
-    pd_Proposal_t proposal;
-} pd_identity_forwarded_call_V5_t;
-
-#define PD_CALL_SUDO_SUDO 0
-typedef struct {
-    pd_Call_t call;
-} pd_sudo_sudo_V5_t;
-
-#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT 1
-typedef struct {
-    pd_Call_t call;
-    pd_Weight_V5_t _weight;
-} pd_sudo_sudo_unchecked_weight_V5_t;
-
-#define PD_CALL_SUDO_SUDO_AS 3
-typedef struct {
-    pd_LookupSource_t who;
-    pd_Call_t call;
-} pd_sudo_sudo_as_V5_t;
-
-#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_IDENTITY 1
-typedef struct {
-    pd_AccountId_V5_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V5_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_or_approve_proposal_as_identity_V5_t;
-
-#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_KEY 2
-typedef struct {
-    pd_AccountId_V5_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V5_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_or_approve_proposal_as_key_V5_t;
-
-#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_IDENTITY 3
-typedef struct {
-    pd_AccountId_V5_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V5_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_proposal_as_identity_V5_t;
-
-#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_KEY 4
-typedef struct {
-    pd_AccountId_V5_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V5_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_proposal_as_key_V5_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE 4
-typedef struct {
-    pd_bool_t approve;
-    pd_Proposal_t call;
-} pd_polymeshcommittee_vote_or_propose_V5_t;
-
-#define PD_CALL_PIPS_PROPOSE 6
-typedef struct {
-    pd_Proposal_t proposal;
-    pd_BalanceOf_t deposit;
-    pd_OptionUrl_V5_t url;
-    pd_OptionPipDescription_V5_t description;
-} pd_pips_propose_V5_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE 4
-typedef struct {
-    pd_bool_t approve;
-    pd_Proposal_t call;
-} pd_technicalcommittee_vote_or_propose_V5_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE 4
-typedef struct {
-    pd_bool_t approve;
-    pd_Proposal_t call;
-} pd_upgradecommittee_vote_or_propose_V5_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE 0
-typedef struct {
-    pd_BlockNumber_t when;
-    pd_OptionPeriod_V5_t maybe_periodic;
-    pd_Priority_V5_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_V5_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_NAMED 2
-typedef struct {
-    pd_Bytes_t id;
-    pd_BlockNumber_t when;
-    pd_OptionPeriod_V5_t maybe_periodic;
-    pd_Priority_V5_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_named_V5_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_AFTER 4
-typedef struct {
-    pd_BlockNumber_t after;
-    pd_OptionPeriod_V5_t maybe_periodic;
-    pd_Priority_V5_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_after_V5_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_AFTER 5
-typedef struct {
-    pd_Bytes_t id;
-    pd_BlockNumber_t after;
-    pd_OptionPeriod_V5_t maybe_periodic;
-    pd_Priority_V5_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_named_after_V5_t;
-
-typedef union {
-    pd_identity_forwarded_call_V5_t identity_forwarded_call_V5;
-    pd_sudo_sudo_V5_t sudo_sudo_V5;
-    pd_sudo_sudo_unchecked_weight_V5_t sudo_sudo_unchecked_weight_V5;
-    pd_sudo_sudo_as_V5_t sudo_sudo_as_V5;
-    pd_multisig_create_or_approve_proposal_as_identity_V5_t multisig_create_or_approve_proposal_as_identity_V5;
-    pd_multisig_create_or_approve_proposal_as_key_V5_t multisig_create_or_approve_proposal_as_key_V5;
-    pd_multisig_create_proposal_as_identity_V5_t multisig_create_proposal_as_identity_V5;
-    pd_multisig_create_proposal_as_key_V5_t multisig_create_proposal_as_key_V5;
-    pd_polymeshcommittee_vote_or_propose_V5_t polymeshcommittee_vote_or_propose_V5;
-    pd_pips_propose_V5_t pips_propose_V5;
-    pd_technicalcommittee_vote_or_propose_V5_t technicalcommittee_vote_or_propose_V5;
-    pd_upgradecommittee_vote_or_propose_V5_t upgradecommittee_vote_or_propose_V5;
-    pd_scheduler_schedule_V5_t scheduler_schedule_V5;
-    pd_scheduler_schedule_named_V5_t scheduler_schedule_named_V5;
-    pd_scheduler_schedule_after_V5_t scheduler_schedule_after_V5;
-    pd_scheduler_schedule_named_after_V5_t scheduler_schedule_named_after_V5;
 } pd_MethodNested_V5_t;
 
 typedef union {

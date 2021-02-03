@@ -62,6 +62,11 @@ parser_error_t _readCompactu64(parser_context_t* c, pd_Compactu64_t* v)
 parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_Method_t* m)
 {
     CHECK_ERROR(_readCallIndex(c, &v->callIndex));
+
+    if (!_getMethod_IsNestingSupported(c->tx_obj->transactionVersion, v->callIndex.moduleIdx, v->callIndex.idx)) {
+        return parser_not_supported;
+    }
+
     CHECK_ERROR(_readMethod(c, v->callIndex.moduleIdx, v->callIndex.idx, m))
     v->_methodPtr = (uint8_t*)m;
     v->_txVerPtr = &c->tx_obj->transactionVersion;
