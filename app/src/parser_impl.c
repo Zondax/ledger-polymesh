@@ -84,6 +84,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Unexpected unparsed bytes";
         case parser_print_not_supported:
             return "Value cannot be printed";
+        case parser_tx_nesting_limit_reached:
+            return "Max nesting limit reached";
         default:
             return "Unrecognized error code";
     }
@@ -367,7 +369,7 @@ parser_error_t _getNextFreeMethodSlot(const parser_context_t *c, pd_Method_t** m
     }
 
     if (c->tx_obj->slotIdx == MAX_METHOD_SLOTS) {
-        return parser_value_too_many_bytes;
+        return parser_tx_nesting_limit_reached;
     }
 
     *method = (pd_Method_t *) &c->tx_obj->methodSlot[c->tx_obj->slotIdx];

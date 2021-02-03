@@ -36,6 +36,7 @@ typedef enum {
     parser_display_idx_out_of_range,
     parser_display_page_out_of_range,
     parser_unexpected_error,
+    parser_tx_nesting_limit_reached,
     // Coin specific
     parser_unexpected_address_type,
     parser_spec_not_supported,
