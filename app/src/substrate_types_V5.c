@@ -2474,7 +2474,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, &pages[1]))
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 
@@ -2482,7 +2482,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, 0, &pages[2]))
+        CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -2490,7 +2490,7 @@ parser_error_t _toStringClassicTickerImport_V5(
 
     //////
     if (pageIdx < pages[3]) {
-        CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, 0, &pages[3]))
+        CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
     }
 
@@ -2554,7 +2554,7 @@ parser_error_t _toStringComplianceRequirement_V5(
 
     //////
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, 0, &pages[2]))
+        CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -2853,13 +2853,13 @@ parser_error_t _toStringElectionSize_V5(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, 0, &pages[0]))
+        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
 
     if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, 0, &pages[1]))
+        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, 0, "", outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 
