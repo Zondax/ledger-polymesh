@@ -99,10 +99,6 @@ typedef struct {
 } pd_Header_t;
 
 typedef struct {
-    const uint8_t* _ptr;
-} pd_LookupSource_t;
-
-typedef struct {
     uint8_t some;
     pd_BalanceOf_t contained;
 } pd_OptionBalanceOf_t;
@@ -159,12 +155,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecHeader_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecLookupSource_t;
 
 typedef struct {
     uint64_t _len;

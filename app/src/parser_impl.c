@@ -18,7 +18,7 @@
 #include "parser_impl.h"
 #include "parser_txdef.h"
 #include "coin.h"
-#include "crypto.h"
+#include "crypto_helper.h"
 #include "bignum.h"
 #include "coin_ss58.h"
 #include "substrate_types.h"
@@ -84,8 +84,6 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Unexpected unparsed bytes";
         case parser_print_not_supported:
             return "Value cannot be printed";
-        case parser_tx_nesting_limit_reached:
-            return "Max nesting limit reached";
         default:
             return "Unrecognized error code";
     }
@@ -203,6 +201,7 @@ parser_error_t _toStringCompactInt(const compactInt_t *c,
         // This is longer number
         uint8_t bcdOut[100];
         const uint16_t bcdOutLen = sizeof(bcdOut);
+
         bignumLittleEndian_to_bcd(bcdOut, bcdOutLen, c->ptr + 1, c->len - 1);
         if (!bignumLittleEndian_bcdprint(bufferUI, sizeof(bufferUI), bcdOut, bcdOutLen))
             return parser_unexpected_buffer_end;
@@ -361,21 +360,6 @@ parser_error_t _checkVersions(parser_context_t *c) {
 }
 
 uint8_t __address_type;
-
-parser_error_t _getNextFreeMethodSlot(const parser_context_t *c, pd_Method_t** method) {
-
-    if (c == NULL || c->tx_obj == NULL) {
-        return parser_unexpected_error;
-    }
-
-    if (c->tx_obj->slotIdx == MAX_METHOD_SLOTS) {
-        return parser_tx_nesting_limit_reached;
-    }
-
-    *method = (pd_Method_t *) &c->tx_obj->methodSlot[c->tx_obj->slotIdx];
-    c->tx_obj->slotIdx++;
-    return parser_ok;
-}
 
 uint8_t _getAddressType() {
     return __address_type;

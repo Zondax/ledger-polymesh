@@ -39,7 +39,6 @@ parser_error_t _readOptionu16(parser_context_t* c, pd_Optionu16_t* v);
 parser_error_t _readBalanceOf(parser_context_t* c, pd_BalanceOf_t* v);
 parser_error_t _readCall(parser_context_t* c, pd_Call_t* v);
 parser_error_t _readHeader(parser_context_t* c, pd_Header_t* v);
-parser_error_t _readLookupSource(parser_context_t* c, pd_LookupSource_t* v);
 parser_error_t _readOptionBalanceOf(parser_context_t* c, pd_OptionBalanceOf_t* v);
 parser_error_t _readProposal(parser_context_t* c, pd_Proposal_t* v);
 parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v);
@@ -52,7 +51,6 @@ parser_error_t _readOptionBlockNumber(parser_context_t* c, pd_OptionBlockNumber_
 parser_error_t _readOptionu32(parser_context_t* c, pd_Optionu32_t* v);
 parser_error_t _readOptionu64(parser_context_t* c, pd_Optionu64_t* v);
 parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v);
-parser_error_t _readVecLookupSource(parser_context_t* c, pd_VecLookupSource_t* v);
 parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v);
 parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v);
 
@@ -142,13 +140,6 @@ parser_error_t _toStringHeader(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringLookupSource(
-    const pd_LookupSource_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
 parser_error_t _toStringOptionBalanceOf(
     const pd_OptionBalanceOf_t* v,
     char* outValue,
@@ -228,13 +219,6 @@ parser_error_t _toStringOptionu64(
 
 parser_error_t _toStringVecHeader(
     const pd_VecHeader_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringVecLookupSource(
-    const pd_VecLookupSource_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

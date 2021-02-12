@@ -24,6 +24,8 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#define GET_PD_CALL(CALL, VERSION) (PD_CALL_##CALL##_V##VERSION)
+
 #include "substrate_methods_V5.h"
 #include "substrate_types_V5.h"
 
