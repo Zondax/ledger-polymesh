@@ -17,7 +17,7 @@
 import jest, {expect} from "jest";
 import Zemu from "@zondax/zemu";
 
-const {newKusamaApp} = require("@zondax/ledger-polkadot");
+const {newPolymeshApp} = require("@zondax/ledger-polkadot");
 const Resolve = require("path").resolve;
 
 const APP_SEED = "equip will roof matter pink blind book anxiety banner elbow sun young"
@@ -66,7 +66,7 @@ describe('Standard', function () {
         const sim = new Zemu(path);
         try {
             await sim.start({model, ...simOptions});
-            const app = newKusamaApp(sim.getTransport());
+            const app = newPolymeshApp(sim.getTransport());
 
             const kusama_expected_address = "JMdbWK5cy3Bm4oCyhWNLQJoC4cczNgJsyk7nLZHMqFT7z7R";
             const kusama_expected_pk = "ffbc10f71d63e0da1b9e7ee2eb4037466551dc32b9d4641aafd73a65970fae42";
