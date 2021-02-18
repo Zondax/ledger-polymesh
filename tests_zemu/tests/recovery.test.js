@@ -68,15 +68,15 @@ describe('Standard', function () {
             await sim.start({model, ...simOptions});
             const app = newPolymeshApp(sim.getTransport());
 
-            const kusama_expected_address = "JMdbWK5cy3Bm4oCyhWNLQJoC4cczNgJsyk7nLZHMqFT7z7R";
-            const kusama_expected_pk = "ffbc10f71d63e0da1b9e7ee2eb4037466551dc32b9d4641aafd73a65970fae42";
+            const polymesh_expected_address = "JMdbWK5cy3Bm4oCyhWNLQJoC4cczNgJsyk7nLZHMqFT7z7R";
+            const polymesh_expected_pk = "ffbc10f71d63e0da1b9e7ee2eb4037466551dc32b9d4641aafd73a65970fae42";
             const polkadot_expected_address = "HgG1gzDdu16uEQYpjM2P6DMDVJBfqHtrneNUg476XZxbFnW";
             const polkadot_expected_pk = "e1b4d72d27b3e91b9b6116555b4ea17138ddc12ca7cdbab30e2e0509bd848419";
 
             let resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000);
             console.log(resp)
-            expect(resp.address).toEqual(kusama_expected_address);
-            expect(resp.pubKey).toEqual(kusama_expected_pk);
+            expect(resp.address).toEqual(polymesh_expected_address);
+            expect(resp.pubKey).toEqual(polymesh_expected_pk);
 
             await activateSecretMode(sim)
 

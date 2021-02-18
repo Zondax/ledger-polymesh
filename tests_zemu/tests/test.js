@@ -30,7 +30,7 @@ var simOptions = {
     logging: true,
     start_delay: 3000,
     custom: `-s "${APP_SEED}"`,
-    X11: false
+    X11: true
 };
 
 let models = [
@@ -174,7 +174,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal`, 6);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal`, model === "nanos" ? 3 : 4);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -223,7 +223,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert`, 12);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert`, model === "nanos" ? 29 : 30);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -266,7 +266,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB`, 6, 1);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB`, model === "nanos" ? 4 : 5, 1);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -309,7 +309,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB_reject`, 7, 1);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB_reject`, model === "nanos" ? 7 : 8, 1);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -342,7 +342,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", "sign_utility_batch_d3", 9);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_d3`, model === "nanos" ? 8 : 9);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -373,16 +373,19 @@ describe('Standard', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "29001000002c0000000000580000000000840000000000b0000000d5030000dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            let txBlobStr = "29000c00002c000000000058000000000084000000d503910103d2029649dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
             const txBlob = Buffer.from(txBlobStr, "hex");
 
             const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_reject`, model === "nanos" ? 9 : 10);
+
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
-            expect(signatureResponse.return_code).toEqual(0x6984);
-            expect(signatureResponse.error_message).toEqual("Max nesting limit reached");
-
+            expect(signatureResponse.return_code).toEqual(0x6986);
+            expect(signatureResponse.error_message).toEqual("Transaction rejected");
         } finally {
             await sim.close();
         }
@@ -397,7 +400,7 @@ describe('Standard', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "060540632751e57bd704b9d0e1a016f35e86df929bac522e6cfc4eae03eb2a4411862ff768f8cd08f228b69a8bd71da4caa9611fcfc1be95df68cc1a28e45d7f8e4e38b80d7731115479b1bd9918a1294bd9d22c62f7de1bbe2553525dd52a779b3110ff28e16b81b22bbc3d3163b3ba1fefb9438cea8560cb0711308ab398351c89464eb2015e9a9082ac9eecd9d08868b7c38a1ed3eee6625ac027c83c49c3d57064de8952adef2e842465ec59eca2c83574a158640b294e539eae2b64c3fe86b1c7432f90c11bde3958ed8cfe29e26cd6d951d4047a4245e608743be02e7cca6c28d7d91d06e16880c2dc29b7d6d79255048a78212c76436b1fbfe96e9a61be9f0438131d928b065389b2c7eacf4ba6d3599ea01f7e142e48391e784e5603a88c53f1559a8bac1a6969efb9d30b3fad16b8d361a286072b443167a588363bd1146177d8eb34473d68f27d638321d6c35942057253842d9b9770c574dbb7b0a9ce6cac2bd27d0692ebf2d661f587354b41a8b47bce6240dc76a0f802a22930ca77814b79a4c8b3a02ae3b6bffed9ae90b186ceb8976f65dba2cd278c80170d447f49eab42ba84f4f319580c8e5dd0561df82f00d6178fc0661a12033eccdafae1a98c755a79b7622993005a2877a797c968ebd895fa9fab4e5e6bb88e87fb9ebfc0674741994dd6f5c40fb06adc78b9f53ae1cdcb369c77a528ea6ee2a140064783fd50391018ed73e0de707000003000000b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafeb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe";
+            let txBlobStr = "08054000f0c74a8500c5b8c96a648236886f8a92b96a9f52791ffc6ab801a034887ebf4f0080a01d8a0c982bb5168a76bc6387f6c5c07121b1708d2d6189fa4b4aa336113700ecf8fd4b9c748a7baf6d83933f4a470a394a4cb97375dc747be58222dae6fe660028ab7c39c82820284f6513a5709ce60db444127363fb62ea941a22bca777d95900a2a56d7e838653933fd36e5a0a307bd9c1fc196af9ed29eacfe31ea41540776600e63166b3416619b8fc5501054ba6ccabacf8168e221363ec7e12c95ea66b7623000ef4bd969740ccc4a860d2b60e2df766f92b075b985ca178ef5581c22681fe0b007ede40cfeb8592d7626347bfb8ebdfacaaaa3350c982d384d9ac6f183c0ab90c00be7b7b9260071da18923cbeb5ba56c8df53490c80baaf8f7a53b17756ec6ed0a008ab9ee1d7ddd0a41918baba2221b63758195cdef662e94cb1b0410bfad8da37e000e95f6bf1d64fb2765af2202a8f262f7e02d49c2d7a55de644dcbb26e658522f00365cb5c9480ab97bf756d4d14109e43285717d3e47073491af6134bd027bdc06008e97da96e2323b8ee4976da07cd1514bf4a7a123bdab1e2a74aec405d6ca644600f6ada0eec0bf9b898e8d51f5f3939a6b3cf2e0e17ed5b778c6002e6e97c1af0100dc12f0393490fc9254cbeb68d57151687927721f2bb751aed8e41f8bd47fd41100ea5a4502661aa5acfffff661832590c0d99b1e0c9a0f6fdcac4c00e58080e771d50391010b63ce64c10c05dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 

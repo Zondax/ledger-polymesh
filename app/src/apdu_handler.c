@@ -60,9 +60,11 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
         THROW(APDU_CODE_DATA_INVALID);
     }
 #else
+#if defined(APP_SECRET_MODE_ENABLED)
     if (app_mode_secret()) {
         hdPath[1] = HDPATH_1_RECOVERY;
     }
+#endif
 #endif
 }
 
