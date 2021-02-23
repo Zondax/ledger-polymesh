@@ -68,9 +68,9 @@ describe('Standard', function () {
             await sim.start({model, ...simOptions});
             const app = newPolymeshApp(sim.getTransport());
 
-            const polymesh_expected_address = "JMdbWK5cy3Bm4oCyhWNLQJoC4cczNgJsyk7nLZHMqFT7z7R";
-            const polymesh_expected_pk = "ffbc10f71d63e0da1b9e7ee2eb4037466551dc32b9d4641aafd73a65970fae42";
-            const polkadot_expected_address = "HgG1gzDdu16uEQYpjM2P6DMDVJBfqHtrneNUg476XZxbFnW";
+            const polymesh_expected_address = "2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr";
+            const polymesh_expected_pk = "c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a";
+            const polkadot_expected_address = "2HYrbcQFUokNTpTBt49GA6sbgLj8Dfb6kCBgdWV7j5WqQfhL";
             const polkadot_expected_pk = "e1b4d72d27b3e91b9b6116555b4ea17138ddc12ca7cdbab30e2e0509bd848419";
 
             let resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000);
