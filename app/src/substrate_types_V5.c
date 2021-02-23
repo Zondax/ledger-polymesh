@@ -1385,7 +1385,6 @@ parser_error_t _readValidatorPrefs_V5(parser_context_t* c, pd_ValidatorPrefs_V5_
 {
     CHECK_INPUT();
     CHECK_ERROR(_readCompactPerBill_V5(c, &v->commission));
-    CHECK_ERROR(_readUInt8(c, &v->blocked));
     return parser_ok;
 }
 
@@ -5025,30 +5024,7 @@ parser_error_t _toStringValidatorPrefs_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-
-    // Index + count pages
-    uint8_t pages[2];
-    CHECK_ERROR(_toStringCompactPerBill_V5(&v->commission, outValue, outValueLen, 0, &pages[0]))
-    CHECK_ERROR(_toStringbool(&v->blocked, outValue, outValueLen, 0, &pages[1]))
-
-    *pageCount = pages[0] + pages[1];
-    if (pageIdx > *pageCount) {
-        return parser_display_idx_out_of_range;
-    }
-
-    if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringCompactPerBill_V5(&v->commission, outValue, outValueLen, pageIdx, &pages[0]))
-        return parser_ok;
-    }
-    pageIdx -= pages[0];
-
-    //////
-    if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringbool(&v->blocked, outValue, outValueLen, pageIdx, &pages[1]))
-        return parser_ok;
-    }
-
-    return parser_display_idx_out_of_range;
+    return _toStringCompactPerBill_V5(&v->commission, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringVenueDetails_V5(
