@@ -66,6 +66,13 @@ extern "C" {
     }                                                                                   \
     return parser_ok;
 
+#define GEN_DEF_TOSTRING_ENUM(NAME) \
+(*pageCount)++;                                    \
+if(pageIdx == 0) { snprintf(outValue, outValueLen, NAME );            \
+return parser_ok;                                                     \
+}                                                                     \
+pageIdx--;                                                            \
+
 #define GEN_DEC_READFIX_UNSIGNED(BITS) parser_error_t _readUInt ## BITS(parser_context_t *ctx, uint ## BITS ##_t *value)
 #define GEN_DEF_READFIX_UNSIGNED(BITS) parser_error_t _readUInt ## BITS(parser_context_t *ctx, uint ## BITS ##_t *value) \
 {                                                                                           \

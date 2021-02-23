@@ -1914,29 +1914,66 @@ parser_error_t _toStringAuthorizationData_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
+    // If pageIdx == 0, prints enum name, else prints value.
+
     switch (v->value) {
-    case 0:
-    case 1:
-        CHECK_ERROR(_toStringIdentityId_V5(&v->identityId, outValue, outValueLen, pageIdx, pageCount);)
+    case 0: // AttestPrimaryKeyRotation
+        CHECK_ERROR(_toStringIdentityId_V5(&v->identityId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("AttestPrimaryKeyRotation")
+        CHECK_ERROR(_toStringIdentityId_V5(&v->identityId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 2:
-    case 3:
-    case 5:
-    case 8:
-    case 10:
-        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, pageCount);)
+    case 1: // RotatePrimaryKey
+        CHECK_ERROR(_toStringIdentityId_V5(&v->identityId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("RotatePrimaryKey")
+        CHECK_ERROR(_toStringIdentityId_V5(&v->identityId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 4:
-        CHECK_ERROR(_toStringAccountId_V5(&v->accountId, outValue, outValueLen, pageIdx, pageCount);)
+    case 2: // TransferTicker
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("TransferTicker")
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 6:
-        CHECK_ERROR(_toStringPermissions_V5(&v->permissions, outValue, outValueLen, pageIdx, pageCount);)
+    case 3: // TransferPrimaryIssuanceAgent
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("TransferPrimaryIssuanceAgent")
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 7:
-        CHECK_ERROR(_toStringPortfolioId_V5(&v->portfolioId, outValue, outValueLen, pageIdx, pageCount);)
+    case 5: // TransferAssetOwnership
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("TransferAssetOwnership")
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 9:
+    case 8: // Custom
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Custom")
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 10: // TransferCorporateActionAgent
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("TransferCorporateActionAgent")
+        CHECK_ERROR(_toStringTicker_V5(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 4: // AddMultiSigSigner
+        CHECK_ERROR(_toStringAccountId_V5(&v->accountId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("AddMultiSigSigner")
+        CHECK_ERROR(_toStringAccountId_V5(&v->accountId, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 6: // JoinIdentity
+        CHECK_ERROR(_toStringPermissions_V5(&v->permissions, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("JoinIdentity")
+        CHECK_ERROR(_toStringPermissions_V5(&v->permissions, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 7: // PortfolioCustody
+        CHECK_ERROR(_toStringPortfolioId_V5(&v->portfolioId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("PortfolioCustody")
+        CHECK_ERROR(_toStringPortfolioId_V5(&v->portfolioId, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 9: // NoData
         snprintf(outValue, outValueLen, "NoData");
+        *pageCount = 1;
         break;
     default:
         return parser_unexpected_value;
@@ -2430,27 +2467,66 @@ parser_error_t _toStringClaim_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
+    // If pageIdx == 0, prints enum name, else prints value.
+
     switch (v->value) {
     case 0: // Accredited
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Accredited");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 1: // Affiliate
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Affiliate");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 2: // BuyLockup
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("BuyLockup");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 3: // SellLockup
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("SellLockup");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 5: // KnowYourCustomer
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("KnowYourCustomer");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 7: // Exempted
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Exempted");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 8: // Blocked
-        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, pageCount));
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Blocked");
+        CHECK_ERROR(_toStringScope_V5(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
         break;
     case 4: // CustomerDueDiligence
-        CHECK_ERROR(_toStringCddId_V5(&v->cddId, outValue, outValueLen, pageIdx, pageCount));
+        CHECK_ERROR(_toStringCddId_V5(&v->cddId, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("CustomerDueDiligence");
+        CHECK_ERROR(_toStringCddId_V5(&v->cddId, outValue, outValueLen, pageIdx, &_dummy));
         break;
     case 6: // Jurisdiction
-        CHECK_ERROR(_toStringTupleCountryCodeScope_V5(&v->jurisdiction, outValue, outValueLen, pageIdx, pageCount));
+        CHECK_ERROR(_toStringTupleCountryCodeScope_V5(&v->jurisdiction, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Jurisdiction");
+        CHECK_ERROR(_toStringTupleCountryCodeScope_V5(&v->jurisdiction, outValue, outValueLen, pageIdx, &_dummy));
         break;
     case 9: // InvestorUniqueness
-        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V5(&v->investorUniqueness, outValue, outValueLen, pageIdx, pageCount));
+        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V5(&v->investorUniqueness, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("InvestorUniqueness");
+        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V5(&v->investorUniqueness, outValue, outValueLen, pageIdx, &_dummy));
         break;
     case 10: // NoData
         snprintf(outValue, outValueLen, "NoData");
+        *pageCount = 1;
         break;
     default:
         return parser_unexpected_value;
