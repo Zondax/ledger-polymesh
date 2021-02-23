@@ -1,5 +1,5 @@
 #*******************************************************************************
-#*   (c) 2020 Zondax GmbH
+#*   (c) 2019 Zondax GmbH
 #*
 #*  Licensed under the Apache License, Version 2.0 (the "License");
 #*  you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@
 #TESTS_JS_DIR = $(CURDIR)/../ledger-polkadot-js
 
 ifeq ($(BOLOS_SDK),)
+# In this case, there is not predefined SDK and we run dockerized
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
+
 else
 default:
 	$(MAKE) -C app
@@ -30,3 +32,16 @@ default:
 	$(info "Calling app Makefile for target $@")
 	COIN=$(COIN) $(MAKE) -C app $@
 endif
+
+build_sr25519: SUPPORT_SR25519=1		# Alternative app purpose
+build_sr25519: buildS
+	cp $(CURDIR)/app/bin/app.elf $(CURDIR)/app/output/app_sr25519.elf
+	cp $(CURDIR)/app/bin/app.elf $(CURDIR)/app/bin/app_sr25519.elf
+
+tests_tools_build:
+	cd tests_tools/neon && yarn install
+
+tests_tools_test: tests_tools_build
+	cd tests_tools/neon && yarn test
+
+zemu_install: tests_tools_build

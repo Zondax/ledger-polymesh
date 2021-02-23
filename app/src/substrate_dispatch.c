@@ -16,6 +16,7 @@
 #include "substrate_dispatch.h"
 #include "parser_impl.h"
 
+#include "allowlist.h"
 #include "zxmacros.h"
 #include <stdint.h>
 
@@ -25,7 +26,6 @@ parser_error_t _readMethod(
     uint8_t callIdx,
     pd_Method_t* method)
 {
-
     switch (c->tx_obj->transactionVersion) {
     case 5:
         return _readMethod_V5(c, moduleIdx, callIdx, &method->V5);
@@ -107,12 +107,60 @@ bool _getMethod_IsNestingSupported(uint32_t transactionVersion, uint8_t moduleId
     }
 }
 
-pd_VecLookupSource_t* getStakingTargets(const parser_context_t* c)
+//Special getters
+#if defined(APP_RESTRICTED)
+parser_error_t parser_validate_staking_targets(parser_context_t* c)
 {
-    switch (c->tx_obj->transactionVersion) {
-    case 5:
-        return &c->tx_obj->method.V5.nested.staking_nominate_V5.targets;
-    default:
-        return NULL;
+    if (!allowlist_is_active()) {
+        return parser_not_allowed;
     }
+
+    const uint8_t* targets_ptr;
+    uint64_t targets_lenBuffer;
+    uint64_t targets_len;
+
+    switch (c->tx_obj->transactionVersion) {
+    case 5: {
+        pd_VecLookupSource_V5_t targets = c->tx_obj->method.V5.basic.staking_nominate_V5.targets;
+        targets_ptr = targets._ptr;
+        targets_lenBuffer = targets._lenBuffer;
+        targets_len = targets._len;
+        break;
+    }
+    default:
+        return parser_not_supported;
+    }
+
+    parser_context_t ctx;
+    parser_init(&ctx, targets_ptr, targets_lenBuffer);
+    switch (c->tx_obj->transactionVersion) {
+    case 5: {
+        for (uint16_t i = 0; i < targets_len; i++) {
+            pd_LookupSource_V5_t lookupSource;
+            CHECK_ERROR(_readLookupSource_V5(&ctx, &lookupSource));
+            char buffer[100];
+            uint8_t dummy;
+            CHECK_ERROR(_toStringLookupSource_V5(&lookupSource, buffer, sizeof(buffer), 0, &dummy));
+            if (!allowlist_item_validate(buffer)) {
+                return parser_not_allowed;
+            }
+        }
+        break;
+    }
+
+    default:
+        return parser_not_supported;
+    }
+
+    return parser_ok;
 }
+#endif
+
+GEN_DEF_GETCALL(STAKING);
+GEN_DEF_GETCALL(STAKING_VALIDATE);
+GEN_DEF_GETCALL(STAKING_SET_PAYEE);
+GEN_DEF_GETCALL(STAKING_CHILL);
+GEN_DEF_GETCALL(STAKING_NOMINATE);
+GEN_DEF_GETCALL(SESSION);
+GEN_DEF_GETCALL(SESSION_SET_KEYS);
+GEN_DEF_GETCALL(SESSION_PURGE_KEYS);

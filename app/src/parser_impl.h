@@ -66,6 +66,13 @@ extern "C" {
     }                                                                                   \
     return parser_ok;
 
+#define GEN_DEF_TOSTRING_ENUM(NAME) \
+(*pageCount)++;                                    \
+if(pageIdx == 0) { snprintf(outValue, outValueLen, NAME );            \
+return parser_ok;                                                     \
+}                                                                     \
+pageIdx--;                                                            \
+
 #define GEN_DEC_READFIX_UNSIGNED(BITS) parser_error_t _readUInt ## BITS(parser_context_t *ctx, uint ## BITS ##_t *value)
 #define GEN_DEF_READFIX_UNSIGNED(BITS) parser_error_t _readUInt ## BITS(parser_context_t *ctx, uint ## BITS ##_t *value) \
 {                                                                                           \
@@ -94,6 +101,17 @@ GEN_DEC_READFIX_UNSIGNED(64);
     v->_lenBuffer = c->offset - v->_lenBuffer;                      \
     return parser_ok;
 
+#define GEN_DEF_READVECTOR_VERSION(TYPE, VERSION)                                    \
+    pd_##TYPE##_V##VERSION##_t dummy;                                            \
+    compactInt_t clen;                                              \
+    CHECK_PARSER_ERR(_readCompactInt(c, &clen));                    \
+    CHECK_PARSER_ERR(_getValue(&clen, &v->_len));                   \
+    v->_ptr = c->buffer + c->offset;                                \
+    v->_lenBuffer = c->offset;                                      \
+    for (uint64_t i = 0; i < v->_len; i++ ) CHECK_ERROR(_read##TYPE##_V##VERSION (c, &dummy));  \
+    v->_lenBuffer = c->offset - v->_lenBuffer;                      \
+    return parser_ok;
+
 #define GEN_DEF_READVECTOR_ITEM(VEC, TYPE, INDEX, VALUE)            \
     parser_context_t ctx;                                           \
     parser_init(&ctx, VEC._ptr, VEC._lenBuffer);                    \
@@ -111,6 +129,11 @@ GEN_DEC_READFIX_UNSIGNED(64);
     parser_context_t ctx;                                   \
     uint8_t chunkPageCount;                                 \
     uint16_t currentPage, currentTotalPage = 0;             \
+        if(v->_len == 0) {                                  \
+        *pageCount = 1;                                     \
+        snprintf(outValue, outValueLen, "<Empty>");         \
+        return parser_ok;                                   \
+    }                                                       \
     /* We need to do it twice because there is no memory to keep intermediate results*/ \
     /* First count*/ \
     parser_init(&ctx, v->_ptr, v->_lenBuffer);\
@@ -151,8 +174,6 @@ parser_error_t _readEra(parser_context_t *c, pd_ExtrinsicEra_t *v);
 parser_error_t _readTx(parser_context_t *c, parser_tx_t *v);
 
 uint8_t _getAddressType();
-
-parser_error_t _getNextFreeMethodSlot(const parser_context_t *c, pd_Method_t** method);
 
 parser_error_t _toStringCompactInt(const compactInt_t *c, uint8_t decimalPlaces,
                                    char postfix,

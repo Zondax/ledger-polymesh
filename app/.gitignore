@@ -39,12 +39,14 @@ cmake-build-debug/
 \.idea/workspace\.xml
 \.idea/
 
-src/glyphs\.h
-src/glyphs\.c
+glyphs/glyphs\.h
+glyphs/glyphs\.c
 obj/
 bin/
 debug/
 bin/app.sha256
 bin/app.apdu
 
+\output/app.*
 pkg/zxtool.sh
+pkg/installer_?.sh

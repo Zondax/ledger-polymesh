@@ -449,6 +449,10 @@ typedef struct {
 } pd_LocalCAId_V5_t;
 
 typedef struct {
+    const uint8_t* _ptr;
+} pd_LookupSource_V5_t;
+
+typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
 } pd_Memo_V5_t;
@@ -994,6 +998,12 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecKey_V5_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecLookupSource_V5_t;
 
 typedef struct {
     uint64_t _len;
