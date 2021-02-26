@@ -42,6 +42,7 @@ parser_error_t _readHeader(parser_context_t* c, pd_Header_t* v);
 parser_error_t _readOptionBalanceOf(parser_context_t* c, pd_OptionBalanceOf_t* v);
 parser_error_t _readProposal(parser_context_t* c, pd_Proposal_t* v);
 parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v);
+parser_error_t _readBalanceNoSymbol(parser_context_t* c, pd_BalanceNoSymbol_t* v);
 parser_error_t _readBytes(parser_context_t* c, pd_Bytes_t* v);
 parser_error_t _readCompactBalanceOf(parser_context_t* c, pd_CompactBalanceOf_t* v);
 parser_error_t _readCompactBlockNumber(parser_context_t* c, pd_CompactBlockNumber_t* v);
@@ -156,6 +157,13 @@ parser_error_t _toStringProposal(
 
 parser_error_t _toStringVecCall(
     const pd_VecCall_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringBalanceNoSymbol(
+    const pd_BalanceNoSymbol_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
