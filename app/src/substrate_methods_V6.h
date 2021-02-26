@@ -72,7 +72,7 @@ extern "C" {
 #define PD_CALL_ASSET_CONTROLLER_TRANSFER_V6 22
 typedef struct {
     pd_Ticker_V6_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
     pd_PortfolioId_V6_t from_portfolio;
 } pd_asset_controller_transfer_V6_t;
 
@@ -92,7 +92,7 @@ typedef struct {
     pd_u64_t venue_id;
     pd_OptionMoment_V6_t start;
     pd_OptionMoment_V6_t end;
-    pd_Balance_t minimum_investment;
+    pd_BalanceNoSymbol_t minimum_investment;
     pd_FundraiserName_V6_t fundraiser_name;
 } pd_sto_create_fundraiser_V6_t;
 
@@ -102,7 +102,7 @@ typedef struct {
     pd_PortfolioId_V6_t funding_portfolio;
     pd_Ticker_V6_t offering_asset;
     pd_u64_t fundraiser_id;
-    pd_Balance_t purchase_amount;
+    pd_BalanceNoSymbol_t purchase_amount;
     pd_OptionBalance_t max_price;
     pd_OptionReceiptDetails_V6_t receipt;
 } pd_sto_invest_V6_t;
@@ -1229,7 +1229,7 @@ typedef struct {
 typedef struct {
     pd_AssetName_V6_t name;
     pd_Ticker_V6_t ticker;
-    pd_Balance_t total_supply;
+    pd_BalanceNoSymbol_t total_supply;
     pd_bool_t divisible;
     pd_AssetType_V6_t asset_type;
     pd_VecAssetIdentifier_V6_t identifiers;
@@ -1255,13 +1255,13 @@ typedef struct {
 #define PD_CALL_ASSET_ISSUE_V6 8
 typedef struct {
     pd_Ticker_V6_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_issue_V6_t;
 
 #define PD_CALL_ASSET_REDEEM_V6 9
 typedef struct {
     pd_Ticker_V6_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_redeem_V6_t;
 
 #define PD_CALL_ASSET_MAKE_DIVISIBLE_V6 10

@@ -1470,7 +1470,7 @@ __Z_INLINE parser_error_t _readMethod_asset_create_asset_V6(
 {
     CHECK_ERROR(_readAssetName_V6(c, &m->name))
     CHECK_ERROR(_readTicker_V6(c, &m->ticker))
-    CHECK_ERROR(_readBalance(c, &m->total_supply))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->total_supply))
     CHECK_ERROR(_readbool(c, &m->divisible))
     CHECK_ERROR(_readAssetType_V6(c, &m->asset_type))
     CHECK_ERROR(_readVecAssetIdentifier_V6(c, &m->identifiers))
@@ -1504,7 +1504,7 @@ __Z_INLINE parser_error_t _readMethod_asset_issue_V6(
     parser_context_t* c, pd_asset_issue_V6_t* m)
 {
     CHECK_ERROR(_readTicker_V6(c, &m->ticker))
-    CHECK_ERROR(_readBalance(c, &m->value))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->value))
     return parser_ok;
 }
 
@@ -1512,7 +1512,7 @@ __Z_INLINE parser_error_t _readMethod_asset_redeem_V6(
     parser_context_t* c, pd_asset_redeem_V6_t* m)
 {
     CHECK_ERROR(_readTicker_V6(c, &m->ticker))
-    CHECK_ERROR(_readBalance(c, &m->value))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->value))
     return parser_ok;
 }
 
@@ -1615,7 +1615,7 @@ __Z_INLINE parser_error_t _readMethod_asset_controller_transfer_V6(
     parser_context_t* c, pd_asset_controller_transfer_V6_t* m)
 {
     CHECK_ERROR(_readTicker_V6(c, &m->ticker))
-    CHECK_ERROR(_readBalance(c, &m->value))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->value))
     CHECK_ERROR(_readPortfolioId_V6(c, &m->from_portfolio))
     return parser_ok;
 }
@@ -1932,7 +1932,7 @@ __Z_INLINE parser_error_t _readMethod_sto_create_fundraiser_V6(
     CHECK_ERROR(_readu64(c, &m->venue_id))
     CHECK_ERROR(_readOptionMoment_V6(c, &m->start))
     CHECK_ERROR(_readOptionMoment_V6(c, &m->end))
-    CHECK_ERROR(_readBalance(c, &m->minimum_investment))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->minimum_investment))
     CHECK_ERROR(_readFundraiserName_V6(c, &m->fundraiser_name))
     return parser_ok;
 }
@@ -1944,7 +1944,7 @@ __Z_INLINE parser_error_t _readMethod_sto_invest_V6(
     CHECK_ERROR(_readPortfolioId_V6(c, &m->funding_portfolio))
     CHECK_ERROR(_readTicker_V6(c, &m->offering_asset))
     CHECK_ERROR(_readu64(c, &m->fundraiser_id))
-    CHECK_ERROR(_readBalance(c, &m->purchase_amount))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->purchase_amount))
     CHECK_ERROR(_readOptionBalance(c, &m->max_price))
     CHECK_ERROR(_readOptionReceiptDetails_V6(c, &m->receipt))
     return parser_ok;
@@ -9692,7 +9692,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_create_asset_V6 - total_supply */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->nested.asset_create_asset_V6.total_supply,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9762,7 +9762,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_issue_V6 - value */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->nested.asset_issue_V6.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9777,7 +9777,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_redeem_V6 - value */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->nested.asset_redeem_V6.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9967,7 +9967,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_controller_transfer_V6 - value */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->basic.asset_controller_transfer_V6.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10577,7 +10577,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 8: /* sto_create_fundraiser_V6 - minimum_investment */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->basic.sto_create_fundraiser_V6.minimum_investment,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10612,7 +10612,7 @@ parser_error_t _getMethod_ItemValue_V6(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* sto_invest_V6 - purchase_amount */;
-            return _toStringBalance(
+            return _toStringBalanceNoSymbol(
                 &m->basic.sto_invest_V6.purchase_amount,
                 outValue, outValueLen,
                 pageIdx, pageCount);
