@@ -18,6 +18,65 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
+__Z_INLINE parser_error_t _readMethod_balances_transfer_V6(
+    parser_context_t* c, pd_balances_transfer_V6_t* m)
+{
+    CHECK_ERROR(_readLookupSource_V6(c, &m->dest))
+    CHECK_ERROR(_readCompactBalance(c, &m->value))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_balances_transfer_with_memo_V6(
+    parser_context_t* c, pd_balances_transfer_with_memo_V6_t* m)
+{
+    CHECK_ERROR(_readLookupSource_V6(c, &m->dest))
+    CHECK_ERROR(_readCompactBalance(c, &m->value))
+    CHECK_ERROR(_readOptionMemo_V6(c, &m->memo))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_validate_V6(
+    parser_context_t* c, pd_staking_validate_V6_t* m)
+{
+    CHECK_ERROR(_readValidatorPrefs_V6(c, &m->prefs))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_nominate_V6(
+    parser_context_t* c, pd_staking_nominate_V6_t* m)
+{
+    CHECK_ERROR(_readVecLookupSource_V6(c, &m->targets))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_chill_V6(
+    parser_context_t* c, pd_staking_chill_V6_t* m)
+{
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_set_payee_V6(
+    parser_context_t* c, pd_staking_set_payee_V6_t* m)
+{
+    CHECK_ERROR(_readRewardDestination_V6(c, &m->payee))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_session_set_keys_V6(
+    parser_context_t* c, pd_session_set_keys_V6_t* m)
+{
+    CHECK_ERROR(_readKeys_V6(c, &m->keys))
+    CHECK_ERROR(_readBytes(c, &m->proof))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_session_purge_keys_V6(
+    parser_context_t* c, pd_session_purge_keys_V6_t* m)
+{
+    return parser_ok;
+}
+
+#ifdef SUBSTRATE_PARSER_FULL
 __Z_INLINE parser_error_t _readMethod_system_fill_block_V6(
     parser_context_t* c, pd_system_fill_block_V6_t* m)
 {
@@ -146,23 +205,6 @@ __Z_INLINE parser_error_t _readMethod_indices_freeze_V6(
     parser_context_t* c, pd_indices_freeze_V6_t* m)
 {
     CHECK_ERROR(_readAccountIndex_V6(c, &m->index))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_balances_transfer_V6(
-    parser_context_t* c, pd_balances_transfer_V6_t* m)
-{
-    CHECK_ERROR(_readLookupSource_V6(c, &m->dest))
-    CHECK_ERROR(_readCompactBalance(c, &m->value))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_balances_transfer_with_memo_V6(
-    parser_context_t* c, pd_balances_transfer_with_memo_V6_t* m)
-{
-    CHECK_ERROR(_readLookupSource_V6(c, &m->dest))
-    CHECK_ERROR(_readCompactBalance(c, &m->value))
-    CHECK_ERROR(_readOptionMemo_V6(c, &m->memo))
     return parser_ok;
 }
 
@@ -499,33 +541,6 @@ __Z_INLINE parser_error_t _readMethod_staking_withdraw_unbonded_V6(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_staking_validate_V6(
-    parser_context_t* c, pd_staking_validate_V6_t* m)
-{
-    CHECK_ERROR(_readValidatorPrefs_V6(c, &m->prefs))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_nominate_V6(
-    parser_context_t* c, pd_staking_nominate_V6_t* m)
-{
-    CHECK_ERROR(_readVecLookupSource_V6(c, &m->targets))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_chill_V6(
-    parser_context_t* c, pd_staking_chill_V6_t* m)
-{
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_set_payee_V6(
-    parser_context_t* c, pd_staking_set_payee_V6_t* m)
-{
-    CHECK_ERROR(_readRewardDestination_V6(c, &m->payee))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_staking_set_controller_V6(
     parser_context_t* c, pd_staking_set_controller_V6_t* m)
 {
@@ -704,20 +719,6 @@ __Z_INLINE parser_error_t _readMethod_staking_update_permissioned_validator_inte
 {
     CHECK_ERROR(_readIdentityId_V6(c, &m->identity))
     CHECK_ERROR(_readu32(c, &m->new_intended_count))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_session_set_keys_V6(
-    parser_context_t* c, pd_session_set_keys_V6_t* m)
-{
-    CHECK_ERROR(_readKeys_V6(c, &m->keys))
-    CHECK_ERROR(_readBytes(c, &m->proof))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_session_purge_keys_V6(
-    parser_context_t* c, pd_session_purge_keys_V6_t* m)
-{
     return parser_ok;
 }
 
@@ -2365,6 +2366,8 @@ __Z_INLINE parser_error_t _readMethod_checkpoint_remove_schedule_V6(
     return parser_ok;
 }
 
+#endif
+
 parser_error_t _readMethod_V6(
     parser_context_t* c,
     uint8_t moduleIdx,
@@ -2374,6 +2377,33 @@ parser_error_t _readMethod_V6(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+
+    case 1024: /* module 4 call 0 */
+        CHECK_ERROR(_readMethod_balances_transfer_V6(c, &method->nested.balances_transfer_V6))
+        break;
+    case 1025: /* module 4 call 1 */
+        CHECK_ERROR(_readMethod_balances_transfer_with_memo_V6(c, &method->nested.balances_transfer_with_memo_V6))
+        break;
+    case 2052: /* module 8 call 4 */
+        CHECK_ERROR(_readMethod_staking_validate_V6(c, &method->nested.staking_validate_V6))
+        break;
+    case 2053: /* module 8 call 5 */
+        CHECK_ERROR(_readMethod_staking_nominate_V6(c, &method->nested.staking_nominate_V6))
+        break;
+    case 2054: /* module 8 call 6 */
+        CHECK_ERROR(_readMethod_staking_chill_V6(c, &method->nested.staking_chill_V6))
+        break;
+    case 2055: /* module 8 call 7 */
+        CHECK_ERROR(_readMethod_staking_set_payee_V6(c, &method->nested.staking_set_payee_V6))
+        break;
+    case 2560: /* module 10 call 0 */
+        CHECK_ERROR(_readMethod_session_set_keys_V6(c, &method->nested.session_set_keys_V6))
+        break;
+    case 2561: /* module 10 call 1 */
+        CHECK_ERROR(_readMethod_session_purge_keys_V6(c, &method->nested.session_purge_keys_V6))
+        break;
+
+#ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         CHECK_ERROR(_readMethod_system_fill_block_V6(c, &method->nested.system_fill_block_V6))
         break;
@@ -2427,12 +2457,6 @@ parser_error_t _readMethod_V6(
         break;
     case 772: /* module 3 call 4 */
         CHECK_ERROR(_readMethod_indices_freeze_V6(c, &method->nested.indices_freeze_V6))
-        break;
-    case 1024: /* module 4 call 0 */
-        CHECK_ERROR(_readMethod_balances_transfer_V6(c, &method->nested.balances_transfer_V6))
-        break;
-    case 1025: /* module 4 call 1 */
-        CHECK_ERROR(_readMethod_balances_transfer_with_memo_V6(c, &method->nested.balances_transfer_with_memo_V6))
         break;
     case 1026: /* module 4 call 2 */
         CHECK_ERROR(_readMethod_balances_deposit_block_reward_reserve_balance_V6(c, &method->nested.balances_deposit_block_reward_reserve_balance_V6))
@@ -2566,18 +2590,6 @@ parser_error_t _readMethod_V6(
     case 2051: /* module 8 call 3 */
         CHECK_ERROR(_readMethod_staking_withdraw_unbonded_V6(c, &method->nested.staking_withdraw_unbonded_V6))
         break;
-    case 2052: /* module 8 call 4 */
-        CHECK_ERROR(_readMethod_staking_validate_V6(c, &method->nested.staking_validate_V6))
-        break;
-    case 2053: /* module 8 call 5 */
-        CHECK_ERROR(_readMethod_staking_nominate_V6(c, &method->nested.staking_nominate_V6))
-        break;
-    case 2054: /* module 8 call 6 */
-        CHECK_ERROR(_readMethod_staking_chill_V6(c, &method->nested.staking_chill_V6))
-        break;
-    case 2055: /* module 8 call 7 */
-        CHECK_ERROR(_readMethod_staking_set_payee_V6(c, &method->nested.staking_set_payee_V6))
-        break;
     case 2056: /* module 8 call 8 */
         CHECK_ERROR(_readMethod_staking_set_controller_V6(c, &method->nested.staking_set_controller_V6))
         break;
@@ -2649,12 +2661,6 @@ parser_error_t _readMethod_V6(
         break;
     case 2079: /* module 8 call 31 */
         CHECK_ERROR(_readMethod_staking_update_permissioned_validator_intended_count_V6(c, &method->nested.staking_update_permissioned_validator_intended_count_V6))
-        break;
-    case 2560: /* module 10 call 0 */
-        CHECK_ERROR(_readMethod_session_set_keys_V6(c, &method->nested.session_set_keys_V6))
-        break;
-    case 2561: /* module 10 call 1 */
-        CHECK_ERROR(_readMethod_session_purge_keys_V6(c, &method->nested.session_purge_keys_V6))
         break;
     case 2816: /* module 11 call 0 */
         CHECK_ERROR(_readMethod_finalitytracker_final_hint_V6(c, &method->nested.finalitytracker_final_hint_V6))
@@ -3274,8 +3280,9 @@ parser_error_t _readMethod_V6(
     case 12547: /* module 49 call 3 */
         CHECK_ERROR(_readMethod_checkpoint_remove_schedule_V6(c, &method->nested.checkpoint_remove_schedule_V6))
         break;
+#endif
     default:
-        return parser_unexpected_callIndex;
+        return parser_not_supported;
     }
 
     return parser_ok;
@@ -3385,6 +3392,23 @@ const char* _getMethod_Name_V6(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1024: /* module 4 call 0 */
+        return "Transfer";
+    case 1025: /* module 4 call 1 */
+        return "Transfer with memo";
+    case 2052: /* module 8 call 4 */
+        return "Validate";
+    case 2053: /* module 8 call 5 */
+        return "Nominate";
+    case 2054: /* module 8 call 6 */
+        return "Chill";
+    case 2055: /* module 8 call 7 */
+        return "Set payee";
+    case 2560: /* module 10 call 0 */
+        return "Set keys";
+    case 2561: /* module 10 call 1 */
+        return "Purge keys";
+#ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         return "Fill block";
     case 1: /* module 0 call 1 */
@@ -3421,10 +3445,6 @@ const char* _getMethod_Name_V6(uint8_t moduleIdx, uint8_t callIdx)
         return "Force transfer";
     case 772: /* module 3 call 4 */
         return "Freeze";
-    case 1024: /* module 4 call 0 */
-        return "Transfer";
-    case 1025: /* module 4 call 1 */
-        return "Transfer with memo";
     case 1026: /* module 4 call 2 */
         return "Deposit block reward reserve balance";
     case 1027: /* module 4 call 3 */
@@ -3513,14 +3533,6 @@ const char* _getMethod_Name_V6(uint8_t moduleIdx, uint8_t callIdx)
         return "Unbond";
     case 2051: /* module 8 call 3 */
         return "Withdraw Unbonded";
-    case 2052: /* module 8 call 4 */
-        return "Validate";
-    case 2053: /* module 8 call 5 */
-        return "Nominate";
-    case 2054: /* module 8 call 6 */
-        return "Chill";
-    case 2055: /* module 8 call 7 */
-        return "Set payee";
     case 2056: /* module 8 call 8 */
         return "Set controller";
     case 2057: /* module 8 call 9 */
@@ -3569,10 +3581,6 @@ const char* _getMethod_Name_V6(uint8_t moduleIdx, uint8_t callIdx)
         return "Change slashing allowed for";
     case 2079: /* module 8 call 31 */
         return "Update permissioned validator intended count";
-    case 2560: /* module 10 call 0 */
-        return "Set keys";
-    case 2561: /* module 10 call 1 */
-        return "Purge keys";
     case 2816: /* module 11 call 0 */
         return "Final hint";
     case 3072: /* module 12 call 0 */
@@ -3985,6 +3993,7 @@ const char* _getMethod_Name_V6(uint8_t moduleIdx, uint8_t callIdx)
         return "Create schedule";
     case 12547: /* module 49 call 3 */
         return "Remove schedule";
+#endif
     default:
         return NULL;
     }
@@ -3997,6 +4006,23 @@ uint8_t _getMethod_NumItems_V6(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V6_
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1024: /* module 4 call 0 */
+        return 2;
+    case 1025: /* module 4 call 1 */
+        return 3;
+    case 2052: /* module 8 call 4 */
+        return 1;
+    case 2053: /* module 8 call 5 */
+        return 1;
+    case 2054: /* module 8 call 6 */
+        return 0;
+    case 2055: /* module 8 call 7 */
+        return 1;
+    case 2560: /* module 10 call 0 */
+        return 2;
+    case 2561: /* module 10 call 1 */
+        return 0;
+#ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         return 1;
     case 1: /* module 0 call 1 */
@@ -4033,10 +4059,6 @@ uint8_t _getMethod_NumItems_V6(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V6_
         return 3;
     case 772: /* module 3 call 4 */
         return 1;
-    case 1024: /* module 4 call 0 */
-        return 2;
-    case 1025: /* module 4 call 1 */
-        return 3;
     case 1026: /* module 4 call 2 */
         return 1;
     case 1027: /* module 4 call 3 */
@@ -4125,14 +4147,6 @@ uint8_t _getMethod_NumItems_V6(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V6_
         return 1;
     case 2051: /* module 8 call 3 */
         return 1;
-    case 2052: /* module 8 call 4 */
-        return 1;
-    case 2053: /* module 8 call 5 */
-        return 1;
-    case 2054: /* module 8 call 6 */
-        return 0;
-    case 2055: /* module 8 call 7 */
-        return 1;
     case 2056: /* module 8 call 8 */
         return 1;
     case 2057: /* module 8 call 9 */
@@ -4181,10 +4195,6 @@ uint8_t _getMethod_NumItems_V6(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V6_
         return 1;
     case 2079: /* module 8 call 31 */
         return 2;
-    case 2560: /* module 10 call 0 */
-        return 2;
-    case 2561: /* module 10 call 1 */
-        return 0;
     case 2816: /* module 11 call 0 */
         return 1;
     case 3072: /* module 12 call 0 */
@@ -4597,6 +4607,7 @@ uint8_t _getMethod_NumItems_V6(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V6_
         return 2;
     case 12547: /* module 49 call 3 */
         return 2;
+#endif
     default:
         return 0;
     }
@@ -4609,6 +4620,67 @@ const char* _getMethod_ItemName_V6(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1024: /* module 4 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return "Dest";
+        case 1:
+            return "Amount";
+        default:
+            return NULL;
+        }
+    case 1025: /* module 4 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return "Dest";
+        case 1:
+            return "Amount";
+        case 2:
+            return "Memo";
+        default:
+            return NULL;
+        }
+    case 2052: /* module 8 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return "Prefs";
+        default:
+            return NULL;
+        }
+    case 2053: /* module 8 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return "Targets";
+        default:
+            return NULL;
+        }
+    case 2054: /* module 8 call 6 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
+    case 2055: /* module 8 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return "Payee";
+        default:
+            return NULL;
+        }
+    case 2560: /* module 10 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return "Keys";
+        case 1:
+            return "Proof";
+        default:
+            return NULL;
+        }
+    case 2561: /* module 10 call 1 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
+#ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         switch (itemIdx) {
         case 0:
@@ -4742,26 +4814,6 @@ const char* _getMethod_ItemName_V6(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return "Index";
-        default:
-            return NULL;
-        }
-    case 1024: /* module 4 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Dest";
-        case 1:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 1025: /* module 4 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Dest";
-        case 1:
-            return "Amount";
-        case 2:
-            return "Memo";
         default:
             return NULL;
         }
@@ -5123,32 +5175,6 @@ const char* _getMethod_ItemName_V6(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
-    case 2052: /* module 8 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Prefs";
-        default:
-            return NULL;
-        }
-    case 2053: /* module 8 call 5 */
-        switch (itemIdx) {
-        case 0:
-            return "Targets";
-        default:
-            return NULL;
-        }
-    case 2054: /* module 8 call 6 */
-        switch (itemIdx) {
-        default:
-            return NULL;
-        }
-    case 2055: /* module 8 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return "Payee";
-        default:
-            return NULL;
-        }
     case 2056: /* module 8 call 8 */
         switch (itemIdx) {
         case 0:
@@ -5340,20 +5366,6 @@ const char* _getMethod_ItemName_V6(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return "Identity";
         case 1:
             return "New intended count";
-        default:
-            return NULL;
-        }
-    case 2560: /* module 10 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Keys";
-        case 1:
-            return "Proof";
-        default:
-            return NULL;
-        }
-    case 2561: /* module 10 call 1 */
-        switch (itemIdx) {
         default:
             return NULL;
         }
@@ -7203,6 +7215,7 @@ const char* _getMethod_ItemName_V6(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+#endif
     default:
         return NULL;
     }
@@ -7219,6 +7232,97 @@ parser_error_t _getMethod_ItemValue_V6(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1024: /* module 4 call 0 */
+        switch (itemIdx) {
+        case 0: /* balances_transfer_V6 - dest */;
+            return _toStringLookupSource_V6(
+                &m->nested.balances_transfer_V6.dest,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* balances_transfer_V6 - value */;
+            return _toStringCompactBalance(
+                &m->nested.balances_transfer_V6.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1025: /* module 4 call 1 */
+        switch (itemIdx) {
+        case 0: /* balances_transfer_with_memo_V6 - dest */;
+            return _toStringLookupSource_V6(
+                &m->nested.balances_transfer_with_memo_V6.dest,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* balances_transfer_with_memo_V6 - value */;
+            return _toStringCompactBalance(
+                &m->nested.balances_transfer_with_memo_V6.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* balances_transfer_with_memo_V6 - memo */;
+            return _toStringOptionMemo_V6(
+                &m->nested.balances_transfer_with_memo_V6.memo,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2052: /* module 8 call 4 */
+        switch (itemIdx) {
+        case 0: /* staking_validate_V6 - prefs */;
+            return _toStringValidatorPrefs_V6(
+                &m->nested.staking_validate_V6.prefs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2053: /* module 8 call 5 */
+        switch (itemIdx) {
+        case 0: /* staking_nominate_V6 - targets */;
+            return _toStringVecLookupSource_V6(
+                &m->nested.staking_nominate_V6.targets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2054: /* module 8 call 6 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+    case 2055: /* module 8 call 7 */
+        switch (itemIdx) {
+        case 0: /* staking_set_payee_V6 - payee */;
+            return _toStringRewardDestination_V6(
+                &m->nested.staking_set_payee_V6.payee,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2560: /* module 10 call 0 */
+        switch (itemIdx) {
+        case 0: /* session_set_keys_V6 - keys */;
+            return _toStringKeys_V6(
+                &m->nested.session_set_keys_V6.keys,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* session_set_keys_V6 - proof */;
+            return _toStringBytes(
+                &m->nested.session_set_keys_V6.proof,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2561: /* module 10 call 1 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+#ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         switch (itemIdx) {
         case 0: /* system_fill_block_V6 - _ratio */;
@@ -7419,41 +7523,6 @@ parser_error_t _getMethod_ItemValue_V6(
         case 0: /* indices_freeze_V6 - index */;
             return _toStringAccountIndex_V6(
                 &m->nested.indices_freeze_V6.index,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1024: /* module 4 call 0 */
-        switch (itemIdx) {
-        case 0: /* balances_transfer_V6 - dest */;
-            return _toStringLookupSource_V6(
-                &m->nested.balances_transfer_V6.dest,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* balances_transfer_V6 - value */;
-            return _toStringCompactBalance(
-                &m->nested.balances_transfer_V6.value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1025: /* module 4 call 1 */
-        switch (itemIdx) {
-        case 0: /* balances_transfer_with_memo_V6 - dest */;
-            return _toStringLookupSource_V6(
-                &m->nested.balances_transfer_with_memo_V6.dest,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* balances_transfer_with_memo_V6 - value */;
-            return _toStringCompactBalance(
-                &m->nested.balances_transfer_with_memo_V6.value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* balances_transfer_with_memo_V6 - memo */;
-            return _toStringOptionMemo_V6(
-                &m->nested.balances_transfer_with_memo_V6.memo,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -8024,41 +8093,6 @@ parser_error_t _getMethod_ItemValue_V6(
         default:
             return parser_no_data;
         }
-    case 2052: /* module 8 call 4 */
-        switch (itemIdx) {
-        case 0: /* staking_validate_V6 - prefs */;
-            return _toStringValidatorPrefs_V6(
-                &m->nested.staking_validate_V6.prefs,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2053: /* module 8 call 5 */
-        switch (itemIdx) {
-        case 0: /* staking_nominate_V6 - targets */;
-            return _toStringVecLookupSource_V6(
-                &m->nested.staking_nominate_V6.targets,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2054: /* module 8 call 6 */
-        switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
-    case 2055: /* module 8 call 7 */
-        switch (itemIdx) {
-        case 0: /* staking_set_payee_V6 - payee */;
-            return _toStringRewardDestination_V6(
-                &m->nested.staking_set_payee_V6.payee,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 2056: /* module 8 call 8 */
         switch (itemIdx) {
         case 0: /* staking_set_controller_V6 - controller */;
@@ -8361,26 +8395,6 @@ parser_error_t _getMethod_ItemValue_V6(
                 &m->nested.staking_update_permissioned_validator_intended_count_V6.new_intended_count,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2560: /* module 10 call 0 */
-        switch (itemIdx) {
-        case 0: /* session_set_keys_V6 - keys */;
-            return _toStringKeys_V6(
-                &m->nested.session_set_keys_V6.keys,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* session_set_keys_V6 - proof */;
-            return _toStringBytes(
-                &m->nested.session_set_keys_V6.proof,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2561: /* module 10 call 1 */
-        switch (itemIdx) {
         default:
             return parser_no_data;
         }
@@ -11454,6 +11468,7 @@ parser_error_t _getMethod_ItemValue_V6(
         default:
             return parser_no_data;
         }
+#endif
     default:
         return parser_ok;
     }

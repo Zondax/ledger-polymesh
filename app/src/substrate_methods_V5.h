@@ -68,6 +68,7 @@ extern "C" {
 #define PD_CALL_CAPITALDISTRIBUTION_V5 48
 #define PD_CALL_CHECKPOINT_V5 49
 
+#ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_STO_CREATE_FUNDRAISER_V5 0
 typedef struct {
     pd_PortfolioId_V5_t offering_portfolio;
@@ -78,7 +79,7 @@ typedef struct {
     pd_u64_t venue_id;
     pd_OptionMoment_V5_t start;
     pd_OptionMoment_V5_t end;
-    pd_Balance_t minimum_investment;
+    pd_BalanceNoSymbol_t minimum_investment;
     pd_FundraiserName_V5_t fundraiser_name;
 } pd_sto_create_fundraiser_V5_t;
 
@@ -88,7 +89,7 @@ typedef struct {
     pd_PortfolioId_V5_t funding_portfolio;
     pd_Ticker_V5_t offering_asset;
     pd_u64_t fundraiser_id;
-    pd_Balance_t investment_amount;
+    pd_BalanceNoSymbol_t investment_amount;
     pd_OptionBalance_t max_price;
     pd_OptionReceiptDetails_V5_t receipt;
 } pd_sto_invest_V5_t;
@@ -119,15 +120,62 @@ typedef struct {
     pd_u64_t fundraiser_id;
 } pd_sto_stop_V5_t;
 
+#endif
+
 typedef union {
+#ifdef SUBSTRATE_PARSER_FULL
     pd_sto_create_fundraiser_V5_t sto_create_fundraiser_V5;
     pd_sto_invest_V5_t sto_invest_V5;
     pd_sto_freeze_fundraiser_V5_t sto_freeze_fundraiser_V5;
     pd_sto_unfreeze_fundraiser_V5_t sto_unfreeze_fundraiser_V5;
     pd_sto_modify_fundraiser_window_V5_t sto_modify_fundraiser_window_V5;
     pd_sto_stop_V5_t sto_stop_V5;
+#endif
 } pd_MethodBasic_V5_t;
 
+#define PD_CALL_BALANCES_TRANSFER_V5 0
+typedef struct {
+    pd_LookupSource_V5_t dest;
+    pd_CompactBalance_t value;
+} pd_balances_transfer_V5_t;
+
+#define PD_CALL_BALANCES_TRANSFER_WITH_MEMO_V5 1
+typedef struct {
+    pd_LookupSource_V5_t dest;
+    pd_CompactBalance_t value;
+    pd_OptionMemo_V5_t memo;
+} pd_balances_transfer_with_memo_V5_t;
+
+#define PD_CALL_STAKING_VALIDATE_V5 4
+typedef struct {
+    pd_ValidatorPrefs_V5_t prefs;
+} pd_staking_validate_V5_t;
+
+#define PD_CALL_STAKING_NOMINATE_V5 5
+typedef struct {
+    pd_VecLookupSource_V5_t targets;
+} pd_staking_nominate_V5_t;
+
+#define PD_CALL_STAKING_CHILL_V5 6
+typedef struct {
+} pd_staking_chill_V5_t;
+
+#define PD_CALL_STAKING_SET_PAYEE_V5 7
+typedef struct {
+    pd_RewardDestination_V5_t payee;
+} pd_staking_set_payee_V5_t;
+
+#define PD_CALL_SESSION_SET_KEYS_V5 0
+typedef struct {
+    pd_Keys_V5_t keys;
+    pd_Bytes_t proof;
+} pd_session_set_keys_V5_t;
+
+#define PD_CALL_SESSION_PURGE_KEYS_V5 1
+typedef struct {
+} pd_session_purge_keys_V5_t;
+
+#ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_SYSTEM_FILL_BLOCK_V5 0
 typedef struct {
     pd_Perbill_V5_t _ratio;
@@ -222,19 +270,6 @@ typedef struct {
 typedef struct {
     pd_AccountIndex_V5_t index;
 } pd_indices_freeze_V5_t;
-
-#define PD_CALL_BALANCES_TRANSFER_V5 0
-typedef struct {
-    pd_LookupSource_V5_t dest;
-    pd_CompactBalance_t value;
-} pd_balances_transfer_V5_t;
-
-#define PD_CALL_BALANCES_TRANSFER_WITH_MEMO_V5 1
-typedef struct {
-    pd_LookupSource_V5_t dest;
-    pd_CompactBalance_t value;
-    pd_OptionMemo_V5_t memo;
-} pd_balances_transfer_with_memo_V5_t;
 
 #define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V5 2
 typedef struct {
@@ -444,25 +479,6 @@ typedef struct {
     pd_u32_t num_slashing_spans;
 } pd_staking_withdraw_unbonded_V5_t;
 
-#define PD_CALL_STAKING_VALIDATE_V5 4
-typedef struct {
-    pd_ValidatorPrefs_V5_t prefs;
-} pd_staking_validate_V5_t;
-
-#define PD_CALL_STAKING_NOMINATE_V5 5
-typedef struct {
-    pd_VecLookupSource_V5_t targets;
-} pd_staking_nominate_V5_t;
-
-#define PD_CALL_STAKING_CHILL_V5 6
-typedef struct {
-} pd_staking_chill_V5_t;
-
-#define PD_CALL_STAKING_SET_PAYEE_V5 7
-typedef struct {
-    pd_RewardDestination_V5_t payee;
-} pd_staking_set_payee_V5_t;
-
 #define PD_CALL_STAKING_SET_CONTROLLER_V5 8
 typedef struct {
     pd_LookupSource_V5_t controller;
@@ -595,16 +611,6 @@ typedef struct {
     pd_IdentityId_V5_t identity;
     pd_u32_t new_intended_count;
 } pd_staking_update_permissioned_validator_intended_count_V5_t;
-
-#define PD_CALL_SESSION_SET_KEYS_V5 0
-typedef struct {
-    pd_Keys_V5_t keys;
-    pd_Bytes_t proof;
-} pd_session_set_keys_V5_t;
-
-#define PD_CALL_SESSION_PURGE_KEYS_V5 1
-typedef struct {
-} pd_session_purge_keys_V5_t;
 
 #define PD_CALL_FINALITYTRACKER_FINAL_HINT_V5 0
 typedef struct {
@@ -1178,7 +1184,7 @@ typedef struct {
 typedef struct {
     pd_AssetName_V5_t name;
     pd_Ticker_V5_t ticker;
-    pd_Balance_t total_supply;
+    pd_BalanceNoSymbol_t total_supply;
     pd_bool_t divisible;
     pd_AssetType_V5_t asset_type;
     pd_VecAssetIdentifier_V5_t identifiers;
@@ -1204,13 +1210,13 @@ typedef struct {
 #define PD_CALL_ASSET_ISSUE_V5 8
 typedef struct {
     pd_Ticker_V5_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_issue_V5_t;
 
 #define PD_CALL_ASSET_REDEEM_V5 9
 typedef struct {
     pd_Ticker_V5_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_redeem_V5_t;
 
 #define PD_CALL_ASSET_MAKE_DIVISIBLE_V5 10
@@ -1810,7 +1816,18 @@ typedef struct {
     pd_ScheduleId_V5_t id;
 } pd_checkpoint_remove_schedule_V5_t;
 
+#endif
+
 typedef union {
+    pd_balances_transfer_V5_t balances_transfer_V5;
+    pd_balances_transfer_with_memo_V5_t balances_transfer_with_memo_V5;
+    pd_staking_validate_V5_t staking_validate_V5;
+    pd_staking_nominate_V5_t staking_nominate_V5;
+    pd_staking_chill_V5_t staking_chill_V5;
+    pd_staking_set_payee_V5_t staking_set_payee_V5;
+    pd_session_set_keys_V5_t session_set_keys_V5;
+    pd_session_purge_keys_V5_t session_purge_keys_V5;
+#ifdef SUBSTRATE_PARSER_FULL
     pd_system_fill_block_V5_t system_fill_block_V5;
     pd_system_remark_V5_t system_remark_V5;
     pd_system_set_heap_pages_V5_t system_set_heap_pages_V5;
@@ -1829,8 +1846,6 @@ typedef union {
     pd_indices_free_V5_t indices_free_V5;
     pd_indices_force_transfer_V5_t indices_force_transfer_V5;
     pd_indices_freeze_V5_t indices_freeze_V5;
-    pd_balances_transfer_V5_t balances_transfer_V5;
-    pd_balances_transfer_with_memo_V5_t balances_transfer_with_memo_V5;
     pd_balances_deposit_block_reward_reserve_balance_V5_t balances_deposit_block_reward_reserve_balance_V5;
     pd_balances_set_balance_V5_t balances_set_balance_V5;
     pd_balances_force_transfer_V5_t balances_force_transfer_V5;
@@ -1868,10 +1883,6 @@ typedef union {
     pd_staking_bond_extra_V5_t staking_bond_extra_V5;
     pd_staking_unbond_V5_t staking_unbond_V5;
     pd_staking_withdraw_unbonded_V5_t staking_withdraw_unbonded_V5;
-    pd_staking_validate_V5_t staking_validate_V5;
-    pd_staking_nominate_V5_t staking_nominate_V5;
-    pd_staking_chill_V5_t staking_chill_V5;
-    pd_staking_set_payee_V5_t staking_set_payee_V5;
     pd_staking_set_controller_V5_t staking_set_controller_V5;
     pd_staking_set_validator_count_V5_t staking_set_validator_count_V5;
     pd_staking_increase_validator_count_V5_t staking_increase_validator_count_V5;
@@ -1896,8 +1907,6 @@ typedef union {
     pd_staking_payout_stakers_by_system_V5_t staking_payout_stakers_by_system_V5;
     pd_staking_change_slashing_allowed_for_V5_t staking_change_slashing_allowed_for_V5;
     pd_staking_update_permissioned_validator_intended_count_V5_t staking_update_permissioned_validator_intended_count_V5;
-    pd_session_set_keys_V5_t session_set_keys_V5;
-    pd_session_purge_keys_V5_t session_purge_keys_V5;
     pd_finalitytracker_final_hint_V5_t finalitytracker_final_hint_V5;
     pd_grandpa_report_equivocation_V5_t grandpa_report_equivocation_V5;
     pd_grandpa_report_equivocation_unsigned_V5_t grandpa_report_equivocation_unsigned_V5;
@@ -2104,6 +2113,7 @@ typedef union {
     pd_checkpoint_set_schedules_max_complexity_V5_t checkpoint_set_schedules_max_complexity_V5;
     pd_checkpoint_create_schedule_V5_t checkpoint_create_schedule_V5;
     pd_checkpoint_remove_schedule_V5_t checkpoint_remove_schedule_V5;
+#endif
 } pd_MethodNested_V5_t;
 
 typedef union {
