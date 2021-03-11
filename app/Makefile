@@ -53,6 +53,11 @@ DEFINES += SUPPORT_SR25519
 $(info ************  SR25519 ENABLED ************)
 endif
 
+ifeq ($(SUBSTRATE_PARSER_FULL),1)
+DEFINES += SUBSTRATE_PARSER_FULL
+$(info ************ FULL PARSER ENABLED ************)
+endif
+
 ifndef COIN
 COIN=POLYX
 endif
