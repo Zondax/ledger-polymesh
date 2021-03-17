@@ -73,6 +73,7 @@ APPPATH = "44'/595'"
 
 else ifeq ($(COIN),Ledgeracio)
 DEFINES += APP_RESTRICTED
+DEFINES += SUBSTRATE_PARSER_FULL
 APPNAME = "Polymesh_sec"
 APPPATH = "44'/595'"
 
@@ -183,7 +184,7 @@ AS := $(GCCPATH)arm-none-eabi-gcc
 AFLAGS +=
 
 LD       := $(GCCPATH)arm-none-eabi-gcc
-LDFLAGS  += -O3 -Os
+LDFLAGS  += -O3 -Os --specs=nano.specs
 LDFLAGS  += -z muldefs
 LDLIBS   += -lm -lgcc -lc
 LDLIBS   += -Lrust/target/thumbv6m-none-eabi/release -lrslib
