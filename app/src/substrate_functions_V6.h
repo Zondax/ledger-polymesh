@@ -84,6 +84,7 @@ parser_error_t _readKeyValue_V6(parser_context_t* c, pd_KeyValue_V6_t* v);
 parser_error_t _readKey_V6(parser_context_t* c, pd_Key_V6_t* v);
 parser_error_t _readKeys_V6(parser_context_t* c, pd_Keys_V6_t* v);
 parser_error_t _readLeg_V6(parser_context_t* c, pd_Leg_V6_t* v);
+parser_error_t _readLegacyPalletPermissions_V6(parser_context_t* c, pd_LegacyPalletPermissions_V6_t* v);
 parser_error_t _readLegacyPermissions_V6(parser_context_t* c, pd_LegacyPermissions_V6_t* v);
 parser_error_t _readLocalCAId_V6(parser_context_t* c, pd_LocalCAId_V6_t* v);
 parser_error_t _readLookupSource_V6(parser_context_t* c, pd_LookupSource_V6_t* v);
@@ -115,6 +116,7 @@ parser_error_t _readOptionTargetIdentities_V6(parser_context_t* c, pd_OptionTarg
 parser_error_t _readOptionTax_V6(parser_context_t* c, pd_OptionTax_V6_t* v);
 parser_error_t _readOptionUrl_V6(parser_context_t* c, pd_OptionUrl_V6_t* v);
 parser_error_t _readOptionVecDispatchableName_V6(parser_context_t* c, pd_OptionVecDispatchableName_V6_t* v);
+parser_error_t _readOptionVecLegacyPalletPermissions_V6(parser_context_t* c, pd_OptionVecLegacyPalletPermissions_V6_t* v);
 parser_error_t _readOptionVecPalletPermissions_V6(parser_context_t* c, pd_OptionVecPalletPermissions_V6_t* v);
 parser_error_t _readOptionVecPortfolioId_V6(parser_context_t* c, pd_OptionVecPortfolioId_V6_t* v);
 parser_error_t _readOptionVecTicker_V6(parser_context_t* c, pd_OptionVecTicker_V6_t* v);
@@ -198,6 +200,7 @@ parser_error_t _readVecIdentityId_V6(parser_context_t* c, pd_VecIdentityId_V6_t*
 parser_error_t _readVecKeyValue_V6(parser_context_t* c, pd_VecKeyValue_V6_t* v);
 parser_error_t _readVecKey_V6(parser_context_t* c, pd_VecKey_V6_t* v);
 parser_error_t _readVecLeg_V6(parser_context_t* c, pd_VecLeg_V6_t* v);
+parser_error_t _readVecLegacyPalletPermissions_V6(parser_context_t* c, pd_VecLegacyPalletPermissions_V6_t* v);
 parser_error_t _readVecLookupSource_V6(parser_context_t* c, pd_VecLookupSource_V6_t* v);
 parser_error_t _readVecMotion_V6(parser_context_t* c, pd_VecMotion_V6_t* v);
 parser_error_t _readVecMovePortfolioItem_V6(parser_context_t* c, pd_VecMovePortfolioItem_V6_t* v);
@@ -626,6 +629,13 @@ parser_error_t _toStringLeg_V6(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringLegacyPalletPermissions_V6(
+    const pd_LegacyPalletPermissions_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringLegacyPermissions_V6(
     const pd_LegacyPermissions_V6_t* v,
     char* outValue,
@@ -838,6 +848,13 @@ parser_error_t _toStringOptionUrl_V6(
 
 parser_error_t _toStringOptionVecDispatchableName_V6(
     const pd_OptionVecDispatchableName_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringOptionVecLegacyPalletPermissions_V6(
+    const pd_OptionVecLegacyPalletPermissions_V6_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1419,6 +1436,13 @@ parser_error_t _toStringVecKey_V6(
 
 parser_error_t _toStringVecLeg_V6(
     const pd_VecLeg_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringVecLegacyPalletPermissions_V6(
+    const pd_VecLegacyPalletPermissions_V6_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

@@ -178,6 +178,124 @@ typedef struct {
     pd_OptionMemo_V6_t memo;
 } pd_balances_transfer_with_memo_V6_t;
 
+#define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V6 4
+typedef struct {
+    pd_VecSignatory_V6_t signers_to_remove;
+} pd_identity_remove_secondary_keys_V6_t;
+
+#define PD_CALL_IDENTITY_ACCEPT_PRIMARY_KEY_V6 5
+typedef struct {
+    pd_u64_t rotation_auth_id;
+    pd_Optionu64_t optional_cdd_auth_id;
+} pd_identity_accept_primary_key_V6_t;
+
+#define PD_CALL_IDENTITY_JOIN_IDENTITY_AS_KEY_V6 7
+typedef struct {
+    pd_u64_t auth_id;
+} pd_identity_join_identity_as_key_V6_t;
+
+#define PD_CALL_IDENTITY_JOIN_IDENTITY_AS_IDENTITY_V6 8
+typedef struct {
+    pd_u64_t auth_id;
+} pd_identity_join_identity_as_identity_V6_t;
+
+#define PD_CALL_IDENTITY_LEAVE_IDENTITY_AS_KEY_V6 9
+typedef struct {
+} pd_identity_leave_identity_as_key_V6_t;
+
+#define PD_CALL_IDENTITY_LEAVE_IDENTITY_AS_IDENTITY_V6 10
+typedef struct {
+    pd_IdentityId_V6_t did;
+} pd_identity_leave_identity_as_identity_V6_t;
+
+#define PD_CALL_IDENTITY_ADD_CLAIM_V6 11
+typedef struct {
+    pd_IdentityId_V6_t target;
+    pd_Claim_V6_t claim;
+    pd_OptionMoment_V6_t expiry;
+} pd_identity_add_claim_V6_t;
+
+#define PD_CALL_IDENTITY_REVOKE_CLAIM_V6 13
+typedef struct {
+    pd_IdentityId_V6_t target;
+    pd_Claim_V6_t claim;
+} pd_identity_revoke_claim_V6_t;
+
+#define PD_CALL_IDENTITY_SET_PERMISSION_TO_SIGNER_V6 14
+typedef struct {
+    pd_Signatory_V6_t signer;
+    pd_Permissions_V6_t permissions;
+} pd_identity_set_permission_to_signer_V6_t;
+
+#define PD_CALL_IDENTITY_LEGACY_SET_PERMISSION_TO_SIGNER_V6 15
+typedef struct {
+    pd_Signatory_V6_t signer;
+    pd_LegacyPermissions_V6_t permissions;
+} pd_identity_legacy_set_permission_to_signer_V6_t;
+
+#define PD_CALL_IDENTITY_FREEZE_SECONDARY_KEYS_V6 16
+typedef struct {
+} pd_identity_freeze_secondary_keys_V6_t;
+
+#define PD_CALL_IDENTITY_UNFREEZE_SECONDARY_KEYS_V6 17
+typedef struct {
+} pd_identity_unfreeze_secondary_keys_V6_t;
+
+#define PD_CALL_IDENTITY_ADD_AUTHORIZATION_V6 20
+typedef struct {
+    pd_Signatory_V6_t target;
+    pd_AuthorizationData_V6_t authorization_data;
+    pd_OptionMoment_V6_t expiry;
+} pd_identity_add_authorization_V6_t;
+
+#define PD_CALL_IDENTITY_REMOVE_AUTHORIZATION_V6 21
+typedef struct {
+    pd_Signatory_V6_t target;
+    pd_u64_t auth_id;
+    pd_bool_t _auth_issuer_pays;
+} pd_identity_remove_authorization_V6_t;
+
+#define PD_CALL_IDENTITY_ACCEPT_AUTHORIZATION_V6 22
+typedef struct {
+    pd_u64_t auth_id;
+} pd_identity_accept_authorization_V6_t;
+
+#define PD_CALL_IDENTITY_ADD_SECONDARY_KEYS_WITH_AUTHORIZATION_V6 23
+typedef struct {
+    pd_VecSecondaryKeyWithAuth_V6_t additional_keys;
+    pd_Moment_V6_t expires_at;
+} pd_identity_add_secondary_keys_with_authorization_V6_t;
+
+#define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V6 25
+typedef struct {
+    pd_IdentityId_V6_t target;
+    pd_Claim_V6_t claim;
+    pd_InvestorZKProofData_V6_t proof;
+    pd_OptionMoment_V6_t expiry;
+} pd_identity_add_investor_uniqueness_claim_V6_t;
+
+#define PD_CALL_STAKING_BOND_V6 0
+typedef struct {
+    pd_LookupSource_V6_t controller;
+    pd_CompactBalanceOf_t value;
+    pd_RewardDestination_V6_t payee;
+} pd_staking_bond_V6_t;
+
+#define PD_CALL_STAKING_BOND_EXTRA_V6 1
+typedef struct {
+    pd_CompactBalanceOf_t max_additional;
+} pd_staking_bond_extra_V6_t;
+
+#define PD_CALL_STAKING_UNBOND_V6 2
+typedef struct {
+    pd_CompactBalanceOf_t value;
+} pd_staking_unbond_V6_t;
+
+#define PD_CALL_STAKING_WITHDRAW_UNBONDED_V6 3
+typedef struct {
+    pd_u32_t num_slashing_spans;
+} pd_staking_withdraw_unbonded_V6_t;
+
 #define PD_CALL_STAKING_VALIDATE_V6 4
 typedef struct {
     pd_ValidatorPrefs_V6_t prefs;
@@ -197,15 +315,163 @@ typedef struct {
     pd_RewardDestination_V6_t payee;
 } pd_staking_set_payee_V6_t;
 
-#define PD_CALL_SESSION_SET_KEYS_V6 0
+#define PD_CALL_STAKING_SET_CONTROLLER_V6 8
 typedef struct {
-    pd_Keys_V6_t keys;
-    pd_Bytes_t proof;
-} pd_session_set_keys_V6_t;
+    pd_LookupSource_V6_t controller;
+} pd_staking_set_controller_V6_t;
 
-#define PD_CALL_SESSION_PURGE_KEYS_V6 1
+#define PD_CALL_STAKING_REBOND_V6 24
 typedef struct {
-} pd_session_purge_keys_V6_t;
+    pd_CompactBalanceOf_t value;
+} pd_staking_rebond_V6_t;
+
+#define PD_CALL_MULTISIG_CREATE_MULTISIG_V6 0
+typedef struct {
+    pd_VecSignatory_V6_t signers;
+    pd_u64_t sigs_required;
+} pd_multisig_create_multisig_V6_t;
+
+#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_IDENTITY_V6 1
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V6_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_or_approve_proposal_as_identity_V6_t;
+
+#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_KEY_V6 2
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V6_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_or_approve_proposal_as_key_V6_t;
+
+#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_IDENTITY_V6 3
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V6_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_proposal_as_identity_V6_t;
+
+#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_KEY_V6 4
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_Proposal_t proposal;
+    pd_OptionMoment_V6_t expiry;
+    pd_bool_t auto_close;
+} pd_multisig_create_proposal_as_key_V6_t;
+
+#define PD_CALL_MULTISIG_APPROVE_AS_IDENTITY_V6 5
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_u64_t proposal_id;
+} pd_multisig_approve_as_identity_V6_t;
+
+#define PD_CALL_MULTISIG_APPROVE_AS_KEY_V6 6
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_u64_t proposal_id;
+} pd_multisig_approve_as_key_V6_t;
+
+#define PD_CALL_MULTISIG_REJECT_AS_IDENTITY_V6 7
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_u64_t proposal_id;
+} pd_multisig_reject_as_identity_V6_t;
+
+#define PD_CALL_MULTISIG_REJECT_AS_KEY_V6 8
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_u64_t proposal_id;
+} pd_multisig_reject_as_key_V6_t;
+
+#define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_IDENTITY_V6 9
+typedef struct {
+    pd_u64_t auth_id;
+} pd_multisig_accept_multisig_signer_as_identity_V6_t;
+
+#define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_KEY_V6 10
+typedef struct {
+    pd_u64_t auth_id;
+} pd_multisig_accept_multisig_signer_as_key_V6_t;
+
+#define PD_CALL_MULTISIG_ADD_MULTISIG_SIGNER_V6 11
+typedef struct {
+    pd_Signatory_V6_t signer;
+} pd_multisig_add_multisig_signer_V6_t;
+
+#define PD_CALL_MULTISIG_REMOVE_MULTISIG_SIGNER_V6 12
+typedef struct {
+    pd_Signatory_V6_t signer;
+} pd_multisig_remove_multisig_signer_V6_t;
+
+#define PD_CALL_MULTISIG_ADD_MULTISIG_SIGNERS_VIA_CREATOR_V6 13
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_VecSignatory_V6_t signers;
+} pd_multisig_add_multisig_signers_via_creator_V6_t;
+
+#define PD_CALL_MULTISIG_REMOVE_MULTISIG_SIGNERS_VIA_CREATOR_V6 14
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_VecSignatory_V6_t signers;
+} pd_multisig_remove_multisig_signers_via_creator_V6_t;
+
+#define PD_CALL_MULTISIG_CHANGE_SIGS_REQUIRED_V6 15
+typedef struct {
+    pd_u64_t sigs_required;
+} pd_multisig_change_sigs_required_V6_t;
+
+#define PD_CALL_MULTISIG_MAKE_MULTISIG_SIGNER_V6 16
+typedef struct {
+    pd_AccountId_V6_t multisig;
+} pd_multisig_make_multisig_signer_V6_t;
+
+#define PD_CALL_MULTISIG_MAKE_MULTISIG_PRIMARY_V6 17
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_Optionu64_t optional_cdd_auth_id;
+} pd_multisig_make_multisig_primary_V6_t;
+
+#define PD_CALL_MULTISIG_EXECUTE_SCHEDULED_PROPOSAL_V6 18
+typedef struct {
+    pd_AccountId_V6_t multisig;
+    pd_u64_t proposal_id;
+    pd_IdentityId_V6_t multisig_did;
+    pd_Weight_V6_t proposal_weight;
+} pd_multisig_execute_scheduled_proposal_V6_t;
+
+#define PD_CALL_PIPS_PROPOSE_V6 6
+typedef struct {
+    pd_Proposal_t proposal;
+    pd_BalanceOf_t deposit;
+    pd_OptionUrl_V6_t url;
+    pd_OptionPipDescription_V6_t description;
+} pd_pips_propose_V6_t;
+
+#define PD_CALL_PIPS_VOTE_V6 7
+typedef struct {
+    pd_PipId_V6_t id;
+    pd_bool_t aye_or_nay;
+    pd_BalanceOf_t deposit;
+} pd_pips_vote_V6_t;
+
+#define PD_CALL_UTILITY_BATCH_V6 0
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_V6_t;
+
+#define PD_CALL_UTILITY_BATCH_ATOMIC_V6 1
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_atomic_V6_t;
+
+#define PD_CALL_UTILITY_BATCH_OPTIMISTIC_V6 2
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_optimistic_V6_t;
 
 #ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_SYSTEM_FILL_BLOCK_V6 0
@@ -351,79 +617,16 @@ typedef struct {
     pd_OptionMoment_V6_t expiry;
 } pd_identity_invalidate_cdd_claims_V6_t;
 
-#define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V6 4
-typedef struct {
-    pd_VecSignatory_V6_t signers_to_remove;
-} pd_identity_remove_secondary_keys_V6_t;
-
-#define PD_CALL_IDENTITY_ACCEPT_PRIMARY_KEY_V6 5
-typedef struct {
-    pd_u64_t rotation_auth_id;
-    pd_Optionu64_t optional_cdd_auth_id;
-} pd_identity_accept_primary_key_V6_t;
-
 #define PD_CALL_IDENTITY_CHANGE_CDD_REQUIREMENT_FOR_MK_ROTATION_V6 6
 typedef struct {
     pd_bool_t auth_required;
 } pd_identity_change_cdd_requirement_for_mk_rotation_V6_t;
-
-#define PD_CALL_IDENTITY_JOIN_IDENTITY_AS_KEY_V6 7
-typedef struct {
-    pd_u64_t auth_id;
-} pd_identity_join_identity_as_key_V6_t;
-
-#define PD_CALL_IDENTITY_JOIN_IDENTITY_AS_IDENTITY_V6 8
-typedef struct {
-    pd_u64_t auth_id;
-} pd_identity_join_identity_as_identity_V6_t;
-
-#define PD_CALL_IDENTITY_LEAVE_IDENTITY_AS_KEY_V6 9
-typedef struct {
-} pd_identity_leave_identity_as_key_V6_t;
-
-#define PD_CALL_IDENTITY_LEAVE_IDENTITY_AS_IDENTITY_V6 10
-typedef struct {
-    pd_IdentityId_V6_t did;
-} pd_identity_leave_identity_as_identity_V6_t;
-
-#define PD_CALL_IDENTITY_ADD_CLAIM_V6 11
-typedef struct {
-    pd_IdentityId_V6_t target;
-    pd_Claim_V6_t claim;
-    pd_OptionMoment_V6_t expiry;
-} pd_identity_add_claim_V6_t;
 
 #define PD_CALL_IDENTITY_FORWARDED_CALL_V6 12
 typedef struct {
     pd_IdentityId_V6_t target_did;
     pd_Proposal_t proposal;
 } pd_identity_forwarded_call_V6_t;
-
-#define PD_CALL_IDENTITY_REVOKE_CLAIM_V6 13
-typedef struct {
-    pd_IdentityId_V6_t target;
-    pd_Claim_V6_t claim;
-} pd_identity_revoke_claim_V6_t;
-
-#define PD_CALL_IDENTITY_SET_PERMISSION_TO_SIGNER_V6 14
-typedef struct {
-    pd_Signatory_V6_t signer;
-    pd_Permissions_V6_t permissions;
-} pd_identity_set_permission_to_signer_V6_t;
-
-#define PD_CALL_IDENTITY_LEGACY_SET_PERMISSION_TO_SIGNER_V6 15
-typedef struct {
-    pd_Signatory_V6_t signer;
-    pd_LegacyPermissions_V6_t permissions;
-} pd_identity_legacy_set_permission_to_signer_V6_t;
-
-#define PD_CALL_IDENTITY_FREEZE_SECONDARY_KEYS_V6 16
-typedef struct {
-} pd_identity_freeze_secondary_keys_V6_t;
-
-#define PD_CALL_IDENTITY_UNFREEZE_SECONDARY_KEYS_V6 17
-typedef struct {
-} pd_identity_unfreeze_secondary_keys_V6_t;
 
 #define PD_CALL_IDENTITY_GET_MY_DID_V6 18
 typedef struct {
@@ -434,44 +637,11 @@ typedef struct {
     pd_AccountId_V6_t of;
 } pd_identity_get_cdd_of_V6_t;
 
-#define PD_CALL_IDENTITY_ADD_AUTHORIZATION_V6 20
-typedef struct {
-    pd_Signatory_V6_t target;
-    pd_AuthorizationData_V6_t authorization_data;
-    pd_OptionMoment_V6_t expiry;
-} pd_identity_add_authorization_V6_t;
-
-#define PD_CALL_IDENTITY_REMOVE_AUTHORIZATION_V6 21
-typedef struct {
-    pd_Signatory_V6_t target;
-    pd_u64_t auth_id;
-    pd_bool_t _auth_issuer_pays;
-} pd_identity_remove_authorization_V6_t;
-
-#define PD_CALL_IDENTITY_ACCEPT_AUTHORIZATION_V6 22
-typedef struct {
-    pd_u64_t auth_id;
-} pd_identity_accept_authorization_V6_t;
-
-#define PD_CALL_IDENTITY_ADD_SECONDARY_KEYS_WITH_AUTHORIZATION_V6 23
-typedef struct {
-    pd_VecSecondaryKeyWithAuth_V6_t additional_keys;
-    pd_Moment_V6_t expires_at;
-} pd_identity_add_secondary_keys_with_authorization_V6_t;
-
 #define PD_CALL_IDENTITY_REVOKE_OFFCHAIN_AUTHORIZATION_V6 24
 typedef struct {
     pd_Signatory_V6_t signer;
     pd_TargetIdAuthorization_V6_t auth;
 } pd_identity_revoke_offchain_authorization_V6_t;
-
-#define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V6 25
-typedef struct {
-    pd_IdentityId_V6_t target;
-    pd_Claim_V6_t claim;
-    pd_InvestorZKProofData_V6_t proof;
-    pd_OptionMoment_V6_t expiry;
-} pd_identity_add_investor_uniqueness_claim_V6_t;
 
 #define PD_CALL_IDENTITY_GC_ADD_CDD_CLAIM_V6 26
 typedef struct {
@@ -525,33 +695,6 @@ typedef struct {
 #define PD_CALL_CDDSERVICEPROVIDERS_ABDICATE_MEMBERSHIP_V6 6
 typedef struct {
 } pd_cddserviceproviders_abdicate_membership_V6_t;
-
-#define PD_CALL_STAKING_BOND_V6 0
-typedef struct {
-    pd_LookupSource_V6_t controller;
-    pd_CompactBalanceOf_t value;
-    pd_RewardDestination_V6_t payee;
-} pd_staking_bond_V6_t;
-
-#define PD_CALL_STAKING_BOND_EXTRA_V6 1
-typedef struct {
-    pd_CompactBalanceOf_t max_additional;
-} pd_staking_bond_extra_V6_t;
-
-#define PD_CALL_STAKING_UNBOND_V6 2
-typedef struct {
-    pd_CompactBalanceOf_t value;
-} pd_staking_unbond_V6_t;
-
-#define PD_CALL_STAKING_WITHDRAW_UNBONDED_V6 3
-typedef struct {
-    pd_u32_t num_slashing_spans;
-} pd_staking_withdraw_unbonded_V6_t;
-
-#define PD_CALL_STAKING_SET_CONTROLLER_V6 8
-typedef struct {
-    pd_LookupSource_V6_t controller;
-} pd_staking_set_controller_V6_t;
 
 #define PD_CALL_STAKING_SET_VALIDATOR_COUNT_V6 9
 typedef struct {
@@ -629,11 +772,6 @@ typedef struct {
     pd_EraIndex_V6_t era;
 } pd_staking_payout_stakers_V6_t;
 
-#define PD_CALL_STAKING_REBOND_V6 24
-typedef struct {
-    pd_CompactBalanceOf_t value;
-} pd_staking_rebond_V6_t;
-
 #define PD_CALL_STAKING_SET_HISTORY_DEPTH_V6 25
 typedef struct {
     pd_CompactEraIndex_V6_t new_history_depth;
@@ -680,6 +818,16 @@ typedef struct {
     pd_IdentityId_V6_t identity;
     pd_u32_t new_intended_count;
 } pd_staking_update_permissioned_validator_intended_count_V6_t;
+
+#define PD_CALL_SESSION_SET_KEYS_V6 0
+typedef struct {
+    pd_Keys_V6_t keys;
+    pd_Bytes_t proof;
+} pd_session_set_keys_V6_t;
+
+#define PD_CALL_SESSION_PURGE_KEYS_V6 1
+typedef struct {
+} pd_session_purge_keys_V6_t;
 
 #define PD_CALL_FINALITYTRACKER_FINAL_HINT_V6 0
 typedef struct {
@@ -736,124 +884,6 @@ typedef struct {
     pd_LookupSource_V6_t who;
     pd_Call_t call;
 } pd_sudo_sudo_as_V6_t;
-
-#define PD_CALL_MULTISIG_CREATE_MULTISIG_V6 0
-typedef struct {
-    pd_VecSignatory_V6_t signers;
-    pd_u64_t sigs_required;
-} pd_multisig_create_multisig_V6_t;
-
-#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_IDENTITY_V6 1
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V6_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_or_approve_proposal_as_identity_V6_t;
-
-#define PD_CALL_MULTISIG_CREATE_OR_APPROVE_PROPOSAL_AS_KEY_V6 2
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V6_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_or_approve_proposal_as_key_V6_t;
-
-#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_IDENTITY_V6 3
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V6_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_proposal_as_identity_V6_t;
-
-#define PD_CALL_MULTISIG_CREATE_PROPOSAL_AS_KEY_V6 4
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_Proposal_t proposal;
-    pd_OptionMoment_V6_t expiry;
-    pd_bool_t auto_close;
-} pd_multisig_create_proposal_as_key_V6_t;
-
-#define PD_CALL_MULTISIG_APPROVE_AS_IDENTITY_V6 5
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_u64_t proposal_id;
-} pd_multisig_approve_as_identity_V6_t;
-
-#define PD_CALL_MULTISIG_APPROVE_AS_KEY_V6 6
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_u64_t proposal_id;
-} pd_multisig_approve_as_key_V6_t;
-
-#define PD_CALL_MULTISIG_REJECT_AS_IDENTITY_V6 7
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_u64_t proposal_id;
-} pd_multisig_reject_as_identity_V6_t;
-
-#define PD_CALL_MULTISIG_REJECT_AS_KEY_V6 8
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_u64_t proposal_id;
-} pd_multisig_reject_as_key_V6_t;
-
-#define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_IDENTITY_V6 9
-typedef struct {
-    pd_u64_t auth_id;
-} pd_multisig_accept_multisig_signer_as_identity_V6_t;
-
-#define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_KEY_V6 10
-typedef struct {
-    pd_u64_t auth_id;
-} pd_multisig_accept_multisig_signer_as_key_V6_t;
-
-#define PD_CALL_MULTISIG_ADD_MULTISIG_SIGNER_V6 11
-typedef struct {
-    pd_Signatory_V6_t signer;
-} pd_multisig_add_multisig_signer_V6_t;
-
-#define PD_CALL_MULTISIG_REMOVE_MULTISIG_SIGNER_V6 12
-typedef struct {
-    pd_Signatory_V6_t signer;
-} pd_multisig_remove_multisig_signer_V6_t;
-
-#define PD_CALL_MULTISIG_ADD_MULTISIG_SIGNERS_VIA_CREATOR_V6 13
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_VecSignatory_V6_t signers;
-} pd_multisig_add_multisig_signers_via_creator_V6_t;
-
-#define PD_CALL_MULTISIG_REMOVE_MULTISIG_SIGNERS_VIA_CREATOR_V6 14
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_VecSignatory_V6_t signers;
-} pd_multisig_remove_multisig_signers_via_creator_V6_t;
-
-#define PD_CALL_MULTISIG_CHANGE_SIGS_REQUIRED_V6 15
-typedef struct {
-    pd_u64_t sigs_required;
-} pd_multisig_change_sigs_required_V6_t;
-
-#define PD_CALL_MULTISIG_MAKE_MULTISIG_SIGNER_V6 16
-typedef struct {
-    pd_AccountId_V6_t multisig;
-} pd_multisig_make_multisig_signer_V6_t;
-
-#define PD_CALL_MULTISIG_MAKE_MULTISIG_PRIMARY_V6 17
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_Optionu64_t optional_cdd_auth_id;
-} pd_multisig_make_multisig_primary_V6_t;
-
-#define PD_CALL_MULTISIG_EXECUTE_SCHEDULED_PROPOSAL_V6 18
-typedef struct {
-    pd_AccountId_V6_t multisig;
-    pd_u64_t proposal_id;
-    pd_IdentityId_V6_t multisig_did;
-    pd_Weight_V6_t proposal_weight;
-} pd_multisig_execute_scheduled_proposal_V6_t;
 
 #define PD_CALL_CONTRACTS_UPDATE_SCHEDULE_V6 0
 typedef struct {
@@ -1018,21 +1048,6 @@ typedef struct {
 typedef struct {
     pd_u32_t limit;
 } pd_pips_set_active_pip_limit_V6_t;
-
-#define PD_CALL_PIPS_PROPOSE_V6 6
-typedef struct {
-    pd_Proposal_t proposal;
-    pd_BalanceOf_t deposit;
-    pd_OptionUrl_V6_t url;
-    pd_OptionPipDescription_V6_t description;
-} pd_pips_propose_V6_t;
-
-#define PD_CALL_PIPS_VOTE_V6 7
-typedef struct {
-    pd_PipId_V6_t id;
-    pd_bool_t aye_or_nay;
-    pd_BalanceOf_t deposit;
-} pd_pips_vote_V6_t;
 
 #define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V6 8
 typedef struct {
@@ -1597,21 +1612,6 @@ typedef struct {
     pd_BalanceOf_t base_fee;
 } pd_protocolfee_change_base_fee_V6_t;
 
-#define PD_CALL_UTILITY_BATCH_V6 0
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_V6_t;
-
-#define PD_CALL_UTILITY_BATCH_ATOMIC_V6 1
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_atomic_V6_t;
-
-#define PD_CALL_UTILITY_BATCH_OPTIMISTIC_V6 2
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_optimistic_V6_t;
-
 #define PD_CALL_UTILITY_RELAY_TX_V6 3
 typedef struct {
     pd_AccountId_V6_t target;
@@ -1840,12 +1840,57 @@ typedef struct {
 typedef union {
     pd_balances_transfer_V6_t balances_transfer_V6;
     pd_balances_transfer_with_memo_V6_t balances_transfer_with_memo_V6;
+    pd_identity_remove_secondary_keys_V6_t identity_remove_secondary_keys_V6;
+    pd_identity_accept_primary_key_V6_t identity_accept_primary_key_V6;
+    pd_identity_join_identity_as_key_V6_t identity_join_identity_as_key_V6;
+    pd_identity_join_identity_as_identity_V6_t identity_join_identity_as_identity_V6;
+    pd_identity_leave_identity_as_key_V6_t identity_leave_identity_as_key_V6;
+    pd_identity_leave_identity_as_identity_V6_t identity_leave_identity_as_identity_V6;
+    pd_identity_add_claim_V6_t identity_add_claim_V6;
+    pd_identity_revoke_claim_V6_t identity_revoke_claim_V6;
+    pd_identity_set_permission_to_signer_V6_t identity_set_permission_to_signer_V6;
+    pd_identity_legacy_set_permission_to_signer_V6_t identity_legacy_set_permission_to_signer_V6;
+    pd_identity_freeze_secondary_keys_V6_t identity_freeze_secondary_keys_V6;
+    pd_identity_unfreeze_secondary_keys_V6_t identity_unfreeze_secondary_keys_V6;
+    pd_identity_add_authorization_V6_t identity_add_authorization_V6;
+    pd_identity_remove_authorization_V6_t identity_remove_authorization_V6;
+    pd_identity_accept_authorization_V6_t identity_accept_authorization_V6;
+    pd_identity_add_secondary_keys_with_authorization_V6_t identity_add_secondary_keys_with_authorization_V6;
+    pd_identity_add_investor_uniqueness_claim_V6_t identity_add_investor_uniqueness_claim_V6;
+    pd_staking_bond_V6_t staking_bond_V6;
+    pd_staking_bond_extra_V6_t staking_bond_extra_V6;
+    pd_staking_unbond_V6_t staking_unbond_V6;
+    pd_staking_withdraw_unbonded_V6_t staking_withdraw_unbonded_V6;
     pd_staking_validate_V6_t staking_validate_V6;
     pd_staking_nominate_V6_t staking_nominate_V6;
     pd_staking_chill_V6_t staking_chill_V6;
     pd_staking_set_payee_V6_t staking_set_payee_V6;
-    pd_session_set_keys_V6_t session_set_keys_V6;
-    pd_session_purge_keys_V6_t session_purge_keys_V6;
+    pd_staking_set_controller_V6_t staking_set_controller_V6;
+    pd_staking_rebond_V6_t staking_rebond_V6;
+    pd_multisig_create_multisig_V6_t multisig_create_multisig_V6;
+    pd_multisig_create_or_approve_proposal_as_identity_V6_t multisig_create_or_approve_proposal_as_identity_V6;
+    pd_multisig_create_or_approve_proposal_as_key_V6_t multisig_create_or_approve_proposal_as_key_V6;
+    pd_multisig_create_proposal_as_identity_V6_t multisig_create_proposal_as_identity_V6;
+    pd_multisig_create_proposal_as_key_V6_t multisig_create_proposal_as_key_V6;
+    pd_multisig_approve_as_identity_V6_t multisig_approve_as_identity_V6;
+    pd_multisig_approve_as_key_V6_t multisig_approve_as_key_V6;
+    pd_multisig_reject_as_identity_V6_t multisig_reject_as_identity_V6;
+    pd_multisig_reject_as_key_V6_t multisig_reject_as_key_V6;
+    pd_multisig_accept_multisig_signer_as_identity_V6_t multisig_accept_multisig_signer_as_identity_V6;
+    pd_multisig_accept_multisig_signer_as_key_V6_t multisig_accept_multisig_signer_as_key_V6;
+    pd_multisig_add_multisig_signer_V6_t multisig_add_multisig_signer_V6;
+    pd_multisig_remove_multisig_signer_V6_t multisig_remove_multisig_signer_V6;
+    pd_multisig_add_multisig_signers_via_creator_V6_t multisig_add_multisig_signers_via_creator_V6;
+    pd_multisig_remove_multisig_signers_via_creator_V6_t multisig_remove_multisig_signers_via_creator_V6;
+    pd_multisig_change_sigs_required_V6_t multisig_change_sigs_required_V6;
+    pd_multisig_make_multisig_signer_V6_t multisig_make_multisig_signer_V6;
+    pd_multisig_make_multisig_primary_V6_t multisig_make_multisig_primary_V6;
+    pd_multisig_execute_scheduled_proposal_V6_t multisig_execute_scheduled_proposal_V6;
+    pd_pips_propose_V6_t pips_propose_V6;
+    pd_pips_vote_V6_t pips_vote_V6;
+    pd_utility_batch_V6_t utility_batch_V6;
+    pd_utility_batch_atomic_V6_t utility_batch_atomic_V6;
+    pd_utility_batch_optimistic_V6_t utility_batch_optimistic_V6;
 #ifdef SUBSTRATE_PARSER_FULL
     pd_system_fill_block_V6_t system_fill_block_V6;
     pd_system_remark_V6_t system_remark_V6;
@@ -1873,28 +1918,11 @@ typedef union {
     pd_identity_cdd_register_did_V6_t identity_cdd_register_did_V6;
     pd_identity_mock_cdd_register_did_V6_t identity_mock_cdd_register_did_V6;
     pd_identity_invalidate_cdd_claims_V6_t identity_invalidate_cdd_claims_V6;
-    pd_identity_remove_secondary_keys_V6_t identity_remove_secondary_keys_V6;
-    pd_identity_accept_primary_key_V6_t identity_accept_primary_key_V6;
     pd_identity_change_cdd_requirement_for_mk_rotation_V6_t identity_change_cdd_requirement_for_mk_rotation_V6;
-    pd_identity_join_identity_as_key_V6_t identity_join_identity_as_key_V6;
-    pd_identity_join_identity_as_identity_V6_t identity_join_identity_as_identity_V6;
-    pd_identity_leave_identity_as_key_V6_t identity_leave_identity_as_key_V6;
-    pd_identity_leave_identity_as_identity_V6_t identity_leave_identity_as_identity_V6;
-    pd_identity_add_claim_V6_t identity_add_claim_V6;
     pd_identity_forwarded_call_V6_t identity_forwarded_call_V6;
-    pd_identity_revoke_claim_V6_t identity_revoke_claim_V6;
-    pd_identity_set_permission_to_signer_V6_t identity_set_permission_to_signer_V6;
-    pd_identity_legacy_set_permission_to_signer_V6_t identity_legacy_set_permission_to_signer_V6;
-    pd_identity_freeze_secondary_keys_V6_t identity_freeze_secondary_keys_V6;
-    pd_identity_unfreeze_secondary_keys_V6_t identity_unfreeze_secondary_keys_V6;
     pd_identity_get_my_did_V6_t identity_get_my_did_V6;
     pd_identity_get_cdd_of_V6_t identity_get_cdd_of_V6;
-    pd_identity_add_authorization_V6_t identity_add_authorization_V6;
-    pd_identity_remove_authorization_V6_t identity_remove_authorization_V6;
-    pd_identity_accept_authorization_V6_t identity_accept_authorization_V6;
-    pd_identity_add_secondary_keys_with_authorization_V6_t identity_add_secondary_keys_with_authorization_V6;
     pd_identity_revoke_offchain_authorization_V6_t identity_revoke_offchain_authorization_V6;
-    pd_identity_add_investor_uniqueness_claim_V6_t identity_add_investor_uniqueness_claim_V6;
     pd_identity_gc_add_cdd_claim_V6_t identity_gc_add_cdd_claim_V6;
     pd_identity_gc_revoke_cdd_claim_V6_t identity_gc_revoke_cdd_claim_V6;
     pd_authorship_set_uncles_V6_t authorship_set_uncles_V6;
@@ -1905,11 +1933,6 @@ typedef union {
     pd_cddserviceproviders_swap_member_V6_t cddserviceproviders_swap_member_V6;
     pd_cddserviceproviders_reset_members_V6_t cddserviceproviders_reset_members_V6;
     pd_cddserviceproviders_abdicate_membership_V6_t cddserviceproviders_abdicate_membership_V6;
-    pd_staking_bond_V6_t staking_bond_V6;
-    pd_staking_bond_extra_V6_t staking_bond_extra_V6;
-    pd_staking_unbond_V6_t staking_unbond_V6;
-    pd_staking_withdraw_unbonded_V6_t staking_withdraw_unbonded_V6;
-    pd_staking_set_controller_V6_t staking_set_controller_V6;
     pd_staking_set_validator_count_V6_t staking_set_validator_count_V6;
     pd_staking_increase_validator_count_V6_t staking_increase_validator_count_V6;
     pd_staking_scale_validator_count_V6_t staking_scale_validator_count_V6;
@@ -1925,7 +1948,6 @@ typedef union {
     pd_staking_force_new_era_always_V6_t staking_force_new_era_always_V6;
     pd_staking_cancel_deferred_slash_V6_t staking_cancel_deferred_slash_V6;
     pd_staking_payout_stakers_V6_t staking_payout_stakers_V6;
-    pd_staking_rebond_V6_t staking_rebond_V6;
     pd_staking_set_history_depth_V6_t staking_set_history_depth_V6;
     pd_staking_reap_stash_V6_t staking_reap_stash_V6;
     pd_staking_submit_election_solution_V6_t staking_submit_election_solution_V6;
@@ -1933,6 +1955,8 @@ typedef union {
     pd_staking_payout_stakers_by_system_V6_t staking_payout_stakers_by_system_V6;
     pd_staking_change_slashing_allowed_for_V6_t staking_change_slashing_allowed_for_V6;
     pd_staking_update_permissioned_validator_intended_count_V6_t staking_update_permissioned_validator_intended_count_V6;
+    pd_session_set_keys_V6_t session_set_keys_V6;
+    pd_session_purge_keys_V6_t session_purge_keys_V6;
     pd_finalitytracker_final_hint_V6_t finalitytracker_final_hint_V6;
     pd_grandpa_report_equivocation_V6_t grandpa_report_equivocation_V6;
     pd_grandpa_report_equivocation_unsigned_V6_t grandpa_report_equivocation_unsigned_V6;
@@ -1943,25 +1967,6 @@ typedef union {
     pd_sudo_sudo_unchecked_weight_V6_t sudo_sudo_unchecked_weight_V6;
     pd_sudo_set_key_V6_t sudo_set_key_V6;
     pd_sudo_sudo_as_V6_t sudo_sudo_as_V6;
-    pd_multisig_create_multisig_V6_t multisig_create_multisig_V6;
-    pd_multisig_create_or_approve_proposal_as_identity_V6_t multisig_create_or_approve_proposal_as_identity_V6;
-    pd_multisig_create_or_approve_proposal_as_key_V6_t multisig_create_or_approve_proposal_as_key_V6;
-    pd_multisig_create_proposal_as_identity_V6_t multisig_create_proposal_as_identity_V6;
-    pd_multisig_create_proposal_as_key_V6_t multisig_create_proposal_as_key_V6;
-    pd_multisig_approve_as_identity_V6_t multisig_approve_as_identity_V6;
-    pd_multisig_approve_as_key_V6_t multisig_approve_as_key_V6;
-    pd_multisig_reject_as_identity_V6_t multisig_reject_as_identity_V6;
-    pd_multisig_reject_as_key_V6_t multisig_reject_as_key_V6;
-    pd_multisig_accept_multisig_signer_as_identity_V6_t multisig_accept_multisig_signer_as_identity_V6;
-    pd_multisig_accept_multisig_signer_as_key_V6_t multisig_accept_multisig_signer_as_key_V6;
-    pd_multisig_add_multisig_signer_V6_t multisig_add_multisig_signer_V6;
-    pd_multisig_remove_multisig_signer_V6_t multisig_remove_multisig_signer_V6;
-    pd_multisig_add_multisig_signers_via_creator_V6_t multisig_add_multisig_signers_via_creator_V6;
-    pd_multisig_remove_multisig_signers_via_creator_V6_t multisig_remove_multisig_signers_via_creator_V6;
-    pd_multisig_change_sigs_required_V6_t multisig_change_sigs_required_V6;
-    pd_multisig_make_multisig_signer_V6_t multisig_make_multisig_signer_V6;
-    pd_multisig_make_multisig_primary_V6_t multisig_make_multisig_primary_V6;
-    pd_multisig_execute_scheduled_proposal_V6_t multisig_execute_scheduled_proposal_V6;
     pd_contracts_update_schedule_V6_t contracts_update_schedule_V6;
     pd_contracts_put_code_V6_t contracts_put_code_V6;
     pd_contracts_call_V6_t contracts_call_V6;
@@ -1991,8 +1996,6 @@ typedef union {
     pd_pips_set_pending_pip_expiry_V6_t pips_set_pending_pip_expiry_V6;
     pd_pips_set_max_pip_skip_count_V6_t pips_set_max_pip_skip_count_V6;
     pd_pips_set_active_pip_limit_V6_t pips_set_active_pip_limit_V6;
-    pd_pips_propose_V6_t pips_propose_V6;
-    pd_pips_vote_V6_t pips_vote_V6;
     pd_pips_approve_committee_proposal_V6_t pips_approve_committee_proposal_V6;
     pd_pips_reject_proposal_V6_t pips_reject_proposal_V6;
     pd_pips_prune_proposal_V6_t pips_prune_proposal_V6;
@@ -2091,9 +2094,6 @@ typedef union {
     pd_statistics_remove_exempted_entities_V6_t statistics_remove_exempted_entities_V6;
     pd_protocolfee_change_coefficient_V6_t protocolfee_change_coefficient_V6;
     pd_protocolfee_change_base_fee_V6_t protocolfee_change_base_fee_V6;
-    pd_utility_batch_V6_t utility_batch_V6;
-    pd_utility_batch_atomic_V6_t utility_batch_atomic_V6;
-    pd_utility_batch_optimistic_V6_t utility_batch_optimistic_V6;
     pd_utility_relay_tx_V6_t utility_relay_tx_V6;
     pd_portfolio_create_portfolio_V6_t portfolio_create_portfolio_V6;
     pd_portfolio_delete_portfolio_V6_t portfolio_delete_portfolio_V6;

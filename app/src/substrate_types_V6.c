@@ -119,7 +119,6 @@ parser_error_t _readAuthorizationData_V6(parser_context_t* c, pd_AuthorizationDa
     switch (v->value) {
     case 0:
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V6(c, &v->identityId))
         break;
     case 2:
@@ -127,19 +126,15 @@ parser_error_t _readAuthorizationData_V6(parser_context_t* c, pd_AuthorizationDa
     case 5:
     case 8:
     case 10:
-        CHECK_INPUT();
         CHECK_ERROR(_readTicker_V6(c, &v->ticker))
         break;
     case 4:
-        CHECK_INPUT();
         CHECK_ERROR(_readAccountId_V6(c, &v->accountId))
         break;
     case 6:
-        CHECK_INPUT();
         CHECK_ERROR(_readPermissions_V6(c, &v->permissions))
         break;
     case 7:
-        CHECK_INPUT();
         CHECK_ERROR(_readPortfolioId_V6(c, &v->portfolioId))
         break;
     case 9:
@@ -364,16 +359,13 @@ parser_error_t _readConditionType_V6(parser_context_t* c, pd_ConditionType_V6_t*
     switch (v->value) {
     case 0:
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readClaim_V6(c, &v->claim))
         break;
     case 2:
     case 3:
-        CHECK_INPUT();
         CHECK_ERROR(_readVecClaim_V6(c, &v->vecClaim))
         break;
     case 4:
-        CHECK_INPUT();
         CHECK_ERROR(_readTargetIdentity_V6(c, &v->identity))
         break;
     default:
@@ -617,9 +609,24 @@ parser_error_t _readLeg_V6(parser_context_t* c, pd_Leg_V6_t* v)
     return parser_ok;
 }
 
+parser_error_t _readLegacyPalletPermissions_V6(parser_context_t* c, pd_LegacyPalletPermissions_V6_t* v)
+{
+    CHECK_INPUT();
+
+    CHECK_ERROR(_readPalletName_V6(c, &v->palletName))
+    CHECK_ERROR(_readBool(c, &v->total))
+    CHECK_ERROR(_readVecDispatchableName_V6(c, &v->dispatchableNames))
+
+    return parser_ok;
+}
+
 parser_error_t _readLegacyPermissions_V6(parser_context_t* c, pd_LegacyPermissions_V6_t* v)
 {
-    return parser_not_supported;
+    CHECK_INPUT();
+    CHECK_ERROR(_readOptionVecTicker_V6(c, &v->asset))
+    CHECK_ERROR(_readOptionVecLegacyPalletPermissions_V6(c, &v->extrinsic))
+    CHECK_ERROR(_readOptionVecPortfolioId_V6(c, &v->portfolio))
+    return parser_ok;
 }
 
 parser_error_t _readLocalCAId_V6(parser_context_t* c, pd_LocalCAId_V6_t* v)
@@ -643,7 +650,6 @@ parser_error_t _readMaybeBlock_V6(parser_context_t* c, pd_MaybeBlock_V6_t* v)
 
     switch (v->value) {
     case 0:
-        CHECK_INPUT();
         CHECK_ERROR(_readBlockNumber(c, &v->blockNumber))
         break;
     case 1:
@@ -1073,7 +1079,6 @@ parser_error_t _readSettlementType_V6(parser_context_t* c, pd_SettlementType_V6_
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readBlockNumber(c, &v->blockNumber))
         break;
     default:
@@ -1090,11 +1095,9 @@ parser_error_t _readSignatory_V6(parser_context_t* c, pd_Signatory_V6_t* v)
 
     switch (v->value) {
     case 0:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V6(c, &v->identity))
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readAccountId_V6(c, &v->account))
         break;
     default:
@@ -1212,7 +1215,6 @@ parser_error_t _readTargetIdentity_V6(parser_context_t* c, pd_TargetIdentity_V6_
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V6(c, &v->specific))
         break;
     default:
@@ -1288,7 +1290,6 @@ parser_error_t _readTrustedFor_V6(parser_context_t* c, pd_TrustedFor_V6_t* v)
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readVecClaimType_V6(c, &v->claims))
         break;
     default:
@@ -1480,6 +1481,10 @@ parser_error_t _readVecKey_V6(parser_context_t* c, pd_VecKey_V6_t* v){
 
 parser_error_t _readVecLeg_V6(parser_context_t* c, pd_VecLeg_V6_t* v){
     GEN_DEF_READVECTOR(Leg_V6)
+}
+
+parser_error_t _readVecLegacyPalletPermissions_V6(parser_context_t* c, pd_VecLegacyPalletPermissions_V6_t* v){
+    GEN_DEF_READVECTOR(LegacyPalletPermissions_V6)
 }
 
 parser_error_t _readVecLookupSource_V6(parser_context_t* c, pd_VecLookupSource_V6_t* v){
@@ -1681,6 +1686,15 @@ parser_error_t _readOptionVecDispatchableName_V6(parser_context_t* c, pd_OptionV
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readVecDispatchableName_V6(c, &v->contained))
+    }
+    return parser_ok;
+}
+
+parser_error_t _readOptionVecLegacyPalletPermissions_V6(parser_context_t* c, pd_OptionVecLegacyPalletPermissions_V6_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readVecLegacyPalletPermissions_V6(c, &v->contained))
     }
     return parser_ok;
 }
@@ -3127,6 +3141,47 @@ parser_error_t _toStringLeg_V6(
     return parser_display_idx_out_of_range;
 }
 
+parser_error_t _toStringLegacyPalletPermissions_V6(
+    const pd_LegacyPalletPermissions_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringPalletName_V6(&v->palletName, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringVecDispatchableName_V6(&v->dispatchableNames, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringPalletName_V6(&v->palletName, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringVecDispatchableName_V6(&v->dispatchableNames, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringLegacyPermissions_V6(
     const pd_LegacyPermissions_V6_t* v,
     char* outValue,
@@ -3135,7 +3190,38 @@ parser_error_t _toStringLegacyPermissions_V6(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringOptionVecTicker_V6(&v->asset, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V6(&v->extrinsic, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringOptionVecPortfolioId_V6(&v->portfolio, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringOptionVecTicker_V6(&v->asset, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V6(&v->extrinsic, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringOptionVecPortfolioId_V6(&v->portfolio, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
 }
 
 parser_error_t _toStringLocalCAId_V6(
@@ -5235,6 +5321,16 @@ parser_error_t _toStringVecLeg_V6(
     GEN_DEF_TOSTRING_VECTOR(Leg_V6);
 }
 
+parser_error_t _toStringVecLegacyPalletPermissions_V6(
+    const pd_VecLegacyPalletPermissions_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(LegacyPalletPermissions_V6);
+}
+
 parser_error_t _toStringVecLookupSource_V6(
     const pd_VecLookupSource_V6_t* v,
     char* outValue,
@@ -5711,6 +5807,27 @@ parser_error_t _toStringOptionVecDispatchableName_V6(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringVecDispatchableName_V6(
+            &v->contained,
+            outValue, outValueLen,
+            pageIdx, pageCount));
+    } else {
+        snprintf(outValue, outValueLen, "None");
+    }
+    return parser_ok;
+}
+
+parser_error_t _toStringOptionVecLegacyPalletPermissions_V6(
+    const pd_OptionVecLegacyPalletPermissions_V6_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    *pageCount = 1;
+    if (v->some > 0) {
+        CHECK_ERROR(_toStringVecLegacyPalletPermissions_V6(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));

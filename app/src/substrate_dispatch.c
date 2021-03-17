@@ -191,7 +191,6 @@ parser_error_t parser_validate_staking_targets(parser_context_t* c)
 
     return parser_ok;
 }
-#endif
 
 GEN_DEF_GETCALL(STAKING);
 GEN_DEF_GETCALL(STAKING_VALIDATE);
@@ -201,3 +200,4 @@ GEN_DEF_GETCALL(STAKING_NOMINATE);
 GEN_DEF_GETCALL(SESSION);
 GEN_DEF_GETCALL(SESSION_SET_KEYS);
 GEN_DEF_GETCALL(SESSION_PURGE_KEYS);
+#endif

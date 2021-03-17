@@ -13,8 +13,9 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 ********************************************************************************/
-#include "substrate_dispatch_V5.h"
 
+#include "substrate_dispatch_V5.h"
+#include "substrate_strings.h"
 #include "zxmacros.h"
 #include <stdint.h>
 
@@ -32,6 +33,166 @@ __Z_INLINE parser_error_t _readMethod_balances_transfer_with_memo_V5(
     CHECK_ERROR(_readLookupSource_V5(c, &m->dest))
     CHECK_ERROR(_readCompactBalance(c, &m->value))
     CHECK_ERROR(_readOptionMemo_V5(c, &m->memo))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_remove_secondary_keys_V5(
+    parser_context_t* c, pd_identity_remove_secondary_keys_V5_t* m)
+{
+    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers_to_remove))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_accept_primary_key_V5(
+    parser_context_t* c, pd_identity_accept_primary_key_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->rotation_auth_id))
+    CHECK_ERROR(_readOptionu64(c, &m->optional_cdd_auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_join_identity_as_key_V5(
+    parser_context_t* c, pd_identity_join_identity_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_join_identity_as_identity_V5(
+    parser_context_t* c, pd_identity_join_identity_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_leave_identity_as_key_V5(
+    parser_context_t* c, pd_identity_leave_identity_as_key_V5_t* m)
+{
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_leave_identity_as_identity_V5(
+    parser_context_t* c, pd_identity_leave_identity_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readIdentityId_V5(c, &m->did))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_add_claim_V5(
+    parser_context_t* c, pd_identity_add_claim_V5_t* m)
+{
+    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
+    CHECK_ERROR(_readClaim_V5(c, &m->claim))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_revoke_claim_V5(
+    parser_context_t* c, pd_identity_revoke_claim_V5_t* m)
+{
+    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
+    CHECK_ERROR(_readClaim_V5(c, &m->claim))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_set_permission_to_signer_V5(
+    parser_context_t* c, pd_identity_set_permission_to_signer_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
+    CHECK_ERROR(_readPermissions_V5(c, &m->permissions))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_legacy_set_permission_to_signer_V5(
+    parser_context_t* c, pd_identity_legacy_set_permission_to_signer_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
+    CHECK_ERROR(_readLegacyPermissions_V5(c, &m->permissions))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_freeze_secondary_keys_V5(
+    parser_context_t* c, pd_identity_freeze_secondary_keys_V5_t* m)
+{
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_unfreeze_secondary_keys_V5(
+    parser_context_t* c, pd_identity_unfreeze_secondary_keys_V5_t* m)
+{
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_add_authorization_V5(
+    parser_context_t* c, pd_identity_add_authorization_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->target))
+    CHECK_ERROR(_readAuthorizationData_V5(c, &m->authorization_data))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_remove_authorization_V5(
+    parser_context_t* c, pd_identity_remove_authorization_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->target))
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    CHECK_ERROR(_readbool(c, &m->_auth_issuer_pays))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_accept_authorization_V5(
+    parser_context_t* c, pd_identity_accept_authorization_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_add_secondary_keys_with_authorization_V5(
+    parser_context_t* c, pd_identity_add_secondary_keys_with_authorization_V5_t* m)
+{
+    CHECK_ERROR(_readVecSecondaryKeyWithAuth_V5(c, &m->additional_keys))
+    CHECK_ERROR(_readMoment_V5(c, &m->expires_at))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_add_investor_uniqueness_claim_V5(
+    parser_context_t* c, pd_identity_add_investor_uniqueness_claim_V5_t* m)
+{
+    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
+    CHECK_ERROR(_readClaim_V5(c, &m->claim))
+    CHECK_ERROR(_readInvestorZKProofData_V5(c, &m->proof))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_bond_V5(
+    parser_context_t* c, pd_staking_bond_V5_t* m)
+{
+    CHECK_ERROR(_readLookupSource_V5(c, &m->controller))
+    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
+    CHECK_ERROR(_readRewardDestination_V5(c, &m->payee))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_bond_extra_V5(
+    parser_context_t* c, pd_staking_bond_extra_V5_t* m)
+{
+    CHECK_ERROR(_readCompactBalanceOf(c, &m->max_additional))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_unbond_V5(
+    parser_context_t* c, pd_staking_unbond_V5_t* m)
+{
+    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_staking_withdraw_unbonded_V5(
+    parser_context_t* c, pd_staking_withdraw_unbonded_V5_t* m)
+{
+    CHECK_ERROR(_readu32(c, &m->num_slashing_spans))
     return parser_ok;
 }
 
@@ -62,17 +223,213 @@ __Z_INLINE parser_error_t _readMethod_staking_set_payee_V5(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_session_set_keys_V5(
-    parser_context_t* c, pd_session_set_keys_V5_t* m)
+__Z_INLINE parser_error_t _readMethod_staking_set_controller_V5(
+    parser_context_t* c, pd_staking_set_controller_V5_t* m)
 {
-    CHECK_ERROR(_readKeys_V5(c, &m->keys))
-    CHECK_ERROR(_readBytes(c, &m->proof))
+    CHECK_ERROR(_readLookupSource_V5(c, &m->controller))
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_session_purge_keys_V5(
-    parser_context_t* c, pd_session_purge_keys_V5_t* m)
+__Z_INLINE parser_error_t _readMethod_staking_rebond_V5(
+    parser_context_t* c, pd_staking_rebond_V5_t* m)
 {
+    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_create_multisig_V5(
+    parser_context_t* c, pd_multisig_create_multisig_V5_t* m)
+{
+    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
+    CHECK_ERROR(_readu64(c, &m->sigs_required))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_identity_V5(
+    parser_context_t* c, pd_multisig_create_or_approve_proposal_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readProposal(c, &m->proposal))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    CHECK_ERROR(_readbool(c, &m->auto_close))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_key_V5(
+    parser_context_t* c, pd_multisig_create_or_approve_proposal_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readProposal(c, &m->proposal))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    CHECK_ERROR(_readbool(c, &m->auto_close))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_identity_V5(
+    parser_context_t* c, pd_multisig_create_proposal_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readProposal(c, &m->proposal))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    CHECK_ERROR(_readbool(c, &m->auto_close))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_key_V5(
+    parser_context_t* c, pd_multisig_create_proposal_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readProposal(c, &m->proposal))
+    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
+    CHECK_ERROR(_readbool(c, &m->auto_close))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_approve_as_identity_V5(
+    parser_context_t* c, pd_multisig_approve_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readu64(c, &m->proposal_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_approve_as_key_V5(
+    parser_context_t* c, pd_multisig_approve_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readu64(c, &m->proposal_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_reject_as_identity_V5(
+    parser_context_t* c, pd_multisig_reject_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readu64(c, &m->proposal_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_reject_as_key_V5(
+    parser_context_t* c, pd_multisig_reject_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readu64(c, &m->proposal_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_identity_V5(
+    parser_context_t* c, pd_multisig_accept_multisig_signer_as_identity_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_key_V5(
+    parser_context_t* c, pd_multisig_accept_multisig_signer_as_key_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signer_V5(
+    parser_context_t* c, pd_multisig_add_multisig_signer_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signer_V5(
+    parser_context_t* c, pd_multisig_remove_multisig_signer_V5_t* m)
+{
+    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signers_via_creator_V5(
+    parser_context_t* c, pd_multisig_add_multisig_signers_via_creator_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signers_via_creator_V5(
+    parser_context_t* c, pd_multisig_remove_multisig_signers_via_creator_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_change_sigs_required_V5(
+    parser_context_t* c, pd_multisig_change_sigs_required_V5_t* m)
+{
+    CHECK_ERROR(_readu64(c, &m->sigs_required))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_make_multisig_signer_V5(
+    parser_context_t* c, pd_multisig_make_multisig_signer_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_make_multisig_primary_V5(
+    parser_context_t* c, pd_multisig_make_multisig_primary_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readOptionu64(c, &m->optional_cdd_auth_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_multisig_execute_scheduled_proposal_V5(
+    parser_context_t* c, pd_multisig_execute_scheduled_proposal_V5_t* m)
+{
+    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
+    CHECK_ERROR(_readu64(c, &m->proposal_id))
+    CHECK_ERROR(_readIdentityId_V5(c, &m->multisig_did))
+    CHECK_ERROR(_readWeight_V5(c, &m->proposal_weight))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_pips_propose_V5(
+    parser_context_t* c, pd_pips_propose_V5_t* m)
+{
+    CHECK_ERROR(_readProposal(c, &m->proposal))
+    CHECK_ERROR(_readBalanceOf(c, &m->deposit))
+    CHECK_ERROR(_readOptionUrl_V5(c, &m->url))
+    CHECK_ERROR(_readOptionPipDescription_V5(c, &m->description))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_pips_vote_V5(
+    parser_context_t* c, pd_pips_vote_V5_t* m)
+{
+    CHECK_ERROR(_readPipId_V5(c, &m->id))
+    CHECK_ERROR(_readbool(c, &m->aye_or_nay))
+    CHECK_ERROR(_readBalanceOf(c, &m->deposit))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_utility_batch_V5(
+    parser_context_t* c, pd_utility_batch_V5_t* m)
+{
+    CHECK_ERROR(_readVecCall(c, &m->calls))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_utility_batch_atomic_V5(
+    parser_context_t* c, pd_utility_batch_atomic_V5_t* m)
+{
+    CHECK_ERROR(_readVecCall(c, &m->calls))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_utility_batch_optimistic_V5(
+    parser_context_t* c, pd_utility_batch_optimistic_V5_t* m)
+{
+    CHECK_ERROR(_readVecCall(c, &m->calls))
     return parser_ok;
 }
 
@@ -272,61 +629,10 @@ __Z_INLINE parser_error_t _readMethod_identity_invalidate_cdd_claims_V5(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_identity_remove_secondary_keys_V5(
-    parser_context_t* c, pd_identity_remove_secondary_keys_V5_t* m)
-{
-    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers_to_remove))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_accept_primary_key_V5(
-    parser_context_t* c, pd_identity_accept_primary_key_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->rotation_auth_id))
-    CHECK_ERROR(_readOptionu64(c, &m->optional_cdd_auth_id))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_identity_change_cdd_requirement_for_mk_rotation_V5(
     parser_context_t* c, pd_identity_change_cdd_requirement_for_mk_rotation_V5_t* m)
 {
     CHECK_ERROR(_readbool(c, &m->auth_required))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_join_identity_as_key_V5(
-    parser_context_t* c, pd_identity_join_identity_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_join_identity_as_identity_V5(
-    parser_context_t* c, pd_identity_join_identity_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_leave_identity_as_key_V5(
-    parser_context_t* c, pd_identity_leave_identity_as_key_V5_t* m)
-{
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_leave_identity_as_identity_V5(
-    parser_context_t* c, pd_identity_leave_identity_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->did))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_add_claim_V5(
-    parser_context_t* c, pd_identity_add_claim_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
-    CHECK_ERROR(_readClaim_V5(c, &m->claim))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
     return parser_ok;
 }
 
@@ -335,42 +641,6 @@ __Z_INLINE parser_error_t _readMethod_identity_forwarded_call_V5(
 {
     CHECK_ERROR(_readIdentityId_V5(c, &m->target_did))
     CHECK_ERROR(_readProposal(c, &m->proposal))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_revoke_claim_V5(
-    parser_context_t* c, pd_identity_revoke_claim_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
-    CHECK_ERROR(_readClaim_V5(c, &m->claim))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_set_permission_to_signer_V5(
-    parser_context_t* c, pd_identity_set_permission_to_signer_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
-    CHECK_ERROR(_readPermissions_V5(c, &m->permissions))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_legacy_set_permission_to_signer_V5(
-    parser_context_t* c, pd_identity_legacy_set_permission_to_signer_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
-    CHECK_ERROR(_readLegacyPermissions_V5(c, &m->permissions))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_freeze_secondary_keys_V5(
-    parser_context_t* c, pd_identity_freeze_secondary_keys_V5_t* m)
-{
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_unfreeze_secondary_keys_V5(
-    parser_context_t* c, pd_identity_unfreeze_secondary_keys_V5_t* m)
-{
     return parser_ok;
 }
 
@@ -387,54 +657,11 @@ __Z_INLINE parser_error_t _readMethod_identity_get_cdd_of_V5(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_identity_add_authorization_V5(
-    parser_context_t* c, pd_identity_add_authorization_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->target))
-    CHECK_ERROR(_readAuthorizationData_V5(c, &m->authorization_data))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_remove_authorization_V5(
-    parser_context_t* c, pd_identity_remove_authorization_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->target))
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    CHECK_ERROR(_readbool(c, &m->_auth_issuer_pays))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_accept_authorization_V5(
-    parser_context_t* c, pd_identity_accept_authorization_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_add_secondary_keys_with_authorization_V5(
-    parser_context_t* c, pd_identity_add_secondary_keys_with_authorization_V5_t* m)
-{
-    CHECK_ERROR(_readVecSecondaryKeyWithAuth_V5(c, &m->additional_keys))
-    CHECK_ERROR(_readMoment_V5(c, &m->expires_at))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_identity_revoke_offchain_authorization_V5(
     parser_context_t* c, pd_identity_revoke_offchain_authorization_V5_t* m)
 {
     CHECK_ERROR(_readSignatory_V5(c, &m->signer))
     CHECK_ERROR(_readTargetIdAuthorization_V5(c, &m->auth))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_identity_add_investor_uniqueness_claim_V5(
-    parser_context_t* c, pd_identity_add_investor_uniqueness_claim_V5_t* m)
-{
-    CHECK_ERROR(_readIdentityId_V5(c, &m->target))
-    CHECK_ERROR(_readClaim_V5(c, &m->claim))
-    CHECK_ERROR(_readInvestorZKProofData_V5(c, &m->proof))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
     return parser_ok;
 }
 
@@ -457,43 +684,6 @@ __Z_INLINE parser_error_t _readMethod_authorship_set_uncles_V5(
     parser_context_t* c, pd_authorship_set_uncles_V5_t* m)
 {
     CHECK_ERROR(_readVecHeader(c, &m->new_uncles))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_bond_V5(
-    parser_context_t* c, pd_staking_bond_V5_t* m)
-{
-    CHECK_ERROR(_readLookupSource_V5(c, &m->controller))
-    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
-    CHECK_ERROR(_readRewardDestination_V5(c, &m->payee))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_bond_extra_V5(
-    parser_context_t* c, pd_staking_bond_extra_V5_t* m)
-{
-    CHECK_ERROR(_readCompactBalanceOf(c, &m->max_additional))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_unbond_V5(
-    parser_context_t* c, pd_staking_unbond_V5_t* m)
-{
-    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_withdraw_unbonded_V5(
-    parser_context_t* c, pd_staking_withdraw_unbonded_V5_t* m)
-{
-    CHECK_ERROR(_readu32(c, &m->num_slashing_spans))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_staking_set_controller_V5(
-    parser_context_t* c, pd_staking_set_controller_V5_t* m)
-{
-    CHECK_ERROR(_readLookupSource_V5(c, &m->controller))
     return parser_ok;
 }
 
@@ -603,13 +793,6 @@ __Z_INLINE parser_error_t _readMethod_staking_payout_stakers_V5(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_staking_rebond_V5(
-    parser_context_t* c, pd_staking_rebond_V5_t* m)
-{
-    CHECK_ERROR(_readCompactBalanceOf(c, &m->value))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_staking_set_history_depth_V5(
     parser_context_t* c, pd_staking_set_history_depth_V5_t* m)
 {
@@ -668,6 +851,20 @@ __Z_INLINE parser_error_t _readMethod_staking_update_permissioned_validator_inte
 {
     CHECK_ERROR(_readIdentityId_V5(c, &m->identity))
     CHECK_ERROR(_readu32(c, &m->new_intended_count))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_session_set_keys_V5(
+    parser_context_t* c, pd_session_set_keys_V5_t* m)
+{
+    CHECK_ERROR(_readKeys_V5(c, &m->keys))
+    CHECK_ERROR(_readBytes(c, &m->proof))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_session_purge_keys_V5(
+    parser_context_t* c, pd_session_purge_keys_V5_t* m)
+{
     return parser_ok;
 }
 
@@ -744,162 +941,6 @@ __Z_INLINE parser_error_t _readMethod_sudo_sudo_as_V5(
 {
     CHECK_ERROR(_readLookupSource_V5(c, &m->who))
     CHECK_ERROR(_readCall(c, &m->call))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_create_multisig_V5(
-    parser_context_t* c, pd_multisig_create_multisig_V5_t* m)
-{
-    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
-    CHECK_ERROR(_readu64(c, &m->sigs_required))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_identity_V5(
-    parser_context_t* c, pd_multisig_create_or_approve_proposal_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
-    CHECK_ERROR(_readbool(c, &m->auto_close))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_key_V5(
-    parser_context_t* c, pd_multisig_create_or_approve_proposal_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
-    CHECK_ERROR(_readbool(c, &m->auto_close))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_identity_V5(
-    parser_context_t* c, pd_multisig_create_proposal_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
-    CHECK_ERROR(_readbool(c, &m->auto_close))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_key_V5(
-    parser_context_t* c, pd_multisig_create_proposal_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V5(c, &m->expiry))
-    CHECK_ERROR(_readbool(c, &m->auto_close))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_approve_as_identity_V5(
-    parser_context_t* c, pd_multisig_approve_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readu64(c, &m->proposal_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_approve_as_key_V5(
-    parser_context_t* c, pd_multisig_approve_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readu64(c, &m->proposal_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_reject_as_identity_V5(
-    parser_context_t* c, pd_multisig_reject_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readu64(c, &m->proposal_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_reject_as_key_V5(
-    parser_context_t* c, pd_multisig_reject_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readu64(c, &m->proposal_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_identity_V5(
-    parser_context_t* c, pd_multisig_accept_multisig_signer_as_identity_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_key_V5(
-    parser_context_t* c, pd_multisig_accept_multisig_signer_as_key_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signer_V5(
-    parser_context_t* c, pd_multisig_add_multisig_signer_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signer_V5(
-    parser_context_t* c, pd_multisig_remove_multisig_signer_V5_t* m)
-{
-    CHECK_ERROR(_readSignatory_V5(c, &m->signer))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signers_via_creator_V5(
-    parser_context_t* c, pd_multisig_add_multisig_signers_via_creator_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signers_via_creator_V5(
-    parser_context_t* c, pd_multisig_remove_multisig_signers_via_creator_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readVecSignatory_V5(c, &m->signers))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_change_sigs_required_V5(
-    parser_context_t* c, pd_multisig_change_sigs_required_V5_t* m)
-{
-    CHECK_ERROR(_readu64(c, &m->sigs_required))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_make_multisig_signer_V5(
-    parser_context_t* c, pd_multisig_make_multisig_signer_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_make_multisig_primary_V5(
-    parser_context_t* c, pd_multisig_make_multisig_primary_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readOptionu64(c, &m->optional_cdd_auth_id))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_multisig_execute_scheduled_proposal_V5(
-    parser_context_t* c, pd_multisig_execute_scheduled_proposal_V5_t* m)
-{
-    CHECK_ERROR(_readAccountId_V5(c, &m->multisig))
-    CHECK_ERROR(_readu64(c, &m->proposal_id))
-    CHECK_ERROR(_readIdentityId_V5(c, &m->multisig_did))
-    CHECK_ERROR(_readWeight_V5(c, &m->proposal_weight))
     return parser_ok;
 }
 
@@ -1130,25 +1171,6 @@ __Z_INLINE parser_error_t _readMethod_pips_set_active_pip_limit_V5(
     parser_context_t* c, pd_pips_set_active_pip_limit_V5_t* m)
 {
     CHECK_ERROR(_readu32(c, &m->limit))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_pips_propose_V5(
-    parser_context_t* c, pd_pips_propose_V5_t* m)
-{
-    CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readBalanceOf(c, &m->deposit))
-    CHECK_ERROR(_readOptionUrl_V5(c, &m->url))
-    CHECK_ERROR(_readOptionPipDescription_V5(c, &m->description))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_pips_vote_V5(
-    parser_context_t* c, pd_pips_vote_V5_t* m)
-{
-    CHECK_ERROR(_readPipId_V5(c, &m->id))
-    CHECK_ERROR(_readbool(c, &m->aye_or_nay))
-    CHECK_ERROR(_readBalanceOf(c, &m->deposit))
     return parser_ok;
 }
 
@@ -2036,27 +2058,6 @@ __Z_INLINE parser_error_t _readMethod_protocolfee_change_base_fee_V5(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_utility_batch_V5(
-    parser_context_t* c, pd_utility_batch_V5_t* m)
-{
-    CHECK_ERROR(_readVecCall(c, &m->calls))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_utility_batch_atomic_V5(
-    parser_context_t* c, pd_utility_batch_atomic_V5_t* m)
-{
-    CHECK_ERROR(_readVecCall(c, &m->calls))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_utility_batch_optimistic_V5(
-    parser_context_t* c, pd_utility_batch_optimistic_V5_t* m)
-{
-    CHECK_ERROR(_readVecCall(c, &m->calls))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_utility_relay_tx_V5(
     parser_context_t* c, pd_utility_relay_tx_V5_t* m)
 {
@@ -2368,6 +2369,69 @@ parser_error_t _readMethod_V5(
     case 1025: /* module 4 call 1 */
         CHECK_ERROR(_readMethod_balances_transfer_with_memo_V5(c, &method->nested.balances_transfer_with_memo_V5))
         break;
+    case 1540: /* module 6 call 4 */
+        CHECK_ERROR(_readMethod_identity_remove_secondary_keys_V5(c, &method->nested.identity_remove_secondary_keys_V5))
+        break;
+    case 1541: /* module 6 call 5 */
+        CHECK_ERROR(_readMethod_identity_accept_primary_key_V5(c, &method->nested.identity_accept_primary_key_V5))
+        break;
+    case 1543: /* module 6 call 7 */
+        CHECK_ERROR(_readMethod_identity_join_identity_as_key_V5(c, &method->nested.identity_join_identity_as_key_V5))
+        break;
+    case 1544: /* module 6 call 8 */
+        CHECK_ERROR(_readMethod_identity_join_identity_as_identity_V5(c, &method->nested.identity_join_identity_as_identity_V5))
+        break;
+    case 1545: /* module 6 call 9 */
+        CHECK_ERROR(_readMethod_identity_leave_identity_as_key_V5(c, &method->nested.identity_leave_identity_as_key_V5))
+        break;
+    case 1546: /* module 6 call 10 */
+        CHECK_ERROR(_readMethod_identity_leave_identity_as_identity_V5(c, &method->nested.identity_leave_identity_as_identity_V5))
+        break;
+    case 1547: /* module 6 call 11 */
+        CHECK_ERROR(_readMethod_identity_add_claim_V5(c, &method->nested.identity_add_claim_V5))
+        break;
+    case 1549: /* module 6 call 13 */
+        CHECK_ERROR(_readMethod_identity_revoke_claim_V5(c, &method->nested.identity_revoke_claim_V5))
+        break;
+    case 1550: /* module 6 call 14 */
+        CHECK_ERROR(_readMethod_identity_set_permission_to_signer_V5(c, &method->nested.identity_set_permission_to_signer_V5))
+        break;
+    case 1551: /* module 6 call 15 */
+        CHECK_ERROR(_readMethod_identity_legacy_set_permission_to_signer_V5(c, &method->nested.identity_legacy_set_permission_to_signer_V5))
+        break;
+    case 1552: /* module 6 call 16 */
+        CHECK_ERROR(_readMethod_identity_freeze_secondary_keys_V5(c, &method->nested.identity_freeze_secondary_keys_V5))
+        break;
+    case 1553: /* module 6 call 17 */
+        CHECK_ERROR(_readMethod_identity_unfreeze_secondary_keys_V5(c, &method->nested.identity_unfreeze_secondary_keys_V5))
+        break;
+    case 1556: /* module 6 call 20 */
+        CHECK_ERROR(_readMethod_identity_add_authorization_V5(c, &method->nested.identity_add_authorization_V5))
+        break;
+    case 1557: /* module 6 call 21 */
+        CHECK_ERROR(_readMethod_identity_remove_authorization_V5(c, &method->nested.identity_remove_authorization_V5))
+        break;
+    case 1558: /* module 6 call 22 */
+        CHECK_ERROR(_readMethod_identity_accept_authorization_V5(c, &method->nested.identity_accept_authorization_V5))
+        break;
+    case 1559: /* module 6 call 23 */
+        CHECK_ERROR(_readMethod_identity_add_secondary_keys_with_authorization_V5(c, &method->nested.identity_add_secondary_keys_with_authorization_V5))
+        break;
+    case 1561: /* module 6 call 25 */
+        CHECK_ERROR(_readMethod_identity_add_investor_uniqueness_claim_V5(c, &method->nested.identity_add_investor_uniqueness_claim_V5))
+        break;
+    case 2048: /* module 8 call 0 */
+        CHECK_ERROR(_readMethod_staking_bond_V5(c, &method->nested.staking_bond_V5))
+        break;
+    case 2049: /* module 8 call 1 */
+        CHECK_ERROR(_readMethod_staking_bond_extra_V5(c, &method->nested.staking_bond_extra_V5))
+        break;
+    case 2050: /* module 8 call 2 */
+        CHECK_ERROR(_readMethod_staking_unbond_V5(c, &method->nested.staking_unbond_V5))
+        break;
+    case 2051: /* module 8 call 3 */
+        CHECK_ERROR(_readMethod_staking_withdraw_unbonded_V5(c, &method->nested.staking_withdraw_unbonded_V5))
+        break;
     case 2052: /* module 8 call 4 */
         CHECK_ERROR(_readMethod_staking_validate_V5(c, &method->nested.staking_validate_V5))
         break;
@@ -2380,11 +2444,83 @@ parser_error_t _readMethod_V5(
     case 2055: /* module 8 call 7 */
         CHECK_ERROR(_readMethod_staking_set_payee_V5(c, &method->nested.staking_set_payee_V5))
         break;
-    case 2560: /* module 10 call 0 */
-        CHECK_ERROR(_readMethod_session_set_keys_V5(c, &method->nested.session_set_keys_V5))
+    case 2056: /* module 8 call 8 */
+        CHECK_ERROR(_readMethod_staking_set_controller_V5(c, &method->nested.staking_set_controller_V5))
         break;
-    case 2561: /* module 10 call 1 */
-        CHECK_ERROR(_readMethod_session_purge_keys_V5(c, &method->nested.session_purge_keys_V5))
+    case 2072: /* module 8 call 24 */
+        CHECK_ERROR(_readMethod_staking_rebond_V5(c, &method->nested.staking_rebond_V5))
+        break;
+    case 4608: /* module 18 call 0 */
+        CHECK_ERROR(_readMethod_multisig_create_multisig_V5(c, &method->nested.multisig_create_multisig_V5))
+        break;
+    case 4609: /* module 18 call 1 */
+        CHECK_ERROR(_readMethod_multisig_create_or_approve_proposal_as_identity_V5(c, &method->nested.multisig_create_or_approve_proposal_as_identity_V5))
+        break;
+    case 4610: /* module 18 call 2 */
+        CHECK_ERROR(_readMethod_multisig_create_or_approve_proposal_as_key_V5(c, &method->nested.multisig_create_or_approve_proposal_as_key_V5))
+        break;
+    case 4611: /* module 18 call 3 */
+        CHECK_ERROR(_readMethod_multisig_create_proposal_as_identity_V5(c, &method->nested.multisig_create_proposal_as_identity_V5))
+        break;
+    case 4612: /* module 18 call 4 */
+        CHECK_ERROR(_readMethod_multisig_create_proposal_as_key_V5(c, &method->nested.multisig_create_proposal_as_key_V5))
+        break;
+    case 4613: /* module 18 call 5 */
+        CHECK_ERROR(_readMethod_multisig_approve_as_identity_V5(c, &method->nested.multisig_approve_as_identity_V5))
+        break;
+    case 4614: /* module 18 call 6 */
+        CHECK_ERROR(_readMethod_multisig_approve_as_key_V5(c, &method->nested.multisig_approve_as_key_V5))
+        break;
+    case 4615: /* module 18 call 7 */
+        CHECK_ERROR(_readMethod_multisig_reject_as_identity_V5(c, &method->nested.multisig_reject_as_identity_V5))
+        break;
+    case 4616: /* module 18 call 8 */
+        CHECK_ERROR(_readMethod_multisig_reject_as_key_V5(c, &method->nested.multisig_reject_as_key_V5))
+        break;
+    case 4617: /* module 18 call 9 */
+        CHECK_ERROR(_readMethod_multisig_accept_multisig_signer_as_identity_V5(c, &method->nested.multisig_accept_multisig_signer_as_identity_V5))
+        break;
+    case 4618: /* module 18 call 10 */
+        CHECK_ERROR(_readMethod_multisig_accept_multisig_signer_as_key_V5(c, &method->nested.multisig_accept_multisig_signer_as_key_V5))
+        break;
+    case 4619: /* module 18 call 11 */
+        CHECK_ERROR(_readMethod_multisig_add_multisig_signer_V5(c, &method->nested.multisig_add_multisig_signer_V5))
+        break;
+    case 4620: /* module 18 call 12 */
+        CHECK_ERROR(_readMethod_multisig_remove_multisig_signer_V5(c, &method->nested.multisig_remove_multisig_signer_V5))
+        break;
+    case 4621: /* module 18 call 13 */
+        CHECK_ERROR(_readMethod_multisig_add_multisig_signers_via_creator_V5(c, &method->nested.multisig_add_multisig_signers_via_creator_V5))
+        break;
+    case 4622: /* module 18 call 14 */
+        CHECK_ERROR(_readMethod_multisig_remove_multisig_signers_via_creator_V5(c, &method->nested.multisig_remove_multisig_signers_via_creator_V5))
+        break;
+    case 4623: /* module 18 call 15 */
+        CHECK_ERROR(_readMethod_multisig_change_sigs_required_V5(c, &method->nested.multisig_change_sigs_required_V5))
+        break;
+    case 4624: /* module 18 call 16 */
+        CHECK_ERROR(_readMethod_multisig_make_multisig_signer_V5(c, &method->nested.multisig_make_multisig_signer_V5))
+        break;
+    case 4625: /* module 18 call 17 */
+        CHECK_ERROR(_readMethod_multisig_make_multisig_primary_V5(c, &method->nested.multisig_make_multisig_primary_V5))
+        break;
+    case 4626: /* module 18 call 18 */
+        CHECK_ERROR(_readMethod_multisig_execute_scheduled_proposal_V5(c, &method->nested.multisig_execute_scheduled_proposal_V5))
+        break;
+    case 6150: /* module 24 call 6 */
+        CHECK_ERROR(_readMethod_pips_propose_V5(c, &method->nested.pips_propose_V5))
+        break;
+    case 6151: /* module 24 call 7 */
+        CHECK_ERROR(_readMethod_pips_vote_V5(c, &method->nested.pips_vote_V5))
+        break;
+    case 10496: /* module 41 call 0 */
+        CHECK_ERROR(_readMethod_utility_batch_V5(c, &method->nested.utility_batch_V5))
+        break;
+    case 10497: /* module 41 call 1 */
+        CHECK_ERROR(_readMethod_utility_batch_atomic_V5(c, &method->nested.utility_batch_atomic_V5))
+        break;
+    case 10498: /* module 41 call 2 */
+        CHECK_ERROR(_readMethod_utility_batch_optimistic_V5(c, &method->nested.utility_batch_optimistic_V5))
         break;
 
 #ifdef SUBSTRATE_PARSER_FULL
@@ -2466,47 +2602,11 @@ parser_error_t _readMethod_V5(
     case 1539: /* module 6 call 3 */
         CHECK_ERROR(_readMethod_identity_invalidate_cdd_claims_V5(c, &method->nested.identity_invalidate_cdd_claims_V5))
         break;
-    case 1540: /* module 6 call 4 */
-        CHECK_ERROR(_readMethod_identity_remove_secondary_keys_V5(c, &method->nested.identity_remove_secondary_keys_V5))
-        break;
-    case 1541: /* module 6 call 5 */
-        CHECK_ERROR(_readMethod_identity_accept_primary_key_V5(c, &method->nested.identity_accept_primary_key_V5))
-        break;
     case 1542: /* module 6 call 6 */
         CHECK_ERROR(_readMethod_identity_change_cdd_requirement_for_mk_rotation_V5(c, &method->nested.identity_change_cdd_requirement_for_mk_rotation_V5))
         break;
-    case 1543: /* module 6 call 7 */
-        CHECK_ERROR(_readMethod_identity_join_identity_as_key_V5(c, &method->nested.identity_join_identity_as_key_V5))
-        break;
-    case 1544: /* module 6 call 8 */
-        CHECK_ERROR(_readMethod_identity_join_identity_as_identity_V5(c, &method->nested.identity_join_identity_as_identity_V5))
-        break;
-    case 1545: /* module 6 call 9 */
-        CHECK_ERROR(_readMethod_identity_leave_identity_as_key_V5(c, &method->nested.identity_leave_identity_as_key_V5))
-        break;
-    case 1546: /* module 6 call 10 */
-        CHECK_ERROR(_readMethod_identity_leave_identity_as_identity_V5(c, &method->nested.identity_leave_identity_as_identity_V5))
-        break;
-    case 1547: /* module 6 call 11 */
-        CHECK_ERROR(_readMethod_identity_add_claim_V5(c, &method->nested.identity_add_claim_V5))
-        break;
     case 1548: /* module 6 call 12 */
         CHECK_ERROR(_readMethod_identity_forwarded_call_V5(c, &method->nested.identity_forwarded_call_V5))
-        break;
-    case 1549: /* module 6 call 13 */
-        CHECK_ERROR(_readMethod_identity_revoke_claim_V5(c, &method->nested.identity_revoke_claim_V5))
-        break;
-    case 1550: /* module 6 call 14 */
-        CHECK_ERROR(_readMethod_identity_set_permission_to_signer_V5(c, &method->nested.identity_set_permission_to_signer_V5))
-        break;
-    case 1551: /* module 6 call 15 */
-        CHECK_ERROR(_readMethod_identity_legacy_set_permission_to_signer_V5(c, &method->nested.identity_legacy_set_permission_to_signer_V5))
-        break;
-    case 1552: /* module 6 call 16 */
-        CHECK_ERROR(_readMethod_identity_freeze_secondary_keys_V5(c, &method->nested.identity_freeze_secondary_keys_V5))
-        break;
-    case 1553: /* module 6 call 17 */
-        CHECK_ERROR(_readMethod_identity_unfreeze_secondary_keys_V5(c, &method->nested.identity_unfreeze_secondary_keys_V5))
         break;
     case 1554: /* module 6 call 18 */
         CHECK_ERROR(_readMethod_identity_get_my_did_V5(c, &method->nested.identity_get_my_did_V5))
@@ -2514,23 +2614,8 @@ parser_error_t _readMethod_V5(
     case 1555: /* module 6 call 19 */
         CHECK_ERROR(_readMethod_identity_get_cdd_of_V5(c, &method->nested.identity_get_cdd_of_V5))
         break;
-    case 1556: /* module 6 call 20 */
-        CHECK_ERROR(_readMethod_identity_add_authorization_V5(c, &method->nested.identity_add_authorization_V5))
-        break;
-    case 1557: /* module 6 call 21 */
-        CHECK_ERROR(_readMethod_identity_remove_authorization_V5(c, &method->nested.identity_remove_authorization_V5))
-        break;
-    case 1558: /* module 6 call 22 */
-        CHECK_ERROR(_readMethod_identity_accept_authorization_V5(c, &method->nested.identity_accept_authorization_V5))
-        break;
-    case 1559: /* module 6 call 23 */
-        CHECK_ERROR(_readMethod_identity_add_secondary_keys_with_authorization_V5(c, &method->nested.identity_add_secondary_keys_with_authorization_V5))
-        break;
     case 1560: /* module 6 call 24 */
         CHECK_ERROR(_readMethod_identity_revoke_offchain_authorization_V5(c, &method->nested.identity_revoke_offchain_authorization_V5))
-        break;
-    case 1561: /* module 6 call 25 */
-        CHECK_ERROR(_readMethod_identity_add_investor_uniqueness_claim_V5(c, &method->nested.identity_add_investor_uniqueness_claim_V5))
         break;
     case 1562: /* module 6 call 26 */
         CHECK_ERROR(_readMethod_identity_gc_add_cdd_claim_V5(c, &method->nested.identity_gc_add_cdd_claim_V5))
@@ -2540,21 +2625,6 @@ parser_error_t _readMethod_V5(
         break;
     case 1792: /* module 7 call 0 */
         CHECK_ERROR(_readMethod_authorship_set_uncles_V5(c, &method->nested.authorship_set_uncles_V5))
-        break;
-    case 2048: /* module 8 call 0 */
-        CHECK_ERROR(_readMethod_staking_bond_V5(c, &method->nested.staking_bond_V5))
-        break;
-    case 2049: /* module 8 call 1 */
-        CHECK_ERROR(_readMethod_staking_bond_extra_V5(c, &method->nested.staking_bond_extra_V5))
-        break;
-    case 2050: /* module 8 call 2 */
-        CHECK_ERROR(_readMethod_staking_unbond_V5(c, &method->nested.staking_unbond_V5))
-        break;
-    case 2051: /* module 8 call 3 */
-        CHECK_ERROR(_readMethod_staking_withdraw_unbonded_V5(c, &method->nested.staking_withdraw_unbonded_V5))
-        break;
-    case 2056: /* module 8 call 8 */
-        CHECK_ERROR(_readMethod_staking_set_controller_V5(c, &method->nested.staking_set_controller_V5))
         break;
     case 2057: /* module 8 call 9 */
         CHECK_ERROR(_readMethod_staking_set_validator_count_V5(c, &method->nested.staking_set_validator_count_V5))
@@ -2601,9 +2671,6 @@ parser_error_t _readMethod_V5(
     case 2071: /* module 8 call 23 */
         CHECK_ERROR(_readMethod_staking_payout_stakers_V5(c, &method->nested.staking_payout_stakers_V5))
         break;
-    case 2072: /* module 8 call 24 */
-        CHECK_ERROR(_readMethod_staking_rebond_V5(c, &method->nested.staking_rebond_V5))
-        break;
     case 2073: /* module 8 call 25 */
         CHECK_ERROR(_readMethod_staking_set_history_depth_V5(c, &method->nested.staking_set_history_depth_V5))
         break;
@@ -2624,6 +2691,12 @@ parser_error_t _readMethod_V5(
         break;
     case 2079: /* module 8 call 31 */
         CHECK_ERROR(_readMethod_staking_update_permissioned_validator_intended_count_V5(c, &method->nested.staking_update_permissioned_validator_intended_count_V5))
+        break;
+    case 2560: /* module 10 call 0 */
+        CHECK_ERROR(_readMethod_session_set_keys_V5(c, &method->nested.session_set_keys_V5))
+        break;
+    case 2561: /* module 10 call 1 */
+        CHECK_ERROR(_readMethod_session_purge_keys_V5(c, &method->nested.session_purge_keys_V5))
         break;
     case 2816: /* module 11 call 0 */
         CHECK_ERROR(_readMethod_finalitytracker_final_hint_V5(c, &method->nested.finalitytracker_final_hint_V5))
@@ -2654,63 +2727,6 @@ parser_error_t _readMethod_V5(
         break;
     case 4355: /* module 17 call 3 */
         CHECK_ERROR(_readMethod_sudo_sudo_as_V5(c, &method->nested.sudo_sudo_as_V5))
-        break;
-    case 4608: /* module 18 call 0 */
-        CHECK_ERROR(_readMethod_multisig_create_multisig_V5(c, &method->nested.multisig_create_multisig_V5))
-        break;
-    case 4609: /* module 18 call 1 */
-        CHECK_ERROR(_readMethod_multisig_create_or_approve_proposal_as_identity_V5(c, &method->nested.multisig_create_or_approve_proposal_as_identity_V5))
-        break;
-    case 4610: /* module 18 call 2 */
-        CHECK_ERROR(_readMethod_multisig_create_or_approve_proposal_as_key_V5(c, &method->nested.multisig_create_or_approve_proposal_as_key_V5))
-        break;
-    case 4611: /* module 18 call 3 */
-        CHECK_ERROR(_readMethod_multisig_create_proposal_as_identity_V5(c, &method->nested.multisig_create_proposal_as_identity_V5))
-        break;
-    case 4612: /* module 18 call 4 */
-        CHECK_ERROR(_readMethod_multisig_create_proposal_as_key_V5(c, &method->nested.multisig_create_proposal_as_key_V5))
-        break;
-    case 4613: /* module 18 call 5 */
-        CHECK_ERROR(_readMethod_multisig_approve_as_identity_V5(c, &method->nested.multisig_approve_as_identity_V5))
-        break;
-    case 4614: /* module 18 call 6 */
-        CHECK_ERROR(_readMethod_multisig_approve_as_key_V5(c, &method->nested.multisig_approve_as_key_V5))
-        break;
-    case 4615: /* module 18 call 7 */
-        CHECK_ERROR(_readMethod_multisig_reject_as_identity_V5(c, &method->nested.multisig_reject_as_identity_V5))
-        break;
-    case 4616: /* module 18 call 8 */
-        CHECK_ERROR(_readMethod_multisig_reject_as_key_V5(c, &method->nested.multisig_reject_as_key_V5))
-        break;
-    case 4617: /* module 18 call 9 */
-        CHECK_ERROR(_readMethod_multisig_accept_multisig_signer_as_identity_V5(c, &method->nested.multisig_accept_multisig_signer_as_identity_V5))
-        break;
-    case 4618: /* module 18 call 10 */
-        CHECK_ERROR(_readMethod_multisig_accept_multisig_signer_as_key_V5(c, &method->nested.multisig_accept_multisig_signer_as_key_V5))
-        break;
-    case 4619: /* module 18 call 11 */
-        CHECK_ERROR(_readMethod_multisig_add_multisig_signer_V5(c, &method->nested.multisig_add_multisig_signer_V5))
-        break;
-    case 4620: /* module 18 call 12 */
-        CHECK_ERROR(_readMethod_multisig_remove_multisig_signer_V5(c, &method->nested.multisig_remove_multisig_signer_V5))
-        break;
-    case 4621: /* module 18 call 13 */
-        CHECK_ERROR(_readMethod_multisig_add_multisig_signers_via_creator_V5(c, &method->nested.multisig_add_multisig_signers_via_creator_V5))
-        break;
-    case 4622: /* module 18 call 14 */
-        CHECK_ERROR(_readMethod_multisig_remove_multisig_signers_via_creator_V5(c, &method->nested.multisig_remove_multisig_signers_via_creator_V5))
-        break;
-    case 4623: /* module 18 call 15 */
-        CHECK_ERROR(_readMethod_multisig_change_sigs_required_V5(c, &method->nested.multisig_change_sigs_required_V5))
-        break;
-    case 4624: /* module 18 call 16 */
-        CHECK_ERROR(_readMethod_multisig_make_multisig_signer_V5(c, &method->nested.multisig_make_multisig_signer_V5))
-        break;
-    case 4625: /* module 18 call 17 */
-        CHECK_ERROR(_readMethod_multisig_make_multisig_primary_V5(c, &method->nested.multisig_make_multisig_primary_V5))
-        break;
-    case 4626: /* module 18 call 18 */
-        CHECK_ERROR(_readMethod_multisig_execute_scheduled_proposal_V5(c, &method->nested.multisig_execute_scheduled_proposal_V5))
         break;
     case 5120: /* module 20 call 0 */
         CHECK_ERROR(_readMethod_contracts_update_schedule_V5(c, &method->nested.contracts_update_schedule_V5))
@@ -2801,12 +2817,6 @@ parser_error_t _readMethod_V5(
         break;
     case 6149: /* module 24 call 5 */
         CHECK_ERROR(_readMethod_pips_set_active_pip_limit_V5(c, &method->nested.pips_set_active_pip_limit_V5))
-        break;
-    case 6150: /* module 24 call 6 */
-        CHECK_ERROR(_readMethod_pips_propose_V5(c, &method->nested.pips_propose_V5))
-        break;
-    case 6151: /* module 24 call 7 */
-        CHECK_ERROR(_readMethod_pips_vote_V5(c, &method->nested.pips_vote_V5))
         break;
     case 6152: /* module 24 call 8 */
         CHECK_ERROR(_readMethod_pips_approve_committee_proposal_V5(c, &method->nested.pips_approve_committee_proposal_V5))
@@ -3147,15 +3157,6 @@ parser_error_t _readMethod_V5(
     case 10241: /* module 40 call 1 */
         CHECK_ERROR(_readMethod_protocolfee_change_base_fee_V5(c, &method->nested.protocolfee_change_base_fee_V5))
         break;
-    case 10496: /* module 41 call 0 */
-        CHECK_ERROR(_readMethod_utility_batch_V5(c, &method->nested.utility_batch_V5))
-        break;
-    case 10497: /* module 41 call 1 */
-        CHECK_ERROR(_readMethod_utility_batch_atomic_V5(c, &method->nested.utility_batch_atomic_V5))
-        break;
-    case 10498: /* module 41 call 2 */
-        CHECK_ERROR(_readMethod_utility_batch_optimistic_V5(c, &method->nested.utility_batch_optimistic_V5))
-        break;
     case 10499: /* module 41 call 3 */
         CHECK_ERROR(_readMethod_utility_relay_tx_V5(c, &method->nested.utility_relay_tx_V5))
         break;
@@ -3277,88 +3278,90 @@ parser_error_t _readMethod_V5(
 const char* _getMethod_ModuleName_V5(uint8_t moduleIdx)
 {
     switch (moduleIdx) {
-    case 0:
-        return "System";
-    case 1:
-        return "Babe";
-    case 2:
-        return "Timestamp";
-    case 3:
-        return "Indices";
     case 4:
-        return "Balances";
+        return STR_MO_BALANCES;
     case 6:
-        return "Identity";
-    case 7:
-        return "Authorship";
+        return STR_MO_IDENTITY;
     case 8:
-        return "Staking";
-    case 9:
-        return "Offences";
-    case 10:
-        return "Session";
-    case 11:
-        return "Finalitytracker";
-    case 12:
-        return "Grandpa";
-    case 13:
-        return "Imonline";
-    case 14:
-        return "Authoritydiscovery";
-    case 15:
-        return "Randomnesscollectiveflip";
-    case 17:
-        return "Sudo";
+        return STR_MO_STAKING;
     case 18:
-        return "Multisig";
-    case 20:
-        return "Contracts";
-    case 21:
-        return "Treasury";
-    case 22:
-        return "Polymeshcommittee";
-    case 23:
-        return "Committeemembership";
+        return STR_MO_MULTISIG;
     case 24:
-        return "Pips";
-    case 25:
-        return "Technicalcommittee";
-    case 26:
-        return "Technicalcommitteemembership";
-    case 27:
-        return "Upgradecommittee";
-    case 28:
-        return "Upgradecommitteemembership";
-    case 29:
-        return "Asset";
-    case 31:
-        return "Bridge";
-    case 32:
-        return "Compliancemanager";
-    case 36:
-        return "Settlement";
-    case 37:
-        return "Sto";
-    case 38:
-        return "Cddserviceproviders";
-    case 39:
-        return "Statistics";
-    case 40:
-        return "Protocolfee";
+        return STR_MO_PIPS;
     case 41:
-        return "Utility";
+        return STR_MO_UTILITY;
+#ifdef SUBSTRATE_PARSER_FULL
+    case 0:
+        return STR_MO_SYSTEM;
+    case 1:
+        return STR_MO_BABE;
+    case 2:
+        return STR_MO_TIMESTAMP;
+    case 3:
+        return STR_MO_INDICES;
+    case 7:
+        return STR_MO_AUTHORSHIP;
+    case 9:
+        return STR_MO_OFFENCES;
+    case 10:
+        return STR_MO_SESSION;
+    case 11:
+        return STR_MO_FINALITYTRACKER;
+    case 12:
+        return STR_MO_GRANDPA;
+    case 13:
+        return STR_MO_IMONLINE;
+    case 14:
+        return STR_MO_AUTHORITYDISCOVERY;
+    case 15:
+        return STR_MO_RANDOMNESSCOLLECTIVEFLIP;
+    case 17:
+        return STR_MO_SUDO;
+    case 20:
+        return STR_MO_CONTRACTS;
+    case 21:
+        return STR_MO_TREASURY;
+    case 22:
+        return STR_MO_POLYMESHCOMMITTEE;
+    case 23:
+        return STR_MO_COMMITTEEMEMBERSHIP;
+    case 25:
+        return STR_MO_TECHNICALCOMMITTEE;
+    case 26:
+        return STR_MO_TECHNICALCOMMITTEEMEMBERSHIP;
+    case 27:
+        return STR_MO_UPGRADECOMMITTEE;
+    case 28:
+        return STR_MO_UPGRADECOMMITTEEMEMBERSHIP;
+    case 29:
+        return STR_MO_ASSET;
+    case 31:
+        return STR_MO_BRIDGE;
+    case 32:
+        return STR_MO_COMPLIANCEMANAGER;
+    case 36:
+        return STR_MO_SETTLEMENT;
+    case 37:
+        return STR_MO_STO;
+    case 38:
+        return STR_MO_CDDSERVICEPROVIDERS;
+    case 39:
+        return STR_MO_STATISTICS;
+    case 40:
+        return STR_MO_PROTOCOLFEE;
     case 42:
-        return "Portfolio";
+        return STR_MO_PORTFOLIO;
     case 45:
-        return "Scheduler";
+        return STR_MO_SCHEDULER;
     case 46:
-        return "Corporateaction";
+        return STR_MO_CORPORATEACTION;
     case 47:
-        return "Corporateballot";
+        return STR_MO_CORPORATEBALLOT;
     case 48:
-        return "Capitaldistribution";
+        return STR_MO_CAPITALDISTRIBUTION;
     case 49:
-        return "Checkpoint";
+        return STR_MO_CHECKPOINT;
+#endif
     default:
         return NULL;
     }
@@ -3372,604 +3375,604 @@ const char* _getMethod_Name_V5(uint8_t moduleIdx, uint8_t callIdx)
 
     switch (callPrivIdx) {
     case 1024: /* module 4 call 0 */
-        return "Transfer";
+        return STR_ME_TRANSFER;
     case 1025: /* module 4 call 1 */
-        return "Transfer with memo";
+        return STR_ME_TRANSFER_WITH_MEMO;
+    case 1540: /* module 6 call 4 */
+        return STR_ME_REMOVE_SECONDARY_KEYS;
+    case 1541: /* module 6 call 5 */
+        return STR_ME_ACCEPT_PRIMARY_KEY;
+    case 1543: /* module 6 call 7 */
+        return STR_ME_JOIN_IDENTITY_AS_KEY;
+    case 1544: /* module 6 call 8 */
+        return STR_ME_JOIN_IDENTITY_AS_IDENTITY;
+    case 1545: /* module 6 call 9 */
+        return STR_ME_LEAVE_IDENTITY_AS_KEY;
+    case 1546: /* module 6 call 10 */
+        return STR_ME_LEAVE_IDENTITY_AS_IDENTITY;
+    case 1547: /* module 6 call 11 */
+        return STR_ME_ADD_CLAIM;
+    case 1549: /* module 6 call 13 */
+        return STR_ME_REVOKE_CLAIM;
+    case 1550: /* module 6 call 14 */
+        return STR_ME_SET_PERMISSION_TO_SIGNER;
+    case 1551: /* module 6 call 15 */
+        return STR_ME_LEGACY_SET_PERMISSION_TO_SIGNER;
+    case 1552: /* module 6 call 16 */
+        return STR_ME_FREEZE_SECONDARY_KEYS;
+    case 1553: /* module 6 call 17 */
+        return STR_ME_UNFREEZE_SECONDARY_KEYS;
+    case 1556: /* module 6 call 20 */
+        return STR_ME_ADD_AUTHORIZATION;
+    case 1557: /* module 6 call 21 */
+        return STR_ME_REMOVE_AUTHORIZATION;
+    case 1558: /* module 6 call 22 */
+        return STR_ME_ACCEPT_AUTHORIZATION;
+    case 1559: /* module 6 call 23 */
+        return STR_ME_ADD_SECONDARY_KEYS_WITH_AUTHORIZATION;
+    case 1561: /* module 6 call 25 */
+        return STR_ME_ADD_INVESTOR_UNIQUENESS_CLAIM;
+    case 2048: /* module 8 call 0 */
+        return STR_ME_BOND;
+    case 2049: /* module 8 call 1 */
+        return STR_ME_BOND_EXTRA;
+    case 2050: /* module 8 call 2 */
+        return STR_ME_UNBOND;
+    case 2051: /* module 8 call 3 */
+        return STR_ME_WITHDRAW_UNBONDED;
     case 2052: /* module 8 call 4 */
-        return "Validate";
+        return STR_ME_VALIDATE;
     case 2053: /* module 8 call 5 */
-        return "Nominate";
+        return STR_ME_NOMINATE;
     case 2054: /* module 8 call 6 */
-        return "Chill";
+        return STR_ME_CHILL;
     case 2055: /* module 8 call 7 */
-        return "Set payee";
-    case 2560: /* module 10 call 0 */
-        return "Set keys";
-    case 2561: /* module 10 call 1 */
-        return "Purge keys";
+        return STR_ME_SET_PAYEE;
+    case 2056: /* module 8 call 8 */
+        return STR_ME_SET_CONTROLLER;
+    case 2072: /* module 8 call 24 */
+        return STR_ME_REBOND;
+    case 4608: /* module 18 call 0 */
+        return STR_ME_CREATE_MULTISIG;
+    case 4609: /* module 18 call 1 */
+        return STR_ME_CREATE_OR_APPROVE_PROPOSAL_AS_IDENTITY;
+    case 4610: /* module 18 call 2 */
+        return STR_ME_CREATE_OR_APPROVE_PROPOSAL_AS_KEY;
+    case 4611: /* module 18 call 3 */
+        return STR_ME_CREATE_PROPOSAL_AS_IDENTITY;
+    case 4612: /* module 18 call 4 */
+        return STR_ME_CREATE_PROPOSAL_AS_KEY;
+    case 4613: /* module 18 call 5 */
+        return STR_ME_APPROVE_AS_IDENTITY;
+    case 4614: /* module 18 call 6 */
+        return STR_ME_APPROVE_AS_KEY;
+    case 4615: /* module 18 call 7 */
+        return STR_ME_REJECT_AS_IDENTITY;
+    case 4616: /* module 18 call 8 */
+        return STR_ME_REJECT_AS_KEY;
+    case 4617: /* module 18 call 9 */
+        return STR_ME_ACCEPT_MULTISIG_SIGNER_AS_IDENTITY;
+    case 4618: /* module 18 call 10 */
+        return STR_ME_ACCEPT_MULTISIG_SIGNER_AS_KEY;
+    case 4619: /* module 18 call 11 */
+        return STR_ME_ADD_MULTISIG_SIGNER;
+    case 4620: /* module 18 call 12 */
+        return STR_ME_REMOVE_MULTISIG_SIGNER;
+    case 4621: /* module 18 call 13 */
+        return STR_ME_ADD_MULTISIG_SIGNERS_VIA_CREATOR;
+    case 4622: /* module 18 call 14 */
+        return STR_ME_REMOVE_MULTISIG_SIGNERS_VIA_CREATOR;
+    case 4623: /* module 18 call 15 */
+        return STR_ME_CHANGE_SIGS_REQUIRED;
+    case 4624: /* module 18 call 16 */
+        return STR_ME_MAKE_MULTISIG_SIGNER;
+    case 4625: /* module 18 call 17 */
+        return STR_ME_MAKE_MULTISIG_PRIMARY;
+    case 4626: /* module 18 call 18 */
+        return STR_ME_EXECUTE_SCHEDULED_PROPOSAL;
+    case 6150: /* module 24 call 6 */
+        return STR_ME_PROPOSE;
+    case 6151: /* module 24 call 7 */
+        return STR_ME_VOTE;
+    case 10496: /* module 41 call 0 */
+        return STR_ME_BATCH;
+    case 10497: /* module 41 call 1 */
+        return STR_ME_BATCH_ATOMIC;
+    case 10498: /* module 41 call 2 */
+        return STR_ME_BATCH_OPTIMISTIC;
 #ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
-        return "Fill block";
+        return STR_ME_FILL_BLOCK;
     case 1: /* module 0 call 1 */
-        return "Remark";
+        return STR_ME_REMARK;
     case 2: /* module 0 call 2 */
-        return "Set heap pages";
+        return STR_ME_SET_HEAP_PAGES;
     case 3: /* module 0 call 3 */
-        return "Set code";
+        return STR_ME_SET_CODE;
     case 4: /* module 0 call 4 */
-        return "Set code without checks";
+        return STR_ME_SET_CODE_WITHOUT_CHECKS;
     case 5: /* module 0 call 5 */
-        return "Set changes trie config";
+        return STR_ME_SET_CHANGES_TRIE_CONFIG;
     case 6: /* module 0 call 6 */
-        return "Set storage";
+        return STR_ME_SET_STORAGE;
     case 7: /* module 0 call 7 */
-        return "Kill storage";
+        return STR_ME_KILL_STORAGE;
     case 8: /* module 0 call 8 */
-        return "Kill prefix";
+        return STR_ME_KILL_PREFIX;
     case 9: /* module 0 call 9 */
-        return "Suicide";
+        return STR_ME_SUICIDE;
     case 256: /* module 1 call 0 */
-        return "Report equivocation";
+        return STR_ME_REPORT_EQUIVOCATION;
     case 257: /* module 1 call 1 */
-        return "Report equivocation unsigned";
+        return STR_ME_REPORT_EQUIVOCATION_UNSIGNED;
     case 512: /* module 2 call 0 */
-        return "Set";
+        return STR_ME_SET;
     case 768: /* module 3 call 0 */
-        return "Claim";
+        return STR_ME_CLAIM;
     case 769: /* module 3 call 1 */
-        return "Transfer";
+        return STR_ME_TRANSFER;
     case 770: /* module 3 call 2 */
-        return "Free";
+        return STR_ME_FREE;
     case 771: /* module 3 call 3 */
-        return "Force transfer";
+        return STR_ME_FORCE_TRANSFER;
     case 772: /* module 3 call 4 */
-        return "Freeze";
+        return STR_ME_FREEZE;
     case 1026: /* module 4 call 2 */
-        return "Deposit block reward reserve balance";
+        return STR_ME_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE;
     case 1027: /* module 4 call 3 */
-        return "Set balance";
+        return STR_ME_SET_BALANCE;
     case 1028: /* module 4 call 4 */
-        return "Force transfer";
+        return STR_ME_FORCE_TRANSFER;
     case 1029: /* module 4 call 5 */
-        return "Burn account balance";
+        return STR_ME_BURN_ACCOUNT_BALANCE;
     case 1536: /* module 6 call 0 */
-        return "Register did";
+        return STR_ME_REGISTER_DID;
     case 1537: /* module 6 call 1 */
-        return "Cdd register did";
+        return STR_ME_CDD_REGISTER_DID;
     case 1538: /* module 6 call 2 */
-        return "Mock cdd register did";
+        return STR_ME_MOCK_CDD_REGISTER_DID;
     case 1539: /* module 6 call 3 */
-        return "Invalidate cdd claims";
-    case 1540: /* module 6 call 4 */
-        return "Remove secondary keys";
-    case 1541: /* module 6 call 5 */
-        return "Accept primary key";
+        return STR_ME_INVALIDATE_CDD_CLAIMS;
     case 1542: /* module 6 call 6 */
-        return "Change cdd requirement for mk rotation";
-    case 1543: /* module 6 call 7 */
-        return "Join identity as key";
-    case 1544: /* module 6 call 8 */
-        return "Join identity as identity";
-    case 1545: /* module 6 call 9 */
-        return "Leave identity as key";
-    case 1546: /* module 6 call 10 */
-        return "Leave identity as identity";
-    case 1547: /* module 6 call 11 */
-        return "Add claim";
+        return STR_ME_CHANGE_CDD_REQUIREMENT_FOR_MK_ROTATION;
     case 1548: /* module 6 call 12 */
-        return "Forwarded call";
-    case 1549: /* module 6 call 13 */
-        return "Revoke claim";
-    case 1550: /* module 6 call 14 */
-        return "Set permission to signer";
-    case 1551: /* module 6 call 15 */
-        return "Legacy set permission to signer";
-    case 1552: /* module 6 call 16 */
-        return "Freeze secondary keys";
-    case 1553: /* module 6 call 17 */
-        return "Unfreeze secondary keys";
+        return STR_ME_FORWARDED_CALL;
     case 1554: /* module 6 call 18 */
-        return "Get my did";
+        return STR_ME_GET_MY_DID;
     case 1555: /* module 6 call 19 */
-        return "Get cdd of";
-    case 1556: /* module 6 call 20 */
-        return "Add authorization";
-    case 1557: /* module 6 call 21 */
-        return "Remove authorization";
-    case 1558: /* module 6 call 22 */
-        return "Accept authorization";
-    case 1559: /* module 6 call 23 */
-        return "Add secondary keys with authorization";
+        return STR_ME_GET_CDD_OF;
     case 1560: /* module 6 call 24 */
-        return "Revoke offchain authorization";
-    case 1561: /* module 6 call 25 */
-        return "Add investor uniqueness claim";
+        return STR_ME_REVOKE_OFFCHAIN_AUTHORIZATION;
     case 1562: /* module 6 call 26 */
-        return "Gc add cdd claim";
+        return STR_ME_GC_ADD_CDD_CLAIM;
     case 1563: /* module 6 call 27 */
-        return "Gc revoke cdd claim";
+        return STR_ME_GC_REVOKE_CDD_CLAIM;
     case 1792: /* module 7 call 0 */
-        return "Set uncles";
-    case 2048: /* module 8 call 0 */
-        return "Bond";
-    case 2049: /* module 8 call 1 */
-        return "Bond extra";
-    case 2050: /* module 8 call 2 */
-        return "Unbond";
-    case 2051: /* module 8 call 3 */
-        return "Withdraw Unbonded";
-    case 2056: /* module 8 call 8 */
-        return "Set controller";
+        return STR_ME_SET_UNCLES;
     case 2057: /* module 8 call 9 */
-        return "Set validator count";
+        return STR_ME_SET_VALIDATOR_COUNT;
     case 2058: /* module 8 call 10 */
-        return "Increase validator count";
+        return STR_ME_INCREASE_VALIDATOR_COUNT;
     case 2059: /* module 8 call 11 */
-        return "Scale validator count";
+        return STR_ME_SCALE_VALIDATOR_COUNT;
     case 2060: /* module 8 call 12 */
-        return "Add permissioned validator";
+        return STR_ME_ADD_PERMISSIONED_VALIDATOR;
     case 2061: /* module 8 call 13 */
-        return "Remove permissioned validator";
+        return STR_ME_REMOVE_PERMISSIONED_VALIDATOR;
     case 2062: /* module 8 call 14 */
-        return "Validate cdd expiry nominators";
+        return STR_ME_VALIDATE_CDD_EXPIRY_NOMINATORS;
     case 2063: /* module 8 call 15 */
-        return "Set commission cap";
+        return STR_ME_SET_COMMISSION_CAP;
     case 2064: /* module 8 call 16 */
-        return "Set min bond threshold";
+        return STR_ME_SET_MIN_BOND_THRESHOLD;
     case 2065: /* module 8 call 17 */
-        return "Force no eras";
+        return STR_ME_FORCE_NO_ERAS;
     case 2066: /* module 8 call 18 */
-        return "Force new era";
+        return STR_ME_FORCE_NEW_ERA;
     case 2067: /* module 8 call 19 */
-        return "Set invulnerables";
+        return STR_ME_SET_INVULNERABLES;
     case 2068: /* module 8 call 20 */
-        return "Force unstake";
+        return STR_ME_FORCE_UNSTAKE;
     case 2069: /* module 8 call 21 */
-        return "Force new era always";
+        return STR_ME_FORCE_NEW_ERA_ALWAYS;
     case 2070: /* module 8 call 22 */
-        return "Cancel deferred slash";
+        return STR_ME_CANCEL_DEFERRED_SLASH;
     case 2071: /* module 8 call 23 */
-        return "Payout stakers";
-    case 2072: /* module 8 call 24 */
-        return "Rebond";
+        return STR_ME_PAYOUT_STAKERS;
     case 2073: /* module 8 call 25 */
-        return "Set history depth";
+        return STR_ME_SET_HISTORY_DEPTH;
     case 2074: /* module 8 call 26 */
-        return "Reap stash";
+        return STR_ME_REAP_STASH;
     case 2075: /* module 8 call 27 */
-        return "Submit election solution";
+        return STR_ME_SUBMIT_ELECTION_SOLUTION;
     case 2076: /* module 8 call 28 */
-        return "Submit election solution unsigned";
+        return STR_ME_SUBMIT_ELECTION_SOLUTION_UNSIGNED;
     case 2077: /* module 8 call 29 */
-        return "Payout stakers by system";
+        return STR_ME_PAYOUT_STAKERS_BY_SYSTEM;
     case 2078: /* module 8 call 30 */
-        return "Change slashing allowed for";
+        return STR_ME_CHANGE_SLASHING_ALLOWED_FOR;
     case 2079: /* module 8 call 31 */
-        return "Update permissioned validator intended count";
+        return STR_ME_UPDATE_PERMISSIONED_VALIDATOR_INTENDED_COUNT;
+    case 2560: /* module 10 call 0 */
+        return STR_ME_SET_KEYS;
+    case 2561: /* module 10 call 1 */
+        return STR_ME_PURGE_KEYS;
     case 2816: /* module 11 call 0 */
-        return "Final hint";
+        return STR_ME_FINAL_HINT;
     case 3072: /* module 12 call 0 */
-        return "Report equivocation";
+        return STR_ME_REPORT_EQUIVOCATION;
     case 3073: /* module 12 call 1 */
-        return "Report equivocation unsigned";
+        return STR_ME_REPORT_EQUIVOCATION_UNSIGNED;
     case 3074: /* module 12 call 2 */
-        return "Note stalled";
+        return STR_ME_NOTE_STALLED;
     case 3328: /* module 13 call 0 */
-        return "Heartbeat";
+        return STR_ME_HEARTBEAT;
     case 3329: /* module 13 call 1 */
-        return "Set slashing params";
+        return STR_ME_SET_SLASHING_PARAMS;
     case 4352: /* module 17 call 0 */
-        return "Sudo";
+        return STR_ME_SUDO;
     case 4353: /* module 17 call 1 */
-        return "Sudo unchecked weight";
+        return STR_ME_SUDO_UNCHECKED_WEIGHT;
     case 4354: /* module 17 call 2 */
-        return "Set key";
+        return STR_ME_SET_KEY;
     case 4355: /* module 17 call 3 */
-        return "Sudo as";
-    case 4608: /* module 18 call 0 */
-        return "Create multisig";
-    case 4609: /* module 18 call 1 */
-        return "Create or approve proposal as identity";
-    case 4610: /* module 18 call 2 */
-        return "Create or approve proposal as key";
-    case 4611: /* module 18 call 3 */
-        return "Create proposal as identity";
-    case 4612: /* module 18 call 4 */
-        return "Create proposal as key";
-    case 4613: /* module 18 call 5 */
-        return "Approve as identity";
-    case 4614: /* module 18 call 6 */
-        return "Approve as key";
-    case 4615: /* module 18 call 7 */
-        return "Reject as identity";
-    case 4616: /* module 18 call 8 */
-        return "Reject as key";
-    case 4617: /* module 18 call 9 */
-        return "Accept multisig signer as identity";
-    case 4618: /* module 18 call 10 */
-        return "Accept multisig signer as key";
-    case 4619: /* module 18 call 11 */
-        return "Add multisig signer";
-    case 4620: /* module 18 call 12 */
-        return "Remove multisig signer";
-    case 4621: /* module 18 call 13 */
-        return "Add multisig signers via creator";
-    case 4622: /* module 18 call 14 */
-        return "Remove multisig signers via creator";
-    case 4623: /* module 18 call 15 */
-        return "Change sigs required";
-    case 4624: /* module 18 call 16 */
-        return "Make multisig signer";
-    case 4625: /* module 18 call 17 */
-        return "Make multisig primary";
-    case 4626: /* module 18 call 18 */
-        return "Execute scheduled proposal";
+        return STR_ME_SUDO_AS;
     case 5120: /* module 20 call 0 */
-        return "Update schedule";
+        return STR_ME_UPDATE_SCHEDULE;
     case 5121: /* module 20 call 1 */
-        return "Put code";
+        return STR_ME_PUT_CODE;
     case 5122: /* module 20 call 2 */
-        return "Call";
+        return STR_ME_CALL;
     case 5123: /* module 20 call 3 */
-        return "Instantiate";
+        return STR_ME_INSTANTIATE;
     case 5124: /* module 20 call 4 */
-        return "Freeze instantiation";
+        return STR_ME_FREEZE_INSTANTIATION;
     case 5125: /* module 20 call 5 */
-        return "Unfreeze instantiation";
+        return STR_ME_UNFREEZE_INSTANTIATION;
     case 5126: /* module 20 call 6 */
-        return "Transfer template ownership";
+        return STR_ME_TRANSFER_TEMPLATE_OWNERSHIP;
     case 5127: /* module 20 call 7 */
-        return "Change template fees";
+        return STR_ME_CHANGE_TEMPLATE_FEES;
     case 5128: /* module 20 call 8 */
-        return "Change template meta url";
+        return STR_ME_CHANGE_TEMPLATE_META_URL;
     case 5376: /* module 21 call 0 */
-        return "Disbursement";
+        return STR_ME_DISBURSEMENT;
     case 5377: /* module 21 call 1 */
-        return "Reimbursement";
+        return STR_ME_REIMBURSEMENT;
     case 5632: /* module 22 call 0 */
-        return "Set vote threshold";
+        return STR_ME_SET_VOTE_THRESHOLD;
     case 5633: /* module 22 call 1 */
-        return "Set release coordinator";
+        return STR_ME_SET_RELEASE_COORDINATOR;
     case 5634: /* module 22 call 2 */
-        return "Set expires after";
+        return STR_ME_SET_EXPIRES_AFTER;
     case 5635: /* module 22 call 3 */
-        return "Close";
+        return STR_ME_CLOSE;
     case 5636: /* module 22 call 4 */
-        return "Vote or propose";
+        return STR_ME_VOTE_OR_PROPOSE;
     case 5637: /* module 22 call 5 */
-        return "Vote";
+        return STR_ME_VOTE;
     case 5888: /* module 23 call 0 */
-        return "Set active members limit";
+        return STR_ME_SET_ACTIVE_MEMBERS_LIMIT;
     case 5889: /* module 23 call 1 */
-        return "Disable member";
+        return STR_ME_DISABLE_MEMBER;
     case 5890: /* module 23 call 2 */
-        return "Add member";
+        return STR_ME_ADD_MEMBER;
     case 5891: /* module 23 call 3 */
-        return "Remove member";
+        return STR_ME_REMOVE_MEMBER;
     case 5892: /* module 23 call 4 */
-        return "Swap member";
+        return STR_ME_SWAP_MEMBER;
     case 5893: /* module 23 call 5 */
-        return "Reset members";
+        return STR_ME_RESET_MEMBERS;
     case 5894: /* module 23 call 6 */
-        return "Abdicate membership";
+        return STR_ME_ABDICATE_MEMBERSHIP;
     case 6144: /* module 24 call 0 */
-        return "Set prune historical pips";
+        return STR_ME_SET_PRUNE_HISTORICAL_PIPS;
     case 6145: /* module 24 call 1 */
-        return "Set min proposal deposit";
+        return STR_ME_SET_MIN_PROPOSAL_DEPOSIT;
     case 6146: /* module 24 call 2 */
-        return "Set default enactment period";
+        return STR_ME_SET_DEFAULT_ENACTMENT_PERIOD;
     case 6147: /* module 24 call 3 */
-        return "Set pending pip expiry";
+        return STR_ME_SET_PENDING_PIP_EXPIRY;
     case 6148: /* module 24 call 4 */
-        return "Set max pip skip count";
+        return STR_ME_SET_MAX_PIP_SKIP_COUNT;
     case 6149: /* module 24 call 5 */
-        return "Set active pip limit";
-    case 6150: /* module 24 call 6 */
-        return "Propose";
-    case 6151: /* module 24 call 7 */
-        return "Vote";
+        return STR_ME_SET_ACTIVE_PIP_LIMIT;
     case 6152: /* module 24 call 8 */
-        return "Approve committee proposal";
+        return STR_ME_APPROVE_COMMITTEE_PROPOSAL;
     case 6153: /* module 24 call 9 */
-        return "Reject proposal";
+        return STR_ME_REJECT_PROPOSAL;
     case 6154: /* module 24 call 10 */
-        return "Prune proposal";
+        return STR_ME_PRUNE_PROPOSAL;
     case 6155: /* module 24 call 11 */
-        return "Reschedule execution";
+        return STR_ME_RESCHEDULE_EXECUTION;
     case 6156: /* module 24 call 12 */
-        return "Clear snapshot";
+        return STR_ME_CLEAR_SNAPSHOT;
     case 6157: /* module 24 call 13 */
-        return "Snapshot";
+        return STR_ME_SNAPSHOT;
     case 6158: /* module 24 call 14 */
-        return "Enact snapshot results";
+        return STR_ME_ENACT_SNAPSHOT_RESULTS;
     case 6159: /* module 24 call 15 */
-        return "Execute scheduled pip";
+        return STR_ME_EXECUTE_SCHEDULED_PIP;
     case 6160: /* module 24 call 16 */
-        return "Expire scheduled pip";
+        return STR_ME_EXPIRE_SCHEDULED_PIP;
     case 6400: /* module 25 call 0 */
-        return "Set vote threshold";
+        return STR_ME_SET_VOTE_THRESHOLD;
     case 6401: /* module 25 call 1 */
-        return "Set release coordinator";
+        return STR_ME_SET_RELEASE_COORDINATOR;
     case 6402: /* module 25 call 2 */
-        return "Set expires after";
+        return STR_ME_SET_EXPIRES_AFTER;
     case 6403: /* module 25 call 3 */
-        return "Close";
+        return STR_ME_CLOSE;
     case 6404: /* module 25 call 4 */
-        return "Vote or propose";
+        return STR_ME_VOTE_OR_PROPOSE;
     case 6405: /* module 25 call 5 */
-        return "Vote";
+        return STR_ME_VOTE;
     case 6656: /* module 26 call 0 */
-        return "Set active members limit";
+        return STR_ME_SET_ACTIVE_MEMBERS_LIMIT;
     case 6657: /* module 26 call 1 */
-        return "Disable member";
+        return STR_ME_DISABLE_MEMBER;
     case 6658: /* module 26 call 2 */
-        return "Add member";
+        return STR_ME_ADD_MEMBER;
     case 6659: /* module 26 call 3 */
-        return "Remove member";
+        return STR_ME_REMOVE_MEMBER;
     case 6660: /* module 26 call 4 */
-        return "Swap member";
+        return STR_ME_SWAP_MEMBER;
     case 6661: /* module 26 call 5 */
-        return "Reset members";
+        return STR_ME_RESET_MEMBERS;
     case 6662: /* module 26 call 6 */
-        return "Abdicate membership";
+        return STR_ME_ABDICATE_MEMBERSHIP;
     case 6912: /* module 27 call 0 */
-        return "Set vote threshold";
+        return STR_ME_SET_VOTE_THRESHOLD;
     case 6913: /* module 27 call 1 */
-        return "Set release coordinator";
+        return STR_ME_SET_RELEASE_COORDINATOR;
     case 6914: /* module 27 call 2 */
-        return "Set expires after";
+        return STR_ME_SET_EXPIRES_AFTER;
     case 6915: /* module 27 call 3 */
-        return "Close";
+        return STR_ME_CLOSE;
     case 6916: /* module 27 call 4 */
-        return "Vote or propose";
+        return STR_ME_VOTE_OR_PROPOSE;
     case 6917: /* module 27 call 5 */
-        return "Vote";
+        return STR_ME_VOTE;
     case 7168: /* module 28 call 0 */
-        return "Set active members limit";
+        return STR_ME_SET_ACTIVE_MEMBERS_LIMIT;
     case 7169: /* module 28 call 1 */
-        return "Disable member";
+        return STR_ME_DISABLE_MEMBER;
     case 7170: /* module 28 call 2 */
-        return "Add member";
+        return STR_ME_ADD_MEMBER;
     case 7171: /* module 28 call 3 */
-        return "Remove member";
+        return STR_ME_REMOVE_MEMBER;
     case 7172: /* module 28 call 4 */
-        return "Swap member";
+        return STR_ME_SWAP_MEMBER;
     case 7173: /* module 28 call 5 */
-        return "Reset members";
+        return STR_ME_RESET_MEMBERS;
     case 7174: /* module 28 call 6 */
-        return "Abdicate membership";
+        return STR_ME_ABDICATE_MEMBERSHIP;
     case 7424: /* module 29 call 0 */
-        return "Register ticker";
+        return STR_ME_REGISTER_TICKER;
     case 7425: /* module 29 call 1 */
-        return "Accept ticker transfer";
+        return STR_ME_ACCEPT_TICKER_TRANSFER;
     case 7426: /* module 29 call 2 */
-        return "Accept primary issuance agent transfer";
+        return STR_ME_ACCEPT_PRIMARY_ISSUANCE_AGENT_TRANSFER;
     case 7427: /* module 29 call 3 */
-        return "Accept asset ownership transfer";
+        return STR_ME_ACCEPT_ASSET_OWNERSHIP_TRANSFER;
     case 7428: /* module 29 call 4 */
-        return "Create asset";
+        return STR_ME_CREATE_ASSET;
     case 7429: /* module 29 call 5 */
-        return "Freeze";
+        return STR_ME_FREEZE;
     case 7430: /* module 29 call 6 */
-        return "Unfreeze";
+        return STR_ME_UNFREEZE;
     case 7431: /* module 29 call 7 */
-        return "Rename asset";
+        return STR_ME_RENAME_ASSET;
     case 7432: /* module 29 call 8 */
-        return "Issue";
+        return STR_ME_ISSUE;
     case 7433: /* module 29 call 9 */
-        return "Redeem";
+        return STR_ME_REDEEM;
     case 7434: /* module 29 call 10 */
-        return "Make divisible";
+        return STR_ME_MAKE_DIVISIBLE;
     case 7435: /* module 29 call 11 */
-        return "Add documents";
+        return STR_ME_ADD_DOCUMENTS;
     case 7436: /* module 29 call 12 */
-        return "Remove documents";
+        return STR_ME_REMOVE_DOCUMENTS;
     case 7437: /* module 29 call 13 */
-        return "Set funding round";
+        return STR_ME_SET_FUNDING_ROUND;
     case 7438: /* module 29 call 14 */
-        return "Update identifiers";
+        return STR_ME_UPDATE_IDENTIFIERS;
     case 7439: /* module 29 call 15 */
-        return "Add extension";
+        return STR_ME_ADD_EXTENSION;
     case 7440: /* module 29 call 16 */
-        return "Archive extension";
+        return STR_ME_ARCHIVE_EXTENSION;
     case 7441: /* module 29 call 17 */
-        return "Unarchive extension";
+        return STR_ME_UNARCHIVE_EXTENSION;
     case 7442: /* module 29 call 18 */
-        return "Remove primary issuance agent";
+        return STR_ME_REMOVE_PRIMARY_ISSUANCE_AGENT;
     case 7443: /* module 29 call 19 */
-        return "Remove smart extension";
+        return STR_ME_REMOVE_SMART_EXTENSION;
     case 7444: /* module 29 call 20 */
-        return "Claim classic ticker";
+        return STR_ME_CLAIM_CLASSIC_TICKER;
     case 7445: /* module 29 call 21 */
-        return "Reserve classic ticker";
+        return STR_ME_RESERVE_CLASSIC_TICKER;
     case 7936: /* module 31 call 0 */
-        return "Change controller";
+        return STR_ME_CHANGE_CONTROLLER;
     case 7937: /* module 31 call 1 */
-        return "Change admin";
+        return STR_ME_CHANGE_ADMIN;
     case 7938: /* module 31 call 2 */
-        return "Change timelock";
+        return STR_ME_CHANGE_TIMELOCK;
     case 7939: /* module 31 call 3 */
-        return "Freeze";
+        return STR_ME_FREEZE;
     case 7940: /* module 31 call 4 */
-        return "Unfreeze";
+        return STR_ME_UNFREEZE;
     case 7941: /* module 31 call 5 */
-        return "Change bridge limit";
+        return STR_ME_CHANGE_BRIDGE_LIMIT;
     case 7942: /* module 31 call 6 */
-        return "Change bridge exempted";
+        return STR_ME_CHANGE_BRIDGE_EXEMPTED;
     case 7943: /* module 31 call 7 */
-        return "Force handle bridge tx";
+        return STR_ME_FORCE_HANDLE_BRIDGE_TX;
     case 7944: /* module 31 call 8 */
-        return "Batch propose bridge tx";
+        return STR_ME_BATCH_PROPOSE_BRIDGE_TX;
     case 7945: /* module 31 call 9 */
-        return "Propose bridge tx";
+        return STR_ME_PROPOSE_BRIDGE_TX;
     case 7946: /* module 31 call 10 */
-        return "Handle bridge tx";
+        return STR_ME_HANDLE_BRIDGE_TX;
     case 7947: /* module 31 call 11 */
-        return "Freeze txs";
+        return STR_ME_FREEZE_TXS;
     case 7948: /* module 31 call 12 */
-        return "Unfreeze txs";
+        return STR_ME_UNFREEZE_TXS;
     case 7949: /* module 31 call 13 */
-        return "Handle scheduled bridge tx";
+        return STR_ME_HANDLE_SCHEDULED_BRIDGE_TX;
     case 8192: /* module 32 call 0 */
-        return "Add compliance requirement";
+        return STR_ME_ADD_COMPLIANCE_REQUIREMENT;
     case 8193: /* module 32 call 1 */
-        return "Remove compliance requirement";
+        return STR_ME_REMOVE_COMPLIANCE_REQUIREMENT;
     case 8194: /* module 32 call 2 */
-        return "Replace asset compliance";
+        return STR_ME_REPLACE_ASSET_COMPLIANCE;
     case 8195: /* module 32 call 3 */
-        return "Reset asset compliance";
+        return STR_ME_RESET_ASSET_COMPLIANCE;
     case 8196: /* module 32 call 4 */
-        return "Pause asset compliance";
+        return STR_ME_PAUSE_ASSET_COMPLIANCE;
     case 8197: /* module 32 call 5 */
-        return "Resume asset compliance";
+        return STR_ME_RESUME_ASSET_COMPLIANCE;
     case 8198: /* module 32 call 6 */
-        return "Add default trusted claim issuer";
+        return STR_ME_ADD_DEFAULT_TRUSTED_CLAIM_ISSUER;
     case 8199: /* module 32 call 7 */
-        return "Remove default trusted claim issuer";
+        return STR_ME_REMOVE_DEFAULT_TRUSTED_CLAIM_ISSUER;
     case 8200: /* module 32 call 8 */
-        return "Change compliance requirement";
+        return STR_ME_CHANGE_COMPLIANCE_REQUIREMENT;
     case 9216: /* module 36 call 0 */
-        return "Create venue";
+        return STR_ME_CREATE_VENUE;
     case 9217: /* module 36 call 1 */
-        return "Update venue";
+        return STR_ME_UPDATE_VENUE;
     case 9218: /* module 36 call 2 */
-        return "Add instruction";
+        return STR_ME_ADD_INSTRUCTION;
     case 9219: /* module 36 call 3 */
-        return "Add and affirm instruction";
+        return STR_ME_ADD_AND_AFFIRM_INSTRUCTION;
     case 9220: /* module 36 call 4 */
-        return "Affirm instruction";
+        return STR_ME_AFFIRM_INSTRUCTION;
     case 9221: /* module 36 call 5 */
-        return "Withdraw affirmation";
+        return STR_ME_WITHDRAW_AFFIRMATION;
     case 9222: /* module 36 call 6 */
-        return "Reject instruction";
+        return STR_ME_REJECT_INSTRUCTION;
     case 9223: /* module 36 call 7 */
-        return "Affirm with receipts";
+        return STR_ME_AFFIRM_WITH_RECEIPTS;
     case 9224: /* module 36 call 8 */
-        return "Claim receipt";
+        return STR_ME_CLAIM_RECEIPT;
     case 9225: /* module 36 call 9 */
-        return "Unclaim receipt";
+        return STR_ME_UNCLAIM_RECEIPT;
     case 9226: /* module 36 call 10 */
-        return "Set venue filtering";
+        return STR_ME_SET_VENUE_FILTERING;
     case 9227: /* module 36 call 11 */
-        return "Allow venues";
+        return STR_ME_ALLOW_VENUES;
     case 9228: /* module 36 call 12 */
-        return "Disallow venues";
+        return STR_ME_DISALLOW_VENUES;
     case 9229: /* module 36 call 13 */
-        return "Execute scheduled instruction";
+        return STR_ME_EXECUTE_SCHEDULED_INSTRUCTION;
     case 9472: /* module 37 call 0 */
-        return "Create fundraiser";
+        return STR_ME_CREATE_FUNDRAISER;
     case 9473: /* module 37 call 1 */
-        return "Invest";
+        return STR_ME_INVEST;
     case 9474: /* module 37 call 2 */
-        return "Freeze fundraiser";
+        return STR_ME_FREEZE_FUNDRAISER;
     case 9475: /* module 37 call 3 */
-        return "Unfreeze fundraiser";
+        return STR_ME_UNFREEZE_FUNDRAISER;
     case 9476: /* module 37 call 4 */
-        return "Modify fundraiser window";
+        return STR_ME_MODIFY_FUNDRAISER_WINDOW;
     case 9477: /* module 37 call 5 */
-        return "Stop";
+        return STR_ME_STOP;
     case 9728: /* module 38 call 0 */
-        return "Set active members limit";
+        return STR_ME_SET_ACTIVE_MEMBERS_LIMIT;
     case 9729: /* module 38 call 1 */
-        return "Disable member";
+        return STR_ME_DISABLE_MEMBER;
     case 9730: /* module 38 call 2 */
-        return "Add member";
+        return STR_ME_ADD_MEMBER;
     case 9731: /* module 38 call 3 */
-        return "Remove member";
+        return STR_ME_REMOVE_MEMBER;
     case 9732: /* module 38 call 4 */
-        return "Swap member";
+        return STR_ME_SWAP_MEMBER;
     case 9733: /* module 38 call 5 */
-        return "Reset members";
+        return STR_ME_RESET_MEMBERS;
     case 9734: /* module 38 call 6 */
-        return "Abdicate membership";
+        return STR_ME_ABDICATE_MEMBERSHIP;
     case 9984: /* module 39 call 0 */
-        return "Add transfer manager";
+        return STR_ME_ADD_TRANSFER_MANAGER;
     case 9985: /* module 39 call 1 */
-        return "Remove transfer manager";
+        return STR_ME_REMOVE_TRANSFER_MANAGER;
     case 9986: /* module 39 call 2 */
-        return "Add exempted entities";
+        return STR_ME_ADD_EXEMPTED_ENTITIES;
     case 9987: /* module 39 call 3 */
-        return "Remove exempted entities";
+        return STR_ME_REMOVE_EXEMPTED_ENTITIES;
     case 10240: /* module 40 call 0 */
-        return "Change coefficient";
+        return STR_ME_CHANGE_COEFFICIENT;
     case 10241: /* module 40 call 1 */
-        return "Change base fee";
-    case 10496: /* module 41 call 0 */
-        return "Batch";
-    case 10497: /* module 41 call 1 */
-        return "Batch atomic";
-    case 10498: /* module 41 call 2 */
-        return "Batch optimistic";
+        return STR_ME_CHANGE_BASE_FEE;
     case 10499: /* module 41 call 3 */
-        return "Relay tx";
+        return STR_ME_RELAY_TX;
     case 10752: /* module 42 call 0 */
-        return "Create portfolio";
+        return STR_ME_CREATE_PORTFOLIO;
     case 10753: /* module 42 call 1 */
-        return "Delete portfolio";
+        return STR_ME_DELETE_PORTFOLIO;
     case 10754: /* module 42 call 2 */
-        return "Move portfolio funds";
+        return STR_ME_MOVE_PORTFOLIO_FUNDS;
     case 10755: /* module 42 call 3 */
-        return "Rename portfolio";
+        return STR_ME_RENAME_PORTFOLIO;
     case 11520: /* module 45 call 0 */
-        return "Schedule";
+        return STR_ME_SCHEDULE;
     case 11521: /* module 45 call 1 */
-        return "Cancel";
+        return STR_ME_CANCEL;
     case 11522: /* module 45 call 2 */
-        return "Schedule named";
+        return STR_ME_SCHEDULE_NAMED;
     case 11523: /* module 45 call 3 */
-        return "Cancel named";
+        return STR_ME_CANCEL_NAMED;
     case 11524: /* module 45 call 4 */
-        return "Schedule after";
+        return STR_ME_SCHEDULE_AFTER;
     case 11525: /* module 45 call 5 */
-        return "Schedule named after";
+        return STR_ME_SCHEDULE_NAMED_AFTER;
     case 11776: /* module 46 call 0 */
-        return "Set max details length";
+        return STR_ME_SET_MAX_DETAILS_LENGTH;
     case 11777: /* module 46 call 1 */
-        return "Reset caa";
+        return STR_ME_RESET_CAA;
     case 11778: /* module 46 call 2 */
-        return "Set default targets";
+        return STR_ME_SET_DEFAULT_TARGETS;
     case 11779: /* module 46 call 3 */
-        return "Set default withholding tax";
+        return STR_ME_SET_DEFAULT_WITHHOLDING_TAX;
     case 11780: /* module 46 call 4 */
-        return "Set did withholding tax";
+        return STR_ME_SET_DID_WITHHOLDING_TAX;
     case 11781: /* module 46 call 5 */
-        return "Initiate corporate action";
+        return STR_ME_INITIATE_CORPORATE_ACTION;
     case 11782: /* module 46 call 6 */
-        return "Link ca doc";
+        return STR_ME_LINK_CA_DOC;
     case 11783: /* module 46 call 7 */
-        return "Remove ca";
+        return STR_ME_REMOVE_CA;
     case 11784: /* module 46 call 8 */
-        return "Change record date";
+        return STR_ME_CHANGE_RECORD_DATE;
     case 12032: /* module 47 call 0 */
-        return "Attach ballot";
+        return STR_ME_ATTACH_BALLOT;
     case 12033: /* module 47 call 1 */
-        return "Vote";
+        return STR_ME_VOTE;
     case 12034: /* module 47 call 2 */
-        return "Change end";
+        return STR_ME_CHANGE_END;
     case 12035: /* module 47 call 3 */
-        return "Change meta";
+        return STR_ME_CHANGE_META;
     case 12036: /* module 47 call 4 */
-        return "Change rcv";
+        return STR_ME_CHANGE_RCV;
     case 12037: /* module 47 call 5 */
-        return "Remove ballot";
+        return STR_ME_REMOVE_BALLOT;
     case 12288: /* module 48 call 0 */
-        return "Distribute";
+        return STR_ME_DISTRIBUTE;
     case 12289: /* module 48 call 1 */
-        return "Claim";
+        return STR_ME_CLAIM;
     case 12290: /* module 48 call 2 */
-        return "Push benefit";
+        return STR_ME_PUSH_BENEFIT;
     case 12291: /* module 48 call 3 */
-        return "Reclaim";
+        return STR_ME_RECLAIM;
     case 12292: /* module 48 call 4 */
-        return "Remove distribution";
+        return STR_ME_REMOVE_DISTRIBUTION;
     case 12544: /* module 49 call 0 */
-        return "Create checkpoint";
+        return STR_ME_CREATE_CHECKPOINT;
     case 12545: /* module 49 call 1 */
-        return "Set schedules max complexity";
+        return STR_ME_SET_SCHEDULES_MAX_COMPLEXITY;
     case 12546: /* module 49 call 2 */
-        return "Create schedule";
+        return STR_ME_CREATE_SCHEDULE;
     case 12547: /* module 49 call 3 */
-        return "Remove schedule";
+        return STR_ME_REMOVE_SCHEDULE;
 #endif
     default:
         return NULL;
@@ -3987,6 +3990,48 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 2;
     case 1025: /* module 4 call 1 */
         return 3;
+    case 1540: /* module 6 call 4 */
+        return 1;
+    case 1541: /* module 6 call 5 */
+        return 2;
+    case 1543: /* module 6 call 7 */
+        return 1;
+    case 1544: /* module 6 call 8 */
+        return 1;
+    case 1545: /* module 6 call 9 */
+        return 0;
+    case 1546: /* module 6 call 10 */
+        return 1;
+    case 1547: /* module 6 call 11 */
+        return 3;
+    case 1549: /* module 6 call 13 */
+        return 2;
+    case 1550: /* module 6 call 14 */
+        return 2;
+    case 1551: /* module 6 call 15 */
+        return 2;
+    case 1552: /* module 6 call 16 */
+        return 0;
+    case 1553: /* module 6 call 17 */
+        return 0;
+    case 1556: /* module 6 call 20 */
+        return 3;
+    case 1557: /* module 6 call 21 */
+        return 3;
+    case 1558: /* module 6 call 22 */
+        return 1;
+    case 1559: /* module 6 call 23 */
+        return 2;
+    case 1561: /* module 6 call 25 */
+        return 4;
+    case 2048: /* module 8 call 0 */
+        return 3;
+    case 2049: /* module 8 call 1 */
+        return 1;
+    case 2050: /* module 8 call 2 */
+        return 1;
+    case 2051: /* module 8 call 3 */
+        return 1;
     case 2052: /* module 8 call 4 */
         return 1;
     case 2053: /* module 8 call 5 */
@@ -3995,10 +4040,58 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 0;
     case 2055: /* module 8 call 7 */
         return 1;
-    case 2560: /* module 10 call 0 */
+    case 2056: /* module 8 call 8 */
+        return 1;
+    case 2072: /* module 8 call 24 */
+        return 1;
+    case 4608: /* module 18 call 0 */
         return 2;
-    case 2561: /* module 10 call 1 */
-        return 0;
+    case 4609: /* module 18 call 1 */
+        return 4;
+    case 4610: /* module 18 call 2 */
+        return 4;
+    case 4611: /* module 18 call 3 */
+        return 4;
+    case 4612: /* module 18 call 4 */
+        return 4;
+    case 4613: /* module 18 call 5 */
+        return 2;
+    case 4614: /* module 18 call 6 */
+        return 2;
+    case 4615: /* module 18 call 7 */
+        return 2;
+    case 4616: /* module 18 call 8 */
+        return 2;
+    case 4617: /* module 18 call 9 */
+        return 1;
+    case 4618: /* module 18 call 10 */
+        return 1;
+    case 4619: /* module 18 call 11 */
+        return 1;
+    case 4620: /* module 18 call 12 */
+        return 1;
+    case 4621: /* module 18 call 13 */
+        return 2;
+    case 4622: /* module 18 call 14 */
+        return 2;
+    case 4623: /* module 18 call 15 */
+        return 1;
+    case 4624: /* module 18 call 16 */
+        return 1;
+    case 4625: /* module 18 call 17 */
+        return 2;
+    case 4626: /* module 18 call 18 */
+        return 4;
+    case 6150: /* module 24 call 6 */
+        return 4;
+    case 6151: /* module 24 call 7 */
+        return 3;
+    case 10496: /* module 41 call 0 */
+        return 1;
+    case 10497: /* module 41 call 1 */
+        return 1;
+    case 10498: /* module 41 call 2 */
+        return 1;
 #ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         return 1;
@@ -4052,65 +4145,21 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 1;
     case 1539: /* module 6 call 3 */
         return 3;
-    case 1540: /* module 6 call 4 */
-        return 1;
-    case 1541: /* module 6 call 5 */
-        return 2;
     case 1542: /* module 6 call 6 */
         return 1;
-    case 1543: /* module 6 call 7 */
-        return 1;
-    case 1544: /* module 6 call 8 */
-        return 1;
-    case 1545: /* module 6 call 9 */
-        return 0;
-    case 1546: /* module 6 call 10 */
-        return 1;
-    case 1547: /* module 6 call 11 */
-        return 3;
     case 1548: /* module 6 call 12 */
         return 2;
-    case 1549: /* module 6 call 13 */
-        return 2;
-    case 1550: /* module 6 call 14 */
-        return 2;
-    case 1551: /* module 6 call 15 */
-        return 2;
-    case 1552: /* module 6 call 16 */
-        return 0;
-    case 1553: /* module 6 call 17 */
-        return 0;
     case 1554: /* module 6 call 18 */
         return 0;
     case 1555: /* module 6 call 19 */
         return 1;
-    case 1556: /* module 6 call 20 */
-        return 3;
-    case 1557: /* module 6 call 21 */
-        return 3;
-    case 1558: /* module 6 call 22 */
-        return 1;
-    case 1559: /* module 6 call 23 */
-        return 2;
     case 1560: /* module 6 call 24 */
         return 2;
-    case 1561: /* module 6 call 25 */
-        return 4;
     case 1562: /* module 6 call 26 */
         return 2;
     case 1563: /* module 6 call 27 */
         return 1;
     case 1792: /* module 7 call 0 */
-        return 1;
-    case 2048: /* module 8 call 0 */
-        return 3;
-    case 2049: /* module 8 call 1 */
-        return 1;
-    case 2050: /* module 8 call 2 */
-        return 1;
-    case 2051: /* module 8 call 3 */
-        return 1;
-    case 2056: /* module 8 call 8 */
         return 1;
     case 2057: /* module 8 call 9 */
         return 1;
@@ -4142,8 +4191,6 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 2;
     case 2071: /* module 8 call 23 */
         return 2;
-    case 2072: /* module 8 call 24 */
-        return 1;
     case 2073: /* module 8 call 25 */
         return 2;
     case 2074: /* module 8 call 26 */
@@ -4158,6 +4205,10 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 1;
     case 2079: /* module 8 call 31 */
         return 2;
+    case 2560: /* module 10 call 0 */
+        return 2;
+    case 2561: /* module 10 call 1 */
+        return 0;
     case 2816: /* module 11 call 0 */
         return 1;
     case 3072: /* module 12 call 0 */
@@ -4178,44 +4229,6 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 1;
     case 4355: /* module 17 call 3 */
         return 2;
-    case 4608: /* module 18 call 0 */
-        return 2;
-    case 4609: /* module 18 call 1 */
-        return 4;
-    case 4610: /* module 18 call 2 */
-        return 4;
-    case 4611: /* module 18 call 3 */
-        return 4;
-    case 4612: /* module 18 call 4 */
-        return 4;
-    case 4613: /* module 18 call 5 */
-        return 2;
-    case 4614: /* module 18 call 6 */
-        return 2;
-    case 4615: /* module 18 call 7 */
-        return 2;
-    case 4616: /* module 18 call 8 */
-        return 2;
-    case 4617: /* module 18 call 9 */
-        return 1;
-    case 4618: /* module 18 call 10 */
-        return 1;
-    case 4619: /* module 18 call 11 */
-        return 1;
-    case 4620: /* module 18 call 12 */
-        return 1;
-    case 4621: /* module 18 call 13 */
-        return 2;
-    case 4622: /* module 18 call 14 */
-        return 2;
-    case 4623: /* module 18 call 15 */
-        return 1;
-    case 4624: /* module 18 call 16 */
-        return 1;
-    case 4625: /* module 18 call 17 */
-        return 2;
-    case 4626: /* module 18 call 18 */
-        return 4;
     case 5120: /* module 20 call 0 */
         return 1;
     case 5121: /* module 20 call 1 */
@@ -4276,10 +4289,6 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 1;
     case 6149: /* module 24 call 5 */
         return 1;
-    case 6150: /* module 24 call 6 */
-        return 4;
-    case 6151: /* module 24 call 7 */
-        return 3;
     case 6152: /* module 24 call 8 */
         return 1;
     case 6153: /* module 24 call 9 */
@@ -4506,12 +4515,6 @@ uint8_t _getMethod_NumItems_V5(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V5_
         return 1;
     case 10241: /* module 40 call 1 */
         return 2;
-    case 10496: /* module 41 call 0 */
-        return 1;
-    case 10497: /* module 41 call 1 */
-        return 1;
-    case 10498: /* module 41 call 2 */
-        return 1;
     case 10499: /* module 41 call 3 */
         return 3;
     case 10752: /* module 42 call 0 */
@@ -4598,306 +4601,50 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 1024: /* module 4 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Dest";
+            return STR_IT_dest;
         case 1:
-            return "Amount";
+            return STR_IT_value;
         default:
             return NULL;
         }
     case 1025: /* module 4 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Dest";
+            return STR_IT_dest;
         case 1:
-            return "Amount";
+            return STR_IT_value;
         case 2:
-            return "Memo";
-        default:
-            return NULL;
-        }
-    case 2052: /* module 8 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Prefs";
-        default:
-            return NULL;
-        }
-    case 2053: /* module 8 call 5 */
-        switch (itemIdx) {
-        case 0:
-            return "Targets";
-        default:
-            return NULL;
-        }
-    case 2054: /* module 8 call 6 */
-        switch (itemIdx) {
-        default:
-            return NULL;
-        }
-    case 2055: /* module 8 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return "Payee";
-        default:
-            return NULL;
-        }
-    case 2560: /* module 10 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Keys";
-        case 1:
-            return "Proof";
-        default:
-            return NULL;
-        }
-    case 2561: /* module 10 call 1 */
-        switch (itemIdx) {
-        default:
-            return NULL;
-        }
-#ifdef SUBSTRATE_PARSER_FULL
-    case 0: /* module 0 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Ratio";
-        default:
-            return NULL;
-        }
-    case 1: /* module 0 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Remark";
-        default:
-            return NULL;
-        }
-    case 2: /* module 0 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Pages";
-        default:
-            return NULL;
-        }
-    case 3: /* module 0 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "Code";
-        default:
-            return NULL;
-        }
-    case 4: /* module 0 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Code";
-        default:
-            return NULL;
-        }
-    case 5: /* module 0 call 5 */
-        switch (itemIdx) {
-        case 0:
-            return "Changes trie config";
-        default:
-            return NULL;
-        }
-    case 6: /* module 0 call 6 */
-        switch (itemIdx) {
-        case 0:
-            return "Items";
-        default:
-            return NULL;
-        }
-    case 7: /* module 0 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return "Keys";
-        default:
-            return NULL;
-        }
-    case 8: /* module 0 call 8 */
-        switch (itemIdx) {
-        case 0:
-            return "Prefix";
-        case 1:
-            return "Subkeys";
-        default:
-            return NULL;
-        }
-    case 9: /* module 0 call 9 */
-        switch (itemIdx) {
-        default:
-            return NULL;
-        }
-    case 256: /* module 1 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Equivocation proof";
-        case 1:
-            return "Key owner proof";
-        default:
-            return NULL;
-        }
-    case 257: /* module 1 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Equivocation proof";
-        case 1:
-            return "Key owner proof";
-        default:
-            return NULL;
-        }
-    case 512: /* module 2 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Now";
-        default:
-            return NULL;
-        }
-    case 768: /* module 3 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Index";
-        default:
-            return NULL;
-        }
-    case 769: /* module 3 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "New";
-        case 1:
-            return "Index";
-        default:
-            return NULL;
-        }
-    case 770: /* module 3 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Index";
-        default:
-            return NULL;
-        }
-    case 771: /* module 3 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "New";
-        case 1:
-            return "Index";
-        case 2:
-            return "Freeze";
-        default:
-            return NULL;
-        }
-    case 772: /* module 3 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Index";
-        default:
-            return NULL;
-        }
-    case 1026: /* module 4 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 1027: /* module 4 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "Who";
-        case 1:
-            return "New free";
-        case 2:
-            return "New reserved";
-        default:
-            return NULL;
-        }
-    case 1028: /* module 4 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Source";
-        case 1:
-            return "Dest";
-        case 2:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 1029: /* module 4 call 5 */
-        switch (itemIdx) {
-        case 0:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 1536: /* module 6 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Uid";
-        case 1:
-            return "Secondary keys";
-        default:
-            return NULL;
-        }
-    case 1537: /* module 6 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Target account";
-        case 1:
-            return "Secondary keys";
-        default:
-            return NULL;
-        }
-    case 1538: /* module 6 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Target account";
-        default:
-            return NULL;
-        }
-    case 1539: /* module 6 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "Cdd";
-        case 1:
-            return "Disable from";
-        case 2:
-            return "Expiry";
+            return STR_IT_memo;
         default:
             return NULL;
         }
     case 1540: /* module 6 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Signers to remove";
+            return STR_IT_signers_to_remove;
         default:
             return NULL;
         }
     case 1541: /* module 6 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Rotation auth id";
+            return STR_IT_rotation_auth_id;
         case 1:
-            return "Optional cdd auth id";
-        default:
-            return NULL;
-        }
-    case 1542: /* module 6 call 6 */
-        switch (itemIdx) {
-        case 0:
-            return "Auth required";
+            return STR_IT_optional_cdd_auth_id;
         default:
             return NULL;
         }
     case 1543: /* module 6 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Auth id";
+            return STR_IT_auth_id;
         default:
             return NULL;
         }
     case 1544: /* module 6 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Auth id";
+            return STR_IT_auth_id;
         default:
             return NULL;
         }
@@ -4909,54 +4656,45 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 1546: /* module 6 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Did";
+            return STR_IT_did;
         default:
             return NULL;
         }
     case 1547: /* module 6 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Target";
+            return STR_IT_target;
         case 1:
-            return "Claim";
+            return STR_IT_claim;
         case 2:
-            return "Expiry";
-        default:
-            return NULL;
-        }
-    case 1548: /* module 6 call 12 */
-        switch (itemIdx) {
-        case 0:
-            return "Target did";
-        case 1:
-            return "Proposal";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 1549: /* module 6 call 13 */
         switch (itemIdx) {
         case 0:
-            return "Target";
+            return STR_IT_target;
         case 1:
-            return "Claim";
+            return STR_IT_claim;
         default:
             return NULL;
         }
     case 1550: /* module 6 call 14 */
         switch (itemIdx) {
         case 0:
-            return "Signer";
+            return STR_IT_signer;
         case 1:
-            return "Permissions";
+            return STR_IT_permissions;
         default:
             return NULL;
         }
     case 1551: /* module 6 call 15 */
         switch (itemIdx) {
         case 0:
-            return "Signer";
+            return STR_IT_signer;
         case 1:
-            return "Permissions";
+            return STR_IT_permissions;
         default:
             return NULL;
         }
@@ -4970,6 +4708,578 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 1556: /* module 6 call 20 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target;
+        case 1:
+            return STR_IT_authorization_data;
+        case 2:
+            return STR_IT_expiry;
+        default:
+            return NULL;
+        }
+    case 1557: /* module 6 call 21 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target;
+        case 1:
+            return STR_IT_auth_id;
+        case 2:
+            return STR_IT__auth_issuer_pays;
+        default:
+            return NULL;
+        }
+    case 1558: /* module 6 call 22 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_auth_id;
+        default:
+            return NULL;
+        }
+    case 1559: /* module 6 call 23 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_additional_keys;
+        case 1:
+            return STR_IT_expires_at;
+        default:
+            return NULL;
+        }
+    case 1561: /* module 6 call 25 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target;
+        case 1:
+            return STR_IT_claim;
+        case 2:
+            return STR_IT_proof;
+        case 3:
+            return STR_IT_expiry;
+        default:
+            return NULL;
+        }
+    case 2048: /* module 8 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_controller;
+        case 1:
+            return STR_IT_value;
+        case 2:
+            return STR_IT_payee;
+        default:
+            return NULL;
+        }
+    case 2049: /* module 8 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_max_additional;
+        default:
+            return NULL;
+        }
+    case 2050: /* module 8 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_value;
+        default:
+            return NULL;
+        }
+    case 2051: /* module 8 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_num_slashing_spans;
+        default:
+            return NULL;
+        }
+    case 2052: /* module 8 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_prefs;
+        default:
+            return NULL;
+        }
+    case 2053: /* module 8 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_targets;
+        default:
+            return NULL;
+        }
+    case 2054: /* module 8 call 6 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
+    case 2055: /* module 8 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_payee;
+        default:
+            return NULL;
+        }
+    case 2056: /* module 8 call 8 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_controller;
+        default:
+            return NULL;
+        }
+    case 2072: /* module 8 call 24 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_value;
+        default:
+            return NULL;
+        }
+    case 4608: /* module 18 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_signers;
+        case 1:
+            return STR_IT_sigs_required;
+        default:
+            return NULL;
+        }
+    case 4609: /* module 18 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal;
+        case 2:
+            return STR_IT_expiry;
+        case 3:
+            return STR_IT_auto_close;
+        default:
+            return NULL;
+        }
+    case 4610: /* module 18 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal;
+        case 2:
+            return STR_IT_expiry;
+        case 3:
+            return STR_IT_auto_close;
+        default:
+            return NULL;
+        }
+    case 4611: /* module 18 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal;
+        case 2:
+            return STR_IT_expiry;
+        case 3:
+            return STR_IT_auto_close;
+        default:
+            return NULL;
+        }
+    case 4612: /* module 18 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal;
+        case 2:
+            return STR_IT_expiry;
+        case 3:
+            return STR_IT_auto_close;
+        default:
+            return NULL;
+        }
+    case 4613: /* module 18 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal_id;
+        default:
+            return NULL;
+        }
+    case 4614: /* module 18 call 6 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal_id;
+        default:
+            return NULL;
+        }
+    case 4615: /* module 18 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal_id;
+        default:
+            return NULL;
+        }
+    case 4616: /* module 18 call 8 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal_id;
+        default:
+            return NULL;
+        }
+    case 4617: /* module 18 call 9 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_auth_id;
+        default:
+            return NULL;
+        }
+    case 4618: /* module 18 call 10 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_auth_id;
+        default:
+            return NULL;
+        }
+    case 4619: /* module 18 call 11 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_signer;
+        default:
+            return NULL;
+        }
+    case 4620: /* module 18 call 12 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_signer;
+        default:
+            return NULL;
+        }
+    case 4621: /* module 18 call 13 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_signers;
+        default:
+            return NULL;
+        }
+    case 4622: /* module 18 call 14 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_signers;
+        default:
+            return NULL;
+        }
+    case 4623: /* module 18 call 15 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_sigs_required;
+        default:
+            return NULL;
+        }
+    case 4624: /* module 18 call 16 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        default:
+            return NULL;
+        }
+    case 4625: /* module 18 call 17 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_optional_cdd_auth_id;
+        default:
+            return NULL;
+        }
+    case 4626: /* module 18 call 18 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_multisig;
+        case 1:
+            return STR_IT_proposal_id;
+        case 2:
+            return STR_IT_multisig_did;
+        case 3:
+            return STR_IT_proposal_weight;
+        default:
+            return NULL;
+        }
+    case 6150: /* module 24 call 6 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_proposal;
+        case 1:
+            return STR_IT_deposit;
+        case 2:
+            return STR_IT_url;
+        case 3:
+            return STR_IT_description;
+        default:
+            return NULL;
+        }
+    case 6151: /* module 24 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_aye_or_nay;
+        case 2:
+            return STR_IT_deposit;
+        default:
+            return NULL;
+        }
+    case 10496: /* module 41 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_calls;
+        default:
+            return NULL;
+        }
+    case 10497: /* module 41 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_calls;
+        default:
+            return NULL;
+        }
+    case 10498: /* module 41 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_calls;
+        default:
+            return NULL;
+        }
+#ifdef SUBSTRATE_PARSER_FULL
+    case 0: /* module 0 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT__ratio;
+        default:
+            return NULL;
+        }
+    case 1: /* module 0 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT__remark;
+        default:
+            return NULL;
+        }
+    case 2: /* module 0 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_pages;
+        default:
+            return NULL;
+        }
+    case 3: /* module 0 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_code;
+        default:
+            return NULL;
+        }
+    case 4: /* module 0 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_code;
+        default:
+            return NULL;
+        }
+    case 5: /* module 0 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_changes_trie_config;
+        default:
+            return NULL;
+        }
+    case 6: /* module 0 call 6 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_items;
+        default:
+            return NULL;
+        }
+    case 7: /* module 0 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_keys;
+        default:
+            return NULL;
+        }
+    case 8: /* module 0 call 8 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_prefix;
+        case 1:
+            return STR_IT__subkeys;
+        default:
+            return NULL;
+        }
+    case 9: /* module 0 call 9 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
+    case 256: /* module 1 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_equivocation_proof;
+        case 1:
+            return STR_IT_key_owner_proof;
+        default:
+            return NULL;
+        }
+    case 257: /* module 1 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_equivocation_proof;
+        case 1:
+            return STR_IT_key_owner_proof;
+        default:
+            return NULL;
+        }
+    case 512: /* module 2 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_now;
+        default:
+            return NULL;
+        }
+    case 768: /* module 3 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_index;
+        default:
+            return NULL;
+        }
+    case 769: /* module 3 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_new_;
+        case 1:
+            return STR_IT_index;
+        default:
+            return NULL;
+        }
+    case 770: /* module 3 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_index;
+        default:
+            return NULL;
+        }
+    case 771: /* module 3 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_new_;
+        case 1:
+            return STR_IT_index;
+        case 2:
+            return STR_IT_freeze;
+        default:
+            return NULL;
+        }
+    case 772: /* module 3 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_index;
+        default:
+            return NULL;
+        }
+    case 1026: /* module 4 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_value;
+        default:
+            return NULL;
+        }
+    case 1027: /* module 4 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_who;
+        case 1:
+            return STR_IT_new_free;
+        case 2:
+            return STR_IT_new_reserved;
+        default:
+            return NULL;
+        }
+    case 1028: /* module 4 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_source;
+        case 1:
+            return STR_IT_dest;
+        case 2:
+            return STR_IT_value;
+        default:
+            return NULL;
+        }
+    case 1029: /* module 4 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_amount;
+        default:
+            return NULL;
+        }
+    case 1536: /* module 6 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_uid;
+        case 1:
+            return STR_IT_secondary_keys;
+        default:
+            return NULL;
+        }
+    case 1537: /* module 6 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target_account;
+        case 1:
+            return STR_IT_secondary_keys;
+        default:
+            return NULL;
+        }
+    case 1538: /* module 6 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target_account;
+        default:
+            return NULL;
+        }
+    case 1539: /* module 6 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_cdd;
+        case 1:
+            return STR_IT_disable_from;
+        case 2:
+            return STR_IT_expiry;
+        default:
+            return NULL;
+        }
+    case 1542: /* module 6 call 6 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_auth_required;
+        default:
+            return NULL;
+        }
+    case 1548: /* module 6 call 12 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target_did;
+        case 1:
+            return STR_IT_proposal;
+        default:
+            return NULL;
+        }
     case 1554: /* module 6 call 18 */
         switch (itemIdx) {
         default:
@@ -4978,187 +5288,97 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 1555: /* module 6 call 19 */
         switch (itemIdx) {
         case 0:
-            return "Of";
-        default:
-            return NULL;
-        }
-    case 1556: /* module 6 call 20 */
-        switch (itemIdx) {
-        case 0:
-            return "Target";
-        case 1:
-            return "Authorization data";
-        case 2:
-            return "Expiry";
-        default:
-            return NULL;
-        }
-    case 1557: /* module 6 call 21 */
-        switch (itemIdx) {
-        case 0:
-            return "Target";
-        case 1:
-            return "Auth id";
-        case 2:
-            return "Auth issuer pays";
-        default:
-            return NULL;
-        }
-    case 1558: /* module 6 call 22 */
-        switch (itemIdx) {
-        case 0:
-            return "Auth id";
-        default:
-            return NULL;
-        }
-    case 1559: /* module 6 call 23 */
-        switch (itemIdx) {
-        case 0:
-            return "Additional keys";
-        case 1:
-            return "Expires at";
+            return STR_IT_of;
         default:
             return NULL;
         }
     case 1560: /* module 6 call 24 */
         switch (itemIdx) {
         case 0:
-            return "Signer";
+            return STR_IT_signer;
         case 1:
-            return "Auth";
-        default:
-            return NULL;
-        }
-    case 1561: /* module 6 call 25 */
-        switch (itemIdx) {
-        case 0:
-            return "Target";
-        case 1:
-            return "Claim";
-        case 2:
-            return "Proof";
-        case 3:
-            return "Expiry";
+            return STR_IT_auth;
         default:
             return NULL;
         }
     case 1562: /* module 6 call 26 */
         switch (itemIdx) {
         case 0:
-            return "Target";
+            return STR_IT_target;
         case 1:
-            return "Expiry";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 1563: /* module 6 call 27 */
         switch (itemIdx) {
         case 0:
-            return "Target";
+            return STR_IT_target;
         default:
             return NULL;
         }
     case 1792: /* module 7 call 0 */
         switch (itemIdx) {
         case 0:
-            return "New uncles";
-        default:
-            return NULL;
-        }
-    case 2048: /* module 8 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Controller";
-        case 1:
-            return "Amount";
-        case 2:
-            return "Payee";
-        default:
-            return NULL;
-        }
-    case 2049: /* module 8 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 2050: /* module 8 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Amount";
-        default:
-            return NULL;
-        }
-    case 2051: /* module 8 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "Num slashing spans";
-        default:
-            return NULL;
-        }
-    case 2056: /* module 8 call 8 */
-        switch (itemIdx) {
-        case 0:
-            return "Controller";
+            return STR_IT_new_uncles;
         default:
             return NULL;
         }
     case 2057: /* module 8 call 9 */
         switch (itemIdx) {
         case 0:
-            return "New";
+            return STR_IT_new_;
         default:
             return NULL;
         }
     case 2058: /* module 8 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Additional";
+            return STR_IT_additional;
         default:
             return NULL;
         }
     case 2059: /* module 8 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Factor";
+            return STR_IT_factor;
         default:
             return NULL;
         }
     case 2060: /* module 8 call 12 */
         switch (itemIdx) {
         case 0:
-            return "Identity";
+            return STR_IT_identity;
         case 1:
-            return "Intended count";
+            return STR_IT_intended_count;
         default:
             return NULL;
         }
     case 2061: /* module 8 call 13 */
         switch (itemIdx) {
         case 0:
-            return "Identity";
+            return STR_IT_identity;
         default:
             return NULL;
         }
     case 2062: /* module 8 call 14 */
         switch (itemIdx) {
         case 0:
-            return "Targets";
+            return STR_IT_targets;
         default:
             return NULL;
         }
     case 2063: /* module 8 call 15 */
         switch (itemIdx) {
         case 0:
-            return "New cap";
+            return STR_IT_new_cap;
         default:
             return NULL;
         }
     case 2064: /* module 8 call 16 */
         switch (itemIdx) {
         case 0:
-            return "New value";
+            return STR_IT_new_value;
         default:
             return NULL;
         }
@@ -5175,16 +5395,16 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 2067: /* module 8 call 19 */
         switch (itemIdx) {
         case 0:
-            return "Validators";
+            return STR_IT_validators;
         default:
             return NULL;
         }
     case 2068: /* module 8 call 20 */
         switch (itemIdx) {
         case 0:
-            return "Stash";
+            return STR_IT_stash;
         case 1:
-            return "Num slashing spans";
+            return STR_IT_num_slashing_spans;
         default:
             return NULL;
         }
@@ -5196,562 +5416,390 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 2070: /* module 8 call 22 */
         switch (itemIdx) {
         case 0:
-            return "Era";
+            return STR_IT_era;
         case 1:
-            return "Slash indices";
+            return STR_IT_slash_indices;
         default:
             return NULL;
         }
     case 2071: /* module 8 call 23 */
         switch (itemIdx) {
         case 0:
-            return "Validator stash";
+            return STR_IT_validator_stash;
         case 1:
-            return "Era";
-        default:
-            return NULL;
-        }
-    case 2072: /* module 8 call 24 */
-        switch (itemIdx) {
-        case 0:
-            return "Amount";
+            return STR_IT_era;
         default:
             return NULL;
         }
     case 2073: /* module 8 call 25 */
         switch (itemIdx) {
         case 0:
-            return "New history depth";
+            return STR_IT_new_history_depth;
         case 1:
-            return "Era items deleted";
+            return STR_IT__era_items_deleted;
         default:
             return NULL;
         }
     case 2074: /* module 8 call 26 */
         switch (itemIdx) {
         case 0:
-            return "Stash";
+            return STR_IT_stash;
         case 1:
-            return "Num slashing spans";
+            return STR_IT_num_slashing_spans;
         default:
             return NULL;
         }
     case 2075: /* module 8 call 27 */
         switch (itemIdx) {
         case 0:
-            return "Winners";
+            return STR_IT_winners;
         case 1:
-            return "Compact";
+            return STR_IT_compact;
         case 2:
-            return "Score";
+            return STR_IT_score;
         case 3:
-            return "Era";
+            return STR_IT_era;
         case 4:
-            return "Size";
+            return STR_IT_size;
         default:
             return NULL;
         }
     case 2076: /* module 8 call 28 */
         switch (itemIdx) {
         case 0:
-            return "Winners";
+            return STR_IT_winners;
         case 1:
-            return "Compact";
+            return STR_IT_compact;
         case 2:
-            return "Score";
+            return STR_IT_score;
         case 3:
-            return "Era";
+            return STR_IT_era;
         case 4:
-            return "Size";
+            return STR_IT_size;
         default:
             return NULL;
         }
     case 2077: /* module 8 call 29 */
         switch (itemIdx) {
         case 0:
-            return "Validator stash";
+            return STR_IT_validator_stash;
         case 1:
-            return "Era";
+            return STR_IT_era;
         default:
             return NULL;
         }
     case 2078: /* module 8 call 30 */
         switch (itemIdx) {
         case 0:
-            return "Slashing switch";
+            return STR_IT_slashing_switch;
         default:
             return NULL;
         }
     case 2079: /* module 8 call 31 */
         switch (itemIdx) {
         case 0:
-            return "Identity";
+            return STR_IT_identity;
         case 1:
-            return "New intended count";
+            return STR_IT_new_intended_count;
+        default:
+            return NULL;
+        }
+    case 2560: /* module 10 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_keys;
+        case 1:
+            return STR_IT_proof;
+        default:
+            return NULL;
+        }
+    case 2561: /* module 10 call 1 */
+        switch (itemIdx) {
         default:
             return NULL;
         }
     case 2816: /* module 11 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Hint";
+            return STR_IT_hint;
         default:
             return NULL;
         }
     case 3072: /* module 12 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Equivocation proof";
+            return STR_IT_equivocation_proof;
         case 1:
-            return "Key owner proof";
+            return STR_IT_key_owner_proof;
         default:
             return NULL;
         }
     case 3073: /* module 12 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Equivocation proof";
+            return STR_IT_equivocation_proof;
         case 1:
-            return "Key owner proof";
+            return STR_IT_key_owner_proof;
         default:
             return NULL;
         }
     case 3074: /* module 12 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Delay";
+            return STR_IT_delay;
         case 1:
-            return "Best finalized block number";
+            return STR_IT_best_finalized_block_number;
         default:
             return NULL;
         }
     case 3328: /* module 13 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Heartbeat";
+            return STR_IT_heartbeat;
         case 1:
-            return "Signature";
+            return STR_IT__signature;
         default:
             return NULL;
         }
     case 3329: /* module 13 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Params";
+            return STR_IT_params;
         default:
             return NULL;
         }
     case 4352: /* module 17 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 4353: /* module 17 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Call";
+            return STR_IT_call;
         case 1:
-            return "Weight";
+            return STR_IT__weight;
         default:
             return NULL;
         }
     case 4354: /* module 17 call 2 */
         switch (itemIdx) {
         case 0:
-            return "New";
+            return STR_IT_new_;
         default:
             return NULL;
         }
     case 4355: /* module 17 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         case 1:
-            return "Call";
-        default:
-            return NULL;
-        }
-    case 4608: /* module 18 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Signers";
-        case 1:
-            return "Sigs required";
-        default:
-            return NULL;
-        }
-    case 4609: /* module 18 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal";
-        case 2:
-            return "Expiry";
-        case 3:
-            return "Auto close";
-        default:
-            return NULL;
-        }
-    case 4610: /* module 18 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal";
-        case 2:
-            return "Expiry";
-        case 3:
-            return "Auto close";
-        default:
-            return NULL;
-        }
-    case 4611: /* module 18 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal";
-        case 2:
-            return "Expiry";
-        case 3:
-            return "Auto close";
-        default:
-            return NULL;
-        }
-    case 4612: /* module 18 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal";
-        case 2:
-            return "Expiry";
-        case 3:
-            return "Auto close";
-        default:
-            return NULL;
-        }
-    case 4613: /* module 18 call 5 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal id";
-        default:
-            return NULL;
-        }
-    case 4614: /* module 18 call 6 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal id";
-        default:
-            return NULL;
-        }
-    case 4615: /* module 18 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal id";
-        default:
-            return NULL;
-        }
-    case 4616: /* module 18 call 8 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal id";
-        default:
-            return NULL;
-        }
-    case 4617: /* module 18 call 9 */
-        switch (itemIdx) {
-        case 0:
-            return "Auth id";
-        default:
-            return NULL;
-        }
-    case 4618: /* module 18 call 10 */
-        switch (itemIdx) {
-        case 0:
-            return "Auth id";
-        default:
-            return NULL;
-        }
-    case 4619: /* module 18 call 11 */
-        switch (itemIdx) {
-        case 0:
-            return "Signer";
-        default:
-            return NULL;
-        }
-    case 4620: /* module 18 call 12 */
-        switch (itemIdx) {
-        case 0:
-            return "Signer";
-        default:
-            return NULL;
-        }
-    case 4621: /* module 18 call 13 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Signers";
-        default:
-            return NULL;
-        }
-    case 4622: /* module 18 call 14 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Signers";
-        default:
-            return NULL;
-        }
-    case 4623: /* module 18 call 15 */
-        switch (itemIdx) {
-        case 0:
-            return "Sigs required";
-        default:
-            return NULL;
-        }
-    case 4624: /* module 18 call 16 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        default:
-            return NULL;
-        }
-    case 4625: /* module 18 call 17 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Optional cdd auth id";
-        default:
-            return NULL;
-        }
-    case 4626: /* module 18 call 18 */
-        switch (itemIdx) {
-        case 0:
-            return "Multisig";
-        case 1:
-            return "Proposal id";
-        case 2:
-            return "Multisig did";
-        case 3:
-            return "Proposal weight";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 5120: /* module 20 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Schedule";
+            return STR_IT_schedule;
         default:
             return NULL;
         }
     case 5121: /* module 20 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Meta info";
+            return STR_IT_meta_info;
         case 1:
-            return "Instantiation fee";
+            return STR_IT_instantiation_fee;
         case 2:
-            return "Code";
+            return STR_IT_code;
         default:
             return NULL;
         }
     case 5122: /* module 20 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Dest";
+            return STR_IT_dest;
         case 1:
-            return "Amount";
+            return STR_IT_value;
         case 2:
-            return "Gas limit";
+            return STR_IT_gas_limit;
         case 3:
-            return "Data";
+            return STR_IT_data;
         default:
             return NULL;
         }
     case 5123: /* module 20 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Endowment";
+            return STR_IT_endowment;
         case 1:
-            return "Gas limit";
+            return STR_IT_gas_limit;
         case 2:
-            return "Code hash";
+            return STR_IT_code_hash;
         case 3:
-            return "Data";
+            return STR_IT_data;
         case 4:
-            return "Max fee";
+            return STR_IT_max_fee;
         default:
             return NULL;
         }
     case 5124: /* module 20 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Code hash";
+            return STR_IT_code_hash;
         default:
             return NULL;
         }
     case 5125: /* module 20 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Code hash";
+            return STR_IT_code_hash;
         default:
             return NULL;
         }
     case 5126: /* module 20 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Code hash";
+            return STR_IT_code_hash;
         case 1:
-            return "New owner";
+            return STR_IT_new_owner;
         default:
             return NULL;
         }
     case 5127: /* module 20 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Code hash";
+            return STR_IT_code_hash;
         case 1:
-            return "New instantiation fee";
+            return STR_IT_new_instantiation_fee;
         case 2:
-            return "New usage fee";
+            return STR_IT_new_usage_fee;
         default:
             return NULL;
         }
     case 5128: /* module 20 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Code hash";
+            return STR_IT_code_hash;
         case 1:
-            return "New url";
+            return STR_IT_new_url;
         default:
             return NULL;
         }
     case 5376: /* module 21 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Beneficiaries";
+            return STR_IT_beneficiaries;
         default:
             return NULL;
         }
     case 5377: /* module 21 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Amount";
+            return STR_IT_amount;
         default:
             return NULL;
         }
     case 5632: /* module 22 call 0 */
         switch (itemIdx) {
         case 0:
-            return "N";
+            return STR_IT_n;
         case 1:
-            return "D";
+            return STR_IT_d;
         default:
             return NULL;
         }
     case 5633: /* module 22 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 5634: /* module 22 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Expiry";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 5635: /* module 22 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         default:
             return NULL;
         }
     case 5636: /* module 22 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Approve";
+            return STR_IT_approve;
         case 1:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 5637: /* module 22 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         case 2:
-            return "Approve";
+            return STR_IT_approve;
         default:
             return NULL;
         }
     case 5888: /* module 23 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Limit";
+            return STR_IT_limit;
         default:
             return NULL;
         }
     case 5889: /* module 23 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         case 1:
-            return "Expiry";
+            return STR_IT_expiry;
         case 2:
-            return "At";
+            return STR_IT_at;
         default:
             return NULL;
         }
     case 5890: /* module 23 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 5891: /* module 23 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 5892: /* module 23 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Remove";
+            return STR_IT_remove;
         case 1:
-            return "Add";
+            return STR_IT_add;
         default:
             return NULL;
         }
     case 5893: /* module 23 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Members";
+            return STR_IT_members;
         default:
             return NULL;
         }
@@ -5763,96 +5811,72 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 6144: /* module 24 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Prune";
+            return STR_IT_prune;
         default:
             return NULL;
         }
     case 6145: /* module 24 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Deposit";
+            return STR_IT_deposit;
         default:
             return NULL;
         }
     case 6146: /* module 24 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Duration";
+            return STR_IT_duration;
         default:
             return NULL;
         }
     case 6147: /* module 24 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Expiry";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 6148: /* module 24 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Max";
+            return STR_IT_max;
         default:
             return NULL;
         }
     case 6149: /* module 24 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Limit";
-        default:
-            return NULL;
-        }
-    case 6150: /* module 24 call 6 */
-        switch (itemIdx) {
-        case 0:
-            return "Proposal";
-        case 1:
-            return "Deposit";
-        case 2:
-            return "Url";
-        case 3:
-            return "Description";
-        default:
-            return NULL;
-        }
-    case 6151: /* module 24 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return "Id";
-        case 1:
-            return "Aye or nay";
-        case 2:
-            return "Deposit";
+            return STR_IT_limit;
         default:
             return NULL;
         }
     case 6152: /* module 24 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6153: /* module 24 call 9 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6154: /* module 24 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6155: /* module 24 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         case 1:
-            return "Until";
+            return STR_IT_until;
         default:
             return NULL;
         }
@@ -5869,123 +5893,123 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 6158: /* module 24 call 14 */
         switch (itemIdx) {
         case 0:
-            return "Results";
+            return STR_IT_results;
         default:
             return NULL;
         }
     case 6159: /* module 24 call 15 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6160: /* module 24 call 16 */
         switch (itemIdx) {
         case 0:
-            return "Did";
+            return STR_IT_did;
         case 1:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6400: /* module 25 call 0 */
         switch (itemIdx) {
         case 0:
-            return "N";
+            return STR_IT_n;
         case 1:
-            return "D";
+            return STR_IT_d;
         default:
             return NULL;
         }
     case 6401: /* module 25 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6402: /* module 25 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Expiry";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 6403: /* module 25 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         default:
             return NULL;
         }
     case 6404: /* module 25 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Approve";
+            return STR_IT_approve;
         case 1:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 6405: /* module 25 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         case 2:
-            return "Approve";
+            return STR_IT_approve;
         default:
             return NULL;
         }
     case 6656: /* module 26 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Limit";
+            return STR_IT_limit;
         default:
             return NULL;
         }
     case 6657: /* module 26 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         case 1:
-            return "Expiry";
+            return STR_IT_expiry;
         case 2:
-            return "At";
+            return STR_IT_at;
         default:
             return NULL;
         }
     case 6658: /* module 26 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 6659: /* module 26 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 6660: /* module 26 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Remove";
+            return STR_IT_remove;
         case 1:
-            return "Add";
+            return STR_IT_add;
         default:
             return NULL;
         }
     case 6661: /* module 26 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Members";
+            return STR_IT_members;
         default:
             return NULL;
         }
@@ -5997,100 +6021,100 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 6912: /* module 27 call 0 */
         switch (itemIdx) {
         case 0:
-            return "N";
+            return STR_IT_n;
         case 1:
-            return "D";
+            return STR_IT_d;
         default:
             return NULL;
         }
     case 6913: /* module 27 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 6914: /* module 27 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Expiry";
+            return STR_IT_expiry;
         default:
             return NULL;
         }
     case 6915: /* module 27 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         default:
             return NULL;
         }
     case 6916: /* module 27 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Approve";
+            return STR_IT_approve;
         case 1:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 6917: /* module 27 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Proposal";
+            return STR_IT_proposal;
         case 1:
-            return "Index";
+            return STR_IT_index;
         case 2:
-            return "Approve";
+            return STR_IT_approve;
         default:
             return NULL;
         }
     case 7168: /* module 28 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Limit";
+            return STR_IT_limit;
         default:
             return NULL;
         }
     case 7169: /* module 28 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         case 1:
-            return "Expiry";
+            return STR_IT_expiry;
         case 2:
-            return "At";
+            return STR_IT_at;
         default:
             return NULL;
         }
     case 7170: /* module 28 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 7171: /* module 28 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 7172: /* module 28 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Remove";
+            return STR_IT_remove;
         case 1:
-            return "Add";
+            return STR_IT_add;
         default:
             return NULL;
         }
     case 7173: /* module 28 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Members";
+            return STR_IT_members;
         default:
             return NULL;
         }
@@ -6102,215 +6126,215 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 7424: /* module 29 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7425: /* module 29 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Auth id";
+            return STR_IT_auth_id;
         default:
             return NULL;
         }
     case 7426: /* module 29 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Auth id";
+            return STR_IT_auth_id;
         default:
             return NULL;
         }
     case 7427: /* module 29 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Auth id";
+            return STR_IT_auth_id;
         default:
             return NULL;
         }
     case 7428: /* module 29 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Name";
+            return STR_IT_name;
         case 1:
-            return "Ticker";
+            return STR_IT_ticker;
         case 2:
-            return "Total supply";
+            return STR_IT_total_supply;
         case 3:
-            return "Divisible";
+            return STR_IT_divisible;
         case 4:
-            return "Asset type";
+            return STR_IT_asset_type;
         case 5:
-            return "Identifiers";
+            return STR_IT_identifiers;
         case 6:
-            return "Funding round";
+            return STR_IT_funding_round;
         default:
             return NULL;
         }
     case 7429: /* module 29 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7430: /* module 29 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7431: /* module 29 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Name";
+            return STR_IT_name;
         default:
             return NULL;
         }
     case 7432: /* module 29 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Amount";
+            return STR_IT_value;
         default:
             return NULL;
         }
     case 7433: /* module 29 call 9 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Amount";
+            return STR_IT_value;
         default:
             return NULL;
         }
     case 7434: /* module 29 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7435: /* module 29 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Docs";
+            return STR_IT_docs;
         case 1:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7436: /* module 29 call 12 */
         switch (itemIdx) {
         case 0:
-            return "Ids";
+            return STR_IT_ids;
         case 1:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7437: /* module 29 call 13 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Name";
+            return STR_IT_name;
         default:
             return NULL;
         }
     case 7438: /* module 29 call 14 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Identifiers";
+            return STR_IT_identifiers;
         default:
             return NULL;
         }
     case 7439: /* module 29 call 15 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Extension details";
+            return STR_IT_extension_details;
         default:
             return NULL;
         }
     case 7440: /* module 29 call 16 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Extension id";
+            return STR_IT_extension_id;
         default:
             return NULL;
         }
     case 7441: /* module 29 call 17 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Extension id";
+            return STR_IT_extension_id;
         default:
             return NULL;
         }
     case 7442: /* module 29 call 18 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 7443: /* module 29 call 19 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Extension id";
+            return STR_IT_extension_id;
         default:
             return NULL;
         }
     case 7444: /* module 29 call 20 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Ethereum signature";
+            return STR_IT_ethereum_signature;
         default:
             return NULL;
         }
     case 7445: /* module 29 call 21 */
         switch (itemIdx) {
         case 0:
-            return "Classic ticker import";
+            return STR_IT_classic_ticker_import;
         case 1:
-            return "Contract did";
+            return STR_IT_contract_did;
         case 2:
-            return "Config";
+            return STR_IT_config;
         default:
             return NULL;
         }
     case 7936: /* module 31 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Controller";
+            return STR_IT_controller;
         default:
             return NULL;
         }
     case 7937: /* module 31 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Admin";
+            return STR_IT_admin;
         default:
             return NULL;
         }
     case 7938: /* module 31 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Timelock";
+            return STR_IT_timelock;
         default:
             return NULL;
         }
@@ -6327,418 +6351,418 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 7941: /* module 31 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Amount";
+            return STR_IT_amount;
         case 1:
-            return "Duration";
+            return STR_IT_duration;
         default:
             return NULL;
         }
     case 7942: /* module 31 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Exempted";
+            return STR_IT_exempted;
         default:
             return NULL;
         }
     case 7943: /* module 31 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Bridge tx";
+            return STR_IT_bridge_tx;
         default:
             return NULL;
         }
     case 7944: /* module 31 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Bridge txs";
+            return STR_IT_bridge_txs;
         default:
             return NULL;
         }
     case 7945: /* module 31 call 9 */
         switch (itemIdx) {
         case 0:
-            return "Bridge tx";
+            return STR_IT_bridge_tx;
         default:
             return NULL;
         }
     case 7946: /* module 31 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Bridge tx";
+            return STR_IT_bridge_tx;
         default:
             return NULL;
         }
     case 7947: /* module 31 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Bridge txs";
+            return STR_IT_bridge_txs;
         default:
             return NULL;
         }
     case 7948: /* module 31 call 12 */
         switch (itemIdx) {
         case 0:
-            return "Bridge txs";
+            return STR_IT_bridge_txs;
         default:
             return NULL;
         }
     case 7949: /* module 31 call 13 */
         switch (itemIdx) {
         case 0:
-            return "Bridge tx";
+            return STR_IT_bridge_tx;
         default:
             return NULL;
         }
     case 8192: /* module 32 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Sender conditions";
+            return STR_IT_sender_conditions;
         case 2:
-            return "Receiver conditions";
+            return STR_IT_receiver_conditions;
         default:
             return NULL;
         }
     case 8193: /* module 32 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 8194: /* module 32 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Asset compliance";
+            return STR_IT_asset_compliance;
         default:
             return NULL;
         }
     case 8195: /* module 32 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 8196: /* module 32 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 8197: /* module 32 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 8198: /* module 32 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Issuer";
+            return STR_IT_issuer;
         default:
             return NULL;
         }
     case 8199: /* module 32 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Issuer";
+            return STR_IT_issuer;
         default:
             return NULL;
         }
     case 8200: /* module 32 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "New req";
+            return STR_IT_new_req;
         default:
             return NULL;
         }
     case 9216: /* module 36 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Details";
+            return STR_IT_details;
         case 1:
-            return "Signers";
+            return STR_IT_signers;
         case 2:
-            return "Venue type";
+            return STR_IT_venue_type;
         default:
             return NULL;
         }
     case 9217: /* module 36 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Venue id";
+            return STR_IT_venue_id;
         case 1:
-            return "Details";
+            return STR_IT_details;
         case 2:
-            return "Typ";
+            return STR_IT_typ;
         default:
             return NULL;
         }
     case 9218: /* module 36 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Venue id";
+            return STR_IT_venue_id;
         case 1:
-            return "Settlement type";
+            return STR_IT_settlement_type;
         case 2:
-            return "Trade date";
+            return STR_IT_trade_date;
         case 3:
-            return "Value date";
+            return STR_IT_value_date;
         case 4:
-            return "Legs";
+            return STR_IT_legs;
         default:
             return NULL;
         }
     case 9219: /* module 36 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Venue id";
+            return STR_IT_venue_id;
         case 1:
-            return "Settlement type";
+            return STR_IT_settlement_type;
         case 2:
-            return "Trade date";
+            return STR_IT_trade_date;
         case 3:
-            return "Value date";
+            return STR_IT_value_date;
         case 4:
-            return "Legs";
+            return STR_IT_legs;
         case 5:
-            return "Portfolios";
+            return STR_IT_portfolios;
         default:
             return NULL;
         }
     case 9220: /* module 36 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Portfolios";
+            return STR_IT_portfolios;
         default:
             return NULL;
         }
     case 9221: /* module 36 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Portfolios";
+            return STR_IT_portfolios;
         default:
             return NULL;
         }
     case 9222: /* module 36 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Portfolios";
+            return STR_IT_portfolios;
         default:
             return NULL;
         }
     case 9223: /* module 36 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Receipt details";
+            return STR_IT_receipt_details;
         case 2:
-            return "Portfolios";
+            return STR_IT_portfolios;
         default:
             return NULL;
         }
     case 9224: /* module 36 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Receipt details";
+            return STR_IT_receipt_details;
         default:
             return NULL;
         }
     case 9225: /* module 36 call 9 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         case 1:
-            return "Leg id";
+            return STR_IT_leg_id;
         default:
             return NULL;
         }
     case 9226: /* module 36 call 10 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Enabled";
+            return STR_IT_enabled;
         default:
             return NULL;
         }
     case 9227: /* module 36 call 11 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Venues";
+            return STR_IT_venues;
         default:
             return NULL;
         }
     case 9228: /* module 36 call 12 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Venues";
+            return STR_IT_venues;
         default:
             return NULL;
         }
     case 9229: /* module 36 call 13 */
         switch (itemIdx) {
         case 0:
-            return "Instruction id";
+            return STR_IT_instruction_id;
         default:
             return NULL;
         }
     case 9472: /* module 37 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Offering portfolio";
+            return STR_IT_offering_portfolio;
         case 1:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 2:
-            return "Raising portfolio";
+            return STR_IT_raising_portfolio;
         case 3:
-            return "Raising asset";
+            return STR_IT_raising_asset;
         case 4:
-            return "Tiers";
+            return STR_IT_tiers;
         case 5:
-            return "Venue id";
+            return STR_IT_venue_id;
         case 6:
-            return "Start";
+            return STR_IT_start;
         case 7:
-            return "End";
+            return STR_IT_end;
         case 8:
-            return "Minimum investment";
+            return STR_IT_minimum_investment;
         case 9:
-            return "Fundraiser name";
+            return STR_IT_fundraiser_name;
         default:
             return NULL;
         }
     case 9473: /* module 37 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Investment portfolio";
+            return STR_IT_investment_portfolio;
         case 1:
-            return "Funding portfolio";
+            return STR_IT_funding_portfolio;
         case 2:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 3:
-            return "Fundraiser id";
+            return STR_IT_fundraiser_id;
         case 4:
-            return "Investment amount";
+            return STR_IT_investment_amount;
         case 5:
-            return "Max price";
+            return STR_IT_max_price;
         case 6:
-            return "Receipt";
+            return STR_IT_receipt;
         default:
             return NULL;
         }
     case 9474: /* module 37 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 1:
-            return "Fundraiser id";
+            return STR_IT_fundraiser_id;
         default:
             return NULL;
         }
     case 9475: /* module 37 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 1:
-            return "Fundraiser id";
+            return STR_IT_fundraiser_id;
         default:
             return NULL;
         }
     case 9476: /* module 37 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 1:
-            return "Fundraiser id";
+            return STR_IT_fundraiser_id;
         case 2:
-            return "Start";
+            return STR_IT_start;
         case 3:
-            return "End";
+            return STR_IT_end;
         default:
             return NULL;
         }
     case 9477: /* module 37 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Offering asset";
+            return STR_IT_offering_asset;
         case 1:
-            return "Fundraiser id";
+            return STR_IT_fundraiser_id;
         default:
             return NULL;
         }
     case 9728: /* module 38 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Limit";
+            return STR_IT_limit;
         default:
             return NULL;
         }
     case 9729: /* module 38 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         case 1:
-            return "Expiry";
+            return STR_IT_expiry;
         case 2:
-            return "At";
+            return STR_IT_at;
         default:
             return NULL;
         }
     case 9730: /* module 38 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 9731: /* module 38 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Who";
+            return STR_IT_who;
         default:
             return NULL;
         }
     case 9732: /* module 38 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Remove";
+            return STR_IT_remove;
         case 1:
-            return "Add";
+            return STR_IT_add;
         default:
             return NULL;
         }
     case 9733: /* module 38 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Members";
+            return STR_IT_members;
         default:
             return NULL;
         }
@@ -6750,418 +6774,397 @@ const char* _getMethod_ItemName_V5(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 9984: /* module 39 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "New transfer manager";
+            return STR_IT_new_transfer_manager;
         default:
             return NULL;
         }
     case 9985: /* module 39 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Transfer manager";
+            return STR_IT_transfer_manager;
         default:
             return NULL;
         }
     case 9986: /* module 39 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Transfer manager";
+            return STR_IT_transfer_manager;
         case 2:
-            return "Exempted entities";
+            return STR_IT_exempted_entities;
         default:
             return NULL;
         }
     case 9987: /* module 39 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Transfer manager";
+            return STR_IT_transfer_manager;
         case 2:
-            return "Entities";
+            return STR_IT_entities;
         default:
             return NULL;
         }
     case 10240: /* module 40 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Coefficient";
+            return STR_IT_coefficient;
         default:
             return NULL;
         }
     case 10241: /* module 40 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Op";
+            return STR_IT_op;
         case 1:
-            return "Base fee";
-        default:
-            return NULL;
-        }
-    case 10496: /* module 41 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return "Calls";
-        default:
-            return NULL;
-        }
-    case 10497: /* module 41 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return "Calls";
-        default:
-            return NULL;
-        }
-    case 10498: /* module 41 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return "Calls";
+            return STR_IT_base_fee;
         default:
             return NULL;
         }
     case 10499: /* module 41 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Target";
+            return STR_IT_target;
         case 1:
-            return "Signature";
+            return STR_IT_signature;
         case 2:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 10752: /* module 42 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Name";
+            return STR_IT_name;
         default:
             return NULL;
         }
     case 10753: /* module 42 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Num";
+            return STR_IT_num;
         default:
             return NULL;
         }
     case 10754: /* module 42 call 2 */
         switch (itemIdx) {
         case 0:
-            return "From";
+            return STR_IT_from;
         case 1:
-            return "To";
+            return STR_IT_to;
         case 2:
-            return "Items";
+            return STR_IT_items;
         default:
             return NULL;
         }
     case 10755: /* module 42 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Num";
+            return STR_IT_num;
         case 1:
-            return "To name";
+            return STR_IT_to_name;
         default:
             return NULL;
         }
     case 11520: /* module 45 call 0 */
         switch (itemIdx) {
         case 0:
-            return "When";
+            return STR_IT_when;
         case 1:
-            return "Maybe periodic";
+            return STR_IT_maybe_periodic;
         case 2:
-            return "Priority";
+            return STR_IT_priority;
         case 3:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 11521: /* module 45 call 1 */
         switch (itemIdx) {
         case 0:
-            return "When";
+            return STR_IT_when;
         case 1:
-            return "Index";
+            return STR_IT_index;
         default:
             return NULL;
         }
     case 11522: /* module 45 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         case 1:
-            return "When";
+            return STR_IT_when;
         case 2:
-            return "Maybe periodic";
+            return STR_IT_maybe_periodic;
         case 3:
-            return "Priority";
+            return STR_IT_priority;
         case 4:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 11523: /* module 45 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
     case 11524: /* module 45 call 4 */
         switch (itemIdx) {
         case 0:
-            return "After";
+            return STR_IT_after;
         case 1:
-            return "Maybe periodic";
+            return STR_IT_maybe_periodic;
         case 2:
-            return "Priority";
+            return STR_IT_priority;
         case 3:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 11525: /* module 45 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         case 1:
-            return "After";
+            return STR_IT_after;
         case 2:
-            return "Maybe periodic";
+            return STR_IT_maybe_periodic;
         case 3:
-            return "Priority";
+            return STR_IT_priority;
         case 4:
-            return "Call";
+            return STR_IT_call;
         default:
             return NULL;
         }
     case 11776: /* module 46 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Length";
+            return STR_IT_length;
         default:
             return NULL;
         }
     case 11777: /* module 46 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 11778: /* module 46 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Targets";
+            return STR_IT_targets;
         default:
             return NULL;
         }
     case 11779: /* module 46 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Tax";
+            return STR_IT_tax;
         default:
             return NULL;
         }
     case 11780: /* module 46 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Taxed did";
+            return STR_IT_taxed_did;
         case 2:
-            return "Tax";
+            return STR_IT_tax;
         default:
             return NULL;
         }
     case 11781: /* module 46 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Kind";
+            return STR_IT_kind;
         case 2:
-            return "Decl date";
+            return STR_IT_decl_date;
         case 3:
-            return "Record date";
+            return STR_IT_record_date;
         case 4:
-            return "Details";
+            return STR_IT_details;
         case 5:
-            return "Targets";
+            return STR_IT_targets;
         case 6:
-            return "Default withholding tax";
+            return STR_IT_default_withholding_tax;
         case 7:
-            return "Withholding tax";
+            return STR_IT_withholding_tax;
         default:
             return NULL;
         }
     case 11782: /* module 46 call 6 */
         switch (itemIdx) {
         case 0:
-            return "Id";
+            return STR_IT_id;
         case 1:
-            return "Docs";
+            return STR_IT_docs;
         default:
             return NULL;
         }
     case 11783: /* module 46 call 7 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         default:
             return NULL;
         }
     case 11784: /* module 46 call 8 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Record date";
+            return STR_IT_record_date;
         default:
             return NULL;
         }
     case 12032: /* module 47 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Range";
+            return STR_IT_range;
         case 2:
-            return "Meta";
+            return STR_IT_meta;
         case 3:
-            return "Rcv";
+            return STR_IT_rcv;
         default:
             return NULL;
         }
     case 12033: /* module 47 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Votes";
+            return STR_IT_votes;
         default:
             return NULL;
         }
     case 12034: /* module 47 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "End";
+            return STR_IT_end;
         default:
             return NULL;
         }
     case 12035: /* module 47 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Meta";
+            return STR_IT_meta;
         default:
             return NULL;
         }
     case 12036: /* module 47 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Rcv";
+            return STR_IT_rcv;
         default:
             return NULL;
         }
     case 12037: /* module 47 call 5 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         default:
             return NULL;
         }
     case 12288: /* module 48 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Portfolio";
+            return STR_IT_portfolio;
         case 2:
-            return "Currency";
+            return STR_IT_currency;
         case 3:
-            return "Amount";
+            return STR_IT_amount;
         case 4:
-            return "Payment at";
+            return STR_IT_payment_at;
         case 5:
-            return "Expires at";
+            return STR_IT_expires_at;
         default:
             return NULL;
         }
     case 12289: /* module 48 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         default:
             return NULL;
         }
     case 12290: /* module 48 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         case 1:
-            return "Holder";
+            return STR_IT_holder;
         default:
             return NULL;
         }
     case 12291: /* module 48 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         default:
             return NULL;
         }
     case 12292: /* module 48 call 4 */
         switch (itemIdx) {
         case 0:
-            return "Ca id";
+            return STR_IT_ca_id;
         default:
             return NULL;
         }
     case 12544: /* module 49 call 0 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         default:
             return NULL;
         }
     case 12545: /* module 49 call 1 */
         switch (itemIdx) {
         case 0:
-            return "Max complexity";
+            return STR_IT_max_complexity;
         default:
             return NULL;
         }
     case 12546: /* module 49 call 2 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Schedule";
+            return STR_IT_schedule;
         default:
             return NULL;
         }
     case 12547: /* module 49 call 3 */
         switch (itemIdx) {
         case 0:
-            return "Ticker";
+            return STR_IT_ticker;
         case 1:
-            return "Id";
+            return STR_IT_id;
         default:
             return NULL;
         }
@@ -7217,6 +7220,281 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
+    case 1540: /* module 6 call 4 */
+        switch (itemIdx) {
+        case 0: /* identity_remove_secondary_keys_V5 - signers_to_remove */;
+            return _toStringVecSignatory_V5(
+                &m->nested.identity_remove_secondary_keys_V5.signers_to_remove,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1541: /* module 6 call 5 */
+        switch (itemIdx) {
+        case 0: /* identity_accept_primary_key_V5 - rotation_auth_id */;
+            return _toStringu64(
+                &m->nested.identity_accept_primary_key_V5.rotation_auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_accept_primary_key_V5 - optional_cdd_auth_id */;
+            return _toStringOptionu64(
+                &m->nested.identity_accept_primary_key_V5.optional_cdd_auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1543: /* module 6 call 7 */
+        switch (itemIdx) {
+        case 0: /* identity_join_identity_as_key_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.identity_join_identity_as_key_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1544: /* module 6 call 8 */
+        switch (itemIdx) {
+        case 0: /* identity_join_identity_as_identity_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.identity_join_identity_as_identity_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1545: /* module 6 call 9 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+    case 1546: /* module 6 call 10 */
+        switch (itemIdx) {
+        case 0: /* identity_leave_identity_as_identity_V5 - did */;
+            return _toStringIdentityId_V5(
+                &m->nested.identity_leave_identity_as_identity_V5.did,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1547: /* module 6 call 11 */
+        switch (itemIdx) {
+        case 0: /* identity_add_claim_V5 - target */;
+            return _toStringIdentityId_V5(
+                &m->nested.identity_add_claim_V5.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_add_claim_V5 - claim */;
+            return _toStringClaim_V5(
+                &m->nested.identity_add_claim_V5.claim,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* identity_add_claim_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.identity_add_claim_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1549: /* module 6 call 13 */
+        switch (itemIdx) {
+        case 0: /* identity_revoke_claim_V5 - target */;
+            return _toStringIdentityId_V5(
+                &m->nested.identity_revoke_claim_V5.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_revoke_claim_V5 - claim */;
+            return _toStringClaim_V5(
+                &m->nested.identity_revoke_claim_V5.claim,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1550: /* module 6 call 14 */
+        switch (itemIdx) {
+        case 0: /* identity_set_permission_to_signer_V5 - signer */;
+            return _toStringSignatory_V5(
+                &m->nested.identity_set_permission_to_signer_V5.signer,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_set_permission_to_signer_V5 - permissions */;
+            return _toStringPermissions_V5(
+                &m->nested.identity_set_permission_to_signer_V5.permissions,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1551: /* module 6 call 15 */
+        switch (itemIdx) {
+        case 0: /* identity_legacy_set_permission_to_signer_V5 - signer */;
+            return _toStringSignatory_V5(
+                &m->nested.identity_legacy_set_permission_to_signer_V5.signer,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_legacy_set_permission_to_signer_V5 - permissions */;
+            return _toStringLegacyPermissions_V5(
+                &m->nested.identity_legacy_set_permission_to_signer_V5.permissions,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1552: /* module 6 call 16 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+    case 1553: /* module 6 call 17 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+    case 1556: /* module 6 call 20 */
+        switch (itemIdx) {
+        case 0: /* identity_add_authorization_V5 - target */;
+            return _toStringSignatory_V5(
+                &m->nested.identity_add_authorization_V5.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_add_authorization_V5 - authorization_data */;
+            return _toStringAuthorizationData_V5(
+                &m->nested.identity_add_authorization_V5.authorization_data,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* identity_add_authorization_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.identity_add_authorization_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1557: /* module 6 call 21 */
+        switch (itemIdx) {
+        case 0: /* identity_remove_authorization_V5 - target */;
+            return _toStringSignatory_V5(
+                &m->nested.identity_remove_authorization_V5.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_remove_authorization_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.identity_remove_authorization_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* identity_remove_authorization_V5 - _auth_issuer_pays */;
+            return _toStringbool(
+                &m->nested.identity_remove_authorization_V5._auth_issuer_pays,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1558: /* module 6 call 22 */
+        switch (itemIdx) {
+        case 0: /* identity_accept_authorization_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.identity_accept_authorization_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1559: /* module 6 call 23 */
+        switch (itemIdx) {
+        case 0: /* identity_add_secondary_keys_with_authorization_V5 - additional_keys */;
+            return _toStringVecSecondaryKeyWithAuth_V5(
+                &m->nested.identity_add_secondary_keys_with_authorization_V5.additional_keys,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_add_secondary_keys_with_authorization_V5 - expires_at */;
+            return _toStringMoment_V5(
+                &m->nested.identity_add_secondary_keys_with_authorization_V5.expires_at,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1561: /* module 6 call 25 */
+        switch (itemIdx) {
+        case 0: /* identity_add_investor_uniqueness_claim_V5 - target */;
+            return _toStringIdentityId_V5(
+                &m->nested.identity_add_investor_uniqueness_claim_V5.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_add_investor_uniqueness_claim_V5 - claim */;
+            return _toStringClaim_V5(
+                &m->nested.identity_add_investor_uniqueness_claim_V5.claim,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* identity_add_investor_uniqueness_claim_V5 - proof */;
+            return _toStringInvestorZKProofData_V5(
+                &m->nested.identity_add_investor_uniqueness_claim_V5.proof,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* identity_add_investor_uniqueness_claim_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.identity_add_investor_uniqueness_claim_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2048: /* module 8 call 0 */
+        switch (itemIdx) {
+        case 0: /* staking_bond_V5 - controller */;
+            return _toStringLookupSource_V5(
+                &m->nested.staking_bond_V5.controller,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* staking_bond_V5 - value */;
+            return _toStringCompactBalanceOf(
+                &m->nested.staking_bond_V5.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* staking_bond_V5 - payee */;
+            return _toStringRewardDestination_V5(
+                &m->nested.staking_bond_V5.payee,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2049: /* module 8 call 1 */
+        switch (itemIdx) {
+        case 0: /* staking_bond_extra_V5 - max_additional */;
+            return _toStringCompactBalanceOf(
+                &m->nested.staking_bond_extra_V5.max_additional,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2050: /* module 8 call 2 */
+        switch (itemIdx) {
+        case 0: /* staking_unbond_V5 - value */;
+            return _toStringCompactBalanceOf(
+                &m->nested.staking_unbond_V5.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2051: /* module 8 call 3 */
+        switch (itemIdx) {
+        case 0: /* staking_withdraw_unbonded_V5 - num_slashing_spans */;
+            return _toStringu32(
+                &m->nested.staking_withdraw_unbonded_V5.num_slashing_spans,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 2052: /* module 8 call 4 */
         switch (itemIdx) {
         case 0: /* staking_validate_V5 - prefs */;
@@ -7252,23 +7530,403 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 2560: /* module 10 call 0 */
+    case 2056: /* module 8 call 8 */
         switch (itemIdx) {
-        case 0: /* session_set_keys_V5 - keys */;
-            return _toStringKeys_V5(
-                &m->nested.session_set_keys_V5.keys,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* session_set_keys_V5 - proof */;
-            return _toStringBytes(
-                &m->nested.session_set_keys_V5.proof,
+        case 0: /* staking_set_controller_V5 - controller */;
+            return _toStringLookupSource_V5(
+                &m->nested.staking_set_controller_V5.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
             return parser_no_data;
         }
-    case 2561: /* module 10 call 1 */
+    case 2072: /* module 8 call 24 */
         switch (itemIdx) {
+        case 0: /* staking_rebond_V5 - value */;
+            return _toStringCompactBalanceOf(
+                &m->nested.staking_rebond_V5.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4608: /* module 18 call 0 */
+        switch (itemIdx) {
+        case 0: /* multisig_create_multisig_V5 - signers */;
+            return _toStringVecSignatory_V5(
+                &m->nested.multisig_create_multisig_V5.signers,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_create_multisig_V5 - sigs_required */;
+            return _toStringu64(
+                &m->nested.multisig_create_multisig_V5.sigs_required,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4609: /* module 18 call 1 */
+        switch (itemIdx) {
+        case 0: /* multisig_create_or_approve_proposal_as_identity_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_create_or_approve_proposal_as_identity_V5 - proposal */;
+            return _toStringProposal(
+                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* multisig_create_or_approve_proposal_as_identity_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* multisig_create_or_approve_proposal_as_identity_V5 - auto_close */;
+            return _toStringbool(
+                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.auto_close,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4610: /* module 18 call 2 */
+        switch (itemIdx) {
+        case 0: /* multisig_create_or_approve_proposal_as_key_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_create_or_approve_proposal_as_key_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_create_or_approve_proposal_as_key_V5 - proposal */;
+            return _toStringProposal(
+                &m->nested.multisig_create_or_approve_proposal_as_key_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* multisig_create_or_approve_proposal_as_key_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.multisig_create_or_approve_proposal_as_key_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* multisig_create_or_approve_proposal_as_key_V5 - auto_close */;
+            return _toStringbool(
+                &m->nested.multisig_create_or_approve_proposal_as_key_V5.auto_close,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4611: /* module 18 call 3 */
+        switch (itemIdx) {
+        case 0: /* multisig_create_proposal_as_identity_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_create_proposal_as_identity_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_create_proposal_as_identity_V5 - proposal */;
+            return _toStringProposal(
+                &m->nested.multisig_create_proposal_as_identity_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* multisig_create_proposal_as_identity_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.multisig_create_proposal_as_identity_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* multisig_create_proposal_as_identity_V5 - auto_close */;
+            return _toStringbool(
+                &m->nested.multisig_create_proposal_as_identity_V5.auto_close,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4612: /* module 18 call 4 */
+        switch (itemIdx) {
+        case 0: /* multisig_create_proposal_as_key_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_create_proposal_as_key_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_create_proposal_as_key_V5 - proposal */;
+            return _toStringProposal(
+                &m->nested.multisig_create_proposal_as_key_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* multisig_create_proposal_as_key_V5 - expiry */;
+            return _toStringOptionMoment_V5(
+                &m->nested.multisig_create_proposal_as_key_V5.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* multisig_create_proposal_as_key_V5 - auto_close */;
+            return _toStringbool(
+                &m->nested.multisig_create_proposal_as_key_V5.auto_close,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4613: /* module 18 call 5 */
+        switch (itemIdx) {
+        case 0: /* multisig_approve_as_identity_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_approve_as_identity_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_approve_as_identity_V5 - proposal_id */;
+            return _toStringu64(
+                &m->nested.multisig_approve_as_identity_V5.proposal_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4614: /* module 18 call 6 */
+        switch (itemIdx) {
+        case 0: /* multisig_approve_as_key_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_approve_as_key_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_approve_as_key_V5 - proposal_id */;
+            return _toStringu64(
+                &m->nested.multisig_approve_as_key_V5.proposal_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4615: /* module 18 call 7 */
+        switch (itemIdx) {
+        case 0: /* multisig_reject_as_identity_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_reject_as_identity_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_reject_as_identity_V5 - proposal_id */;
+            return _toStringu64(
+                &m->nested.multisig_reject_as_identity_V5.proposal_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4616: /* module 18 call 8 */
+        switch (itemIdx) {
+        case 0: /* multisig_reject_as_key_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_reject_as_key_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_reject_as_key_V5 - proposal_id */;
+            return _toStringu64(
+                &m->nested.multisig_reject_as_key_V5.proposal_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4617: /* module 18 call 9 */
+        switch (itemIdx) {
+        case 0: /* multisig_accept_multisig_signer_as_identity_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.multisig_accept_multisig_signer_as_identity_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4618: /* module 18 call 10 */
+        switch (itemIdx) {
+        case 0: /* multisig_accept_multisig_signer_as_key_V5 - auth_id */;
+            return _toStringu64(
+                &m->nested.multisig_accept_multisig_signer_as_key_V5.auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4619: /* module 18 call 11 */
+        switch (itemIdx) {
+        case 0: /* multisig_add_multisig_signer_V5 - signer */;
+            return _toStringSignatory_V5(
+                &m->nested.multisig_add_multisig_signer_V5.signer,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4620: /* module 18 call 12 */
+        switch (itemIdx) {
+        case 0: /* multisig_remove_multisig_signer_V5 - signer */;
+            return _toStringSignatory_V5(
+                &m->nested.multisig_remove_multisig_signer_V5.signer,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4621: /* module 18 call 13 */
+        switch (itemIdx) {
+        case 0: /* multisig_add_multisig_signers_via_creator_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_add_multisig_signers_via_creator_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_add_multisig_signers_via_creator_V5 - signers */;
+            return _toStringVecSignatory_V5(
+                &m->nested.multisig_add_multisig_signers_via_creator_V5.signers,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4622: /* module 18 call 14 */
+        switch (itemIdx) {
+        case 0: /* multisig_remove_multisig_signers_via_creator_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_remove_multisig_signers_via_creator_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_remove_multisig_signers_via_creator_V5 - signers */;
+            return _toStringVecSignatory_V5(
+                &m->nested.multisig_remove_multisig_signers_via_creator_V5.signers,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4623: /* module 18 call 15 */
+        switch (itemIdx) {
+        case 0: /* multisig_change_sigs_required_V5 - sigs_required */;
+            return _toStringu64(
+                &m->nested.multisig_change_sigs_required_V5.sigs_required,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4624: /* module 18 call 16 */
+        switch (itemIdx) {
+        case 0: /* multisig_make_multisig_signer_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_make_multisig_signer_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4625: /* module 18 call 17 */
+        switch (itemIdx) {
+        case 0: /* multisig_make_multisig_primary_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_make_multisig_primary_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_make_multisig_primary_V5 - optional_cdd_auth_id */;
+            return _toStringOptionu64(
+                &m->nested.multisig_make_multisig_primary_V5.optional_cdd_auth_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4626: /* module 18 call 18 */
+        switch (itemIdx) {
+        case 0: /* multisig_execute_scheduled_proposal_V5 - multisig */;
+            return _toStringAccountId_V5(
+                &m->nested.multisig_execute_scheduled_proposal_V5.multisig,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* multisig_execute_scheduled_proposal_V5 - proposal_id */;
+            return _toStringu64(
+                &m->nested.multisig_execute_scheduled_proposal_V5.proposal_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* multisig_execute_scheduled_proposal_V5 - multisig_did */;
+            return _toStringIdentityId_V5(
+                &m->nested.multisig_execute_scheduled_proposal_V5.multisig_did,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* multisig_execute_scheduled_proposal_V5 - proposal_weight */;
+            return _toStringWeight_V5(
+                &m->nested.multisig_execute_scheduled_proposal_V5.proposal_weight,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6150: /* module 24 call 6 */
+        switch (itemIdx) {
+        case 0: /* pips_propose_V5 - proposal */;
+            return _toStringProposal(
+                &m->nested.pips_propose_V5.proposal,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* pips_propose_V5 - deposit */;
+            return _toStringBalanceOf(
+                &m->nested.pips_propose_V5.deposit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* pips_propose_V5 - url */;
+            return _toStringOptionUrl_V5(
+                &m->nested.pips_propose_V5.url,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* pips_propose_V5 - description */;
+            return _toStringOptionPipDescription_V5(
+                &m->nested.pips_propose_V5.description,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6151: /* module 24 call 7 */
+        switch (itemIdx) {
+        case 0: /* pips_vote_V5 - id */;
+            return _toStringPipId_V5(
+                &m->nested.pips_vote_V5.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* pips_vote_V5 - aye_or_nay */;
+            return _toStringbool(
+                &m->nested.pips_vote_V5.aye_or_nay,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* pips_vote_V5 - deposit */;
+            return _toStringBalanceOf(
+                &m->nested.pips_vote_V5.deposit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 10496: /* module 41 call 0 */
+        switch (itemIdx) {
+        case 0: /* utility_batch_V5 - calls */;
+            return _toStringVecCall(
+                &m->nested.utility_batch_V5.calls,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 10497: /* module 41 call 1 */
+        switch (itemIdx) {
+        case 0: /* utility_batch_atomic_V5 - calls */;
+            return _toStringVecCall(
+                &m->nested.utility_batch_atomic_V5.calls,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 10498: /* module 41 call 2 */
+        switch (itemIdx) {
+        case 0: /* utility_batch_optimistic_V5 - calls */;
+            return _toStringVecCall(
+                &m->nested.utility_batch_optimistic_V5.calls,
+                outValue, outValueLen,
+                pageIdx, pageCount);
         default:
             return parser_no_data;
         }
@@ -7598,91 +8256,11 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 1540: /* module 6 call 4 */
-        switch (itemIdx) {
-        case 0: /* identity_remove_secondary_keys_V5 - signers_to_remove */;
-            return _toStringVecSignatory_V5(
-                &m->nested.identity_remove_secondary_keys_V5.signers_to_remove,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1541: /* module 6 call 5 */
-        switch (itemIdx) {
-        case 0: /* identity_accept_primary_key_V5 - rotation_auth_id */;
-            return _toStringu64(
-                &m->nested.identity_accept_primary_key_V5.rotation_auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_accept_primary_key_V5 - optional_cdd_auth_id */;
-            return _toStringOptionu64(
-                &m->nested.identity_accept_primary_key_V5.optional_cdd_auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 1542: /* module 6 call 6 */
         switch (itemIdx) {
         case 0: /* identity_change_cdd_requirement_for_mk_rotation_V5 - auth_required */;
             return _toStringbool(
                 &m->nested.identity_change_cdd_requirement_for_mk_rotation_V5.auth_required,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1543: /* module 6 call 7 */
-        switch (itemIdx) {
-        case 0: /* identity_join_identity_as_key_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.identity_join_identity_as_key_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1544: /* module 6 call 8 */
-        switch (itemIdx) {
-        case 0: /* identity_join_identity_as_identity_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.identity_join_identity_as_identity_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1545: /* module 6 call 9 */
-        switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
-    case 1546: /* module 6 call 10 */
-        switch (itemIdx) {
-        case 0: /* identity_leave_identity_as_identity_V5 - did */;
-            return _toStringIdentityId_V5(
-                &m->nested.identity_leave_identity_as_identity_V5.did,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1547: /* module 6 call 11 */
-        switch (itemIdx) {
-        case 0: /* identity_add_claim_V5 - target */;
-            return _toStringIdentityId_V5(
-                &m->nested.identity_add_claim_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_add_claim_V5 - claim */;
-            return _toStringClaim_V5(
-                &m->nested.identity_add_claim_V5.claim,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* identity_add_claim_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.identity_add_claim_V5.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -7703,61 +8281,6 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 1549: /* module 6 call 13 */
-        switch (itemIdx) {
-        case 0: /* identity_revoke_claim_V5 - target */;
-            return _toStringIdentityId_V5(
-                &m->nested.identity_revoke_claim_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_revoke_claim_V5 - claim */;
-            return _toStringClaim_V5(
-                &m->nested.identity_revoke_claim_V5.claim,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1550: /* module 6 call 14 */
-        switch (itemIdx) {
-        case 0: /* identity_set_permission_to_signer_V5 - signer */;
-            return _toStringSignatory_V5(
-                &m->nested.identity_set_permission_to_signer_V5.signer,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_set_permission_to_signer_V5 - permissions */;
-            return _toStringPermissions_V5(
-                &m->nested.identity_set_permission_to_signer_V5.permissions,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1551: /* module 6 call 15 */
-        switch (itemIdx) {
-        case 0: /* identity_legacy_set_permission_to_signer_V5 - signer */;
-            return _toStringSignatory_V5(
-                &m->nested.identity_legacy_set_permission_to_signer_V5.signer,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_legacy_set_permission_to_signer_V5 - permissions */;
-            return _toStringLegacyPermissions_V5(
-                &m->nested.identity_legacy_set_permission_to_signer_V5.permissions,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1552: /* module 6 call 16 */
-        switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
-    case 1553: /* module 6 call 17 */
-        switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
     case 1554: /* module 6 call 18 */
         switch (itemIdx) {
         default:
@@ -7773,71 +8296,6 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 1556: /* module 6 call 20 */
-        switch (itemIdx) {
-        case 0: /* identity_add_authorization_V5 - target */;
-            return _toStringSignatory_V5(
-                &m->nested.identity_add_authorization_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_add_authorization_V5 - authorization_data */;
-            return _toStringAuthorizationData_V5(
-                &m->nested.identity_add_authorization_V5.authorization_data,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* identity_add_authorization_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.identity_add_authorization_V5.expiry,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1557: /* module 6 call 21 */
-        switch (itemIdx) {
-        case 0: /* identity_remove_authorization_V5 - target */;
-            return _toStringSignatory_V5(
-                &m->nested.identity_remove_authorization_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_remove_authorization_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.identity_remove_authorization_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* identity_remove_authorization_V5 - _auth_issuer_pays */;
-            return _toStringbool(
-                &m->nested.identity_remove_authorization_V5._auth_issuer_pays,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1558: /* module 6 call 22 */
-        switch (itemIdx) {
-        case 0: /* identity_accept_authorization_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.identity_accept_authorization_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1559: /* module 6 call 23 */
-        switch (itemIdx) {
-        case 0: /* identity_add_secondary_keys_with_authorization_V5 - additional_keys */;
-            return _toStringVecSecondaryKeyWithAuth_V5(
-                &m->nested.identity_add_secondary_keys_with_authorization_V5.additional_keys,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_add_secondary_keys_with_authorization_V5 - expires_at */;
-            return _toStringMoment_V5(
-                &m->nested.identity_add_secondary_keys_with_authorization_V5.expires_at,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 1560: /* module 6 call 24 */
         switch (itemIdx) {
         case 0: /* identity_revoke_offchain_authorization_V5 - signer */;
@@ -7848,31 +8306,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 1: /* identity_revoke_offchain_authorization_V5 - auth */;
             return _toStringTargetIdAuthorization_V5(
                 &m->nested.identity_revoke_offchain_authorization_V5.auth,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1561: /* module 6 call 25 */
-        switch (itemIdx) {
-        case 0: /* identity_add_investor_uniqueness_claim_V5 - target */;
-            return _toStringIdentityId_V5(
-                &m->nested.identity_add_investor_uniqueness_claim_V5.target,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* identity_add_investor_uniqueness_claim_V5 - claim */;
-            return _toStringClaim_V5(
-                &m->nested.identity_add_investor_uniqueness_claim_V5.claim,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* identity_add_investor_uniqueness_claim_V5 - proof */;
-            return _toStringInvestorZKProofData_V5(
-                &m->nested.identity_add_investor_uniqueness_claim_V5.proof,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* identity_add_investor_uniqueness_claim_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.identity_add_investor_uniqueness_claim_V5.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -7908,66 +8341,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 0: /* authorship_set_uncles_V5 - new_uncles */;
             return _toStringVecHeader(
                 &m->nested.authorship_set_uncles_V5.new_uncles,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2048: /* module 8 call 0 */
-        switch (itemIdx) {
-        case 0: /* staking_bond_V5 - controller */;
-            return _toStringLookupSource_V5(
-                &m->nested.staking_bond_V5.controller,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* staking_bond_V5 - value */;
-            return _toStringCompactBalanceOf(
-                &m->nested.staking_bond_V5.value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* staking_bond_V5 - payee */;
-            return _toStringRewardDestination_V5(
-                &m->nested.staking_bond_V5.payee,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2049: /* module 8 call 1 */
-        switch (itemIdx) {
-        case 0: /* staking_bond_extra_V5 - max_additional */;
-            return _toStringCompactBalanceOf(
-                &m->nested.staking_bond_extra_V5.max_additional,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2050: /* module 8 call 2 */
-        switch (itemIdx) {
-        case 0: /* staking_unbond_V5 - value */;
-            return _toStringCompactBalanceOf(
-                &m->nested.staking_unbond_V5.value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2051: /* module 8 call 3 */
-        switch (itemIdx) {
-        case 0: /* staking_withdraw_unbonded_V5 - num_slashing_spans */;
-            return _toStringu32(
-                &m->nested.staking_withdraw_unbonded_V5.num_slashing_spans,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 2056: /* module 8 call 8 */
-        switch (itemIdx) {
-        case 0: /* staking_set_controller_V5 - controller */;
-            return _toStringLookupSource_V5(
-                &m->nested.staking_set_controller_V5.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -8128,16 +8501,6 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
-    case 2072: /* module 8 call 24 */
-        switch (itemIdx) {
-        case 0: /* staking_rebond_V5 - value */;
-            return _toStringCompactBalanceOf(
-                &m->nested.staking_rebond_V5.value,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 2073: /* module 8 call 25 */
         switch (itemIdx) {
         case 0: /* staking_set_history_depth_V5 - new_history_depth */;
@@ -8268,6 +8631,26 @@ parser_error_t _getMethod_ItemValue_V5(
         default:
             return parser_no_data;
         }
+    case 2560: /* module 10 call 0 */
+        switch (itemIdx) {
+        case 0: /* session_set_keys_V5 - keys */;
+            return _toStringKeys_V5(
+                &m->nested.session_set_keys_V5.keys,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* session_set_keys_V5 - proof */;
+            return _toStringBytes(
+                &m->nested.session_set_keys_V5.proof,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 2561: /* module 10 call 1 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
     case 2816: /* module 11 call 0 */
         switch (itemIdx) {
         case 0: /* finalitytracker_final_hint_V5 - hint */;
@@ -8393,311 +8776,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 1: /* sudo_sudo_as_V5 - call */;
             return _toStringCall(
                 &m->nested.sudo_sudo_as_V5.call,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4608: /* module 18 call 0 */
-        switch (itemIdx) {
-        case 0: /* multisig_create_multisig_V5 - signers */;
-            return _toStringVecSignatory_V5(
-                &m->nested.multisig_create_multisig_V5.signers,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_create_multisig_V5 - sigs_required */;
-            return _toStringu64(
-                &m->nested.multisig_create_multisig_V5.sigs_required,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4609: /* module 18 call 1 */
-        switch (itemIdx) {
-        case 0: /* multisig_create_or_approve_proposal_as_identity_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_create_or_approve_proposal_as_identity_V5 - proposal */;
-            return _toStringProposal(
-                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.proposal,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* multisig_create_or_approve_proposal_as_identity_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.expiry,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* multisig_create_or_approve_proposal_as_identity_V5 - auto_close */;
-            return _toStringbool(
-                &m->nested.multisig_create_or_approve_proposal_as_identity_V5.auto_close,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4610: /* module 18 call 2 */
-        switch (itemIdx) {
-        case 0: /* multisig_create_or_approve_proposal_as_key_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_create_or_approve_proposal_as_key_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_create_or_approve_proposal_as_key_V5 - proposal */;
-            return _toStringProposal(
-                &m->nested.multisig_create_or_approve_proposal_as_key_V5.proposal,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* multisig_create_or_approve_proposal_as_key_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.multisig_create_or_approve_proposal_as_key_V5.expiry,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* multisig_create_or_approve_proposal_as_key_V5 - auto_close */;
-            return _toStringbool(
-                &m->nested.multisig_create_or_approve_proposal_as_key_V5.auto_close,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4611: /* module 18 call 3 */
-        switch (itemIdx) {
-        case 0: /* multisig_create_proposal_as_identity_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_create_proposal_as_identity_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_create_proposal_as_identity_V5 - proposal */;
-            return _toStringProposal(
-                &m->nested.multisig_create_proposal_as_identity_V5.proposal,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* multisig_create_proposal_as_identity_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.multisig_create_proposal_as_identity_V5.expiry,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* multisig_create_proposal_as_identity_V5 - auto_close */;
-            return _toStringbool(
-                &m->nested.multisig_create_proposal_as_identity_V5.auto_close,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4612: /* module 18 call 4 */
-        switch (itemIdx) {
-        case 0: /* multisig_create_proposal_as_key_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_create_proposal_as_key_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_create_proposal_as_key_V5 - proposal */;
-            return _toStringProposal(
-                &m->nested.multisig_create_proposal_as_key_V5.proposal,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* multisig_create_proposal_as_key_V5 - expiry */;
-            return _toStringOptionMoment_V5(
-                &m->nested.multisig_create_proposal_as_key_V5.expiry,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* multisig_create_proposal_as_key_V5 - auto_close */;
-            return _toStringbool(
-                &m->nested.multisig_create_proposal_as_key_V5.auto_close,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4613: /* module 18 call 5 */
-        switch (itemIdx) {
-        case 0: /* multisig_approve_as_identity_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_approve_as_identity_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_approve_as_identity_V5 - proposal_id */;
-            return _toStringu64(
-                &m->nested.multisig_approve_as_identity_V5.proposal_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4614: /* module 18 call 6 */
-        switch (itemIdx) {
-        case 0: /* multisig_approve_as_key_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_approve_as_key_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_approve_as_key_V5 - proposal_id */;
-            return _toStringu64(
-                &m->nested.multisig_approve_as_key_V5.proposal_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4615: /* module 18 call 7 */
-        switch (itemIdx) {
-        case 0: /* multisig_reject_as_identity_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_reject_as_identity_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_reject_as_identity_V5 - proposal_id */;
-            return _toStringu64(
-                &m->nested.multisig_reject_as_identity_V5.proposal_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4616: /* module 18 call 8 */
-        switch (itemIdx) {
-        case 0: /* multisig_reject_as_key_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_reject_as_key_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_reject_as_key_V5 - proposal_id */;
-            return _toStringu64(
-                &m->nested.multisig_reject_as_key_V5.proposal_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4617: /* module 18 call 9 */
-        switch (itemIdx) {
-        case 0: /* multisig_accept_multisig_signer_as_identity_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.multisig_accept_multisig_signer_as_identity_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4618: /* module 18 call 10 */
-        switch (itemIdx) {
-        case 0: /* multisig_accept_multisig_signer_as_key_V5 - auth_id */;
-            return _toStringu64(
-                &m->nested.multisig_accept_multisig_signer_as_key_V5.auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4619: /* module 18 call 11 */
-        switch (itemIdx) {
-        case 0: /* multisig_add_multisig_signer_V5 - signer */;
-            return _toStringSignatory_V5(
-                &m->nested.multisig_add_multisig_signer_V5.signer,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4620: /* module 18 call 12 */
-        switch (itemIdx) {
-        case 0: /* multisig_remove_multisig_signer_V5 - signer */;
-            return _toStringSignatory_V5(
-                &m->nested.multisig_remove_multisig_signer_V5.signer,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4621: /* module 18 call 13 */
-        switch (itemIdx) {
-        case 0: /* multisig_add_multisig_signers_via_creator_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_add_multisig_signers_via_creator_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_add_multisig_signers_via_creator_V5 - signers */;
-            return _toStringVecSignatory_V5(
-                &m->nested.multisig_add_multisig_signers_via_creator_V5.signers,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4622: /* module 18 call 14 */
-        switch (itemIdx) {
-        case 0: /* multisig_remove_multisig_signers_via_creator_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_remove_multisig_signers_via_creator_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_remove_multisig_signers_via_creator_V5 - signers */;
-            return _toStringVecSignatory_V5(
-                &m->nested.multisig_remove_multisig_signers_via_creator_V5.signers,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4623: /* module 18 call 15 */
-        switch (itemIdx) {
-        case 0: /* multisig_change_sigs_required_V5 - sigs_required */;
-            return _toStringu64(
-                &m->nested.multisig_change_sigs_required_V5.sigs_required,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4624: /* module 18 call 16 */
-        switch (itemIdx) {
-        case 0: /* multisig_make_multisig_signer_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_make_multisig_signer_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4625: /* module 18 call 17 */
-        switch (itemIdx) {
-        case 0: /* multisig_make_multisig_primary_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_make_multisig_primary_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_make_multisig_primary_V5 - optional_cdd_auth_id */;
-            return _toStringOptionu64(
-                &m->nested.multisig_make_multisig_primary_V5.optional_cdd_auth_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 4626: /* module 18 call 18 */
-        switch (itemIdx) {
-        case 0: /* multisig_execute_scheduled_proposal_V5 - multisig */;
-            return _toStringAccountId_V5(
-                &m->nested.multisig_execute_scheduled_proposal_V5.multisig,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* multisig_execute_scheduled_proposal_V5 - proposal_id */;
-            return _toStringu64(
-                &m->nested.multisig_execute_scheduled_proposal_V5.proposal_id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* multisig_execute_scheduled_proposal_V5 - multisig_did */;
-            return _toStringIdentityId_V5(
-                &m->nested.multisig_execute_scheduled_proposal_V5.multisig_did,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* multisig_execute_scheduled_proposal_V5 - proposal_weight */;
-            return _toStringWeight_V5(
-                &m->nested.multisig_execute_scheduled_proposal_V5.proposal_weight,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -9098,51 +9176,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 0: /* pips_set_active_pip_limit_V5 - limit */;
             return _toStringu32(
                 &m->nested.pips_set_active_pip_limit_V5.limit,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 6150: /* module 24 call 6 */
-        switch (itemIdx) {
-        case 0: /* pips_propose_V5 - proposal */;
-            return _toStringProposal(
-                &m->nested.pips_propose_V5.proposal,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* pips_propose_V5 - deposit */;
-            return _toStringBalanceOf(
-                &m->nested.pips_propose_V5.deposit,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* pips_propose_V5 - url */;
-            return _toStringOptionUrl_V5(
-                &m->nested.pips_propose_V5.url,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 3: /* pips_propose_V5 - description */;
-            return _toStringOptionPipDescription_V5(
-                &m->nested.pips_propose_V5.description,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 6151: /* module 24 call 7 */
-        switch (itemIdx) {
-        case 0: /* pips_vote_V5 - id */;
-            return _toStringPipId_V5(
-                &m->nested.pips_vote_V5.id,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* pips_vote_V5 - aye_or_nay */;
-            return _toStringbool(
-                &m->nested.pips_vote_V5.aye_or_nay,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* pips_vote_V5 - deposit */;
-            return _toStringBalanceOf(
-                &m->nested.pips_vote_V5.deposit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10738,36 +10771,6 @@ parser_error_t _getMethod_ItemValue_V5(
         case 1: /* protocolfee_change_base_fee_V5 - base_fee */;
             return _toStringBalanceOf(
                 &m->nested.protocolfee_change_base_fee_V5.base_fee,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 10496: /* module 41 call 0 */
-        switch (itemIdx) {
-        case 0: /* utility_batch_V5 - calls */;
-            return _toStringVecCall(
-                &m->nested.utility_batch_V5.calls,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 10497: /* module 41 call 1 */
-        switch (itemIdx) {
-        case 0: /* utility_batch_atomic_V5 - calls */;
-            return _toStringVecCall(
-                &m->nested.utility_batch_atomic_V5.calls,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 10498: /* module 41 call 2 */
-        switch (itemIdx) {
-        case 0: /* utility_batch_optimistic_V5 - calls */;
-            return _toStringVecCall(
-                &m->nested.utility_batch_optimistic_V5.calls,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
