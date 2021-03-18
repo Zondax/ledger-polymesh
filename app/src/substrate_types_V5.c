@@ -17,6 +17,7 @@
 #include "coin.h"
 #include "parser_impl.h"
 #include "substrate_dispatch_V5.h"
+#include "substrate_strings.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -47,7 +48,7 @@ parser_error_t _readCompactProposalIndex_V5(parser_context_t* c, pd_CompactPropo
     return _readCompactInt(c, v);
 }
 
-parser_error_t _readAccountId_V5(parser_context_t* c, pd_AccountId_V5_t* v) {
+parser_error_t _readAccountId_V5(parser_context_t* c, pd_AccountId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
@@ -124,7 +125,6 @@ parser_error_t _readAuthorizationData_V5(parser_context_t* c, pd_AuthorizationDa
     switch (v->value) {
     case 0:
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V5(c, &v->identityId))
         break;
     case 2:
@@ -132,19 +132,15 @@ parser_error_t _readAuthorizationData_V5(parser_context_t* c, pd_AuthorizationDa
     case 5:
     case 8:
     case 10:
-        CHECK_INPUT();
         CHECK_ERROR(_readTicker_V5(c, &v->ticker))
         break;
     case 4:
-        CHECK_INPUT();
         CHECK_ERROR(_readAccountId_V5(c, &v->accountId))
         break;
     case 6:
-        CHECK_INPUT();
         CHECK_ERROR(_readPermissions_V5(c, &v->permissions))
         break;
     case 7:
-        CHECK_INPUT();
         CHECK_ERROR(_readPortfolioId_V5(c, &v->portfolioId))
         break;
     case 9:
@@ -260,7 +256,7 @@ parser_error_t _readCalendarUnit_V5(parser_context_t* c, pd_CalendarUnit_V5_t* v
     return parser_ok;
 }
 
-parser_error_t _readCddId_V5(parser_context_t* c, pd_CddId_V5_t* v) {
+parser_error_t _readCddId_V5(parser_context_t* c, pd_CddId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
@@ -369,16 +365,13 @@ parser_error_t _readConditionType_V5(parser_context_t* c, pd_ConditionType_V5_t*
     switch (v->value) {
     case 0:
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readClaim_V5(c, &v->claim))
         break;
     case 2:
     case 3:
-        CHECK_INPUT();
         CHECK_ERROR(_readVecClaim_V5(c, &v->vecClaim))
         break;
     case 4:
-        CHECK_INPUT();
         CHECK_ERROR(_readTargetIdentity_V5(c, &v->identity))
         break;
     default:
@@ -521,7 +514,7 @@ parser_error_t _readDocument_V5(parser_context_t* c, pd_Document_V5_t* v)
     return parser_ok;
 }
 
-parser_error_t _readEcdsaSignature_V5(parser_context_t* c, pd_EcdsaSignature_V5_t* v) {
+parser_error_t _readEcdsaSignature_V5(parser_context_t* c, pd_EcdsaSignature_V5_t* v){
     GEN_DEF_READARRAY(65)
 }
 
@@ -547,7 +540,7 @@ parser_error_t _readEraIndex_V5(parser_context_t* c, pd_EraIndex_V5_t* v)
     return _readUInt32(c, &v->value);
 }
 
-parser_error_t _readEthereumAddress_V5(parser_context_t* c, pd_EthereumAddress_V5_t* v) {
+parser_error_t _readEthereumAddress_V5(parser_context_t* c, pd_EthereumAddress_V5_t* v){
     GEN_DEF_READARRAY(20)
 }
 
@@ -579,15 +572,15 @@ parser_error_t _readFundraiserName_V5(parser_context_t* c, pd_FundraiserName_V5_
     return parser_ok;
 }
 
-parser_error_t _readIdentityId_V5(parser_context_t* c, pd_IdentityId_V5_t* v) {
+parser_error_t _readIdentityId_V5(parser_context_t* c, pd_IdentityId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
-parser_error_t _readInvestorUid_V5(parser_context_t* c, pd_InvestorUid_V5_t* v) {
+parser_error_t _readInvestorUid_V5(parser_context_t* c, pd_InvestorUid_V5_t* v){
     GEN_DEF_READARRAY(16)
 }
 
-parser_error_t _readInvestorZKProofData_V5(parser_context_t* c, pd_InvestorZKProofData_V5_t* v) {
+parser_error_t _readInvestorZKProofData_V5(parser_context_t* c, pd_InvestorZKProofData_V5_t* v){
     GEN_DEF_READARRAY(64)
 }
 
@@ -596,11 +589,11 @@ parser_error_t _readKeyOwnerProof_V5(parser_context_t* c, pd_KeyOwnerProof_V5_t*
     return parser_not_supported;
 }
 
-parser_error_t _readKeyValue_V5(parser_context_t* c, pd_KeyValue_V5_t* v) {
+parser_error_t _readKeyValue_V5(parser_context_t* c, pd_KeyValue_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
-parser_error_t _readKey_V5(parser_context_t* c, pd_Key_V5_t* v) {
+parser_error_t _readKey_V5(parser_context_t* c, pd_Key_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
@@ -622,9 +615,24 @@ parser_error_t _readLeg_V5(parser_context_t* c, pd_Leg_V5_t* v)
     return parser_ok;
 }
 
+parser_error_t _readLegacyPalletPermissions_V5(parser_context_t* c, pd_LegacyPalletPermissions_V5_t* v)
+{
+    CHECK_INPUT();
+
+    CHECK_ERROR(_readPalletName_V5(c, &v->palletName))
+    CHECK_ERROR(_readBool(c, &v->total))
+    CHECK_ERROR(_readVecDispatchableName_V5(c, &v->dispatchableNames))
+
+    return parser_ok;
+}
+
 parser_error_t _readLegacyPermissions_V5(parser_context_t* c, pd_LegacyPermissions_V5_t* v)
 {
-    return parser_not_supported;
+    CHECK_INPUT();
+    CHECK_ERROR(_readOptionVecTicker_V5(c, &v->asset))
+    CHECK_ERROR(_readOptionVecLegacyPalletPermissions_V5(c, &v->extrinsic))
+    CHECK_ERROR(_readOptionVecPortfolioId_V5(c, &v->portfolio))
+    return parser_ok;
 }
 
 parser_error_t _readLocalCAId_V5(parser_context_t* c, pd_LocalCAId_V5_t* v)
@@ -648,7 +656,6 @@ parser_error_t _readMaybeBlock_V5(parser_context_t* c, pd_MaybeBlock_V5_t* v)
 
     switch (v->value) {
     case 0:
-        CHECK_INPUT();
         CHECK_ERROR(_readBlockNumber(c, &v->blockNumber))
         break;
     case 1:
@@ -1024,7 +1031,7 @@ parser_error_t _readSchedule_V5(parser_context_t* c, pd_Schedule_V5_t* v)
     return parser_not_supported;
 }
 
-parser_error_t _readScopeId_V5(parser_context_t* c, pd_ScopeId_V5_t* v) {
+parser_error_t _readScopeId_V5(parser_context_t* c, pd_ScopeId_V5_t* v){
     GEN_DEF_READARRAY(32)
 }
 
@@ -1078,7 +1085,6 @@ parser_error_t _readSettlementType_V5(parser_context_t* c, pd_SettlementType_V5_
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readBlockNumber(c, &v->blockNumber))
         break;
     default:
@@ -1095,11 +1101,9 @@ parser_error_t _readSignatory_V5(parser_context_t* c, pd_Signatory_V5_t* v)
 
     switch (v->value) {
     case 0:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V5(c, &v->identity))
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readAccountId_V5(c, &v->account))
         break;
     default:
@@ -1109,7 +1113,7 @@ parser_error_t _readSignatory_V5(parser_context_t* c, pd_Signatory_V5_t* v)
     return parser_ok;
 }
 
-parser_error_t _readSignature_V5(parser_context_t* c, pd_Signature_V5_t* v) {
+parser_error_t _readSignature_V5(parser_context_t* c, pd_Signature_V5_t* v){
     GEN_DEF_READARRAY(64)
 }
 
@@ -1217,7 +1221,6 @@ parser_error_t _readTargetIdentity_V5(parser_context_t* c, pd_TargetIdentity_V5_
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readIdentityId_V5(c, &v->specific))
         break;
     default:
@@ -1293,7 +1296,6 @@ parser_error_t _readTrustedFor_V5(parser_context_t* c, pd_TrustedFor_V5_t* v)
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
         CHECK_ERROR(_readVecClaimType_V5(c, &v->claims))
         break;
     default:
@@ -1419,139 +1421,143 @@ parser_error_t _readWeight_V5(parser_context_t* c, pd_Weight_V5_t* v)
     return _readUInt64(c, &v->value);
 }
 
-parser_error_t _readVecAccountId_V5(parser_context_t* c, pd_VecAccountId_V5_t* v) {
+parser_error_t _readVecAccountId_V5(parser_context_t* c, pd_VecAccountId_V5_t* v){
     GEN_DEF_READVECTOR(AccountId_V5)
 }
 
-parser_error_t _readVecAssetIdentifier_V5(parser_context_t* c, pd_VecAssetIdentifier_V5_t* v) {
+parser_error_t _readVecAssetIdentifier_V5(parser_context_t* c, pd_VecAssetIdentifier_V5_t* v){
     GEN_DEF_READVECTOR(AssetIdentifier_V5)
 }
 
-parser_error_t _readVecBallotVote_V5(parser_context_t* c, pd_VecBallotVote_V5_t* v) {
+parser_error_t _readVecBallotVote_V5(parser_context_t* c, pd_VecBallotVote_V5_t* v){
     GEN_DEF_READVECTOR(BallotVote_V5)
 }
 
-parser_error_t _readVecBeneficiary_V5(parser_context_t* c, pd_VecBeneficiary_V5_t* v) {
+parser_error_t _readVecBeneficiary_V5(parser_context_t* c, pd_VecBeneficiary_V5_t* v){
     GEN_DEF_READVECTOR(Beneficiary_V5)
 }
 
-parser_error_t _readVecBridgeTx_V5(parser_context_t* c, pd_VecBridgeTx_V5_t* v) {
+parser_error_t _readVecBridgeTx_V5(parser_context_t* c, pd_VecBridgeTx_V5_t* v){
     GEN_DEF_READVECTOR(BridgeTx_V5)
 }
 
-parser_error_t _readVecChoiceTitle_V5(parser_context_t* c, pd_VecChoiceTitle_V5_t* v) {
+parser_error_t _readVecChoiceTitle_V5(parser_context_t* c, pd_VecChoiceTitle_V5_t* v){
     GEN_DEF_READVECTOR(ChoiceTitle_V5)
 }
 
-parser_error_t _readVecClaimType_V5(parser_context_t* c, pd_VecClaimType_V5_t* v) {
+parser_error_t _readVecClaimType_V5(parser_context_t* c, pd_VecClaimType_V5_t* v){
     GEN_DEF_READVECTOR(ClaimType_V5)
 }
 
-parser_error_t _readVecClaim_V5(parser_context_t* c, pd_VecClaim_V5_t* v) {
+parser_error_t _readVecClaim_V5(parser_context_t* c, pd_VecClaim_V5_t* v){
     GEN_DEF_READVECTOR(Claim_V5)
 }
 
-parser_error_t _readVecComplianceRequirement_V5(parser_context_t* c, pd_VecComplianceRequirement_V5_t* v) {
+parser_error_t _readVecComplianceRequirement_V5(parser_context_t* c, pd_VecComplianceRequirement_V5_t* v){
     GEN_DEF_READVECTOR(ComplianceRequirement_V5)
 }
 
-parser_error_t _readVecCondition_V5(parser_context_t* c, pd_VecCondition_V5_t* v) {
+parser_error_t _readVecCondition_V5(parser_context_t* c, pd_VecCondition_V5_t* v){
     GEN_DEF_READVECTOR(Condition_V5)
 }
 
-parser_error_t _readVecDispatchableName_V5(parser_context_t* c, pd_VecDispatchableName_V5_t* v) {
+parser_error_t _readVecDispatchableName_V5(parser_context_t* c, pd_VecDispatchableName_V5_t* v){
     GEN_DEF_READVECTOR(DispatchableName_V5)
 }
 
-parser_error_t _readVecDocumentId_V5(parser_context_t* c, pd_VecDocumentId_V5_t* v) {
+parser_error_t _readVecDocumentId_V5(parser_context_t* c, pd_VecDocumentId_V5_t* v){
     GEN_DEF_READVECTOR(DocumentId_V5)
 }
 
-parser_error_t _readVecDocument_V5(parser_context_t* c, pd_VecDocument_V5_t* v) {
+parser_error_t _readVecDocument_V5(parser_context_t* c, pd_VecDocument_V5_t* v){
     GEN_DEF_READVECTOR(Document_V5)
 }
 
-parser_error_t _readVecIdentityId_V5(parser_context_t* c, pd_VecIdentityId_V5_t* v) {
+parser_error_t _readVecIdentityId_V5(parser_context_t* c, pd_VecIdentityId_V5_t* v){
     GEN_DEF_READVECTOR(IdentityId_V5)
 }
 
-parser_error_t _readVecKeyValue_V5(parser_context_t* c, pd_VecKeyValue_V5_t* v) {
+parser_error_t _readVecKeyValue_V5(parser_context_t* c, pd_VecKeyValue_V5_t* v){
     GEN_DEF_READVECTOR(KeyValue_V5)
 }
 
-parser_error_t _readVecKey_V5(parser_context_t* c, pd_VecKey_V5_t* v) {
+parser_error_t _readVecKey_V5(parser_context_t* c, pd_VecKey_V5_t* v){
     GEN_DEF_READVECTOR(Key_V5)
 }
 
-parser_error_t _readVecLeg_V5(parser_context_t* c, pd_VecLeg_V5_t* v) {
+parser_error_t _readVecLeg_V5(parser_context_t* c, pd_VecLeg_V5_t* v){
     GEN_DEF_READVECTOR(Leg_V5)
 }
 
-parser_error_t _readVecLookupSource_V5(parser_context_t* c, pd_VecLookupSource_V5_t* v) {
+parser_error_t _readVecLegacyPalletPermissions_V5(parser_context_t* c, pd_VecLegacyPalletPermissions_V5_t* v){
+    GEN_DEF_READVECTOR(LegacyPalletPermissions_V5)
+}
+
+parser_error_t _readVecLookupSource_V5(parser_context_t* c, pd_VecLookupSource_V5_t* v){
     GEN_DEF_READVECTOR(LookupSource_V5)
 }
 
-parser_error_t _readVecMotion_V5(parser_context_t* c, pd_VecMotion_V5_t* v) {
+parser_error_t _readVecMotion_V5(parser_context_t* c, pd_VecMotion_V5_t* v){
     GEN_DEF_READVECTOR(Motion_V5)
 }
 
-parser_error_t _readVecMovePortfolioItem_V5(parser_context_t* c, pd_VecMovePortfolioItem_V5_t* v) {
+parser_error_t _readVecMovePortfolioItem_V5(parser_context_t* c, pd_VecMovePortfolioItem_V5_t* v){
     GEN_DEF_READVECTOR(MovePortfolioItem_V5)
 }
 
-parser_error_t _readVecPalletPermissions_V5(parser_context_t* c, pd_VecPalletPermissions_V5_t* v) {
+parser_error_t _readVecPalletPermissions_V5(parser_context_t* c, pd_VecPalletPermissions_V5_t* v){
     GEN_DEF_READVECTOR(PalletPermissions_V5)
 }
 
-parser_error_t _readVecPortfolioId_V5(parser_context_t* c, pd_VecPortfolioId_V5_t* v) {
+parser_error_t _readVecPortfolioId_V5(parser_context_t* c, pd_VecPortfolioId_V5_t* v){
     GEN_DEF_READVECTOR(PortfolioId_V5)
 }
 
-parser_error_t _readVecPriceTier_V5(parser_context_t* c, pd_VecPriceTier_V5_t* v) {
+parser_error_t _readVecPriceTier_V5(parser_context_t* c, pd_VecPriceTier_V5_t* v){
     GEN_DEF_READVECTOR(PriceTier_V5)
 }
 
-parser_error_t _readVecReceiptDetails_V5(parser_context_t* c, pd_VecReceiptDetails_V5_t* v) {
+parser_error_t _readVecReceiptDetails_V5(parser_context_t* c, pd_VecReceiptDetails_V5_t* v){
     GEN_DEF_READVECTOR(ReceiptDetails_V5)
 }
 
-parser_error_t _readVecScopeId_V5(parser_context_t* c, pd_VecScopeId_V5_t* v) {
+parser_error_t _readVecScopeId_V5(parser_context_t* c, pd_VecScopeId_V5_t* v){
     GEN_DEF_READVECTOR(ScopeId_V5)
 }
 
-parser_error_t _readVecSecondaryKeyWithAuth_V5(parser_context_t* c, pd_VecSecondaryKeyWithAuth_V5_t* v) {
+parser_error_t _readVecSecondaryKeyWithAuth_V5(parser_context_t* c, pd_VecSecondaryKeyWithAuth_V5_t* v){
     GEN_DEF_READVECTOR(SecondaryKeyWithAuth_V5)
 }
 
-parser_error_t _readVecSecondaryKey_V5(parser_context_t* c, pd_VecSecondaryKey_V5_t* v) {
+parser_error_t _readVecSecondaryKey_V5(parser_context_t* c, pd_VecSecondaryKey_V5_t* v){
     GEN_DEF_READVECTOR(SecondaryKey_V5)
 }
 
-parser_error_t _readVecSignatory_V5(parser_context_t* c, pd_VecSignatory_V5_t* v) {
+parser_error_t _readVecSignatory_V5(parser_context_t* c, pd_VecSignatory_V5_t* v){
     GEN_DEF_READVECTOR(Signatory_V5)
 }
 
-parser_error_t _readVecTicker_V5(parser_context_t* c, pd_VecTicker_V5_t* v) {
+parser_error_t _readVecTicker_V5(parser_context_t* c, pd_VecTicker_V5_t* v){
     GEN_DEF_READVECTOR(Ticker_V5)
 }
 
-parser_error_t _readVecTrustedIssuer_V5(parser_context_t* c, pd_VecTrustedIssuer_V5_t* v) {
+parser_error_t _readVecTrustedIssuer_V5(parser_context_t* c, pd_VecTrustedIssuer_V5_t* v){
     GEN_DEF_READVECTOR(TrustedIssuer_V5)
 }
 
-parser_error_t _readVecTupleIdentityIdTax_V5(parser_context_t* c, pd_VecTupleIdentityIdTax_V5_t* v) {
+parser_error_t _readVecTupleIdentityIdTax_V5(parser_context_t* c, pd_VecTupleIdentityIdTax_V5_t* v){
     GEN_DEF_READVECTOR(TupleIdentityIdTax_V5)
 }
 
-parser_error_t _readVecTupleIdentityIdbool_V5(parser_context_t* c, pd_VecTupleIdentityIdbool_V5_t* v) {
+parser_error_t _readVecTupleIdentityIdbool_V5(parser_context_t* c, pd_VecTupleIdentityIdbool_V5_t* v){
     GEN_DEF_READVECTOR(TupleIdentityIdbool_V5)
 }
 
-parser_error_t _readVecTuplePipIdSnapshotResult_V5(parser_context_t* c, pd_VecTuplePipIdSnapshotResult_V5_t* v) {
+parser_error_t _readVecTuplePipIdSnapshotResult_V5(parser_context_t* c, pd_VecTuplePipIdSnapshotResult_V5_t* v){
     GEN_DEF_READVECTOR(TuplePipIdSnapshotResult_V5)
 }
 
-parser_error_t _readVecValidatorIndex_V5(parser_context_t* c, pd_VecValidatorIndex_V5_t* v) {
+parser_error_t _readVecValidatorIndex_V5(parser_context_t* c, pd_VecValidatorIndex_V5_t* v){
     GEN_DEF_READVECTOR(ValidatorIndex_V5)
 }
 
@@ -1686,6 +1692,15 @@ parser_error_t _readOptionVecDispatchableName_V5(parser_context_t* c, pd_OptionV
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readVecDispatchableName_V5(c, &v->contained))
+    }
+    return parser_ok;
+}
+
+parser_error_t _readOptionVecLegacyPalletPermissions_V5(parser_context_t* c, pd_OptionVecLegacyPalletPermissions_V5_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readVecLegacyPalletPermissions_V5(c, &v->contained))
     }
     return parser_ok;
 }
@@ -2346,7 +2361,7 @@ parser_error_t _toStringCddId_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -2730,24 +2745,10 @@ parser_error_t _toStringCountryCode_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    //TODO complete
-    switch (v->value) {
-    case 0:
-        snprintf(outValue, outValueLen, "AF");
-        break;
-    case 1:
-        snprintf(outValue, outValueLen, "AX");
-        break;
-    case 2:
-        snprintf(outValue, outValueLen, "AL");
-        break;
-    case 3:
-        snprintf(outValue, outValueLen, "DZ");
-        break;
-    default:
-        return parser_not_supported;
+    if (v->value > COUNTRY_CODES_SIZE - 1) {
+        return parser_value_out_of_range;
     }
-
+    snprintf(outValue, outValueLen, "%s", STR_COUNTRY_CODES[v->value]);
     *pageCount = 1;
     return parser_ok;
 }
@@ -2775,7 +2776,7 @@ parser_error_t _toStringDocumentHash_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(v->_len)
 }
 
@@ -2909,7 +2910,7 @@ parser_error_t _toStringEcdsaSignature_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(65)
 }
 
@@ -2981,7 +2982,7 @@ parser_error_t _toStringEthereumAddress_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(20)
 }
 
@@ -3026,7 +3027,7 @@ parser_error_t _toStringIdentityId_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -3035,7 +3036,7 @@ parser_error_t _toStringInvestorUid_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(16)
 }
 
@@ -3044,7 +3045,7 @@ parser_error_t _toStringInvestorZKProofData_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(64)
 }
 
@@ -3088,7 +3089,7 @@ parser_error_t _toStringKeys_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(4 * 32)
 }
 
@@ -3142,6 +3143,47 @@ parser_error_t _toStringLeg_V5(
     return parser_display_idx_out_of_range;
 }
 
+parser_error_t _toStringLegacyPalletPermissions_V5(
+    const pd_LegacyPalletPermissions_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringPalletName_V5(&v->palletName, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringVecDispatchableName_V5(&v->dispatchableNames, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringPalletName_V5(&v->palletName, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringVecDispatchableName_V5(&v->dispatchableNames, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringLegacyPermissions_V5(
     const pd_LegacyPermissions_V5_t* v,
     char* outValue,
@@ -3150,7 +3192,38 @@ parser_error_t _toStringLegacyPermissions_V5(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringOptionVecTicker_V5(&v->asset, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V5(&v->extrinsic, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringOptionVecPortfolioId_V5(&v->portfolio, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringOptionVecTicker_V5(&v->asset, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V5(&v->extrinsic, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringOptionVecPortfolioId_V5(&v->portfolio, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
 }
 
 parser_error_t _toStringLocalCAId_V5(
@@ -3813,7 +3886,6 @@ parser_error_t _toStringPriority_V5(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-
     // Get all pages first
     uint8_t pages[2];
     CHECK_ERROR(_toStringu32(&v->stream_id, outValue, outValueLen, 0, &pages[0]))
@@ -4104,7 +4176,7 @@ parser_error_t _toStringScopeId_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -4251,7 +4323,7 @@ parser_error_t _toStringSignature_V5(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount) {
+    uint8_t* pageCount){
     GEN_DEF_TOSTRING_ARRAY(64)
 }
 
@@ -5251,6 +5323,16 @@ parser_error_t _toStringVecLeg_V5(
     GEN_DEF_TOSTRING_VECTOR(Leg_V5);
 }
 
+parser_error_t _toStringVecLegacyPalletPermissions_V5(
+    const pd_VecLegacyPalletPermissions_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(LegacyPalletPermissions_V5);
+}
+
 parser_error_t _toStringVecLookupSource_V5(
     const pd_VecLookupSource_V5_t* v,
     char* outValue,
@@ -5727,6 +5809,27 @@ parser_error_t _toStringOptionVecDispatchableName_V5(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringVecDispatchableName_V5(
+            &v->contained,
+            outValue, outValueLen,
+            pageIdx, pageCount));
+    } else {
+        snprintf(outValue, outValueLen, "None");
+    }
+    return parser_ok;
+}
+
+parser_error_t _toStringOptionVecLegacyPalletPermissions_V5(
+    const pd_OptionVecLegacyPalletPermissions_V5_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    *pageCount = 1;
+    if (v->some > 0) {
+        CHECK_ERROR(_toStringVecLegacyPalletPermissions_V5(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));

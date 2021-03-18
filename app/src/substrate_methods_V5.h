@@ -68,6 +68,7 @@ extern "C" {
 #define PD_CALL_CAPITALDISTRIBUTION_V5 48
 #define PD_CALL_CHECKPOINT_V5 49
 
+#ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_STO_CREATE_FUNDRAISER_V5 0
 typedef struct {
     pd_PortfolioId_V5_t offering_portfolio;
@@ -78,7 +79,7 @@ typedef struct {
     pd_u64_t venue_id;
     pd_OptionMoment_V5_t start;
     pd_OptionMoment_V5_t end;
-    pd_Balance_t minimum_investment;
+    pd_BalanceNoSymbol_t minimum_investment;
     pd_FundraiserName_V5_t fundraiser_name;
 } pd_sto_create_fundraiser_V5_t;
 
@@ -88,7 +89,7 @@ typedef struct {
     pd_PortfolioId_V5_t funding_portfolio;
     pd_Ticker_V5_t offering_asset;
     pd_u64_t fundraiser_id;
-    pd_Balance_t investment_amount;
+    pd_BalanceNoSymbol_t investment_amount;
     pd_OptionBalance_t max_price;
     pd_OptionReceiptDetails_V5_t receipt;
 } pd_sto_invest_V5_t;
@@ -119,109 +120,18 @@ typedef struct {
     pd_u64_t fundraiser_id;
 } pd_sto_stop_V5_t;
 
+#endif
+
 typedef union {
+#ifdef SUBSTRATE_PARSER_FULL
     pd_sto_create_fundraiser_V5_t sto_create_fundraiser_V5;
     pd_sto_invest_V5_t sto_invest_V5;
     pd_sto_freeze_fundraiser_V5_t sto_freeze_fundraiser_V5;
     pd_sto_unfreeze_fundraiser_V5_t sto_unfreeze_fundraiser_V5;
     pd_sto_modify_fundraiser_window_V5_t sto_modify_fundraiser_window_V5;
     pd_sto_stop_V5_t sto_stop_V5;
+#endif
 } pd_MethodBasic_V5_t;
-
-#define PD_CALL_SYSTEM_FILL_BLOCK_V5 0
-typedef struct {
-    pd_Perbill_V5_t _ratio;
-} pd_system_fill_block_V5_t;
-
-#define PD_CALL_SYSTEM_REMARK_V5 1
-typedef struct {
-    pd_Bytes_t _remark;
-} pd_system_remark_V5_t;
-
-#define PD_CALL_SYSTEM_SET_HEAP_PAGES_V5 2
-typedef struct {
-    pd_u64_t pages;
-} pd_system_set_heap_pages_V5_t;
-
-#define PD_CALL_SYSTEM_SET_CODE_V5 3
-typedef struct {
-    pd_Bytes_t code;
-} pd_system_set_code_V5_t;
-
-#define PD_CALL_SYSTEM_SET_CODE_WITHOUT_CHECKS_V5 4
-typedef struct {
-    pd_Bytes_t code;
-} pd_system_set_code_without_checks_V5_t;
-
-#define PD_CALL_SYSTEM_SET_CHANGES_TRIE_CONFIG_V5 5
-typedef struct {
-    pd_OptionChangesTrieConfiguration_V5_t changes_trie_config;
-} pd_system_set_changes_trie_config_V5_t;
-
-#define PD_CALL_SYSTEM_SET_STORAGE_V5 6
-typedef struct {
-    pd_VecKeyValue_V5_t items;
-} pd_system_set_storage_V5_t;
-
-#define PD_CALL_SYSTEM_KILL_STORAGE_V5 7
-typedef struct {
-    pd_VecKey_V5_t keys;
-} pd_system_kill_storage_V5_t;
-
-#define PD_CALL_SYSTEM_KILL_PREFIX_V5 8
-typedef struct {
-    pd_Key_V5_t prefix;
-    pd_u32_t _subkeys;
-} pd_system_kill_prefix_V5_t;
-
-#define PD_CALL_SYSTEM_SUICIDE_V5 9
-typedef struct {
-} pd_system_suicide_V5_t;
-
-#define PD_CALL_BABE_REPORT_EQUIVOCATION_V5 0
-typedef struct {
-    pd_EquivocationProof_V5_t equivocation_proof;
-    pd_KeyOwnerProof_V5_t key_owner_proof;
-} pd_babe_report_equivocation_V5_t;
-
-#define PD_CALL_BABE_REPORT_EQUIVOCATION_UNSIGNED_V5 1
-typedef struct {
-    pd_EquivocationProof_V5_t equivocation_proof;
-    pd_KeyOwnerProof_V5_t key_owner_proof;
-} pd_babe_report_equivocation_unsigned_V5_t;
-
-#define PD_CALL_TIMESTAMP_SET_V5 0
-typedef struct {
-    pd_CompactMoment_V5_t now;
-} pd_timestamp_set_V5_t;
-
-#define PD_CALL_INDICES_CLAIM_V5 0
-typedef struct {
-    pd_AccountIndex_V5_t index;
-} pd_indices_claim_V5_t;
-
-#define PD_CALL_INDICES_TRANSFER_V5 1
-typedef struct {
-    pd_AccountId_V5_t new_;
-    pd_AccountIndex_V5_t index;
-} pd_indices_transfer_V5_t;
-
-#define PD_CALL_INDICES_FREE_V5 2
-typedef struct {
-    pd_AccountIndex_V5_t index;
-} pd_indices_free_V5_t;
-
-#define PD_CALL_INDICES_FORCE_TRANSFER_V5 3
-typedef struct {
-    pd_AccountId_V5_t new_;
-    pd_AccountIndex_V5_t index;
-    pd_bool_t freeze;
-} pd_indices_force_transfer_V5_t;
-
-#define PD_CALL_INDICES_FREEZE_V5 4
-typedef struct {
-    pd_AccountIndex_V5_t index;
-} pd_indices_freeze_V5_t;
 
 #define PD_CALL_BALANCES_TRANSFER_V5 0
 typedef struct {
@@ -236,54 +146,6 @@ typedef struct {
     pd_OptionMemo_V5_t memo;
 } pd_balances_transfer_with_memo_V5_t;
 
-#define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V5 2
-typedef struct {
-    pd_CompactBalance_t value;
-} pd_balances_deposit_block_reward_reserve_balance_V5_t;
-
-#define PD_CALL_BALANCES_SET_BALANCE_V5 3
-typedef struct {
-    pd_LookupSource_V5_t who;
-    pd_CompactBalance_t new_free;
-    pd_CompactBalance_t new_reserved;
-} pd_balances_set_balance_V5_t;
-
-#define PD_CALL_BALANCES_FORCE_TRANSFER_V5 4
-typedef struct {
-    pd_LookupSource_V5_t source;
-    pd_LookupSource_V5_t dest;
-    pd_CompactBalance_t value;
-} pd_balances_force_transfer_V5_t;
-
-#define PD_CALL_BALANCES_BURN_ACCOUNT_BALANCE_V5 5
-typedef struct {
-    pd_Balance_t amount;
-} pd_balances_burn_account_balance_V5_t;
-
-#define PD_CALL_IDENTITY_REGISTER_DID_V5 0
-typedef struct {
-    pd_InvestorUid_V5_t uid;
-    pd_VecSecondaryKey_V5_t secondary_keys;
-} pd_identity_register_did_V5_t;
-
-#define PD_CALL_IDENTITY_CDD_REGISTER_DID_V5 1
-typedef struct {
-    pd_AccountId_V5_t target_account;
-    pd_VecSecondaryKey_V5_t secondary_keys;
-} pd_identity_cdd_register_did_V5_t;
-
-#define PD_CALL_IDENTITY_MOCK_CDD_REGISTER_DID_V5 2
-typedef struct {
-    pd_AccountId_V5_t target_account;
-} pd_identity_mock_cdd_register_did_V5_t;
-
-#define PD_CALL_IDENTITY_INVALIDATE_CDD_CLAIMS_V5 3
-typedef struct {
-    pd_IdentityId_V5_t cdd;
-    pd_Moment_V5_t disable_from;
-    pd_OptionMoment_V5_t expiry;
-} pd_identity_invalidate_cdd_claims_V5_t;
-
 #define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V5 4
 typedef struct {
     pd_VecSignatory_V5_t signers_to_remove;
@@ -294,11 +156,6 @@ typedef struct {
     pd_u64_t rotation_auth_id;
     pd_Optionu64_t optional_cdd_auth_id;
 } pd_identity_accept_primary_key_V5_t;
-
-#define PD_CALL_IDENTITY_CHANGE_CDD_REQUIREMENT_FOR_MK_ROTATION_V5 6
-typedef struct {
-    pd_bool_t auth_required;
-} pd_identity_change_cdd_requirement_for_mk_rotation_V5_t;
 
 #define PD_CALL_IDENTITY_JOIN_IDENTITY_AS_KEY_V5 7
 typedef struct {
@@ -326,12 +183,6 @@ typedef struct {
     pd_OptionMoment_V5_t expiry;
 } pd_identity_add_claim_V5_t;
 
-#define PD_CALL_IDENTITY_FORWARDED_CALL_V5 12
-typedef struct {
-    pd_IdentityId_V5_t target_did;
-    pd_Proposal_t proposal;
-} pd_identity_forwarded_call_V5_t;
-
 #define PD_CALL_IDENTITY_REVOKE_CLAIM_V5 13
 typedef struct {
     pd_IdentityId_V5_t target;
@@ -358,15 +209,6 @@ typedef struct {
 typedef struct {
 } pd_identity_unfreeze_secondary_keys_V5_t;
 
-#define PD_CALL_IDENTITY_GET_MY_DID_V5 18
-typedef struct {
-} pd_identity_get_my_did_V5_t;
-
-#define PD_CALL_IDENTITY_GET_CDD_OF_V5 19
-typedef struct {
-    pd_AccountId_V5_t of;
-} pd_identity_get_cdd_of_V5_t;
-
 #define PD_CALL_IDENTITY_ADD_AUTHORIZATION_V5 20
 typedef struct {
     pd_Signatory_V5_t target;
@@ -392,12 +234,6 @@ typedef struct {
     pd_Moment_V5_t expires_at;
 } pd_identity_add_secondary_keys_with_authorization_V5_t;
 
-#define PD_CALL_IDENTITY_REVOKE_OFFCHAIN_AUTHORIZATION_V5 24
-typedef struct {
-    pd_Signatory_V5_t signer;
-    pd_TargetIdAuthorization_V5_t auth;
-} pd_identity_revoke_offchain_authorization_V5_t;
-
 #define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V5 25
 typedef struct {
     pd_IdentityId_V5_t target;
@@ -405,22 +241,6 @@ typedef struct {
     pd_InvestorZKProofData_V5_t proof;
     pd_OptionMoment_V5_t expiry;
 } pd_identity_add_investor_uniqueness_claim_V5_t;
-
-#define PD_CALL_IDENTITY_GC_ADD_CDD_CLAIM_V5 26
-typedef struct {
-    pd_IdentityId_V5_t target;
-    pd_OptionMoment_V5_t expiry;
-} pd_identity_gc_add_cdd_claim_V5_t;
-
-#define PD_CALL_IDENTITY_GC_REVOKE_CDD_CLAIM_V5 27
-typedef struct {
-    pd_IdentityId_V5_t target;
-} pd_identity_gc_revoke_cdd_claim_V5_t;
-
-#define PD_CALL_AUTHORSHIP_SET_UNCLES_V5 0
-typedef struct {
-    pd_VecHeader_t new_uncles;
-} pd_authorship_set_uncles_V5_t;
 
 #define PD_CALL_STAKING_BOND_V5 0
 typedef struct {
@@ -468,199 +288,10 @@ typedef struct {
     pd_LookupSource_V5_t controller;
 } pd_staking_set_controller_V5_t;
 
-#define PD_CALL_STAKING_SET_VALIDATOR_COUNT_V5 9
-typedef struct {
-    pd_Compactu32_t new_;
-} pd_staking_set_validator_count_V5_t;
-
-#define PD_CALL_STAKING_INCREASE_VALIDATOR_COUNT_V5 10
-typedef struct {
-    pd_Compactu32_t additional;
-} pd_staking_increase_validator_count_V5_t;
-
-#define PD_CALL_STAKING_SCALE_VALIDATOR_COUNT_V5 11
-typedef struct {
-    pd_Percent_V5_t factor;
-} pd_staking_scale_validator_count_V5_t;
-
-#define PD_CALL_STAKING_ADD_PERMISSIONED_VALIDATOR_V5 12
-typedef struct {
-    pd_IdentityId_V5_t identity;
-    pd_Optionu32_t intended_count;
-} pd_staking_add_permissioned_validator_V5_t;
-
-#define PD_CALL_STAKING_REMOVE_PERMISSIONED_VALIDATOR_V5 13
-typedef struct {
-    pd_IdentityId_V5_t identity;
-} pd_staking_remove_permissioned_validator_V5_t;
-
-#define PD_CALL_STAKING_VALIDATE_CDD_EXPIRY_NOMINATORS_V5 14
-typedef struct {
-    pd_VecAccountId_V5_t targets;
-} pd_staking_validate_cdd_expiry_nominators_V5_t;
-
-#define PD_CALL_STAKING_SET_COMMISSION_CAP_V5 15
-typedef struct {
-    pd_Perbill_V5_t new_cap;
-} pd_staking_set_commission_cap_V5_t;
-
-#define PD_CALL_STAKING_SET_MIN_BOND_THRESHOLD_V5 16
-typedef struct {
-    pd_BalanceOf_t new_value;
-} pd_staking_set_min_bond_threshold_V5_t;
-
-#define PD_CALL_STAKING_FORCE_NO_ERAS_V5 17
-typedef struct {
-} pd_staking_force_no_eras_V5_t;
-
-#define PD_CALL_STAKING_FORCE_NEW_ERA_V5 18
-typedef struct {
-} pd_staking_force_new_era_V5_t;
-
-#define PD_CALL_STAKING_SET_INVULNERABLES_V5 19
-typedef struct {
-    pd_VecAccountId_V5_t validators;
-} pd_staking_set_invulnerables_V5_t;
-
-#define PD_CALL_STAKING_FORCE_UNSTAKE_V5 20
-typedef struct {
-    pd_AccountId_V5_t stash;
-    pd_u32_t num_slashing_spans;
-} pd_staking_force_unstake_V5_t;
-
-#define PD_CALL_STAKING_FORCE_NEW_ERA_ALWAYS_V5 21
-typedef struct {
-} pd_staking_force_new_era_always_V5_t;
-
-#define PD_CALL_STAKING_CANCEL_DEFERRED_SLASH_V5 22
-typedef struct {
-    pd_EraIndex_V5_t era;
-    pd_Vecu32_t slash_indices;
-} pd_staking_cancel_deferred_slash_V5_t;
-
-#define PD_CALL_STAKING_PAYOUT_STAKERS_V5 23
-typedef struct {
-    pd_AccountId_V5_t validator_stash;
-    pd_EraIndex_V5_t era;
-} pd_staking_payout_stakers_V5_t;
-
 #define PD_CALL_STAKING_REBOND_V5 24
 typedef struct {
     pd_CompactBalanceOf_t value;
 } pd_staking_rebond_V5_t;
-
-#define PD_CALL_STAKING_SET_HISTORY_DEPTH_V5 25
-typedef struct {
-    pd_CompactEraIndex_V5_t new_history_depth;
-    pd_Compactu32_t _era_items_deleted;
-} pd_staking_set_history_depth_V5_t;
-
-#define PD_CALL_STAKING_REAP_STASH_V5 26
-typedef struct {
-    pd_AccountId_V5_t stash;
-    pd_u32_t num_slashing_spans;
-} pd_staking_reap_stash_V5_t;
-
-#define PD_CALL_STAKING_SUBMIT_ELECTION_SOLUTION_V5 27
-typedef struct {
-    pd_VecValidatorIndex_V5_t winners;
-    pd_CompactAssignments_V5_t compact;
-    pd_ElectionScore_V5_t score;
-    pd_EraIndex_V5_t era;
-    pd_ElectionSize_V5_t size;
-} pd_staking_submit_election_solution_V5_t;
-
-#define PD_CALL_STAKING_SUBMIT_ELECTION_SOLUTION_UNSIGNED_V5 28
-typedef struct {
-    pd_VecValidatorIndex_V5_t winners;
-    pd_CompactAssignments_V5_t compact;
-    pd_ElectionScore_V5_t score;
-    pd_EraIndex_V5_t era;
-    pd_ElectionSize_V5_t size;
-} pd_staking_submit_election_solution_unsigned_V5_t;
-
-#define PD_CALL_STAKING_PAYOUT_STAKERS_BY_SYSTEM_V5 29
-typedef struct {
-    pd_AccountId_V5_t validator_stash;
-    pd_EraIndex_V5_t era;
-} pd_staking_payout_stakers_by_system_V5_t;
-
-#define PD_CALL_STAKING_CHANGE_SLASHING_ALLOWED_FOR_V5 30
-typedef struct {
-    pd_SlashingSwitch_V5_t slashing_switch;
-} pd_staking_change_slashing_allowed_for_V5_t;
-
-#define PD_CALL_STAKING_UPDATE_PERMISSIONED_VALIDATOR_INTENDED_COUNT_V5 31
-typedef struct {
-    pd_IdentityId_V5_t identity;
-    pd_u32_t new_intended_count;
-} pd_staking_update_permissioned_validator_intended_count_V5_t;
-
-#define PD_CALL_SESSION_SET_KEYS_V5 0
-typedef struct {
-    pd_Keys_V5_t keys;
-    pd_Bytes_t proof;
-} pd_session_set_keys_V5_t;
-
-#define PD_CALL_SESSION_PURGE_KEYS_V5 1
-typedef struct {
-} pd_session_purge_keys_V5_t;
-
-#define PD_CALL_FINALITYTRACKER_FINAL_HINT_V5 0
-typedef struct {
-    pd_CompactBlockNumber_t hint;
-} pd_finalitytracker_final_hint_V5_t;
-
-#define PD_CALL_GRANDPA_REPORT_EQUIVOCATION_V5 0
-typedef struct {
-    pd_EquivocationProof_V5_t equivocation_proof;
-    pd_KeyOwnerProof_V5_t key_owner_proof;
-} pd_grandpa_report_equivocation_V5_t;
-
-#define PD_CALL_GRANDPA_REPORT_EQUIVOCATION_UNSIGNED_V5 1
-typedef struct {
-    pd_EquivocationProof_V5_t equivocation_proof;
-    pd_KeyOwnerProof_V5_t key_owner_proof;
-} pd_grandpa_report_equivocation_unsigned_V5_t;
-
-#define PD_CALL_GRANDPA_NOTE_STALLED_V5 2
-typedef struct {
-    pd_BlockNumber_t delay;
-    pd_BlockNumber_t best_finalized_block_number;
-} pd_grandpa_note_stalled_V5_t;
-
-#define PD_CALL_IMONLINE_HEARTBEAT_V5 0
-typedef struct {
-    pd_Heartbeat_t heartbeat;
-    pd_Signature_V5_t _signature;
-} pd_imonline_heartbeat_V5_t;
-
-#define PD_CALL_IMONLINE_SET_SLASHING_PARAMS_V5 1
-typedef struct {
-    pd_OfflineSlashingParams_V5_t params;
-} pd_imonline_set_slashing_params_V5_t;
-
-#define PD_CALL_SUDO_SUDO_V5 0
-typedef struct {
-    pd_Call_t call;
-} pd_sudo_sudo_V5_t;
-
-#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V5 1
-typedef struct {
-    pd_Call_t call;
-    pd_Weight_V5_t _weight;
-} pd_sudo_sudo_unchecked_weight_V5_t;
-
-#define PD_CALL_SUDO_SET_KEY_V5 2
-typedef struct {
-    pd_LookupSource_V5_t new_;
-} pd_sudo_set_key_V5_t;
-
-#define PD_CALL_SUDO_SUDO_AS_V5 3
-typedef struct {
-    pd_LookupSource_V5_t who;
-    pd_Call_t call;
-} pd_sudo_sudo_as_V5_t;
 
 #define PD_CALL_MULTISIG_CREATE_MULTISIG_V5 0
 typedef struct {
@@ -779,6 +410,411 @@ typedef struct {
     pd_IdentityId_V5_t multisig_did;
     pd_Weight_V5_t proposal_weight;
 } pd_multisig_execute_scheduled_proposal_V5_t;
+
+#define PD_CALL_PIPS_PROPOSE_V5 6
+typedef struct {
+    pd_Proposal_t proposal;
+    pd_BalanceOf_t deposit;
+    pd_OptionUrl_V5_t url;
+    pd_OptionPipDescription_V5_t description;
+} pd_pips_propose_V5_t;
+
+#define PD_CALL_PIPS_VOTE_V5 7
+typedef struct {
+    pd_PipId_V5_t id;
+    pd_bool_t aye_or_nay;
+    pd_BalanceOf_t deposit;
+} pd_pips_vote_V5_t;
+
+#define PD_CALL_UTILITY_BATCH_V5 0
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_V5_t;
+
+#define PD_CALL_UTILITY_BATCH_ATOMIC_V5 1
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_atomic_V5_t;
+
+#define PD_CALL_UTILITY_BATCH_OPTIMISTIC_V5 2
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_optimistic_V5_t;
+
+#ifdef SUBSTRATE_PARSER_FULL
+#define PD_CALL_SYSTEM_FILL_BLOCK_V5 0
+typedef struct {
+    pd_Perbill_V5_t _ratio;
+} pd_system_fill_block_V5_t;
+
+#define PD_CALL_SYSTEM_REMARK_V5 1
+typedef struct {
+    pd_Bytes_t _remark;
+} pd_system_remark_V5_t;
+
+#define PD_CALL_SYSTEM_SET_HEAP_PAGES_V5 2
+typedef struct {
+    pd_u64_t pages;
+} pd_system_set_heap_pages_V5_t;
+
+#define PD_CALL_SYSTEM_SET_CODE_V5 3
+typedef struct {
+    pd_Bytes_t code;
+} pd_system_set_code_V5_t;
+
+#define PD_CALL_SYSTEM_SET_CODE_WITHOUT_CHECKS_V5 4
+typedef struct {
+    pd_Bytes_t code;
+} pd_system_set_code_without_checks_V5_t;
+
+#define PD_CALL_SYSTEM_SET_CHANGES_TRIE_CONFIG_V5 5
+typedef struct {
+    pd_OptionChangesTrieConfiguration_V5_t changes_trie_config;
+} pd_system_set_changes_trie_config_V5_t;
+
+#define PD_CALL_SYSTEM_SET_STORAGE_V5 6
+typedef struct {
+    pd_VecKeyValue_V5_t items;
+} pd_system_set_storage_V5_t;
+
+#define PD_CALL_SYSTEM_KILL_STORAGE_V5 7
+typedef struct {
+    pd_VecKey_V5_t keys;
+} pd_system_kill_storage_V5_t;
+
+#define PD_CALL_SYSTEM_KILL_PREFIX_V5 8
+typedef struct {
+    pd_Key_V5_t prefix;
+    pd_u32_t _subkeys;
+} pd_system_kill_prefix_V5_t;
+
+#define PD_CALL_SYSTEM_SUICIDE_V5 9
+typedef struct {
+} pd_system_suicide_V5_t;
+
+#define PD_CALL_BABE_REPORT_EQUIVOCATION_V5 0
+typedef struct {
+    pd_EquivocationProof_V5_t equivocation_proof;
+    pd_KeyOwnerProof_V5_t key_owner_proof;
+} pd_babe_report_equivocation_V5_t;
+
+#define PD_CALL_BABE_REPORT_EQUIVOCATION_UNSIGNED_V5 1
+typedef struct {
+    pd_EquivocationProof_V5_t equivocation_proof;
+    pd_KeyOwnerProof_V5_t key_owner_proof;
+} pd_babe_report_equivocation_unsigned_V5_t;
+
+#define PD_CALL_TIMESTAMP_SET_V5 0
+typedef struct {
+    pd_CompactMoment_V5_t now;
+} pd_timestamp_set_V5_t;
+
+#define PD_CALL_INDICES_CLAIM_V5 0
+typedef struct {
+    pd_AccountIndex_V5_t index;
+} pd_indices_claim_V5_t;
+
+#define PD_CALL_INDICES_TRANSFER_V5 1
+typedef struct {
+    pd_AccountId_V5_t new_;
+    pd_AccountIndex_V5_t index;
+} pd_indices_transfer_V5_t;
+
+#define PD_CALL_INDICES_FREE_V5 2
+typedef struct {
+    pd_AccountIndex_V5_t index;
+} pd_indices_free_V5_t;
+
+#define PD_CALL_INDICES_FORCE_TRANSFER_V5 3
+typedef struct {
+    pd_AccountId_V5_t new_;
+    pd_AccountIndex_V5_t index;
+    pd_bool_t freeze;
+} pd_indices_force_transfer_V5_t;
+
+#define PD_CALL_INDICES_FREEZE_V5 4
+typedef struct {
+    pd_AccountIndex_V5_t index;
+} pd_indices_freeze_V5_t;
+
+#define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V5 2
+typedef struct {
+    pd_CompactBalance_t value;
+} pd_balances_deposit_block_reward_reserve_balance_V5_t;
+
+#define PD_CALL_BALANCES_SET_BALANCE_V5 3
+typedef struct {
+    pd_LookupSource_V5_t who;
+    pd_CompactBalance_t new_free;
+    pd_CompactBalance_t new_reserved;
+} pd_balances_set_balance_V5_t;
+
+#define PD_CALL_BALANCES_FORCE_TRANSFER_V5 4
+typedef struct {
+    pd_LookupSource_V5_t source;
+    pd_LookupSource_V5_t dest;
+    pd_CompactBalance_t value;
+} pd_balances_force_transfer_V5_t;
+
+#define PD_CALL_BALANCES_BURN_ACCOUNT_BALANCE_V5 5
+typedef struct {
+    pd_Balance_t amount;
+} pd_balances_burn_account_balance_V5_t;
+
+#define PD_CALL_IDENTITY_REGISTER_DID_V5 0
+typedef struct {
+    pd_InvestorUid_V5_t uid;
+    pd_VecSecondaryKey_V5_t secondary_keys;
+} pd_identity_register_did_V5_t;
+
+#define PD_CALL_IDENTITY_CDD_REGISTER_DID_V5 1
+typedef struct {
+    pd_AccountId_V5_t target_account;
+    pd_VecSecondaryKey_V5_t secondary_keys;
+} pd_identity_cdd_register_did_V5_t;
+
+#define PD_CALL_IDENTITY_MOCK_CDD_REGISTER_DID_V5 2
+typedef struct {
+    pd_AccountId_V5_t target_account;
+} pd_identity_mock_cdd_register_did_V5_t;
+
+#define PD_CALL_IDENTITY_INVALIDATE_CDD_CLAIMS_V5 3
+typedef struct {
+    pd_IdentityId_V5_t cdd;
+    pd_Moment_V5_t disable_from;
+    pd_OptionMoment_V5_t expiry;
+} pd_identity_invalidate_cdd_claims_V5_t;
+
+#define PD_CALL_IDENTITY_CHANGE_CDD_REQUIREMENT_FOR_MK_ROTATION_V5 6
+typedef struct {
+    pd_bool_t auth_required;
+} pd_identity_change_cdd_requirement_for_mk_rotation_V5_t;
+
+#define PD_CALL_IDENTITY_FORWARDED_CALL_V5 12
+typedef struct {
+    pd_IdentityId_V5_t target_did;
+    pd_Proposal_t proposal;
+} pd_identity_forwarded_call_V5_t;
+
+#define PD_CALL_IDENTITY_GET_MY_DID_V5 18
+typedef struct {
+} pd_identity_get_my_did_V5_t;
+
+#define PD_CALL_IDENTITY_GET_CDD_OF_V5 19
+typedef struct {
+    pd_AccountId_V5_t of;
+} pd_identity_get_cdd_of_V5_t;
+
+#define PD_CALL_IDENTITY_REVOKE_OFFCHAIN_AUTHORIZATION_V5 24
+typedef struct {
+    pd_Signatory_V5_t signer;
+    pd_TargetIdAuthorization_V5_t auth;
+} pd_identity_revoke_offchain_authorization_V5_t;
+
+#define PD_CALL_IDENTITY_GC_ADD_CDD_CLAIM_V5 26
+typedef struct {
+    pd_IdentityId_V5_t target;
+    pd_OptionMoment_V5_t expiry;
+} pd_identity_gc_add_cdd_claim_V5_t;
+
+#define PD_CALL_IDENTITY_GC_REVOKE_CDD_CLAIM_V5 27
+typedef struct {
+    pd_IdentityId_V5_t target;
+} pd_identity_gc_revoke_cdd_claim_V5_t;
+
+#define PD_CALL_AUTHORSHIP_SET_UNCLES_V5 0
+typedef struct {
+    pd_VecHeader_t new_uncles;
+} pd_authorship_set_uncles_V5_t;
+
+#define PD_CALL_STAKING_SET_VALIDATOR_COUNT_V5 9
+typedef struct {
+    pd_Compactu32_t new_;
+} pd_staking_set_validator_count_V5_t;
+
+#define PD_CALL_STAKING_INCREASE_VALIDATOR_COUNT_V5 10
+typedef struct {
+    pd_Compactu32_t additional;
+} pd_staking_increase_validator_count_V5_t;
+
+#define PD_CALL_STAKING_SCALE_VALIDATOR_COUNT_V5 11
+typedef struct {
+    pd_Percent_V5_t factor;
+} pd_staking_scale_validator_count_V5_t;
+
+#define PD_CALL_STAKING_ADD_PERMISSIONED_VALIDATOR_V5 12
+typedef struct {
+    pd_IdentityId_V5_t identity;
+    pd_Optionu32_t intended_count;
+} pd_staking_add_permissioned_validator_V5_t;
+
+#define PD_CALL_STAKING_REMOVE_PERMISSIONED_VALIDATOR_V5 13
+typedef struct {
+    pd_IdentityId_V5_t identity;
+} pd_staking_remove_permissioned_validator_V5_t;
+
+#define PD_CALL_STAKING_VALIDATE_CDD_EXPIRY_NOMINATORS_V5 14
+typedef struct {
+    pd_VecAccountId_V5_t targets;
+} pd_staking_validate_cdd_expiry_nominators_V5_t;
+
+#define PD_CALL_STAKING_SET_COMMISSION_CAP_V5 15
+typedef struct {
+    pd_Perbill_V5_t new_cap;
+} pd_staking_set_commission_cap_V5_t;
+
+#define PD_CALL_STAKING_SET_MIN_BOND_THRESHOLD_V5 16
+typedef struct {
+    pd_BalanceOf_t new_value;
+} pd_staking_set_min_bond_threshold_V5_t;
+
+#define PD_CALL_STAKING_FORCE_NO_ERAS_V5 17
+typedef struct {
+} pd_staking_force_no_eras_V5_t;
+
+#define PD_CALL_STAKING_FORCE_NEW_ERA_V5 18
+typedef struct {
+} pd_staking_force_new_era_V5_t;
+
+#define PD_CALL_STAKING_SET_INVULNERABLES_V5 19
+typedef struct {
+    pd_VecAccountId_V5_t validators;
+} pd_staking_set_invulnerables_V5_t;
+
+#define PD_CALL_STAKING_FORCE_UNSTAKE_V5 20
+typedef struct {
+    pd_AccountId_V5_t stash;
+    pd_u32_t num_slashing_spans;
+} pd_staking_force_unstake_V5_t;
+
+#define PD_CALL_STAKING_FORCE_NEW_ERA_ALWAYS_V5 21
+typedef struct {
+} pd_staking_force_new_era_always_V5_t;
+
+#define PD_CALL_STAKING_CANCEL_DEFERRED_SLASH_V5 22
+typedef struct {
+    pd_EraIndex_V5_t era;
+    pd_Vecu32_t slash_indices;
+} pd_staking_cancel_deferred_slash_V5_t;
+
+#define PD_CALL_STAKING_PAYOUT_STAKERS_V5 23
+typedef struct {
+    pd_AccountId_V5_t validator_stash;
+    pd_EraIndex_V5_t era;
+} pd_staking_payout_stakers_V5_t;
+
+#define PD_CALL_STAKING_SET_HISTORY_DEPTH_V5 25
+typedef struct {
+    pd_CompactEraIndex_V5_t new_history_depth;
+    pd_Compactu32_t _era_items_deleted;
+} pd_staking_set_history_depth_V5_t;
+
+#define PD_CALL_STAKING_REAP_STASH_V5 26
+typedef struct {
+    pd_AccountId_V5_t stash;
+    pd_u32_t num_slashing_spans;
+} pd_staking_reap_stash_V5_t;
+
+#define PD_CALL_STAKING_SUBMIT_ELECTION_SOLUTION_V5 27
+typedef struct {
+    pd_VecValidatorIndex_V5_t winners;
+    pd_CompactAssignments_V5_t compact;
+    pd_ElectionScore_V5_t score;
+    pd_EraIndex_V5_t era;
+    pd_ElectionSize_V5_t size;
+} pd_staking_submit_election_solution_V5_t;
+
+#define PD_CALL_STAKING_SUBMIT_ELECTION_SOLUTION_UNSIGNED_V5 28
+typedef struct {
+    pd_VecValidatorIndex_V5_t winners;
+    pd_CompactAssignments_V5_t compact;
+    pd_ElectionScore_V5_t score;
+    pd_EraIndex_V5_t era;
+    pd_ElectionSize_V5_t size;
+} pd_staking_submit_election_solution_unsigned_V5_t;
+
+#define PD_CALL_STAKING_PAYOUT_STAKERS_BY_SYSTEM_V5 29
+typedef struct {
+    pd_AccountId_V5_t validator_stash;
+    pd_EraIndex_V5_t era;
+} pd_staking_payout_stakers_by_system_V5_t;
+
+#define PD_CALL_STAKING_CHANGE_SLASHING_ALLOWED_FOR_V5 30
+typedef struct {
+    pd_SlashingSwitch_V5_t slashing_switch;
+} pd_staking_change_slashing_allowed_for_V5_t;
+
+#define PD_CALL_STAKING_UPDATE_PERMISSIONED_VALIDATOR_INTENDED_COUNT_V5 31
+typedef struct {
+    pd_IdentityId_V5_t identity;
+    pd_u32_t new_intended_count;
+} pd_staking_update_permissioned_validator_intended_count_V5_t;
+
+#define PD_CALL_SESSION_SET_KEYS_V5 0
+typedef struct {
+    pd_Keys_V5_t keys;
+    pd_Bytes_t proof;
+} pd_session_set_keys_V5_t;
+
+#define PD_CALL_SESSION_PURGE_KEYS_V5 1
+typedef struct {
+} pd_session_purge_keys_V5_t;
+
+#define PD_CALL_FINALITYTRACKER_FINAL_HINT_V5 0
+typedef struct {
+    pd_CompactBlockNumber_t hint;
+} pd_finalitytracker_final_hint_V5_t;
+
+#define PD_CALL_GRANDPA_REPORT_EQUIVOCATION_V5 0
+typedef struct {
+    pd_EquivocationProof_V5_t equivocation_proof;
+    pd_KeyOwnerProof_V5_t key_owner_proof;
+} pd_grandpa_report_equivocation_V5_t;
+
+#define PD_CALL_GRANDPA_REPORT_EQUIVOCATION_UNSIGNED_V5 1
+typedef struct {
+    pd_EquivocationProof_V5_t equivocation_proof;
+    pd_KeyOwnerProof_V5_t key_owner_proof;
+} pd_grandpa_report_equivocation_unsigned_V5_t;
+
+#define PD_CALL_GRANDPA_NOTE_STALLED_V5 2
+typedef struct {
+    pd_BlockNumber_t delay;
+    pd_BlockNumber_t best_finalized_block_number;
+} pd_grandpa_note_stalled_V5_t;
+
+#define PD_CALL_IMONLINE_HEARTBEAT_V5 0
+typedef struct {
+    pd_Heartbeat_t heartbeat;
+    pd_Signature_V5_t _signature;
+} pd_imonline_heartbeat_V5_t;
+
+#define PD_CALL_IMONLINE_SET_SLASHING_PARAMS_V5 1
+typedef struct {
+    pd_OfflineSlashingParams_V5_t params;
+} pd_imonline_set_slashing_params_V5_t;
+
+#define PD_CALL_SUDO_SUDO_V5 0
+typedef struct {
+    pd_Call_t call;
+} pd_sudo_sudo_V5_t;
+
+#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V5 1
+typedef struct {
+    pd_Call_t call;
+    pd_Weight_V5_t _weight;
+} pd_sudo_sudo_unchecked_weight_V5_t;
+
+#define PD_CALL_SUDO_SET_KEY_V5 2
+typedef struct {
+    pd_LookupSource_V5_t new_;
+} pd_sudo_set_key_V5_t;
+
+#define PD_CALL_SUDO_SUDO_AS_V5 3
+typedef struct {
+    pd_LookupSource_V5_t who;
+    pd_Call_t call;
+} pd_sudo_sudo_as_V5_t;
 
 #define PD_CALL_CONTRACTS_UPDATE_SCHEDULE_V5 0
 typedef struct {
@@ -949,21 +985,6 @@ typedef struct {
 typedef struct {
     pd_u32_t limit;
 } pd_pips_set_active_pip_limit_V5_t;
-
-#define PD_CALL_PIPS_PROPOSE_V5 6
-typedef struct {
-    pd_Proposal_t proposal;
-    pd_BalanceOf_t deposit;
-    pd_OptionUrl_V5_t url;
-    pd_OptionPipDescription_V5_t description;
-} pd_pips_propose_V5_t;
-
-#define PD_CALL_PIPS_VOTE_V5 7
-typedef struct {
-    pd_PipId_V5_t id;
-    pd_bool_t aye_or_nay;
-    pd_BalanceOf_t deposit;
-} pd_pips_vote_V5_t;
 
 #define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V5 8
 typedef struct {
@@ -1178,7 +1199,7 @@ typedef struct {
 typedef struct {
     pd_AssetName_V5_t name;
     pd_Ticker_V5_t ticker;
-    pd_Balance_t total_supply;
+    pd_BalanceNoSymbol_t total_supply;
     pd_bool_t divisible;
     pd_AssetType_V5_t asset_type;
     pd_VecAssetIdentifier_V5_t identifiers;
@@ -1204,13 +1225,13 @@ typedef struct {
 #define PD_CALL_ASSET_ISSUE_V5 8
 typedef struct {
     pd_Ticker_V5_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_issue_V5_t;
 
 #define PD_CALL_ASSET_REDEEM_V5 9
 typedef struct {
     pd_Ticker_V5_t ticker;
-    pd_Balance_t value;
+    pd_BalanceNoSymbol_t value;
 } pd_asset_redeem_V5_t;
 
 #define PD_CALL_ASSET_MAKE_DIVISIBLE_V5 10
@@ -1572,21 +1593,6 @@ typedef struct {
     pd_BalanceOf_t base_fee;
 } pd_protocolfee_change_base_fee_V5_t;
 
-#define PD_CALL_UTILITY_BATCH_V5 0
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_V5_t;
-
-#define PD_CALL_UTILITY_BATCH_ATOMIC_V5 1
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_atomic_V5_t;
-
-#define PD_CALL_UTILITY_BATCH_OPTIMISTIC_V5 2
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_optimistic_V5_t;
-
 #define PD_CALL_UTILITY_RELAY_TX_V5 3
 typedef struct {
     pd_AccountId_V5_t target;
@@ -1810,60 +1816,28 @@ typedef struct {
     pd_ScheduleId_V5_t id;
 } pd_checkpoint_remove_schedule_V5_t;
 
+#endif
+
 typedef union {
-    pd_system_fill_block_V5_t system_fill_block_V5;
-    pd_system_remark_V5_t system_remark_V5;
-    pd_system_set_heap_pages_V5_t system_set_heap_pages_V5;
-    pd_system_set_code_V5_t system_set_code_V5;
-    pd_system_set_code_without_checks_V5_t system_set_code_without_checks_V5;
-    pd_system_set_changes_trie_config_V5_t system_set_changes_trie_config_V5;
-    pd_system_set_storage_V5_t system_set_storage_V5;
-    pd_system_kill_storage_V5_t system_kill_storage_V5;
-    pd_system_kill_prefix_V5_t system_kill_prefix_V5;
-    pd_system_suicide_V5_t system_suicide_V5;
-    pd_babe_report_equivocation_V5_t babe_report_equivocation_V5;
-    pd_babe_report_equivocation_unsigned_V5_t babe_report_equivocation_unsigned_V5;
-    pd_timestamp_set_V5_t timestamp_set_V5;
-    pd_indices_claim_V5_t indices_claim_V5;
-    pd_indices_transfer_V5_t indices_transfer_V5;
-    pd_indices_free_V5_t indices_free_V5;
-    pd_indices_force_transfer_V5_t indices_force_transfer_V5;
-    pd_indices_freeze_V5_t indices_freeze_V5;
     pd_balances_transfer_V5_t balances_transfer_V5;
     pd_balances_transfer_with_memo_V5_t balances_transfer_with_memo_V5;
-    pd_balances_deposit_block_reward_reserve_balance_V5_t balances_deposit_block_reward_reserve_balance_V5;
-    pd_balances_set_balance_V5_t balances_set_balance_V5;
-    pd_balances_force_transfer_V5_t balances_force_transfer_V5;
-    pd_balances_burn_account_balance_V5_t balances_burn_account_balance_V5;
-    pd_identity_register_did_V5_t identity_register_did_V5;
-    pd_identity_cdd_register_did_V5_t identity_cdd_register_did_V5;
-    pd_identity_mock_cdd_register_did_V5_t identity_mock_cdd_register_did_V5;
-    pd_identity_invalidate_cdd_claims_V5_t identity_invalidate_cdd_claims_V5;
     pd_identity_remove_secondary_keys_V5_t identity_remove_secondary_keys_V5;
     pd_identity_accept_primary_key_V5_t identity_accept_primary_key_V5;
-    pd_identity_change_cdd_requirement_for_mk_rotation_V5_t identity_change_cdd_requirement_for_mk_rotation_V5;
     pd_identity_join_identity_as_key_V5_t identity_join_identity_as_key_V5;
     pd_identity_join_identity_as_identity_V5_t identity_join_identity_as_identity_V5;
     pd_identity_leave_identity_as_key_V5_t identity_leave_identity_as_key_V5;
     pd_identity_leave_identity_as_identity_V5_t identity_leave_identity_as_identity_V5;
     pd_identity_add_claim_V5_t identity_add_claim_V5;
-    pd_identity_forwarded_call_V5_t identity_forwarded_call_V5;
     pd_identity_revoke_claim_V5_t identity_revoke_claim_V5;
     pd_identity_set_permission_to_signer_V5_t identity_set_permission_to_signer_V5;
     pd_identity_legacy_set_permission_to_signer_V5_t identity_legacy_set_permission_to_signer_V5;
     pd_identity_freeze_secondary_keys_V5_t identity_freeze_secondary_keys_V5;
     pd_identity_unfreeze_secondary_keys_V5_t identity_unfreeze_secondary_keys_V5;
-    pd_identity_get_my_did_V5_t identity_get_my_did_V5;
-    pd_identity_get_cdd_of_V5_t identity_get_cdd_of_V5;
     pd_identity_add_authorization_V5_t identity_add_authorization_V5;
     pd_identity_remove_authorization_V5_t identity_remove_authorization_V5;
     pd_identity_accept_authorization_V5_t identity_accept_authorization_V5;
     pd_identity_add_secondary_keys_with_authorization_V5_t identity_add_secondary_keys_with_authorization_V5;
-    pd_identity_revoke_offchain_authorization_V5_t identity_revoke_offchain_authorization_V5;
     pd_identity_add_investor_uniqueness_claim_V5_t identity_add_investor_uniqueness_claim_V5;
-    pd_identity_gc_add_cdd_claim_V5_t identity_gc_add_cdd_claim_V5;
-    pd_identity_gc_revoke_cdd_claim_V5_t identity_gc_revoke_cdd_claim_V5;
-    pd_authorship_set_uncles_V5_t authorship_set_uncles_V5;
     pd_staking_bond_V5_t staking_bond_V5;
     pd_staking_bond_extra_V5_t staking_bond_extra_V5;
     pd_staking_unbond_V5_t staking_unbond_V5;
@@ -1873,41 +1847,7 @@ typedef union {
     pd_staking_chill_V5_t staking_chill_V5;
     pd_staking_set_payee_V5_t staking_set_payee_V5;
     pd_staking_set_controller_V5_t staking_set_controller_V5;
-    pd_staking_set_validator_count_V5_t staking_set_validator_count_V5;
-    pd_staking_increase_validator_count_V5_t staking_increase_validator_count_V5;
-    pd_staking_scale_validator_count_V5_t staking_scale_validator_count_V5;
-    pd_staking_add_permissioned_validator_V5_t staking_add_permissioned_validator_V5;
-    pd_staking_remove_permissioned_validator_V5_t staking_remove_permissioned_validator_V5;
-    pd_staking_validate_cdd_expiry_nominators_V5_t staking_validate_cdd_expiry_nominators_V5;
-    pd_staking_set_commission_cap_V5_t staking_set_commission_cap_V5;
-    pd_staking_set_min_bond_threshold_V5_t staking_set_min_bond_threshold_V5;
-    pd_staking_force_no_eras_V5_t staking_force_no_eras_V5;
-    pd_staking_force_new_era_V5_t staking_force_new_era_V5;
-    pd_staking_set_invulnerables_V5_t staking_set_invulnerables_V5;
-    pd_staking_force_unstake_V5_t staking_force_unstake_V5;
-    pd_staking_force_new_era_always_V5_t staking_force_new_era_always_V5;
-    pd_staking_cancel_deferred_slash_V5_t staking_cancel_deferred_slash_V5;
-    pd_staking_payout_stakers_V5_t staking_payout_stakers_V5;
     pd_staking_rebond_V5_t staking_rebond_V5;
-    pd_staking_set_history_depth_V5_t staking_set_history_depth_V5;
-    pd_staking_reap_stash_V5_t staking_reap_stash_V5;
-    pd_staking_submit_election_solution_V5_t staking_submit_election_solution_V5;
-    pd_staking_submit_election_solution_unsigned_V5_t staking_submit_election_solution_unsigned_V5;
-    pd_staking_payout_stakers_by_system_V5_t staking_payout_stakers_by_system_V5;
-    pd_staking_change_slashing_allowed_for_V5_t staking_change_slashing_allowed_for_V5;
-    pd_staking_update_permissioned_validator_intended_count_V5_t staking_update_permissioned_validator_intended_count_V5;
-    pd_session_set_keys_V5_t session_set_keys_V5;
-    pd_session_purge_keys_V5_t session_purge_keys_V5;
-    pd_finalitytracker_final_hint_V5_t finalitytracker_final_hint_V5;
-    pd_grandpa_report_equivocation_V5_t grandpa_report_equivocation_V5;
-    pd_grandpa_report_equivocation_unsigned_V5_t grandpa_report_equivocation_unsigned_V5;
-    pd_grandpa_note_stalled_V5_t grandpa_note_stalled_V5;
-    pd_imonline_heartbeat_V5_t imonline_heartbeat_V5;
-    pd_imonline_set_slashing_params_V5_t imonline_set_slashing_params_V5;
-    pd_sudo_sudo_V5_t sudo_sudo_V5;
-    pd_sudo_sudo_unchecked_weight_V5_t sudo_sudo_unchecked_weight_V5;
-    pd_sudo_set_key_V5_t sudo_set_key_V5;
-    pd_sudo_sudo_as_V5_t sudo_sudo_as_V5;
     pd_multisig_create_multisig_V5_t multisig_create_multisig_V5;
     pd_multisig_create_or_approve_proposal_as_identity_V5_t multisig_create_or_approve_proposal_as_identity_V5;
     pd_multisig_create_or_approve_proposal_as_key_V5_t multisig_create_or_approve_proposal_as_key_V5;
@@ -1927,6 +1867,80 @@ typedef union {
     pd_multisig_make_multisig_signer_V5_t multisig_make_multisig_signer_V5;
     pd_multisig_make_multisig_primary_V5_t multisig_make_multisig_primary_V5;
     pd_multisig_execute_scheduled_proposal_V5_t multisig_execute_scheduled_proposal_V5;
+    pd_pips_propose_V5_t pips_propose_V5;
+    pd_pips_vote_V5_t pips_vote_V5;
+    pd_utility_batch_V5_t utility_batch_V5;
+    pd_utility_batch_atomic_V5_t utility_batch_atomic_V5;
+    pd_utility_batch_optimistic_V5_t utility_batch_optimistic_V5;
+#ifdef SUBSTRATE_PARSER_FULL
+    pd_system_fill_block_V5_t system_fill_block_V5;
+    pd_system_remark_V5_t system_remark_V5;
+    pd_system_set_heap_pages_V5_t system_set_heap_pages_V5;
+    pd_system_set_code_V5_t system_set_code_V5;
+    pd_system_set_code_without_checks_V5_t system_set_code_without_checks_V5;
+    pd_system_set_changes_trie_config_V5_t system_set_changes_trie_config_V5;
+    pd_system_set_storage_V5_t system_set_storage_V5;
+    pd_system_kill_storage_V5_t system_kill_storage_V5;
+    pd_system_kill_prefix_V5_t system_kill_prefix_V5;
+    pd_system_suicide_V5_t system_suicide_V5;
+    pd_babe_report_equivocation_V5_t babe_report_equivocation_V5;
+    pd_babe_report_equivocation_unsigned_V5_t babe_report_equivocation_unsigned_V5;
+    pd_timestamp_set_V5_t timestamp_set_V5;
+    pd_indices_claim_V5_t indices_claim_V5;
+    pd_indices_transfer_V5_t indices_transfer_V5;
+    pd_indices_free_V5_t indices_free_V5;
+    pd_indices_force_transfer_V5_t indices_force_transfer_V5;
+    pd_indices_freeze_V5_t indices_freeze_V5;
+    pd_balances_deposit_block_reward_reserve_balance_V5_t balances_deposit_block_reward_reserve_balance_V5;
+    pd_balances_set_balance_V5_t balances_set_balance_V5;
+    pd_balances_force_transfer_V5_t balances_force_transfer_V5;
+    pd_balances_burn_account_balance_V5_t balances_burn_account_balance_V5;
+    pd_identity_register_did_V5_t identity_register_did_V5;
+    pd_identity_cdd_register_did_V5_t identity_cdd_register_did_V5;
+    pd_identity_mock_cdd_register_did_V5_t identity_mock_cdd_register_did_V5;
+    pd_identity_invalidate_cdd_claims_V5_t identity_invalidate_cdd_claims_V5;
+    pd_identity_change_cdd_requirement_for_mk_rotation_V5_t identity_change_cdd_requirement_for_mk_rotation_V5;
+    pd_identity_forwarded_call_V5_t identity_forwarded_call_V5;
+    pd_identity_get_my_did_V5_t identity_get_my_did_V5;
+    pd_identity_get_cdd_of_V5_t identity_get_cdd_of_V5;
+    pd_identity_revoke_offchain_authorization_V5_t identity_revoke_offchain_authorization_V5;
+    pd_identity_gc_add_cdd_claim_V5_t identity_gc_add_cdd_claim_V5;
+    pd_identity_gc_revoke_cdd_claim_V5_t identity_gc_revoke_cdd_claim_V5;
+    pd_authorship_set_uncles_V5_t authorship_set_uncles_V5;
+    pd_staking_set_validator_count_V5_t staking_set_validator_count_V5;
+    pd_staking_increase_validator_count_V5_t staking_increase_validator_count_V5;
+    pd_staking_scale_validator_count_V5_t staking_scale_validator_count_V5;
+    pd_staking_add_permissioned_validator_V5_t staking_add_permissioned_validator_V5;
+    pd_staking_remove_permissioned_validator_V5_t staking_remove_permissioned_validator_V5;
+    pd_staking_validate_cdd_expiry_nominators_V5_t staking_validate_cdd_expiry_nominators_V5;
+    pd_staking_set_commission_cap_V5_t staking_set_commission_cap_V5;
+    pd_staking_set_min_bond_threshold_V5_t staking_set_min_bond_threshold_V5;
+    pd_staking_force_no_eras_V5_t staking_force_no_eras_V5;
+    pd_staking_force_new_era_V5_t staking_force_new_era_V5;
+    pd_staking_set_invulnerables_V5_t staking_set_invulnerables_V5;
+    pd_staking_force_unstake_V5_t staking_force_unstake_V5;
+    pd_staking_force_new_era_always_V5_t staking_force_new_era_always_V5;
+    pd_staking_cancel_deferred_slash_V5_t staking_cancel_deferred_slash_V5;
+    pd_staking_payout_stakers_V5_t staking_payout_stakers_V5;
+    pd_staking_set_history_depth_V5_t staking_set_history_depth_V5;
+    pd_staking_reap_stash_V5_t staking_reap_stash_V5;
+    pd_staking_submit_election_solution_V5_t staking_submit_election_solution_V5;
+    pd_staking_submit_election_solution_unsigned_V5_t staking_submit_election_solution_unsigned_V5;
+    pd_staking_payout_stakers_by_system_V5_t staking_payout_stakers_by_system_V5;
+    pd_staking_change_slashing_allowed_for_V5_t staking_change_slashing_allowed_for_V5;
+    pd_staking_update_permissioned_validator_intended_count_V5_t staking_update_permissioned_validator_intended_count_V5;
+    pd_session_set_keys_V5_t session_set_keys_V5;
+    pd_session_purge_keys_V5_t session_purge_keys_V5;
+    pd_finalitytracker_final_hint_V5_t finalitytracker_final_hint_V5;
+    pd_grandpa_report_equivocation_V5_t grandpa_report_equivocation_V5;
+    pd_grandpa_report_equivocation_unsigned_V5_t grandpa_report_equivocation_unsigned_V5;
+    pd_grandpa_note_stalled_V5_t grandpa_note_stalled_V5;
+    pd_imonline_heartbeat_V5_t imonline_heartbeat_V5;
+    pd_imonline_set_slashing_params_V5_t imonline_set_slashing_params_V5;
+    pd_sudo_sudo_V5_t sudo_sudo_V5;
+    pd_sudo_sudo_unchecked_weight_V5_t sudo_sudo_unchecked_weight_V5;
+    pd_sudo_set_key_V5_t sudo_set_key_V5;
+    pd_sudo_sudo_as_V5_t sudo_sudo_as_V5;
     pd_contracts_update_schedule_V5_t contracts_update_schedule_V5;
     pd_contracts_put_code_V5_t contracts_put_code_V5;
     pd_contracts_call_V5_t contracts_call_V5;
@@ -1957,8 +1971,6 @@ typedef union {
     pd_pips_set_pending_pip_expiry_V5_t pips_set_pending_pip_expiry_V5;
     pd_pips_set_max_pip_skip_count_V5_t pips_set_max_pip_skip_count_V5;
     pd_pips_set_active_pip_limit_V5_t pips_set_active_pip_limit_V5;
-    pd_pips_propose_V5_t pips_propose_V5;
-    pd_pips_vote_V5_t pips_vote_V5;
     pd_pips_approve_committee_proposal_V5_t pips_approve_committee_proposal_V5;
     pd_pips_reject_proposal_V5_t pips_reject_proposal_V5;
     pd_pips_prune_proposal_V5_t pips_prune_proposal_V5;
@@ -2066,9 +2078,6 @@ typedef union {
     pd_statistics_remove_exempted_entities_V5_t statistics_remove_exempted_entities_V5;
     pd_protocolfee_change_coefficient_V5_t protocolfee_change_coefficient_V5;
     pd_protocolfee_change_base_fee_V5_t protocolfee_change_base_fee_V5;
-    pd_utility_batch_V5_t utility_batch_V5;
-    pd_utility_batch_atomic_V5_t utility_batch_atomic_V5;
-    pd_utility_batch_optimistic_V5_t utility_batch_optimistic_V5;
     pd_utility_relay_tx_V5_t utility_relay_tx_V5;
     pd_portfolio_create_portfolio_V5_t portfolio_create_portfolio_V5;
     pd_portfolio_delete_portfolio_V5_t portfolio_delete_portfolio_V5;
@@ -2104,6 +2113,7 @@ typedef union {
     pd_checkpoint_set_schedules_max_complexity_V5_t checkpoint_set_schedules_max_complexity_V5;
     pd_checkpoint_create_schedule_V5_t checkpoint_create_schedule_V5;
     pd_checkpoint_remove_schedule_V5_t checkpoint_remove_schedule_V5;
+#endif
 } pd_MethodNested_V5_t;
 
 typedef union {

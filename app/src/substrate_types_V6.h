@@ -221,6 +221,12 @@ typedef struct {
 } pd_DocumentType_V6_t;
 
 typedef struct {
+    pd_PalletName_V6_t palletName;
+    pd_bool_t total;
+    pd_VecDispatchableName_V6_t dispatchableNames;
+} pd_LegacyPalletPermissions_V6_t;
+
+typedef struct {
     uint64_t value;
 } pd_Moment_V6_t;
 
@@ -357,6 +363,12 @@ typedef struct {
 } pd_VecIdentityId_V6_t;
 
 typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecLegacyPalletPermissions_V6_t;
+
+typedef struct {
     uint8_t value;
     uint64_t _len;
     const uint8_t* _ptr;
@@ -475,6 +487,11 @@ typedef struct {
     uint8_t some;
     pd_MetaUrl_V6_t contained;
 } pd_OptionMetaUrl_V6_t;
+
+typedef struct {
+    uint8_t some;
+    pd_VecLegacyPalletPermissions_V6_t contained;
+} pd_OptionVecLegacyPalletPermissions_V6_t;
 
 typedef struct {
     pd_Permill_V6_t value;
@@ -614,6 +631,12 @@ typedef struct {
 typedef struct {
     pd_Hash_t hash;
 } pd_CodeHash_V6_t;
+
+typedef struct {
+    pd_OptionVecTicker_V6_t asset;
+    pd_OptionVecLegacyPalletPermissions_V6_t extrinsic;
+    pd_OptionVecPortfolioId_V6_t portfolio;
+} pd_LegacyPermissions_V6_t;
 
 typedef struct {
     uint8_t value;
@@ -863,11 +886,6 @@ typedef struct {
 typedef struct {
     const uint8_t* _ptr;
 } pd_Keys_V6_t;
-
-typedef struct {
-    // TODO: Not implemented
-    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_LegacyPermissions_V6_t;
 
 typedef struct {
     uint32_t value;
