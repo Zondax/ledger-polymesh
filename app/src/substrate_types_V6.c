@@ -17,6 +17,7 @@
 #include "coin.h"
 #include "parser_impl.h"
 #include "substrate_dispatch_V6.h"
+#include "substrate_strings.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -2729,24 +2730,10 @@ parser_error_t _toStringCountryCode_V6(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    //TODO complete
-    switch (v->value) {
-    case 0:
-        snprintf(outValue, outValueLen, "AF");
-        break;
-    case 1:
-        snprintf(outValue, outValueLen, "AX");
-        break;
-    case 2:
-        snprintf(outValue, outValueLen, "AL");
-        break;
-    case 3:
-        snprintf(outValue, outValueLen, "DZ");
-        break;
-    default:
-        return parser_not_supported;
+    if (v->value > COUNTRY_CODES_SIZE - 1) {
+        return parser_value_out_of_range;
     }
-
+    snprintf(outValue, outValueLen, "%s", STR_COUNTRY_CODES[v->value]);
     *pageCount = 1;
     return parser_ok;
 }
