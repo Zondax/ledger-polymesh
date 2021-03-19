@@ -17,6 +17,7 @@
 #include "coin.h"
 #include "parser_impl.h"
 #include "substrate_dispatch_V7.h"
+#include "substrate_strings.h"
 
 #include <stddef.h>
 #include <stdint.h>
