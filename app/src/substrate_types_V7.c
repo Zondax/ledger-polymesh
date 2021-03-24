@@ -1023,6 +1023,11 @@ parser_error_t _readSchedule_V7(parser_context_t* c, pd_Schedule_V7_t* v)
     return parser_not_supported;
 }
 
+parser_error_t _readScopeClaimProof_V7(parser_context_t* c, pd_ScopeClaimProof_V7_t* v)
+{
+    return parser_not_supported;
+}
+
 parser_error_t _readScopeId_V7(parser_context_t* c, pd_ScopeId_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
@@ -4113,6 +4118,17 @@ parser_error_t _toStringScheduleSpec_V7(
 
 parser_error_t _toStringSchedule_V7(
     const pd_Schedule_V7_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+    return parser_print_not_supported;
+}
+
+parser_error_t _toStringScopeClaimProof_V7(
+    const pd_ScopeClaimProof_V7_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

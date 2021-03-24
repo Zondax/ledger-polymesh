@@ -652,6 +652,16 @@ __Z_INLINE parser_error_t _readMethod_identity_gc_revoke_cdd_claim_V7(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_identity_add_investor_uniqueness_claim_v2_V7(
+    parser_context_t* c, pd_identity_add_investor_uniqueness_claim_v2_V7_t* m)
+{
+    CHECK_ERROR(_readIdentityId_V7(c, &m->target))
+    CHECK_ERROR(_readClaim_V7(c, &m->claim))
+    CHECK_ERROR(_readScopeClaimProof_V7(c, &m->proof))
+    CHECK_ERROR(_readOptionMoment_V7(c, &m->expiry))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_authorship_set_uncles_V7(
     parser_context_t* c, pd_authorship_set_uncles_V7_t* m)
 {
@@ -1558,6 +1568,14 @@ __Z_INLINE parser_error_t _readMethod_asset_add_extension_V7(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_asset_remove_smart_extension_V7(
+    parser_context_t* c, pd_asset_remove_smart_extension_V7_t* m)
+{
+    CHECK_ERROR(_readTicker_V7(c, &m->ticker))
+    CHECK_ERROR(_readAccountId_V7(c, &m->extension_id))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_asset_archive_extension_V7(
     parser_context_t* c, pd_asset_archive_extension_V7_t* m)
 {
@@ -1578,14 +1596,6 @@ __Z_INLINE parser_error_t _readMethod_asset_remove_primary_issuance_agent_V7(
     parser_context_t* c, pd_asset_remove_primary_issuance_agent_V7_t* m)
 {
     CHECK_ERROR(_readTicker_V7(c, &m->ticker))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_asset_remove_smart_extension_V7(
-    parser_context_t* c, pd_asset_remove_smart_extension_V7_t* m)
-{
-    CHECK_ERROR(_readTicker_V7(c, &m->ticker))
-    CHECK_ERROR(_readAccountId_V7(c, &m->extension_id))
     return parser_ok;
 }
 
@@ -2610,6 +2620,9 @@ parser_error_t _readMethod_V7(
     case 1559: /* module 6 call 23 */
         CHECK_ERROR(_readMethod_identity_gc_revoke_cdd_claim_V7(c, &method->nested.identity_gc_revoke_cdd_claim_V7))
         break;
+    case 1560: /* module 6 call 24 */
+        CHECK_ERROR(_readMethod_identity_add_investor_uniqueness_claim_v2_V7(c, &method->basic.identity_add_investor_uniqueness_claim_v2_V7))
+        break;
     case 1792: /* module 7 call 0 */
         CHECK_ERROR(_readMethod_authorship_set_uncles_V7(c, &method->nested.authorship_set_uncles_V7))
         break;
@@ -2971,16 +2984,16 @@ parser_error_t _readMethod_V7(
         CHECK_ERROR(_readMethod_asset_add_extension_V7(c, &method->nested.asset_add_extension_V7))
         break;
     case 7440: /* module 29 call 16 */
-        CHECK_ERROR(_readMethod_asset_archive_extension_V7(c, &method->nested.asset_archive_extension_V7))
+        CHECK_ERROR(_readMethod_asset_remove_smart_extension_V7(c, &method->nested.asset_remove_smart_extension_V7))
         break;
     case 7441: /* module 29 call 17 */
-        CHECK_ERROR(_readMethod_asset_unarchive_extension_V7(c, &method->nested.asset_unarchive_extension_V7))
+        CHECK_ERROR(_readMethod_asset_archive_extension_V7(c, &method->nested.asset_archive_extension_V7))
         break;
     case 7442: /* module 29 call 18 */
-        CHECK_ERROR(_readMethod_asset_remove_primary_issuance_agent_V7(c, &method->nested.asset_remove_primary_issuance_agent_V7))
+        CHECK_ERROR(_readMethod_asset_unarchive_extension_V7(c, &method->nested.asset_unarchive_extension_V7))
         break;
     case 7443: /* module 29 call 19 */
-        CHECK_ERROR(_readMethod_asset_remove_smart_extension_V7(c, &method->nested.asset_remove_smart_extension_V7))
+        CHECK_ERROR(_readMethod_asset_remove_primary_issuance_agent_V7(c, &method->nested.asset_remove_primary_issuance_agent_V7))
         break;
     case 7444: /* module 29 call 20 */
         CHECK_ERROR(_readMethod_asset_claim_classic_ticker_V7(c, &method->nested.asset_claim_classic_ticker_V7))
@@ -3359,6 +3372,8 @@ const char* _getMethod_ModuleName_V7(uint8_t moduleIdx)
         return STR_MO_CHECKPOINT;
     case 50:
         return STR_MO_TESTUTILS;
+    case 51:
+        return STR_MO_BASE;
 #endif
     default:
         return NULL;
@@ -3537,6 +3552,8 @@ const char* _getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_GC_ADD_CDD_CLAIM;
     case 1559: /* module 6 call 23 */
         return STR_ME_GC_REVOKE_CDD_CLAIM;
+    case 1560: /* module 6 call 24 */
+        return STR_ME_ADD_INVESTOR_UNIQUENESS_CLAIM_V2;
     case 1792: /* module 7 call 0 */
         return STR_ME_SET_UNCLES;
     case 9728: /* module 38 call 0 */
@@ -3778,13 +3795,13 @@ const char* _getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx)
     case 7439: /* module 29 call 15 */
         return STR_ME_ADD_EXTENSION;
     case 7440: /* module 29 call 16 */
-        return STR_ME_ARCHIVE_EXTENSION;
-    case 7441: /* module 29 call 17 */
-        return STR_ME_UNARCHIVE_EXTENSION;
-    case 7442: /* module 29 call 18 */
-        return STR_ME_REMOVE_PRIMARY_ISSUANCE_AGENT;
-    case 7443: /* module 29 call 19 */
         return STR_ME_REMOVE_SMART_EXTENSION;
+    case 7441: /* module 29 call 17 */
+        return STR_ME_ARCHIVE_EXTENSION;
+    case 7442: /* module 29 call 18 */
+        return STR_ME_UNARCHIVE_EXTENSION;
+    case 7443: /* module 29 call 19 */
+        return STR_ME_REMOVE_PRIMARY_ISSUANCE_AGENT;
     case 7444: /* module 29 call 20 */
         return STR_ME_CLAIM_CLASSIC_TICKER;
     case 7445: /* module 29 call 21 */
@@ -4147,6 +4164,8 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V7_
         return 2;
     case 1559: /* module 6 call 23 */
         return 1;
+    case 1560: /* module 6 call 24 */
+        return 4;
     case 1792: /* module 7 call 0 */
         return 1;
     case 9728: /* module 38 call 0 */
@@ -4392,9 +4411,9 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx, pd_Method_V7_
     case 7441: /* module 29 call 17 */
         return 2;
     case 7442: /* module 29 call 18 */
-        return 1;
-    case 7443: /* module 29 call 19 */
         return 2;
+    case 7443: /* module 29 call 19 */
+        return 1;
     case 7444: /* module 29 call 20 */
         return 2;
     case 7445: /* module 29 call 21 */
@@ -5280,6 +5299,19 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_target;
+        default:
+            return NULL;
+        }
+    case 1560: /* module 6 call 24 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target;
+        case 1:
+            return STR_IT_claim;
+        case 2:
+            return STR_IT_proof;
+        case 3:
+            return STR_IT_expiry;
         default:
             return NULL;
         }
@@ -6277,6 +6309,8 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_ticker;
+        case 1:
+            return STR_IT_extension_id;
         default:
             return NULL;
         }
@@ -6284,8 +6318,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_ticker;
-        case 1:
-            return STR_IT_extension_id;
         default:
             return NULL;
         }
@@ -8295,6 +8327,31 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
+    case 1560: /* module 6 call 24 */
+        switch (itemIdx) {
+        case 0: /* identity_add_investor_uniqueness_claim_v2_V7 - target */;
+            return _toStringIdentityId_V7(
+                &m->basic.identity_add_investor_uniqueness_claim_v2_V7.target,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* identity_add_investor_uniqueness_claim_v2_V7 - claim */;
+            return _toStringClaim_V7(
+                &m->basic.identity_add_investor_uniqueness_claim_v2_V7.claim,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* identity_add_investor_uniqueness_claim_v2_V7 - proof */;
+            return _toStringScopeClaimProof_V7(
+                &m->basic.identity_add_investor_uniqueness_claim_v2_V7.proof,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* identity_add_investor_uniqueness_claim_v2_V7 - expiry */;
+            return _toStringOptionMoment_V7(
+                &m->basic.identity_add_investor_uniqueness_claim_v2_V7.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 1792: /* module 7 call 0 */
         switch (itemIdx) {
         case 0: /* authorship_set_uncles_V7 - new_uncles */;
@@ -9827,6 +9884,21 @@ parser_error_t _getMethod_ItemValue_V7(
         }
     case 7440: /* module 29 call 16 */
         switch (itemIdx) {
+        case 0: /* asset_remove_smart_extension_V7 - ticker */;
+            return _toStringTicker_V7(
+                &m->nested.asset_remove_smart_extension_V7.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* asset_remove_smart_extension_V7 - extension_id */;
+            return _toStringAccountId_V7(
+                &m->nested.asset_remove_smart_extension_V7.extension_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 7441: /* module 29 call 17 */
+        switch (itemIdx) {
         case 0: /* asset_archive_extension_V7 - ticker */;
             return _toStringTicker_V7(
                 &m->nested.asset_archive_extension_V7.ticker,
@@ -9840,7 +9912,7 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
-    case 7441: /* module 29 call 17 */
+    case 7442: /* module 29 call 18 */
         switch (itemIdx) {
         case 0: /* asset_unarchive_extension_V7 - ticker */;
             return _toStringTicker_V7(
@@ -9855,26 +9927,11 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
-    case 7442: /* module 29 call 18 */
+    case 7443: /* module 29 call 19 */
         switch (itemIdx) {
         case 0: /* asset_remove_primary_issuance_agent_V7 - ticker */;
             return _toStringTicker_V7(
                 &m->nested.asset_remove_primary_issuance_agent_V7.ticker,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 7443: /* module 29 call 19 */
-        switch (itemIdx) {
-        case 0: /* asset_remove_smart_extension_V7 - ticker */;
-            return _toStringTicker_V7(
-                &m->nested.asset_remove_smart_extension_V7.ticker,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* asset_remove_smart_extension_V7 - extension_id */;
-            return _toStringAccountId_V7(
-                &m->nested.asset_remove_smart_extension_V7.extension_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11430,6 +11487,7 @@ bool _getMethod_IsNestingSupported_V7(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1560: // Identity:Add investor uniqueness claim v2
     case 5121: // Contracts:Set put code flag
     case 7446: // Asset:Controller transfer
     case 9229: // Settlement:Change receipt validity

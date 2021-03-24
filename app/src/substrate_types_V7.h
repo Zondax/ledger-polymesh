@@ -977,6 +977,11 @@ typedef struct {
 } pd_Schedule_V7_t;
 
 typedef struct {
+    // TODO: Not implemented
+    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
+} pd_ScopeClaimProof_V7_t;
+
+typedef struct {
     uint8_t value;
 } pd_SkippedCount_V7_t;
 

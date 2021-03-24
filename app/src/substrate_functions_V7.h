@@ -149,6 +149,7 @@ parser_error_t _readRewardDestination_V7(parser_context_t* c, pd_RewardDestinati
 parser_error_t _readScheduleId_V7(parser_context_t* c, pd_ScheduleId_V7_t* v);
 parser_error_t _readScheduleSpec_V7(parser_context_t* c, pd_ScheduleSpec_V7_t* v);
 parser_error_t _readSchedule_V7(parser_context_t* c, pd_Schedule_V7_t* v);
+parser_error_t _readScopeClaimProof_V7(parser_context_t* c, pd_ScopeClaimProof_V7_t* v);
 parser_error_t _readScopeId_V7(parser_context_t* c, pd_ScopeId_V7_t* v);
 parser_error_t _readScope_V7(parser_context_t* c, pd_Scope_V7_t* v);
 parser_error_t _readSecondaryKeyWithAuth_V7(parser_context_t* c, pd_SecondaryKeyWithAuth_V7_t* v);
@@ -1079,6 +1080,13 @@ parser_error_t _toStringScheduleSpec_V7(
 
 parser_error_t _toStringSchedule_V7(
     const pd_Schedule_V7_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringScopeClaimProof_V7(
+    const pd_ScopeClaimProof_V7_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

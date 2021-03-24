@@ -68,8 +68,17 @@ extern "C" {
 #define PD_CALL_CAPITALDISTRIBUTION_V7 48
 #define PD_CALL_CHECKPOINT_V7 49
 #define PD_CALL_TESTUTILS_V7 50
+#define PD_CALL_BASE_V7 51
 
 #ifdef SUBSTRATE_PARSER_FULL
+#define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V2_V7 24
+typedef struct {
+    pd_IdentityId_V7_t target;
+    pd_Claim_V7_t claim;
+    pd_ScopeClaimProof_V7_t proof;
+    pd_OptionMoment_V7_t expiry;
+} pd_identity_add_investor_uniqueness_claim_v2_V7_t;
+
 #define PD_CALL_CONTRACTS_SET_PUT_CODE_FLAG_V7 1
 typedef struct {
     pd_bool_t is_enabled;
@@ -163,6 +172,7 @@ typedef struct {
 
 typedef union {
 #ifdef SUBSTRATE_PARSER_FULL
+    pd_identity_add_investor_uniqueness_claim_v2_V7_t identity_add_investor_uniqueness_claim_v2_V7;
     pd_contracts_set_put_code_flag_V7_t contracts_set_put_code_flag_V7;
     pd_asset_controller_transfer_V7_t asset_controller_transfer_V7;
     pd_settlement_change_receipt_validity_V7_t settlement_change_receipt_validity_V7;
@@ -1309,28 +1319,28 @@ typedef struct {
     pd_SmartExtension_V7_t extension_details;
 } pd_asset_add_extension_V7_t;
 
-#define PD_CALL_ASSET_ARCHIVE_EXTENSION_V7 16
+#define PD_CALL_ASSET_REMOVE_SMART_EXTENSION_V7 16
+typedef struct {
+    pd_Ticker_V7_t ticker;
+    pd_AccountId_V7_t extension_id;
+} pd_asset_remove_smart_extension_V7_t;
+
+#define PD_CALL_ASSET_ARCHIVE_EXTENSION_V7 17
 typedef struct {
     pd_Ticker_V7_t ticker;
     pd_AccountId_V7_t extension_id;
 } pd_asset_archive_extension_V7_t;
 
-#define PD_CALL_ASSET_UNARCHIVE_EXTENSION_V7 17
+#define PD_CALL_ASSET_UNARCHIVE_EXTENSION_V7 18
 typedef struct {
     pd_Ticker_V7_t ticker;
     pd_AccountId_V7_t extension_id;
 } pd_asset_unarchive_extension_V7_t;
 
-#define PD_CALL_ASSET_REMOVE_PRIMARY_ISSUANCE_AGENT_V7 18
+#define PD_CALL_ASSET_REMOVE_PRIMARY_ISSUANCE_AGENT_V7 19
 typedef struct {
     pd_Ticker_V7_t ticker;
 } pd_asset_remove_primary_issuance_agent_V7_t;
-
-#define PD_CALL_ASSET_REMOVE_SMART_EXTENSION_V7 19
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_AccountId_V7_t extension_id;
-} pd_asset_remove_smart_extension_V7_t;
 
 #define PD_CALL_ASSET_CLAIM_CLASSIC_TICKER_V7 20
 typedef struct {
@@ -2030,10 +2040,10 @@ typedef union {
     pd_asset_set_funding_round_V7_t asset_set_funding_round_V7;
     pd_asset_update_identifiers_V7_t asset_update_identifiers_V7;
     pd_asset_add_extension_V7_t asset_add_extension_V7;
+    pd_asset_remove_smart_extension_V7_t asset_remove_smart_extension_V7;
     pd_asset_archive_extension_V7_t asset_archive_extension_V7;
     pd_asset_unarchive_extension_V7_t asset_unarchive_extension_V7;
     pd_asset_remove_primary_issuance_agent_V7_t asset_remove_primary_issuance_agent_V7;
-    pd_asset_remove_smart_extension_V7_t asset_remove_smart_extension_V7;
     pd_asset_claim_classic_ticker_V7_t asset_claim_classic_ticker_V7;
     pd_asset_reserve_classic_ticker_V7_t asset_reserve_classic_ticker_V7;
     pd_bridge_change_controller_V7_t bridge_change_controller_V7;
