@@ -56,7 +56,7 @@ typedef enum {
 #define COIN_NAME                           "Polymesh"
 #define COIN_TICKER                         "POLYX"
 
-#define COIN_SECRET_REQUIRED_CLICKS         10
+#define COIN_SECRET_REQUIRED_CLICKS         0
 
 #if defined(APP_STANDARD)
 #include "coin_standard.h"

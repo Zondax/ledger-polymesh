@@ -122,7 +122,7 @@ describe('SR25519', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "0000bd494f87d503ae1103008ed73e0ddd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            let txBlobStr = "040000287e8d895a3e642fa19a9c5ed97bec0d7cfc63bdb3641fc98a9c926cf0e8e93c0b63ce64c10c05d503910133158139ae28a3dfaac5fe1560a5e9e05ce1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -134,7 +134,7 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal_sr25519`, model === "nanos" ? 3 : 4);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal_sr25519`, model === "nanos" ? 6 : 7);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -171,7 +171,7 @@ describe('SR25519', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "24026bc40000000000000127c1210001000800000000000001000800000000000008cce2bd1bf485643a80bcd14091326632501ef80fcff04d9ca08adedc6e65389c0140e2010000000000424e3d8c4553fcf20ef3694464333dcf9c4d3f0c16c47213221d9f37b9b5d5220140e2010000000000544b52415354000000000000a08601000000000000000000000000005992f519733534fed05d2d98ba21c4da22282d39a5a4a725779a5aacccba8b960140e20100000000006cb4e5edb9a93bdb9ab340c8cb7c0ab4001e19264823a0373d2b510a2661ee6a0140e2010000000000544b52415354420000000000a0860100000000000000000000000000d503ae11030033158139ae28a3dfaac5fe1560a5e9e05cdd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            let txBlobStr = "040000287e8d895a3e642fa19a9c5ed97bec0d7cfc63bdb3641fc98a9c926cf0e8e93c0b63ce64c10c05d503910133158139ae28a3dfaac5fe1560a5e9e05ce1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -184,7 +184,7 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert_sr25519`, model === "nanos" ? 29 : 30);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert_sr25519`, model === "nanos" ? 12 : 13);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -202,83 +202,6 @@ describe('SR25519', function () {
             let signingcontext = Buffer.from([]);
             const valid = addon.schnorrkel_verify(pubKey,signingcontext,prehash, signatureResponse.signature.slice(1));
             expect(valid).toEqual(true);
-        } finally {
-            await sim.close();
-        }
-    });
-
-    test.each(models)('sign basic - forward/backward (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
-        try {
-            await sim.start(simOptions);
-            const app = newPolymeshApp(sim.getTransport());
-            const pathAccount = 0x80000000;
-            const pathChange = 0x80000000;
-            const pathIndex = 0x80000000;
-
-            let txBlobStr = "29000400002c000000d50391010b63ce64c10c05dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
-
-            const txBlob = Buffer.from(txBlobStr, "hex");
-
-            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1);
-            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
-
-            // do not wait here.. we need to navigate
-            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob, 1);
-            // Wait until we are not in the main menu
-            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB_sr25519`, model === "nanos" ? 4 : 5, 1);
-
-            let signatureResponse = await signatureRequest;
-            console.log(signatureResponse);
-
-            expect(signatureResponse.return_code).toEqual(0x9000);
-            expect(signatureResponse.error_message).toEqual("No errors");
-
-            // Now verify the signature
-            let prehash = txBlob;
-            if (txBlob.length > 256) {
-                const context = blake2bInit(32, null);
-                blake2bUpdate(context, txBlob);
-                prehash = Buffer.from(blake2bFinal(context));
-            }
-            let signingcontext = Buffer.from([]);
-            const valid = addon.schnorrkel_verify(pubKey,signingcontext,prehash, signatureResponse.signature.slice(1));
-            expect(valid).toEqual(true);
-        } finally {
-            await sim.close();
-        }
-    });
-
-    test.each(models)('sign basic - forward/backward-reject (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
-        try {
-            await sim.start(simOptions);
-            const app = newPolymeshApp(sim.getTransport());
-            const pathAccount = 0x80000000;
-            const pathChange = 0x80000000;
-            const pathIndex = 0x80000000;
-
-            let txBlobStr = "29000800002c000000000058000000d503910100dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
-
-            const txBlob = Buffer.from(txBlobStr, "hex");
-
-            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1);
-            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
-
-            // do not wait here.. we need to navigate
-            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob, 1);
-            // Wait until we are not in the main menu
-            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_FB_reject_sr25519`, model === "nanos" ? 7 : 8, 1);
-
-            let signatureResponse = await signatureRequest;
-            console.log(signatureResponse);
-
-            expect(signatureResponse.return_code).toEqual(0x6986);
-            expect(signatureResponse.error_message).toEqual("Transaction rejected");
         } finally {
             await sim.close();
         }
@@ -293,7 +216,7 @@ describe('SR25519', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "08054000f0c74a8500c5b8c96a648236886f8a92b96a9f52791ffc6ab801a034887ebf4f0080a01d8a0c982bb5168a76bc6387f6c5c07121b1708d2d6189fa4b4aa336113700ecf8fd4b9c748a7baf6d83933f4a470a394a4cb97375dc747be58222dae6fe660028ab7c39c82820284f6513a5709ce60db444127363fb62ea941a22bca777d95900a2a56d7e838653933fd36e5a0a307bd9c1fc196af9ed29eacfe31ea41540776600e63166b3416619b8fc5501054ba6ccabacf8168e221363ec7e12c95ea66b7623000ef4bd969740ccc4a860d2b60e2df766f92b075b985ca178ef5581c22681fe0b007ede40cfeb8592d7626347bfb8ebdfacaaaa3350c982d384d9ac6f183c0ab90c00be7b7b9260071da18923cbeb5ba56c8df53490c80baaf8f7a53b17756ec6ed0a008ab9ee1d7ddd0a41918baba2221b63758195cdef662e94cb1b0410bfad8da37e000e95f6bf1d64fb2765af2202a8f262f7e02d49c2d7a55de644dcbb26e658522f00365cb5c9480ab97bf756d4d14109e43285717d3e47073491af6134bd027bdc06008e97da96e2323b8ee4976da07cd1514bf4a7a123bdab1e2a74aec405d6ca644600f6ada0eec0bf9b898e8d51f5f3939a6b3cf2e0e17ed5b778c6002e6e97c1af0100dc12f0393490fc9254cbeb68d57151687927721f2bb751aed8e41f8bd47fd41100ea5a4502661aa5acfffff661832590c0d99b1e0c9a0f6fdcac4c00e58080e771d50391010b63ce64c10c05dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            let txBlobStr = "080540006e34558d8a0255d837207a78038826d5d6d868803bf19b4ac79c1f25551b607e00ec437f7d7c48fdcc7a0ec4b81304509c2715e80c2eea6c037f12c8b6f82d721f004423c993381a2248ad4e932ad857a59885dcd7816511fc98f1508bc7f5a48629002898b4f6d6fe083f6519fbec6878b617bd78fa24374e17c890d0f9ed41a29871009009fbc535f95ad1de9c8a21a9065b6b75761c1a88e51185075a2cbf44d101420054f7a0a6bb84f3babb8a77d770f2f43f58dc5468bea686f94038cfc8084b6d7f0098e7890acb6a1f84116a7b551f92f4c172a965d390c9368b54d9163a1620677c009ed61e5fac1d7d5d3a7f49f493c193ed5a8638755d4aaa8ae962f5c1a137993600ecf83d0d9baef51d1e5b58b372994b021970074b703574c9b73c351279c6946f0052c204370e503d59a63f7309aeb42ba79ba21cab309d5356f2751178bca9fd7900304d53f51a0af0d280bcfc76ff307a1f6d8a5d4917bbe36cc157b3637f1e0f2200007e1bae1f1c9106734faec4c6ac2229bfa83d513d3c9edb14130ad825757b1c001603b70d5dd403242e01e428311746ed265c91135e4e2a0f74e5e520b741cc57000eea86b8cbf40083d66aff6631b6ac4c97ffe1dba7c04e67d6ba3ad0b9775648005ed646319954b783e397d2ae8dbf8d56e4868a7dbb57228d6c67be02b26712260008df51facad217e63431beeb63e42f7a3e03dfbedc1be252e83a61014f481e6ad503910100e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -305,7 +228,7 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_large_nomination_sr25519`, model === "nanos" ? 34 : 19);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_large_nomination_sr25519`, model === "nanos" ? 33 : 18);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
