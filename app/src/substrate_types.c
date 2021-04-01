@@ -464,7 +464,7 @@ parser_error_t _toStringCall(
     ctx.tx_obj->nestCallIdx._ptr = NULL;
     ctx.tx_obj->nestCallIdx._nextPtr = NULL;
     ctx.tx_obj->nestCallIdx._lenBuffer = 0;
-    ctx.tx_obj->nestCallIdx.isTail = true;
+    ctx.tx_obj->nestCallIdx.isTail = false;
 
     // Read the Call, so we get the contained Method
     parser_error_t err = _readCallImpl(&ctx, &_call, (pd_MethodNested_t*)&_txObj.method);
