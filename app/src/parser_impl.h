@@ -129,7 +129,7 @@ GEN_DEC_READFIX_UNSIGNED(64);
     parser_context_t ctx;                                   \
     uint8_t chunkPageCount;                                 \
     uint16_t currentPage, currentTotalPage = 0;             \
-        if(v->_len == 0) {                                  \
+    if(v->_len == 0) {                                      \
         *pageCount = 1;                                     \
         snprintf(outValue, outValueLen, "<Empty>");         \
         return parser_ok;                                   \
