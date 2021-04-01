@@ -358,4 +358,102 @@ describe('Standard', function () {
         }
     });
 
+    test.each(models)('nested tx - lvl2 - sign expert (%s)', async function (_, {model, prefix, path}) {
+        const sim = new Zemu(path);
+        try {
+            await sim.start({model, ...simOptions});
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            // Change to expert mode so we can skip fields
+            await sim.clickRight();
+            await sim.clickBoth();
+            await sim.clickLeft();
+
+            let txBlobStr = "160301110300d4c3f104025f865e0bd398c1a96f1944e9b44d09b9def6501a511f90c04a305911030068e7413b8ca73d3ece04042982c291a33b4b9d6faf16b9dc6d2ece1b272fdf81000058000000d5038d2400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_2_expert`, model === "nanos" ? 16 : 16);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
+    test.each(models)('nested tx - lvl3 - sign expert (%s)', async function (_, {model, prefix, path}) {
+        const sim = new Zemu(path);
+        try {
+            await sim.start({model, ...simOptions});
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            // Change to expert mode so we can skip fields
+            await sim.clickRight();
+            await sim.clickBoth();
+            await sim.clickLeft();
+
+            let txBlobStr = "1603001103002f769ae07fff20645edc5319382b4bd4eca7f59ab2e7accc35f17ec856d91fb4110300a655dfa214bfce9f89a5fbaeb01312faf0437070570e37cc5dca70528c3ad228110300567c34919ecdf1e8b56ac3044e5b98b00e58e3a3364137e8c95dc3545de6b0c3000058000000d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_3_expert`, model === "nanos" ? 16 : 16);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
 });
