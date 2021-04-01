@@ -30,7 +30,7 @@ var simOptions = {
     logging: true,
     start_delay: 3000,
     custom: `-s "${APP_SEED}"`,
-    X11: true
+    X11: false
 };
 
 let models = [
@@ -245,75 +245,75 @@ describe('Standard', function () {
         }
     });
 
-    // test.each(models)('sign utility.batch (%s)', async function (_, {model, prefix, path}) {
-    //     const sim = new Zemu(path);
-    //     try {
-    //         await sim.start({model, ...simOptions});
-    //         const app = newPolymeshApp(sim.getTransport());
-    //         const pathAccount = 0x80000000;
-    //         const pathChange = 0x80000000;
-    //         const pathIndex = 0x80000000;
-    //
-    //         let txBlobStr = "290014080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0103000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0104000000080910d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
-    //
-    //         const txBlob = Buffer.from(txBlobStr, "hex");
-    //
-    //         const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
-    //         const pubKey = Buffer.from(responseAddr.pubKey, "hex");
-    //
-    //         // do not wait here.. we need to navigate
-    //         const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
-    //         // Wait until we are not in the main menu
-    //         await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-    //
-    //         await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_d3`, model === "nanos" ? 8 : 9);
-    //
-    //         let signatureResponse = await signatureRequest;
-    //         console.log(signatureResponse);
-    //
-    //         expect(signatureResponse.return_code).toEqual(0x9000);
-    //         expect(signatureResponse.error_message).toEqual("No errors");
-    //
-    //         // Now verify the signature
-    //         let prehash = txBlob;
-    //         if (txBlob.length > 256) {
-    //             const context = blake2bInit(32, null);
-    //             blake2bUpdate(context, txBlob);
-    //             prehash = Buffer.from(blake2bFinal(context));
-    //         }
-    //         const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
-    //         expect(valid).toEqual(true);
-    //     } finally {
-    //         await sim.close();
-    //     }
-    // });
-    //
-    // test.each(models)('sign utility.batch - reject (%s)', async function (_, {model, prefix, path}) {
-    //     const sim = new Zemu(path);
-    //     try {
-    //         await sim.start({model, ...simOptions});
-    //         const app = newPolymeshApp(sim.getTransport());
-    //         const pathAccount = 0x80000000;
-    //         const pathChange = 0x80000000;
-    //         const pathIndex = 0x80000000;
-    //
-    //         let txBlobStr = "29000c00002c000000000058000000000084000000d503910103d2029649dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
-    //         const txBlob = Buffer.from(txBlobStr, "hex");
-    //
-    //         const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
-    //
-    //         await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-    //         await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_reject`, model === "nanos" ? 9 : 10);
-    //
-    //         let signatureResponse = await signatureRequest;
-    //         console.log(signatureResponse);
-    //
-    //         expect(signatureResponse.return_code).toEqual(0x6986);
-    //         expect(signatureResponse.error_message).toEqual("Transaction rejected");
-    //     } finally {
-    //         await sim.close();
-    //     }
-    // });
+    test.each(models)('sign utility.batch (%s)', async function (_, {model, prefix, path}) {
+        const sim = new Zemu(path);
+        try {
+            await sim.start({model, ...simOptions});
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "290014080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0103000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0104000000080910d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex);
+            const pubKey = Buffer.from(responseAddr.pubKey, "hex");
+
+            // do not wait here.. we need to navigate
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+            // Wait until we are not in the main menu
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_d3`, model === "nanos" ? 8 : 9);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x9000);
+            expect(signatureResponse.error_message).toEqual("No errors");
+
+            // Now verify the signature
+            let prehash = txBlob;
+            if (txBlob.length > 256) {
+                const context = blake2bInit(32, null);
+                blake2bUpdate(context, txBlob);
+                prehash = Buffer.from(blake2bFinal(context));
+            }
+            const valid = ed25519.verify(signatureResponse.signature.slice(1), prehash, pubKey);
+            expect(valid).toEqual(true);
+        } finally {
+            await sim.close();
+        }
+    });
+
+    test.each(models)('sign utility.batch - reject (%s)', async function (_, {model, prefix, path}) {
+        const sim = new Zemu(path);
+        try {
+            await sim.start({model, ...simOptions});
+            const app = newPolymeshApp(sim.getTransport());
+            const pathAccount = 0x80000000;
+            const pathChange = 0x80000000;
+            const pathIndex = 0x80000000;
+
+            let txBlobStr = "29000c00002c000000000058000000000084000000d503910103d2029649dd0700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
+            const txBlob = Buffer.from(txBlobStr, "hex");
+
+            const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
+
+            await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_reject`, model === "nanos" ? 9 : 10);
+
+            let signatureResponse = await signatureRequest;
+            console.log(signatureResponse);
+
+            expect(signatureResponse.return_code).toEqual(0x6986);
+            expect(signatureResponse.error_message).toEqual("Transaction rejected");
+        } finally {
+            await sim.close();
+        }
+    });
 
     test.each(models)('sign large nomination (%s)', async function (_, {model, prefix, path}) {
         const sim = new Zemu(path);
@@ -385,7 +385,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_2_expert`, model === "nanos" ? 16 : 16);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_2_expert`, model === "nanos" ? 16 : 15);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -434,7 +434,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_3_expert`, model === "nanos" ? 16 : 16);
+            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_3_expert`, model === "nanos" ? 16 : 18);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -455,5 +455,4 @@ describe('Standard', function () {
             await sim.close();
         }
     });
-
 });
