@@ -39,7 +39,9 @@ typedef uint32_t pd_BlockNumber_t;
 
 #define CHECK_ERROR(FUNC_CALL)          \
     {                                   \
+        check_app_canary();             \
         parser_error_t err = FUNC_CALL; \
+        check_app_canary();             \
         if (err != parser_ok)           \
             return err;                 \
     }

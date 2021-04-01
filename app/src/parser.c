@@ -89,6 +89,7 @@ parser_error_t parser_validate(const parser_context_t *ctx) {
 
     for (uint8_t idx = 0; idx < numItems; idx++) {
         uint8_t pageCount = 0;
+        zemu_log_stack("validate::getItem");
         CHECK_PARSER_ERR(parser_getItem(ctx, idx, tmpKey, sizeof(tmpKey), tmpVal, sizeof(tmpVal), 0, &pageCount))
     }
 

@@ -61,6 +61,7 @@ parser_error_t _readCompactu64(parser_context_t* c, pd_Compactu64_t* v)
 
 parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_t* m)
 {
+    zemu_log_stack("_readCallImpl");
     // If it's the first Call, store a pointer to it
     if (c->tx_obj->nestCallIdx._ptr == NULL) {
         c->tx_obj->nestCallIdx._ptr = c->buffer + c->offset;
@@ -85,6 +86,8 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 
     // Read and check the contained method on this Call
     CHECK_ERROR(_readMethod(c, v->callIndex.moduleIdx, v->callIndex.idx, (pd_Method_t*)m))
+
+    check_app_canary();
 
     // The instance of 'v' corresponding to the upper call on the stack (persisted variable)
     // will end up having the pointer to the first Call and to the 'next' one if exists.
@@ -133,6 +136,9 @@ parser_error_t _readCall(parser_context_t* c, pd_Call_t* v)
         v->nestCallIdx._nextPtr = c->tx_obj->nestCallIdx._nextPtr;
     }
     v->nestCallIdx.slotIdx = c->tx_obj->nestCallIdx.slotIdx;
+
+    check_app_canary();
+
     return parser_ok;
 }
 
@@ -442,6 +448,7 @@ parser_error_t _toStringCall(
 {
     CLEAN_AND_CHECK()
     *pageCount = 1;
+    zemu_log_stack("_toStringCall");
 
     parser_context_t ctx;
 
