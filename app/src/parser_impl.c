@@ -84,6 +84,8 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "Unexpected unparsed bytes";
         case parser_print_not_supported:
             return "Value cannot be printed";
+        case parser_tx_nesting_limit_reached:
+            return "Max nesting reached";
         default:
             return "Unrecognized error code";
     }
