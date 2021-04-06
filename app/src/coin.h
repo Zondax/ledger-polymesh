@@ -52,11 +52,11 @@ typedef enum {
 
 #define COIN_AMOUNT_DECIMAL_PLACES          6
 
-#define COIN_GENESIS_HASH                   "12fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7"
+#define COIN_GENESIS_HASH                   "9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f"
 #define COIN_NAME                           "Polymesh"
 #define COIN_TICKER                         "POLYX"
 
-#define COIN_SECRET_REQUIRED_CLICKS         10
+#define COIN_SECRET_REQUIRED_CLICKS         0
 
 #if defined(APP_STANDARD)
 #include "coin_standard.h"

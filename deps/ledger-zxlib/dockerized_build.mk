@@ -274,7 +274,7 @@ cpp_test:
 
 .PHONY: fuzz_build
 fuzz_build:
-	cmake -B build -DCMAKE_C_COMPILER=clang-10 -DCMAKE_CXX_COMPILER=clang++-10 -DCMAKE_BUILD_TYPE=Debug -DENABLE_FUZZING=1 -DENABLE_SANITIZERS=1 .
+	cmake -B build -DCMAKE_C_COMPILER=clang-10 -DCMAKE_CXX_COMPILER=clang++-10 -DCMAKE_BUILD_TYPE=Debug -DENABLE_FUZZING=1 -DENABLE_SANITIZERS=1 -DFUZZ_LOGGING=1 .
 	make -C build
 
 .PHONY: fuzz
@@ -282,5 +282,6 @@ fuzz: fuzz_build
 	./fuzz/run-fuzzers.py
 
 .PHONY: fuzz_crash
+fuzz_crash: FUZZ_LOGGING=1
 fuzz_crash: fuzz_build
 	./fuzz/run-fuzz-crashes.py
