@@ -24,9 +24,11 @@ extern "C" {
 #include "substrate_methods.h"
 
 #ifdef TARGET_NANOX
-#define MAX_NESTING 6
+#define MAX_CALL_NESTING_SIZE 6
+#define MAX_CALL_VEC_SIZE 6
 #else
-#define MAX_NESTING 2
+#define MAX_CALL_NESTING_SIZE 2
+#define MAX_CALL_VEC_SIZE 5
 #endif
 
 typedef struct {

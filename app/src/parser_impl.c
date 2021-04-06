@@ -85,7 +85,9 @@ const char *parser_getErrorDescription(parser_error_t err) {
         case parser_print_not_supported:
             return "Value cannot be printed";
         case parser_tx_nesting_limit_reached:
-            return "Max nesting reached";
+            return "Max nested calls reached";
+    case parser_tx_call_vec_too_large:
+            return "Call vector exceeds limit";
         default:
             return "Unrecognized error code";
     }
