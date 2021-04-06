@@ -26,7 +26,7 @@ extern "C" {
 #ifdef TARGET_NANOX
 #define MAX_NESTING 6
 #else
-#define MAX_NESTING 3
+#define MAX_NESTING 2
 #endif
 
 typedef struct {
