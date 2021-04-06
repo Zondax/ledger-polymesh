@@ -24,9 +24,9 @@ extern "C" {
 #include "substrate_methods.h"
 
 #ifdef TARGET_NANOX
-#define MAX_METHOD_SLOTS 10
+#define MAX_NESTING 6
 #else
-#define MAX_METHOD_SLOTS 6
+#define MAX_NESTING 3
 #endif
 
 typedef struct {

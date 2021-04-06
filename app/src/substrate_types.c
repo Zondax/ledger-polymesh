@@ -77,6 +77,9 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 
     // To keep track on how many nested Calls we have
     c->tx_obj->nestCallIdx.slotIdx++;
+    if (c->tx_obj->nestCallIdx.slotIdx > MAX_NESTING) {
+        return parser_tx_nesting_limit_reached;
+    }
 
     CHECK_ERROR(_readCallIndex(c, &v->callIndex));
 
@@ -86,8 +89,6 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 
     // Read and check the contained method on this Call
     CHECK_ERROR(_readMethod(c, v->callIndex.moduleIdx, v->callIndex.idx, (pd_Method_t*)m))
-
-    check_app_canary();
 
     // The instance of 'v' corresponding to the upper call on the stack (persisted variable)
     // will end up having the pointer to the first Call and to the 'next' one if exists.
@@ -136,9 +137,6 @@ parser_error_t _readCall(parser_context_t* c, pd_Call_t* v)
         v->nestCallIdx._nextPtr = c->tx_obj->nestCallIdx._nextPtr;
     }
     v->nestCallIdx.slotIdx = c->tx_obj->nestCallIdx.slotIdx;
-
-    check_app_canary();
-
     return parser_ok;
 }
 
@@ -159,7 +157,7 @@ parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v)
     CHECK_PARSER_ERR(_readCompactInt(c, &clen));
     CHECK_PARSER_ERR(_getValue(&clen, &v->_len));
 
-    if (v->_len > MAX_METHOD_SLOTS) {
+    if (v->_len > MAX_NESTING) {
         return parser_tx_nesting_limit_reached;
     }
 
