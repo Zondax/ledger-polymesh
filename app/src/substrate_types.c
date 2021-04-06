@@ -77,7 +77,7 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 
     // To keep track on how many nested Calls we have
     c->tx_obj->nestCallIdx.slotIdx++;
-    if (c->tx_obj->nestCallIdx.slotIdx > MAX_NESTING) {
+    if (c->tx_obj->nestCallIdx.slotIdx > MAX_CALL_NESTING_SIZE) {
         return parser_tx_nesting_limit_reached;
     }
 
@@ -157,8 +157,8 @@ parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v)
     CHECK_PARSER_ERR(_readCompactInt(c, &clen));
     CHECK_PARSER_ERR(_getValue(&clen, &v->_len));
 
-    if (v->_len > MAX_NESTING) {
-        return parser_tx_nesting_limit_reached;
+    if (v->_len > MAX_CALL_VEC_SIZE) {
+        return parser_tx_call_vec_too_large;
     }
 
     v->_ptr = c->buffer + c->offset;
@@ -168,6 +168,7 @@ parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v)
     }
 
     for (uint64_t i = 0; i < v->_len; i++) {
+        c->tx_obj->nestCallIdx.slotIdx = 0;
         CHECK_ERROR(_readCall(c, &dummy))
     }
     v->_lenBuffer = c->offset - v->_lenBuffer;
@@ -469,6 +470,7 @@ parser_error_t _toStringCall(
     ctx.tx_obj->nestCallIdx._ptr = NULL;
     ctx.tx_obj->nestCallIdx._nextPtr = NULL;
     ctx.tx_obj->nestCallIdx._lenBuffer = 0;
+    ctx.tx_obj->nestCallIdx.slotIdx = 0;
     ctx.tx_obj->nestCallIdx.isTail = false;
 
     // Read the Call, so we get the contained Method
@@ -572,6 +574,7 @@ parser_error_t _toStringVecCall(
     for (uint16_t i = 0; i < v->_len; i++) {
         ctx.tx_obj->nestCallIdx._ptr = NULL;
         ctx.tx_obj->nestCallIdx._nextPtr = NULL;
+        ctx.tx_obj->nestCallIdx.slotIdx = 0;
         CHECK_ERROR(_readCallImpl(&ctx, &_call, (pd_MethodNested_t*)&_txObj.method));
         CHECK_ERROR(_toStringCall(&_call, outValue, outValueLen, 0, &chunkPageCount));
         (*pageCount) += chunkPageCount;
@@ -582,6 +585,7 @@ parser_error_t _toStringVecCall(
     for (uint16_t i = 0; i < v->_len; i++) {
         ctx.tx_obj->nestCallIdx._ptr = NULL;
         ctx.tx_obj->nestCallIdx._nextPtr = NULL;
+        ctx.tx_obj->nestCallIdx.slotIdx = 0;
         CHECK_ERROR(_readCallImpl(&ctx, &_call, (pd_MethodNested_t*)&_txObj.method));
         chunkPageCount = 1;
         currentPage = 0;
