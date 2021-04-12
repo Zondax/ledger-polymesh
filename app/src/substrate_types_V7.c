@@ -43,7 +43,7 @@ parser_error_t _readCompactMoment_V7(parser_context_t* c, pd_CompactMoment_V7_t*
     return _readCompactInt(c, v);
 }
 
-parser_error_t _readAccountId_V7(parser_context_t* c, pd_AccountId_V7_t* v){
+parser_error_t _readAccountId_V7(parser_context_t* c, pd_AccountId_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
@@ -256,7 +256,7 @@ parser_error_t _readCalendarUnit_V7(parser_context_t* c, pd_CalendarUnit_V7_t* v
     return parser_ok;
 }
 
-parser_error_t _readCddId_V7(parser_context_t* c, pd_CddId_V7_t* v){
+parser_error_t _readCddId_V7(parser_context_t* c, pd_CddId_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
@@ -514,7 +514,7 @@ parser_error_t _readDocument_V7(parser_context_t* c, pd_Document_V7_t* v)
     return parser_ok;
 }
 
-parser_error_t _readEcdsaSignature_V7(parser_context_t* c, pd_EcdsaSignature_V7_t* v){
+parser_error_t _readEcdsaSignature_V7(parser_context_t* c, pd_EcdsaSignature_V7_t* v) {
     GEN_DEF_READARRAY(65)
 }
 
@@ -535,7 +535,7 @@ parser_error_t _readEraIndex_V7(parser_context_t* c, pd_EraIndex_V7_t* v)
     return _readUInt32(c, &v->value);
 }
 
-parser_error_t _readEthereumAddress_V7(parser_context_t* c, pd_EthereumAddress_V7_t* v){
+parser_error_t _readEthereumAddress_V7(parser_context_t* c, pd_EthereumAddress_V7_t* v) {
     GEN_DEF_READARRAY(20)
 }
 
@@ -572,15 +572,11 @@ parser_error_t _readGrandpaEquivocationProof_V7(parser_context_t* c, pd_GrandpaE
     return parser_not_supported;
 }
 
-parser_error_t _readIdentityId_V7(parser_context_t* c, pd_IdentityId_V7_t* v){
+parser_error_t _readIdentityId_V7(parser_context_t* c, pd_IdentityId_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
-parser_error_t _readInvestorUid_V7(parser_context_t* c, pd_InvestorUid_V7_t* v){
-    GEN_DEF_READARRAY(16)
-}
-
-parser_error_t _readInvestorZKProofData_V7(parser_context_t* c, pd_InvestorZKProofData_V7_t* v){
+parser_error_t _readInvestorZKProofData_V7(parser_context_t* c, pd_InvestorZKProofData_V7_t* v) {
     GEN_DEF_READARRAY(64)
 }
 
@@ -589,11 +585,11 @@ parser_error_t _readKeyOwnerProof_V7(parser_context_t* c, pd_KeyOwnerProof_V7_t*
     return parser_not_supported;
 }
 
-parser_error_t _readKeyValue_V7(parser_context_t* c, pd_KeyValue_V7_t* v){
+parser_error_t _readKeyValue_V7(parser_context_t* c, pd_KeyValue_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
-parser_error_t _readKey_V7(parser_context_t* c, pd_Key_V7_t* v){
+parser_error_t _readKey_V7(parser_context_t* c, pd_Key_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
@@ -1028,7 +1024,7 @@ parser_error_t _readScopeClaimProof_V7(parser_context_t* c, pd_ScopeClaimProof_V
     return parser_not_supported;
 }
 
-parser_error_t _readScopeId_V7(parser_context_t* c, pd_ScopeId_V7_t* v){
+parser_error_t _readScopeId_V7(parser_context_t* c, pd_ScopeId_V7_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
@@ -1110,7 +1106,7 @@ parser_error_t _readSignatory_V7(parser_context_t* c, pd_Signatory_V7_t* v)
     return parser_ok;
 }
 
-parser_error_t _readSignature_V7(parser_context_t* c, pd_Signature_V7_t* v){
+parser_error_t _readSignature_V7(parser_context_t* c, pd_Signature_V7_t* v) {
     GEN_DEF_READARRAY(64)
 }
 
@@ -1419,143 +1415,143 @@ parser_error_t _readWeight_V7(parser_context_t* c, pd_Weight_V7_t* v)
     return _readUInt64(c, &v->value);
 }
 
-parser_error_t _readVecAccountId_V7(parser_context_t* c, pd_VecAccountId_V7_t* v){
+parser_error_t _readVecAccountId_V7(parser_context_t* c, pd_VecAccountId_V7_t* v) {
     GEN_DEF_READVECTOR(AccountId_V7)
 }
 
-parser_error_t _readVecAssetIdentifier_V7(parser_context_t* c, pd_VecAssetIdentifier_V7_t* v){
+parser_error_t _readVecAssetIdentifier_V7(parser_context_t* c, pd_VecAssetIdentifier_V7_t* v) {
     GEN_DEF_READVECTOR(AssetIdentifier_V7)
 }
 
-parser_error_t _readVecBallotVote_V7(parser_context_t* c, pd_VecBallotVote_V7_t* v){
+parser_error_t _readVecBallotVote_V7(parser_context_t* c, pd_VecBallotVote_V7_t* v) {
     GEN_DEF_READVECTOR(BallotVote_V7)
 }
 
-parser_error_t _readVecBeneficiary_V7(parser_context_t* c, pd_VecBeneficiary_V7_t* v){
+parser_error_t _readVecBeneficiary_V7(parser_context_t* c, pd_VecBeneficiary_V7_t* v) {
     GEN_DEF_READVECTOR(Beneficiary_V7)
 }
 
-parser_error_t _readVecBridgeTx_V7(parser_context_t* c, pd_VecBridgeTx_V7_t* v){
+parser_error_t _readVecBridgeTx_V7(parser_context_t* c, pd_VecBridgeTx_V7_t* v) {
     GEN_DEF_READVECTOR(BridgeTx_V7)
 }
 
-parser_error_t _readVecChoiceTitle_V7(parser_context_t* c, pd_VecChoiceTitle_V7_t* v){
+parser_error_t _readVecChoiceTitle_V7(parser_context_t* c, pd_VecChoiceTitle_V7_t* v) {
     GEN_DEF_READVECTOR(ChoiceTitle_V7)
 }
 
-parser_error_t _readVecClaimType_V7(parser_context_t* c, pd_VecClaimType_V7_t* v){
+parser_error_t _readVecClaimType_V7(parser_context_t* c, pd_VecClaimType_V7_t* v) {
     GEN_DEF_READVECTOR(ClaimType_V7)
 }
 
-parser_error_t _readVecClaim_V7(parser_context_t* c, pd_VecClaim_V7_t* v){
+parser_error_t _readVecClaim_V7(parser_context_t* c, pd_VecClaim_V7_t* v) {
     GEN_DEF_READVECTOR(Claim_V7)
 }
 
-parser_error_t _readVecComplianceRequirement_V7(parser_context_t* c, pd_VecComplianceRequirement_V7_t* v){
+parser_error_t _readVecComplianceRequirement_V7(parser_context_t* c, pd_VecComplianceRequirement_V7_t* v) {
     GEN_DEF_READVECTOR(ComplianceRequirement_V7)
 }
 
-parser_error_t _readVecCondition_V7(parser_context_t* c, pd_VecCondition_V7_t* v){
+parser_error_t _readVecCondition_V7(parser_context_t* c, pd_VecCondition_V7_t* v) {
     GEN_DEF_READVECTOR(Condition_V7)
 }
 
-parser_error_t _readVecDispatchableName_V7(parser_context_t* c, pd_VecDispatchableName_V7_t* v){
+parser_error_t _readVecDispatchableName_V7(parser_context_t* c, pd_VecDispatchableName_V7_t* v) {
     GEN_DEF_READVECTOR(DispatchableName_V7)
 }
 
-parser_error_t _readVecDocumentId_V7(parser_context_t* c, pd_VecDocumentId_V7_t* v){
+parser_error_t _readVecDocumentId_V7(parser_context_t* c, pd_VecDocumentId_V7_t* v) {
     GEN_DEF_READVECTOR(DocumentId_V7)
 }
 
-parser_error_t _readVecDocument_V7(parser_context_t* c, pd_VecDocument_V7_t* v){
+parser_error_t _readVecDocument_V7(parser_context_t* c, pd_VecDocument_V7_t* v) {
     GEN_DEF_READVECTOR(Document_V7)
 }
 
-parser_error_t _readVecIdentityId_V7(parser_context_t* c, pd_VecIdentityId_V7_t* v){
+parser_error_t _readVecIdentityId_V7(parser_context_t* c, pd_VecIdentityId_V7_t* v) {
     GEN_DEF_READVECTOR(IdentityId_V7)
 }
 
-parser_error_t _readVecKeyValue_V7(parser_context_t* c, pd_VecKeyValue_V7_t* v){
+parser_error_t _readVecKeyValue_V7(parser_context_t* c, pd_VecKeyValue_V7_t* v) {
     GEN_DEF_READVECTOR(KeyValue_V7)
 }
 
-parser_error_t _readVecKey_V7(parser_context_t* c, pd_VecKey_V7_t* v){
+parser_error_t _readVecKey_V7(parser_context_t* c, pd_VecKey_V7_t* v) {
     GEN_DEF_READVECTOR(Key_V7)
 }
 
-parser_error_t _readVecLeg_V7(parser_context_t* c, pd_VecLeg_V7_t* v){
+parser_error_t _readVecLeg_V7(parser_context_t* c, pd_VecLeg_V7_t* v) {
     GEN_DEF_READVECTOR(Leg_V7)
 }
 
-parser_error_t _readVecLegacyPalletPermissions_V7(parser_context_t* c, pd_VecLegacyPalletPermissions_V7_t* v){
+parser_error_t _readVecLegacyPalletPermissions_V7(parser_context_t* c, pd_VecLegacyPalletPermissions_V7_t* v) {
     GEN_DEF_READVECTOR(LegacyPalletPermissions_V7)
 }
 
-parser_error_t _readVecLookupSource_V7(parser_context_t* c, pd_VecLookupSource_V7_t* v){
+parser_error_t _readVecLookupSource_V7(parser_context_t* c, pd_VecLookupSource_V7_t* v) {
     GEN_DEF_READVECTOR(LookupSource_V7)
 }
 
-parser_error_t _readVecMotion_V7(parser_context_t* c, pd_VecMotion_V7_t* v){
+parser_error_t _readVecMotion_V7(parser_context_t* c, pd_VecMotion_V7_t* v) {
     GEN_DEF_READVECTOR(Motion_V7)
 }
 
-parser_error_t _readVecMovePortfolioItem_V7(parser_context_t* c, pd_VecMovePortfolioItem_V7_t* v){
+parser_error_t _readVecMovePortfolioItem_V7(parser_context_t* c, pd_VecMovePortfolioItem_V7_t* v) {
     GEN_DEF_READVECTOR(MovePortfolioItem_V7)
 }
 
-parser_error_t _readVecPalletPermissions_V7(parser_context_t* c, pd_VecPalletPermissions_V7_t* v){
+parser_error_t _readVecPalletPermissions_V7(parser_context_t* c, pd_VecPalletPermissions_V7_t* v) {
     GEN_DEF_READVECTOR(PalletPermissions_V7)
 }
 
-parser_error_t _readVecPortfolioId_V7(parser_context_t* c, pd_VecPortfolioId_V7_t* v){
+parser_error_t _readVecPortfolioId_V7(parser_context_t* c, pd_VecPortfolioId_V7_t* v) {
     GEN_DEF_READVECTOR(PortfolioId_V7)
 }
 
-parser_error_t _readVecPriceTier_V7(parser_context_t* c, pd_VecPriceTier_V7_t* v){
+parser_error_t _readVecPriceTier_V7(parser_context_t* c, pd_VecPriceTier_V7_t* v) {
     GEN_DEF_READVECTOR(PriceTier_V7)
 }
 
-parser_error_t _readVecReceiptDetails_V7(parser_context_t* c, pd_VecReceiptDetails_V7_t* v){
+parser_error_t _readVecReceiptDetails_V7(parser_context_t* c, pd_VecReceiptDetails_V7_t* v) {
     GEN_DEF_READVECTOR(ReceiptDetails_V7)
 }
 
-parser_error_t _readVecScopeId_V7(parser_context_t* c, pd_VecScopeId_V7_t* v){
+parser_error_t _readVecScopeId_V7(parser_context_t* c, pd_VecScopeId_V7_t* v) {
     GEN_DEF_READVECTOR(ScopeId_V7)
 }
 
-parser_error_t _readVecSecondaryKeyWithAuth_V7(parser_context_t* c, pd_VecSecondaryKeyWithAuth_V7_t* v){
+parser_error_t _readVecSecondaryKeyWithAuth_V7(parser_context_t* c, pd_VecSecondaryKeyWithAuth_V7_t* v) {
     GEN_DEF_READVECTOR(SecondaryKeyWithAuth_V7)
 }
 
-parser_error_t _readVecSecondaryKey_V7(parser_context_t* c, pd_VecSecondaryKey_V7_t* v){
+parser_error_t _readVecSecondaryKey_V7(parser_context_t* c, pd_VecSecondaryKey_V7_t* v) {
     GEN_DEF_READVECTOR(SecondaryKey_V7)
 }
 
-parser_error_t _readVecSignatory_V7(parser_context_t* c, pd_VecSignatory_V7_t* v){
+parser_error_t _readVecSignatory_V7(parser_context_t* c, pd_VecSignatory_V7_t* v) {
     GEN_DEF_READVECTOR(Signatory_V7)
 }
 
-parser_error_t _readVecTicker_V7(parser_context_t* c, pd_VecTicker_V7_t* v){
+parser_error_t _readVecTicker_V7(parser_context_t* c, pd_VecTicker_V7_t* v) {
     GEN_DEF_READVECTOR(Ticker_V7)
 }
 
-parser_error_t _readVecTrustedIssuer_V7(parser_context_t* c, pd_VecTrustedIssuer_V7_t* v){
+parser_error_t _readVecTrustedIssuer_V7(parser_context_t* c, pd_VecTrustedIssuer_V7_t* v) {
     GEN_DEF_READVECTOR(TrustedIssuer_V7)
 }
 
-parser_error_t _readVecTupleIdentityIdTax_V7(parser_context_t* c, pd_VecTupleIdentityIdTax_V7_t* v){
+parser_error_t _readVecTupleIdentityIdTax_V7(parser_context_t* c, pd_VecTupleIdentityIdTax_V7_t* v) {
     GEN_DEF_READVECTOR(TupleIdentityIdTax_V7)
 }
 
-parser_error_t _readVecTupleIdentityIdbool_V7(parser_context_t* c, pd_VecTupleIdentityIdbool_V7_t* v){
+parser_error_t _readVecTupleIdentityIdbool_V7(parser_context_t* c, pd_VecTupleIdentityIdbool_V7_t* v) {
     GEN_DEF_READVECTOR(TupleIdentityIdbool_V7)
 }
 
-parser_error_t _readVecTuplePipIdSnapshotResult_V7(parser_context_t* c, pd_VecTuplePipIdSnapshotResult_V7_t* v){
+parser_error_t _readVecTuplePipIdSnapshotResult_V7(parser_context_t* c, pd_VecTuplePipIdSnapshotResult_V7_t* v) {
     GEN_DEF_READVECTOR(TuplePipIdSnapshotResult_V7)
 }
 
-parser_error_t _readVecValidatorIndex_V7(parser_context_t* c, pd_VecValidatorIndex_V7_t* v){
+parser_error_t _readVecValidatorIndex_V7(parser_context_t* c, pd_VecValidatorIndex_V7_t* v) {
     GEN_DEF_READVECTOR(ValidatorIndex_V7)
 }
 
@@ -1654,6 +1650,15 @@ parser_error_t _readOptionRecordDateSpec_V7(parser_context_t* c, pd_OptionRecord
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readRecordDateSpec_V7(c, &v->contained))
+    }
+    return parser_ok;
+}
+
+parser_error_t _readOptionScope_V7(parser_context_t* c, pd_OptionScope_V7_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readScope_V7(c, &v->contained))
     }
     return parser_ok;
 }
@@ -2360,7 +2365,7 @@ parser_error_t _toStringCddId_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -2775,7 +2780,7 @@ parser_error_t _toStringDocumentHash_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(v->_len)
 }
 
@@ -2909,7 +2914,7 @@ parser_error_t _toStringEcdsaSignature_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(65)
 }
 
@@ -2970,7 +2975,7 @@ parser_error_t _toStringEthereumAddress_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(20)
 }
 
@@ -3026,17 +3031,8 @@ parser_error_t _toStringIdentityId_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(32)
-}
-
-parser_error_t _toStringInvestorUid_V7(
-    const pd_InvestorUid_V7_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount){
-    GEN_DEF_TOSTRING_ARRAY(16)
 }
 
 parser_error_t _toStringInvestorZKProofData_V7(
@@ -3044,7 +3040,7 @@ parser_error_t _toStringInvestorZKProofData_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(64)
 }
 
@@ -3088,7 +3084,7 @@ parser_error_t _toStringKeys_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(4 * 32)
 }
 
@@ -4144,7 +4140,7 @@ parser_error_t _toStringScopeId_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -4291,7 +4287,7 @@ parser_error_t _toStringSignature_V7(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(64)
 }
 
@@ -5718,6 +5714,27 @@ parser_error_t _toStringOptionRecordDateSpec_V7(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringRecordDateSpec_V7(
+            &v->contained,
+            outValue, outValueLen,
+            pageIdx, pageCount));
+    } else {
+        snprintf(outValue, outValueLen, "None");
+    }
+    return parser_ok;
+}
+
+parser_error_t _toStringOptionScope_V7(
+    const pd_OptionScope_V7_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    *pageCount = 1;
+    if (v->some > 0) {
+        CHECK_ERROR(_toStringScope_V7(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));

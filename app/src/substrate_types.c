@@ -61,7 +61,6 @@ parser_error_t _readCompactu64(parser_context_t* c, pd_Compactu64_t* v)
 
 parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_t* m)
 {
-    zemu_log_stack("_readCallImpl");
     // If it's the first Call, store a pointer to it
     if (c->tx_obj->nestCallIdx._ptr == NULL) {
         c->tx_obj->nestCallIdx._ptr = c->buffer + c->offset;
@@ -108,11 +107,11 @@ parser_error_t _readCompactBlockNumber(parser_context_t* c, pd_CompactBlockNumbe
     return _readCompactInt(c, v);
 }
 
-parser_error_t _readBalance(parser_context_t* c, pd_Balance_t* v){
+parser_error_t _readBalance(parser_context_t* c, pd_Balance_t* v) {
     GEN_DEF_READARRAY(16)
 }
 
-parser_error_t _readHash(parser_context_t* c, pd_Hash_t* v){
+parser_error_t _readHash(parser_context_t* c, pd_Hash_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
@@ -177,7 +176,7 @@ parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v)
     return parser_ok;
 }
 
-parser_error_t _readBalanceNoSymbol(parser_context_t* c, pd_BalanceNoSymbol_t* v){
+parser_error_t _readBalanceNoSymbol(parser_context_t* c, pd_BalanceNoSymbol_t* v) {
     GEN_DEF_READARRAY(16)
 }
 
@@ -206,15 +205,15 @@ parser_error_t _readHeartbeat(parser_context_t* c, pd_Heartbeat_t* v)
     return parser_not_supported;
 }
 
-parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v){
+parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v) {
     GEN_DEF_READVECTOR(Header)
 }
 
-parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v){
+parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v) {
     GEN_DEF_READVECTOR(u32)
 }
 
-parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v){
+parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v) {
     GEN_DEF_READVECTOR(u64)
 }
 
@@ -424,7 +423,7 @@ parser_error_t _toStringHash(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
@@ -447,7 +446,6 @@ parser_error_t _toStringCall(
 {
     CLEAN_AND_CHECK()
     *pageCount = 1;
-    zemu_log_stack("_toStringCall");
 
     parser_context_t ctx;
 
@@ -673,7 +671,7 @@ parser_error_t _toStringVecHeader(
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
-    uint8_t* pageCount){
+    uint8_t* pageCount) {
     GEN_DEF_TOSTRING_VECTOR(Header)
 }
 
