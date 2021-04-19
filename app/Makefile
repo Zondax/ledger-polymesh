@@ -73,7 +73,6 @@ APPPATH = "44'/595'"
 
 else ifeq ($(COIN),Ledgeracio)
 DEFINES += APP_RESTRICTED
-DEFINES += SUBSTRATE_PARSER_FULL
 APPNAME = "Polymesh_sec"
 APPPATH = "44'/595'"
 

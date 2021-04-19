@@ -96,7 +96,6 @@ message(STATUS "LEDGER_MAJOR_VERSION [${MAJOR_RESULT}]: ${MAJOR_VERSION}" )
 message(STATUS "LEDGER_MINOR_VERSION [${MINOR_RESULT}]: ${MINOR_VERSION}" )
 
 add_definitions(
-    -DAPP_STANDARD
     -DLEDGER_MAJOR_VERSION=${MAJOR_VERSION}
     -DLEDGER_MINOR_VERSION=${MINOR_VERSION}
 )
@@ -152,6 +151,7 @@ target_link_libraries(unittests PRIVATE
         CONAN_PKG::fmt
         CONAN_PKG::jsoncpp)
 
+add_compile_definitions(TESTVECTORS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/")
 add_test(unittests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unittests)
 set_tests_properties(unittests PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 

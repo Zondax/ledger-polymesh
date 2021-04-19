@@ -68,13 +68,9 @@ std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
     Json::CharReaderBuilder builder;
     Json::Value obj;
 
-    std::ifstream inFile(jsonFile);
-    EXPECT_TRUE(inFile.is_open())
-                        << "\n"
-                        << "******************\n"
-                        << "Check that your working directory points to the tests directory\n"
-                        << "In CLion use $PROJECT_DIR$\\tests\n"
-                        << "******************\n";
+    std::string fullPathJsonFile = std::string(TESTVECTORS_DIR) + jsonFile;
+
+    std::ifstream inFile(fullPathJsonFile);
     if (!inFile.is_open()) {
         return answer;
     }
@@ -148,9 +144,6 @@ INSTANTIATE_TEST_SUITE_P
     JsonTestsA::PrintToStringParamName()
 );
 
-// Parametric test using current runtime:
-TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Normal) { check_testcase(GetParam(), false); }
-TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) { check_testcase(GetParam(), true); }
 
 //INSTANTIATE_TEST_SUITE_P
 //
@@ -160,6 +153,10 @@ TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) { check_testcase(GetParam(), 
 //    ::testing::ValuesIn(GetJsonTestCases("testcases_previous.json")),
 //    JsonTestsB::PrintToStringParamName()
 //);
+
+// Parametric test using current runtime:
+TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Normal) { check_testcase(GetParam(), false); }
+TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) { check_testcase(GetParam(), true); }
 
 //// Parametric test using previous runtime:
 //TEST_P(JsonTestsB, CheckUIOutput_PreviousTX_Normal) { check_testcase(GetParam(), false); }

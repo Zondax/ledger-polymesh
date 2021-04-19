@@ -247,7 +247,7 @@ describe('Standard', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -261,7 +261,7 @@ describe('Standard', function () {
 
             await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_utility_batch_d3`, m.name === "nanos" ? 11 : 12);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -290,7 +290,7 @@ describe('Standard', function () {
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
             const txBlob = Buffer.from(txBlobStr, "hex");
 
             const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
@@ -298,7 +298,7 @@ describe('Standard', function () {
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
             await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_utility_batch_reject`, m.name === "nanos" ? 12 : 13);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x6986);
@@ -331,7 +331,7 @@ describe('Standard', function () {
 
             await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_large_nomination`, m.name === "nanos" ? 33 : 18);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -365,7 +365,7 @@ describe('Standard', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "160300110300b816d6e5c9403379862c457a463b0c561e0af0708ed0069a0d7cba51ec44d7d6000058000000d50391018ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "160300110300b816d6e5c9403379862c457a463b0c561e0af0708ed0069a0d7cba51ec44d7d6000058000000d50391018ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -380,7 +380,7 @@ describe('Standard', function () {
 
             await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_nested_2_expert`, m.name === "nanos" ? 14 : 14);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -419,7 +419,7 @@ describe('Standard', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "1603001103002f769ae07fff20645edc5319382b4bd4eca7f59ab2e7accc35f17ec856d91fb4110300a655dfa214bfce9f89a5fbaeb01312faf0437070570e37cc5dca70528c3ad228110300567c34919ecdf1e8b56ac3044e5b98b00e58e3a3364137e8c95dc3545de6b0c3000058000000d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "1603001103002f769ae07fff20645edc5319382b4bd4eca7f59ab2e7accc35f17ec856d91fb4110300a655dfa214bfce9f89a5fbaeb01312faf0437070570e37cc5dca70528c3ad228110300567c34919ecdf1e8b56ac3044e5b98b00e58e3a3364137e8c95dc3545de6b0c3000058000000d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -434,7 +434,7 @@ describe('Standard', function () {
 
             await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_nested_3_expert`, m.name === "nanos" ? 16 : 18);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
