@@ -14,35 +14,32 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import jest, {expect} from "jest";
-import Zemu from "@zondax/zemu";
+import Zemu, {DEFAULT_START_OPTIONS} from "@zondax/zemu";
+import {newPolymeshApp} from "@zondax/ledger-polkadot";
+import {APP_SEED} from "./common";
+
+// @ts-ignore
 import {blake2bFinal, blake2bInit, blake2bUpdate} from "blakejs";
-var addon = require('../../tests_tools/neon/native');
+const addon = require('../../tests_tools/neon/native');
 
-const {newPolymeshApp} = require("@zondax/ledger-polkadot");
 const Resolve = require("path").resolve;
+const APP_PATH = Resolve("../app/output/app_sr25519.elf");
 
-const APP_PATH_S = Resolve("../app/output/app_sr25519.elf");
-const APP_SEED = "equip will roof matter pink blind book anxiety banner elbow sun young"
-
-var simOptions = {
+const defaultOptions = {
+    ...DEFAULT_START_OPTIONS,
     logging: true,
-    start_delay: 3000,
     custom: `-s "${APP_SEED}"`,
-    X11: true
+    X11: false,
+    model: 'nanos'
 };
-
-let models = [
-    ['S', {model: 'nanos', prefix: 'S', path: APP_PATH_S}],
-]
 
 jest.setTimeout(60000)
 
 describe('SR25519', function () {
-    test.each(models)('get address (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('get address sr25519', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
 
             const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000, false, 1);
@@ -57,23 +54,22 @@ describe('SR25519', function () {
 
             expect(resp.address).toEqual(expected_address);
             expect(resp.pubKey).toEqual(expected_pk);
-
         } finally {
             await sim.close();
         }
     });
 
-    test.each(models)('show address (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('show address sr25519', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
 
             const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true, 1);
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-show_address_sr25519`, 2);
+            await sim.compareSnapshotsAndAccept(".", "s-show_address_sr25519", 2);
 
             const resp = await respRequest;
             console.log(resp);
@@ -91,17 +87,16 @@ describe('SR25519', function () {
         }
     });
 
-    test.each(models)('show address - reject (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('show address - reject sr25519', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
 
             const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true, 1);
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-show_address_reject_sr25519`, 3, 2);
+            await sim.compareSnapshotsAndAccept(".", "s-show_address_reject_sr25519", 3, 2);
 
             const resp = await respRequest;
             console.log(resp);
@@ -113,10 +108,10 @@ describe('SR25519', function () {
         }
     });
 
-    test.each(models)('sign basic normal (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('sign basic normal', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -134,9 +129,9 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal_sr25519`, model === "nanos" ? 6 : 7);
+            await sim.compareSnapshotsAndAccept(".", "s-sign_basic_normal", 5);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -149,18 +144,18 @@ describe('SR25519', function () {
                 blake2bUpdate(context, txBlob);
                 prehash = Buffer.from(blake2bFinal(context));
             }
-            let signingcontext = Buffer.from([]);
-            const valid = addon.schnorrkel_verify(pubKey,signingcontext,prehash, signatureResponse.signature.slice(1));
+            const signingcontext = Buffer.from([]);
+            const valid = addon.schnorrkel_verify(pubKey, signingcontext, prehash, signatureResponse.signature.slice(1));
             expect(valid).toEqual(true);
         } finally {
             await sim.close();
         }
     });
 
-    test.each(models)('sign basic expert (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('sign basic expert', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -175,7 +170,7 @@ describe('SR25519', function () {
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
-            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false , 1);
+            const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1);
             const pubKey = Buffer.from(responseAddr.pubKey, "hex");
 
             // do not wait here.. we need to navigate
@@ -184,9 +179,9 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert_sr25519`, model === "nanos" ? 12 : 13);
+            await sim.compareSnapshotsAndAccept(".", "s-sign_basic_expert", 11);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -199,18 +194,18 @@ describe('SR25519', function () {
                 blake2bUpdate(context, txBlob);
                 prehash = Buffer.from(blake2bFinal(context));
             }
-            let signingcontext = Buffer.from([]);
-            const valid = addon.schnorrkel_verify(pubKey,signingcontext,prehash, signatureResponse.signature.slice(1));
+            const signingcontext = Buffer.from([]);
+            const valid = addon.schnorrkel_verify(pubKey, signingcontext, prehash, signatureResponse.signature.slice(1));
             expect(valid).toEqual(true);
         } finally {
             await sim.close();
         }
     });
 
-    test.each(models)('sign large nomination (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test('sign large nomination', async function () {
+        const sim = new Zemu(APP_PATH);
         try {
-            await sim.start(simOptions);
+            await sim.start({...defaultOptions});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -228,9 +223,9 @@ describe('SR25519', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_large_nomination_sr25519`, model === "nanos" ? 33 : 18);
+            await sim.compareSnapshotsAndAccept(".", `s-sign_large_nomination_sr25519`, 33);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -243,12 +238,11 @@ describe('SR25519', function () {
                 blake2bUpdate(context, txBlob);
                 prehash = Buffer.from(blake2bFinal(context));
             }
-            let signingcontext = Buffer.from([]);
-            const valid = addon.schnorrkel_verify(pubKey,signingcontext,prehash, signatureResponse.signature.slice(1));
+            const signingcontext = Buffer.from([]);
+            const valid = addon.schnorrkel_verify(pubKey, signingcontext, prehash, signatureResponse.signature.slice(1));
             expect(valid).toEqual(true);
         } finally {
             await sim.close();
         }
     });
-
 });
