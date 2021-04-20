@@ -681,6 +681,7 @@ typedef struct {
 typedef struct {
     pd_OptionMoment_V7_t start;
     pd_CalendarPeriod_V7_t period;
+    uint32_t remaining;
 } pd_ScheduleSpec_V7_t;
 
 typedef struct {
@@ -729,7 +730,6 @@ typedef struct {
 
 typedef struct {
     pd_CompactPerBill_V7_t commission;
-    pd_bool_t blocked;
 } pd_ValidatorPrefs_V7_t;
 
 typedef struct {

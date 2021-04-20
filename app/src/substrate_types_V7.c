@@ -1011,6 +1011,7 @@ parser_error_t _readScheduleSpec_V7(parser_context_t* c, pd_ScheduleSpec_V7_t* v
     CHECK_INPUT();
     CHECK_ERROR(_readOptionMoment_V7(c, &v->start))
     CHECK_ERROR(_readCalendarPeriod_V7(c, &v->period))
+    CHECK_ERROR(_readUInt32(c, &v->remaining))
     return parser_ok;
 }
 
@@ -1380,7 +1381,6 @@ parser_error_t _readValidatorPrefs_V7(parser_context_t* c, pd_ValidatorPrefs_V7_
 {
     CHECK_INPUT();
     CHECK_ERROR(_readCompactPerBill_V7(c, &v->commission));
-    CHECK_ERROR(_readbool(c, &v->blocked))
     return parser_ok;
 }
 
@@ -4089,11 +4089,12 @@ parser_error_t _toStringScheduleSpec_V7(
     CLEAN_AND_CHECK()
 
     // Index + count pages
-    uint8_t pages[2];
+    uint8_t pages[3];
     CHECK_ERROR(_toStringOptionMoment_V7(&v->start, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringCalendarPeriod_V7(&v->period, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringu32(&v->remaining, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = pages[0] + pages[1] + pages[2];
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4107,6 +4108,13 @@ parser_error_t _toStringScheduleSpec_V7(
     //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringCalendarPeriod_V7(&v->period, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    pageIdx -= pages[1];
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringu32(&v->remaining, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -5060,32 +5068,7 @@ parser_error_t _toStringValidatorPrefs_V7(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-
-    uint8_t pages[2];
-    CHECK_ERROR(_toStringCompactPerBill_V7(&v->commission, outValue, outValueLen, 0, &pages[0]))
-    CHECK_ERROR(_toStringbool(&v->blocked, outValue, outValueLen, 0, &pages[1]))
-
-    *pageCount = 0;
-    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
-        *pageCount += pages[i];
-    }
-
-    if (pageIdx > *pageCount) {
-        return parser_display_idx_out_of_range;
-    }
-
-    if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringCompactPerBill_V7(&v->commission, outValue, outValueLen, pageIdx, &pages[0]))
-        return parser_ok;
-    }
-    pageIdx -= pages[0];
-
-    if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringbool(&v->blocked, outValue, outValueLen, pageIdx, &pages[1]))
-        return parser_ok;
-    }
-
-    return parser_display_idx_out_of_range;
+    return _toStringCompactPerBill_V7(&v->commission, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringVenueDetails_V7(
