@@ -27,6 +27,7 @@ const defaultOptions = {
     ...DEFAULT_START_OPTIONS,
     logging: true,
     custom: `-s "${APP_SEED}"`,
+    startDelay: 4000,
     X11: false,
 };
 

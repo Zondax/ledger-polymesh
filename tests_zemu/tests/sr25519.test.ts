@@ -30,6 +30,7 @@ const defaultOptions = {
     logging: true,
     custom: `-s "${APP_SEED}"`,
     X11: false,
+    startDelay: 4000,
     model: 'nanos'
 };
 
