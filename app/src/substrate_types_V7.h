@@ -660,6 +660,11 @@ typedef struct {
 
 typedef struct {
     uint8_t some;
+    pd_Scope_V7_t contained;
+} pd_OptionScope_V7_t;
+
+typedef struct {
+    uint8_t some;
     pd_TargetIdentities_V7_t contained;
 } pd_OptionTargetIdentities_V7_t;
 
@@ -676,6 +681,7 @@ typedef struct {
 typedef struct {
     pd_OptionMoment_V7_t start;
     pd_CalendarPeriod_V7_t period;
+    uint32_t remaining;
 } pd_ScheduleSpec_V7_t;
 
 typedef struct {
@@ -724,7 +730,6 @@ typedef struct {
 
 typedef struct {
     pd_CompactPerBill_V7_t commission;
-    pd_bool_t blocked;
 } pd_ValidatorPrefs_V7_t;
 
 typedef struct {
@@ -875,10 +880,6 @@ typedef struct {
     // TODO: Not implemented
     uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
 } pd_GrandpaEquivocationProof_V7_t;
-
-typedef struct {
-    const uint8_t* _ptr;
-} pd_InvestorUid_V7_t;
 
 typedef struct {
     const uint8_t* _ptr;

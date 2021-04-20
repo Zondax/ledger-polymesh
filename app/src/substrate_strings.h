@@ -328,6 +328,7 @@ static const char* STR_ME_ADD_RANGE_PROOF = "Add range proof";
 static const char* STR_ME_ADD_VERIFY_RANGE_PROOF = "Add verify range proof";
 static const char* STR_ME_ADD_INVESTOR_UNIQUENESS_CLAIM_V2 = "Add investor uniqueness claim v2";
 static const char* STR_ME_SET_PUT_CODE_FLAG = "Set put code flag";
+static const char* STR_ME_REVOKE_CLAIM_BY_INDEX = "Revoke claim by index";
 
 // Items names
 static const char* STR_IT__ratio = "Ratio";
@@ -550,9 +551,11 @@ static const char* STR_IT_secret_value = "Secret value";
 static const char* STR_IT_prover = "Prover";
 static const char* STR_IT_is_enabled = "Is enabled";
 static const char* STR_IT_per_share = "Per share";
+static const char* STR_IT_scope = "Scope";
+static const char* STR_IT_claim_type = "Claim type";
 
 // Country Codes
-static const uint8_t COUNTRY_CODES_SIZE = 247;
+static const uint8_t COUNTRY_CODES_SIZE = 250;
 static const char* const STR_COUNTRY_CODES[] = {
     "AF",
     "AX",
@@ -801,6 +804,9 @@ static const char* const STR_COUNTRY_CODES[] = {
     "YE",
     "ZM",
     "ZW",
+    "BQ",
+    "CW",
+    "SX",
 };
 
 #ifdef __cplusplus

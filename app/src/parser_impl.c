@@ -131,6 +131,7 @@ parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v) {
         case 0:         // single byte
             v->len = 1;
             CTX_CHECK_AND_ADVANCE(c, v->len)
+            _getValue(v, &tmp);
             break;
         case 1:         // 2-byte
             v->len = 2;
@@ -387,7 +388,6 @@ uint8_t _detectAddressType(const parser_context_t *c) {
 
 parser_error_t _readTx(parser_context_t *c, parser_tx_t *v) {
     CHECK_INPUT();
-    zemu_log_stack("_readTx");
 
     // Reverse parse to retrieve spec before forward parsing
     CHECK_ERROR(_checkVersions(c));
@@ -412,8 +412,6 @@ parser_error_t _readTx(parser_context_t *c, parser_tx_t *v) {
     }
 
     __address_type = _detectAddressType(c);
-
-    zemu_log_stack("_readTx DONE");
 
     return parser_ok;
 }

@@ -14,56 +14,49 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import jest, {expect} from "jest";
-import Zemu from "@zondax/zemu";
+import Zemu, {DEFAULT_START_OPTIONS} from "@zondax/zemu";
+import {newPolymeshApp} from "@zondax/ledger-polkadot";
+import {APP_SEED, models} from "./common";
+
+// @ts-ignore
+import ed25519 from "ed25519-supercop";
+// @ts-ignore
 import {blake2bFinal, blake2bInit, blake2bUpdate} from "blakejs";
 
-const {newPolymeshApp} = require("@zondax/ledger-polkadot");
-const ed25519 = require("ed25519-supercop");
-const Resolve = require("path").resolve;
-const APP_PATH_S = Resolve("../app/output/app_s.elf");
-const APP_PATH_X = Resolve("../app/output/app_x.elf");
-
-const APP_SEED = "equip will roof matter pink blind book anxiety banner elbow sun young"
-
-var simOptions = {
+const defaultOptions = {
+    ...DEFAULT_START_OPTIONS,
     logging: true,
-    start_delay: 3000,
     custom: `-s "${APP_SEED}"`,
-    X11: false
+    startDelay: 4000,
+    X11: false,
 };
-
-let models = [
-    ['S', {model: 'nanos', prefix: 'S', path: APP_PATH_S}],
-    ['X', {model: 'nanox', prefix: 'X', path: APP_PATH_X}]
-]
 
 jest.setTimeout(60000)
 
 describe('Standard', function () {
-    test.each(models)('can start and stop container (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('can start and stop container', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
         } finally {
             await sim.close();
         }
     });
 
-    test.each(models)('main menu (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('main menu', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-mainmenu`, 3);
+            await sim.start({...defaultOptions, model: m.name,});
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-mainmenu`, 3);
         } finally {
             await sim.close();
         }
     });
 
-    test.each(models)('get app version (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('get app version', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const resp = await app.getVersion();
 
@@ -80,10 +73,10 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('get address (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('get address', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
 
             const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000);
@@ -103,19 +96,20 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('show address (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('show address', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
 
             const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true);
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-show_address`, 2);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-show_address`, 2);
 
             const resp = await respRequest;
+
             console.log(resp);
 
             expect(resp.return_code).toEqual(0x9000);
@@ -131,17 +125,17 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('show address - reject (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('show address - reject', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
 
             const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true);
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-show_address_reject`, 3, 2);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-show_address_reject`, 3, 2);
 
             const resp = await respRequest;
             console.log(resp);
@@ -153,16 +147,16 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('sign basic normal (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('sign basic normal', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "040000287e8d895a3e642fa19a9c5ed97bec0d7cfc63bdb3641fc98a9c926cf0e8e93c0b63ce64c10c05d503910133158139ae28a3dfaac5fe1560a5e9e05ce1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "0500ff40f53afc3e2ac603eae342a2f18e4cc456cd12e77aaf4eddea2045c4fb5d39966d0fd5030000e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -174,7 +168,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_normal`, model === "nanos" ? 6 : 6);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_basic_normal`, m.name === "nanos" ? 4 : 4);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -196,10 +190,10 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('sign basic expert (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('sign basic expert', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -210,7 +204,7 @@ describe('Standard', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "040000287e8d895a3e642fa19a9c5ed97bec0d7cfc63bdb3641fc98a9c926cf0e8e93c0b63ce64c10c05d503910133158139ae28a3dfaac5fe1560a5e9e05ce1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            let txBlobStr = "0500ff40f53afc3e2ac603eae342a2f18e4cc456cd12e77aaf4eddea2045c4fb5d39966d0fd5030000e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -223,7 +217,7 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_basic_expert`, model === "nanos" ? 12 : 12);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_basic_expert`, m.name === "nanos" ? 10 : 10);
 
             let signatureResponse = await signatureRequest;
             console.log(signatureResponse);
@@ -245,16 +239,16 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('sign utility.batch (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('sign utility.batch', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "2c000c110c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000110c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000110910d503ae1103006d0fe2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -266,9 +260,9 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_d3`, model === "nanos" ? 11 : 12);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_utility_batch_d3`, m.name === "nanos" ? 12 : 13);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -288,24 +282,24 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('sign utility.batch - reject (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('sign utility.batch - reject', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "29000c080c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000080c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000080910d5030400e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "2c000c110c31463758677235564d355269596d6b437853317857483647626342675341354a0101000000110c31463758677235564d355269596d6b437853317857483647626342675341354a0102000000110910d503ae1103006d0fe2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
             const txBlob = Buffer.from(txBlobStr, "hex");
 
             const signatureRequest = app.sign(pathAccount, pathChange, pathIndex, txBlob);
 
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_utility_batch_reject`, model === "nanos" ? 12 : 13);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_utility_batch_reject`, m.name === "nanos" ? 13 : 14);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x6986);
@@ -315,16 +309,16 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('sign large nomination (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('sign large nomination', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
             const pathIndex = 0x80000000;
 
-            let txBlobStr = "080540006e34558d8a0255d837207a78038826d5d6d868803bf19b4ac79c1f25551b607e00ec437f7d7c48fdcc7a0ec4b81304509c2715e80c2eea6c037f12c8b6f82d721f004423c993381a2248ad4e932ad857a59885dcd7816511fc98f1508bc7f5a48629002898b4f6d6fe083f6519fbec6878b617bd78fa24374e17c890d0f9ed41a29871009009fbc535f95ad1de9c8a21a9065b6b75761c1a88e51185075a2cbf44d101420054f7a0a6bb84f3babb8a77d770f2f43f58dc5468bea686f94038cfc8084b6d7f0098e7890acb6a1f84116a7b551f92f4c172a965d390c9368b54d9163a1620677c009ed61e5fac1d7d5d3a7f49f493c193ed5a8638755d4aaa8ae962f5c1a137993600ecf83d0d9baef51d1e5b58b372994b021970074b703574c9b73c351279c6946f0052c204370e503d59a63f7309aeb42ba79ba21cab309d5356f2751178bca9fd7900304d53f51a0af0d280bcfc76ff307a1f6d8a5d4917bbe36cc157b3637f1e0f2200007e1bae1f1c9106734faec4c6ac2229bfa83d513d3c9edb14130ad825757b1c001603b70d5dd403242e01e428311746ed265c91135e4e2a0f74e5e520b741cc57000eea86b8cbf40083d66aff6631b6ac4c97ffe1dba7c04e67d6ba3ad0b9775648005ed646319954b783e397d2ae8dbf8d56e4868a7dbb57228d6c67be02b26712260008df51facad217e63431beeb63e42f7a3e03dfbedc1be252e83a61014f481e6ad503910100e1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "110520ff3a74572ba8f3136c8fadd394cea53e7f1e8b6cb0dd35969db363abf52fc99b30ff305429035c83eab3af45c8324d5bc36a659f2cedfb36198156d0287f7f501107ff1a81532ef75c44acf3e5bf12d614b91fd5019276879bc8f0eac5a046b0c15277ffc8ee4c5e6d3ae0468077fa791e0468c90efff0ad9d3098b58f578d97a6465801ffc4faf3ff6cea6d0cc39dce4af2f126087a5b4221a0fe9903d22aaf5bd248e010ff06ea6ede1e2dd9cc9ab286762ed6732db47df39fc0f9d5a47a53325100c94f75fff065ea2f702c2cdd21abcfc6867404423fe2c0ecce2fecbdcfee28d481994d18ff8a9170375fef6774fe9381eace15328d1a2cce7809ced520edd75be93567e82dd5038d2400e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -336,9 +330,9 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_large_nomination`, model === "nanos" ? 33 : 18);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_large_nomination`, m.name === "nanos" ? 17 : 11);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -358,10 +352,10 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('nested tx - lvl2 - sign expert (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('nested tx - lvl2 - sign expert', async function (m) {
+        const sim = new Zemu(m.path);
         try {
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -372,7 +366,7 @@ describe('Standard', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "160300110300b816d6e5c9403379862c457a463b0c561e0af0708ed0069a0d7cba51ec44d7d6000058000000d50391018ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "0b03011a03ff7dda71019d55f7d1459acf328987de918ac5dba9c6f38984c50984a52fb0c325000058000000d5038d2433158139ae28a3dfaac5fe1560a5e9e05ce2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -385,9 +379,9 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_2_expert`, model === "nanos" ? 14 : 14);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_nested_2_expert`, m.name === "nanos" ? 15 : 15);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);
@@ -407,15 +401,15 @@ describe('Standard', function () {
         }
     });
 
-    test.each(models)('nested tx - lvl3 - sign expert (%s)', async function (_, {model, prefix, path}) {
-        const sim = new Zemu(path);
+    test.each(models)('nested tx - lvl3 - sign expert', async function (m) {
+        const sim = new Zemu(m.path);
         try {
 
-            if(model === "nanos") { // This level is only for nanoX
+            if(m.name === "nanos") { // This level is only for nanoX
                 return;
             }
 
-            await sim.start({model, ...simOptions});
+            await sim.start({...defaultOptions, model: m.name,});
             const app = newPolymeshApp(sim.getTransport());
             const pathAccount = 0x80000000;
             const pathChange = 0x80000000;
@@ -426,7 +420,7 @@ describe('Standard', function () {
             await sim.clickBoth();
             await sim.clickLeft();
 
-            let txBlobStr = "1603001103002f769ae07fff20645edc5319382b4bd4eca7f59ab2e7accc35f17ec856d91fb4110300a655dfa214bfce9f89a5fbaeb01312faf0437070570e37cc5dca70528c3ad228110300567c34919ecdf1e8b56ac3044e5b98b00e58e3a3364137e8c95dc3545de6b0c3000058000000d5038d248ed73e0de1070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
+            const txBlobStr = "0b03001a03ff123c911f8f48fff3a55fc4e8323b1e5bf300097844e020c1f03cfed7fe8ba3931a03ff18bf3c847bdd950c9d31fe408c0e4890a6281458127b085deb94d47554bbf6b4000058000000d5038d2400e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f";
 
             const txBlob = Buffer.from(txBlobStr, "hex");
 
@@ -439,9 +433,9 @@ describe('Standard', function () {
             // Wait until we are not in the main menu
             await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot());
 
-            await sim.compareSnapshotsAndAccept(".", `${prefix.toLowerCase()}-sign_nested_3_expert`, model === "nanos" ? 16 : 18);
+            await sim.compareSnapshotsAndAccept(".", `${m.prefix.toLowerCase()}-sign_nested_3_expert`, m.name === "nanos" ? 16 : 15);
 
-            let signatureResponse = await signatureRequest;
+            const signatureResponse = await signatureRequest;
             console.log(signatureResponse);
 
             expect(signatureResponse.return_code).toEqual(0x9000);

@@ -30,54 +30,61 @@ extern "C" {
 #define PD_CALL_BABE_V7 1
 #define PD_CALL_TIMESTAMP_V7 2
 #define PD_CALL_INDICES_V7 3
-#define PD_CALL_BALANCES_V7 4
-#define PD_CALL_IDENTITY_V7 6
-#define PD_CALL_AUTHORSHIP_V7 7
-#define PD_CALL_CDDSERVICEPROVIDERS_V7 38
-#define PD_CALL_STAKING_V7 8
-#define PD_CALL_OFFENCES_V7 9
-#define PD_CALL_SESSION_V7 10
-#define PD_CALL_FINALITYTRACKER_V7 11
-#define PD_CALL_GRANDPA_V7 12
-#define PD_CALL_IMONLINE_V7 13
-#define PD_CALL_AUTHORITYDISCOVERY_V7 14
-#define PD_CALL_RANDOMNESSCOLLECTIVEFLIP_V7 15
-#define PD_CALL_SUDO_V7 17
-#define PD_CALL_MULTISIG_V7 18
-#define PD_CALL_CONTRACTS_V7 20
-#define PD_CALL_TREASURY_V7 21
-#define PD_CALL_POLYMESHCOMMITTEE_V7 22
-#define PD_CALL_COMMITTEEMEMBERSHIP_V7 23
-#define PD_CALL_PIPS_V7 24
-#define PD_CALL_TECHNICALCOMMITTEE_V7 25
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_V7 26
-#define PD_CALL_UPGRADECOMMITTEE_V7 27
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_V7 28
+#define PD_CALL_AUTHORSHIP_V7 4
+#define PD_CALL_BALANCES_V7 5
+#define PD_CALL_IDENTITY_V7 7
+#define PD_CALL_CDDSERVICEPROVIDERS_V7 8
+#define PD_CALL_POLYMESHCOMMITTEE_V7 10
+#define PD_CALL_COMMITTEEMEMBERSHIP_V7 9
+#define PD_CALL_TECHNICALCOMMITTEE_V7 11
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_V7 12
+#define PD_CALL_UPGRADECOMMITTEE_V7 13
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_V7 14
+#define PD_CALL_MULTISIG_V7 15
+#define PD_CALL_BRIDGE_V7 16
+#define PD_CALL_STAKING_V7 17
+#define PD_CALL_OFFENCES_V7 18
+#define PD_CALL_SESSION_V7 19
+#define PD_CALL_AUTHORITYDISCOVERY_V7 20
+#define PD_CALL_FINALITYTRACKER_V7 21
+#define PD_CALL_GRANDPA_V7 22
+#define PD_CALL_IMONLINE_V7 24
+#define PD_CALL_RANDOMNESSCOLLECTIVEFLIP_V7 25
+#define PD_CALL_SUDO_V7 26
+#define PD_CALL_CONTRACTS_V7 28
 #define PD_CALL_ASSET_V7 29
-#define PD_CALL_BRIDGE_V7 31
+#define PD_CALL_CAPITALDISTRIBUTION_V7 30
+#define PD_CALL_CHECKPOINT_V7 31
 #define PD_CALL_COMPLIANCEMANAGER_V7 32
-#define PD_CALL_SETTLEMENT_V7 36
-#define PD_CALL_STO_V7 37
-#define PD_CALL_STATISTICS_V7 39
-#define PD_CALL_PROTOCOLFEE_V7 40
-#define PD_CALL_UTILITY_V7 41
-#define PD_CALL_PORTFOLIO_V7 42
-#define PD_CALL_SCHEDULER_V7 45
-#define PD_CALL_CORPORATEACTION_V7 46
-#define PD_CALL_CORPORATEBALLOT_V7 47
-#define PD_CALL_CAPITALDISTRIBUTION_V7 48
-#define PD_CALL_CHECKPOINT_V7 49
-#define PD_CALL_TESTUTILS_V7 50
-#define PD_CALL_BASE_V7 51
+#define PD_CALL_CORPORATEACTION_V7 33
+#define PD_CALL_CORPORATEBALLOT_V7 34
+#define PD_CALL_PIPS_V7 36
+#define PD_CALL_PORTFOLIO_V7 37
+#define PD_CALL_PROTOCOLFEE_V7 38
+#define PD_CALL_SCHEDULER_V7 39
+#define PD_CALL_SETTLEMENT_V7 40
+#define PD_CALL_STATISTICS_V7 41
+#define PD_CALL_STO_V7 42
+#define PD_CALL_TREASURY_V7 43
+#define PD_CALL_UTILITY_V7 44
+#define PD_CALL_BASE_V7 45
 
 #ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V2_V7 24
 typedef struct {
     pd_IdentityId_V7_t target;
+    pd_Scope_V7_t scope;
     pd_Claim_V7_t claim;
     pd_ScopeClaimProof_V7_t proof;
     pd_OptionMoment_V7_t expiry;
 } pd_identity_add_investor_uniqueness_claim_v2_V7_t;
+
+#define PD_CALL_IDENTITY_REVOKE_CLAIM_BY_INDEX_V7 25
+typedef struct {
+    pd_IdentityId_V7_t target;
+    pd_ClaimType_V7_t claim_type;
+    pd_OptionScope_V7_t scope;
+} pd_identity_revoke_claim_by_index_V7_t;
 
 #define PD_CALL_CONTRACTS_SET_PUT_CODE_FLAG_V7 1
 typedef struct {
@@ -148,31 +155,12 @@ typedef struct {
     pd_u64_t fundraiser_id;
 } pd_sto_stop_V7_t;
 
-#define PD_CALL_TESTUTILS_REGISTER_DID_V7 0
-typedef struct {
-    pd_InvestorUid_V7_t uid;
-    pd_VecSecondaryKey_V7_t secondary_keys;
-} pd_testutils_register_did_V7_t;
-
-#define PD_CALL_TESTUTILS_MOCK_CDD_REGISTER_DID_V7 1
-typedef struct {
-    pd_AccountId_V7_t target_account;
-} pd_testutils_mock_cdd_register_did_V7_t;
-
-#define PD_CALL_TESTUTILS_GET_MY_DID_V7 2
-typedef struct {
-} pd_testutils_get_my_did_V7_t;
-
-#define PD_CALL_TESTUTILS_GET_CDD_OF_V7 3
-typedef struct {
-    pd_AccountId_V7_t of;
-} pd_testutils_get_cdd_of_V7_t;
-
 #endif
 
 typedef union {
 #ifdef SUBSTRATE_PARSER_FULL
     pd_identity_add_investor_uniqueness_claim_v2_V7_t identity_add_investor_uniqueness_claim_v2_V7;
+    pd_identity_revoke_claim_by_index_V7_t identity_revoke_claim_by_index_V7;
     pd_contracts_set_put_code_flag_V7_t contracts_set_put_code_flag_V7;
     pd_asset_controller_transfer_V7_t asset_controller_transfer_V7;
     pd_settlement_change_receipt_validity_V7_t settlement_change_receipt_validity_V7;
@@ -182,10 +170,6 @@ typedef union {
     pd_sto_unfreeze_fundraiser_V7_t sto_unfreeze_fundraiser_V7;
     pd_sto_modify_fundraiser_window_V7_t sto_modify_fundraiser_window_V7;
     pd_sto_stop_V7_t sto_stop_V7;
-    pd_testutils_register_did_V7_t testutils_register_did_V7;
-    pd_testutils_mock_cdd_register_did_V7_t testutils_mock_cdd_register_did_V7;
-    pd_testutils_get_my_did_V7_t testutils_get_my_did_V7;
-    pd_testutils_get_cdd_of_V7_t testutils_get_cdd_of_V7;
 #endif
 } pd_MethodBasic_V7_t;
 
@@ -297,57 +281,6 @@ typedef struct {
     pd_InvestorZKProofData_V7_t proof;
     pd_OptionMoment_V7_t expiry;
 } pd_identity_add_investor_uniqueness_claim_V7_t;
-
-#define PD_CALL_STAKING_BOND_V7 0
-typedef struct {
-    pd_LookupSource_V7_t controller;
-    pd_CompactBalanceOf_t value;
-    pd_RewardDestination_V7_t payee;
-} pd_staking_bond_V7_t;
-
-#define PD_CALL_STAKING_BOND_EXTRA_V7 1
-typedef struct {
-    pd_CompactBalanceOf_t max_additional;
-} pd_staking_bond_extra_V7_t;
-
-#define PD_CALL_STAKING_UNBOND_V7 2
-typedef struct {
-    pd_CompactBalanceOf_t value;
-} pd_staking_unbond_V7_t;
-
-#define PD_CALL_STAKING_WITHDRAW_UNBONDED_V7 3
-typedef struct {
-    pd_u32_t num_slashing_spans;
-} pd_staking_withdraw_unbonded_V7_t;
-
-#define PD_CALL_STAKING_VALIDATE_V7 4
-typedef struct {
-    pd_ValidatorPrefs_V7_t prefs;
-} pd_staking_validate_V7_t;
-
-#define PD_CALL_STAKING_NOMINATE_V7 5
-typedef struct {
-    pd_VecLookupSource_V7_t targets;
-} pd_staking_nominate_V7_t;
-
-#define PD_CALL_STAKING_CHILL_V7 6
-typedef struct {
-} pd_staking_chill_V7_t;
-
-#define PD_CALL_STAKING_SET_PAYEE_V7 7
-typedef struct {
-    pd_RewardDestination_V7_t payee;
-} pd_staking_set_payee_V7_t;
-
-#define PD_CALL_STAKING_SET_CONTROLLER_V7 8
-typedef struct {
-    pd_LookupSource_V7_t controller;
-} pd_staking_set_controller_V7_t;
-
-#define PD_CALL_STAKING_REBOND_V7 24
-typedef struct {
-    pd_CompactBalanceOf_t value;
-} pd_staking_rebond_V7_t;
 
 #define PD_CALL_MULTISIG_CREATE_MULTISIG_V7 0
 typedef struct {
@@ -466,6 +399,57 @@ typedef struct {
     pd_IdentityId_V7_t multisig_did;
     pd_Weight_V7_t proposal_weight;
 } pd_multisig_execute_scheduled_proposal_V7_t;
+
+#define PD_CALL_STAKING_BOND_V7 0
+typedef struct {
+    pd_LookupSource_V7_t controller;
+    pd_CompactBalanceOf_t value;
+    pd_RewardDestination_V7_t payee;
+} pd_staking_bond_V7_t;
+
+#define PD_CALL_STAKING_BOND_EXTRA_V7 1
+typedef struct {
+    pd_CompactBalanceOf_t max_additional;
+} pd_staking_bond_extra_V7_t;
+
+#define PD_CALL_STAKING_UNBOND_V7 2
+typedef struct {
+    pd_CompactBalanceOf_t value;
+} pd_staking_unbond_V7_t;
+
+#define PD_CALL_STAKING_WITHDRAW_UNBONDED_V7 3
+typedef struct {
+    pd_u32_t num_slashing_spans;
+} pd_staking_withdraw_unbonded_V7_t;
+
+#define PD_CALL_STAKING_VALIDATE_V7 4
+typedef struct {
+    pd_ValidatorPrefs_V7_t prefs;
+} pd_staking_validate_V7_t;
+
+#define PD_CALL_STAKING_NOMINATE_V7 5
+typedef struct {
+    pd_VecLookupSource_V7_t targets;
+} pd_staking_nominate_V7_t;
+
+#define PD_CALL_STAKING_CHILL_V7 6
+typedef struct {
+} pd_staking_chill_V7_t;
+
+#define PD_CALL_STAKING_SET_PAYEE_V7 7
+typedef struct {
+    pd_RewardDestination_V7_t payee;
+} pd_staking_set_payee_V7_t;
+
+#define PD_CALL_STAKING_SET_CONTROLLER_V7 8
+typedef struct {
+    pd_LookupSource_V7_t controller;
+} pd_staking_set_controller_V7_t;
+
+#define PD_CALL_STAKING_REBOND_V7 24
+typedef struct {
+    pd_CompactBalanceOf_t value;
+} pd_staking_rebond_V7_t;
 
 #define PD_CALL_PIPS_PROPOSE_V7 6
 typedef struct {
@@ -593,6 +577,11 @@ typedef struct {
     pd_AccountIndex_V7_t index;
 } pd_indices_freeze_V7_t;
 
+#define PD_CALL_AUTHORSHIP_SET_UNCLES_V7 0
+typedef struct {
+    pd_VecHeader_t new_uncles;
+} pd_authorship_set_uncles_V7_t;
+
 #define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V7 2
 typedef struct {
     pd_CompactBalance_t value;
@@ -650,18 +639,12 @@ typedef struct {
 #define PD_CALL_IDENTITY_GC_ADD_CDD_CLAIM_V7 22
 typedef struct {
     pd_IdentityId_V7_t target;
-    pd_OptionMoment_V7_t expiry;
 } pd_identity_gc_add_cdd_claim_V7_t;
 
 #define PD_CALL_IDENTITY_GC_REVOKE_CDD_CLAIM_V7 23
 typedef struct {
     pd_IdentityId_V7_t target;
 } pd_identity_gc_revoke_cdd_claim_V7_t;
-
-#define PD_CALL_AUTHORSHIP_SET_UNCLES_V7 0
-typedef struct {
-    pd_VecHeader_t new_uncles;
-} pd_authorship_set_uncles_V7_t;
 
 #define PD_CALL_CDDSERVICEPROVIDERS_SET_ACTIVE_MEMBERS_LIMIT_V7 0
 typedef struct {
@@ -699,6 +682,273 @@ typedef struct {
 #define PD_CALL_CDDSERVICEPROVIDERS_ABDICATE_MEMBERSHIP_V7 6
 typedef struct {
 } pd_cddserviceproviders_abdicate_membership_V7_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_SET_VOTE_THRESHOLD_V7 0
+typedef struct {
+    pd_u32_t n;
+    pd_u32_t d;
+} pd_polymeshcommittee_set_vote_threshold_V7_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
+typedef struct {
+    pd_IdentityId_V7_t id;
+} pd_polymeshcommittee_set_release_coordinator_V7_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_SET_EXPIRES_AFTER_V7 2
+typedef struct {
+    pd_MaybeBlock_V7_t expiry;
+} pd_polymeshcommittee_set_expires_after_V7_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE_V7 3
+typedef struct {
+    pd_bool_t approve;
+    pd_Call_t call;
+} pd_polymeshcommittee_vote_or_propose_V7_t;
+
+#define PD_CALL_POLYMESHCOMMITTEE_VOTE_V7 4
+typedef struct {
+    pd_Hash_t proposal;
+    pd_ProposalIndex_V7_t index;
+    pd_bool_t approve;
+} pd_polymeshcommittee_vote_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
+typedef struct {
+    pd_MemberCount_V7_t limit;
+} pd_committeemembership_set_active_members_limit_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
+typedef struct {
+    pd_IdentityId_V7_t who;
+    pd_OptionMoment_V7_t expiry;
+    pd_OptionMoment_V7_t at;
+} pd_committeemembership_disable_member_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_committeemembership_add_member_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_committeemembership_remove_member_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
+typedef struct {
+    pd_IdentityId_V7_t remove;
+    pd_IdentityId_V7_t add;
+} pd_committeemembership_swap_member_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
+typedef struct {
+    pd_VecIdentityId_V7_t members;
+} pd_committeemembership_reset_members_V7_t;
+
+#define PD_CALL_COMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
+typedef struct {
+} pd_committeemembership_abdicate_membership_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_SET_VOTE_THRESHOLD_V7 0
+typedef struct {
+    pd_u32_t n;
+    pd_u32_t d;
+} pd_technicalcommittee_set_vote_threshold_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
+typedef struct {
+    pd_IdentityId_V7_t id;
+} pd_technicalcommittee_set_release_coordinator_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_SET_EXPIRES_AFTER_V7 2
+typedef struct {
+    pd_MaybeBlock_V7_t expiry;
+} pd_technicalcommittee_set_expires_after_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE_V7 3
+typedef struct {
+    pd_bool_t approve;
+    pd_Call_t call;
+} pd_technicalcommittee_vote_or_propose_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEE_VOTE_V7 4
+typedef struct {
+    pd_Hash_t proposal;
+    pd_ProposalIndex_V7_t index;
+    pd_bool_t approve;
+} pd_technicalcommittee_vote_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
+typedef struct {
+    pd_MemberCount_V7_t limit;
+} pd_technicalcommitteemembership_set_active_members_limit_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
+typedef struct {
+    pd_IdentityId_V7_t who;
+    pd_OptionMoment_V7_t expiry;
+    pd_OptionMoment_V7_t at;
+} pd_technicalcommitteemembership_disable_member_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_technicalcommitteemembership_add_member_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_technicalcommitteemembership_remove_member_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
+typedef struct {
+    pd_IdentityId_V7_t remove;
+    pd_IdentityId_V7_t add;
+} pd_technicalcommitteemembership_swap_member_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
+typedef struct {
+    pd_VecIdentityId_V7_t members;
+} pd_technicalcommitteemembership_reset_members_V7_t;
+
+#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
+typedef struct {
+} pd_technicalcommitteemembership_abdicate_membership_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_SET_VOTE_THRESHOLD_V7 0
+typedef struct {
+    pd_u32_t n;
+    pd_u32_t d;
+} pd_upgradecommittee_set_vote_threshold_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
+typedef struct {
+    pd_IdentityId_V7_t id;
+} pd_upgradecommittee_set_release_coordinator_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_SET_EXPIRES_AFTER_V7 2
+typedef struct {
+    pd_MaybeBlock_V7_t expiry;
+} pd_upgradecommittee_set_expires_after_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE_V7 3
+typedef struct {
+    pd_bool_t approve;
+    pd_Call_t call;
+} pd_upgradecommittee_vote_or_propose_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEE_VOTE_V7 4
+typedef struct {
+    pd_Hash_t proposal;
+    pd_ProposalIndex_V7_t index;
+    pd_bool_t approve;
+} pd_upgradecommittee_vote_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
+typedef struct {
+    pd_MemberCount_V7_t limit;
+} pd_upgradecommitteemembership_set_active_members_limit_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
+typedef struct {
+    pd_IdentityId_V7_t who;
+    pd_OptionMoment_V7_t expiry;
+    pd_OptionMoment_V7_t at;
+} pd_upgradecommitteemembership_disable_member_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_upgradecommitteemembership_add_member_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
+typedef struct {
+    pd_IdentityId_V7_t who;
+} pd_upgradecommitteemembership_remove_member_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
+typedef struct {
+    pd_IdentityId_V7_t remove;
+    pd_IdentityId_V7_t add;
+} pd_upgradecommitteemembership_swap_member_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
+typedef struct {
+    pd_VecIdentityId_V7_t members;
+} pd_upgradecommitteemembership_reset_members_V7_t;
+
+#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
+typedef struct {
+} pd_upgradecommitteemembership_abdicate_membership_V7_t;
+
+#define PD_CALL_BRIDGE_CHANGE_CONTROLLER_V7 0
+typedef struct {
+    pd_AccountId_V7_t controller;
+} pd_bridge_change_controller_V7_t;
+
+#define PD_CALL_BRIDGE_CHANGE_ADMIN_V7 1
+typedef struct {
+    pd_AccountId_V7_t admin;
+} pd_bridge_change_admin_V7_t;
+
+#define PD_CALL_BRIDGE_CHANGE_TIMELOCK_V7 2
+typedef struct {
+    pd_BlockNumber_t timelock;
+} pd_bridge_change_timelock_V7_t;
+
+#define PD_CALL_BRIDGE_FREEZE_V7 3
+typedef struct {
+} pd_bridge_freeze_V7_t;
+
+#define PD_CALL_BRIDGE_UNFREEZE_V7 4
+typedef struct {
+} pd_bridge_unfreeze_V7_t;
+
+#define PD_CALL_BRIDGE_CHANGE_BRIDGE_LIMIT_V7 5
+typedef struct {
+    pd_Balance_t amount;
+    pd_BlockNumber_t duration;
+} pd_bridge_change_bridge_limit_V7_t;
+
+#define PD_CALL_BRIDGE_CHANGE_BRIDGE_EXEMPTED_V7 6
+typedef struct {
+    pd_VecTupleIdentityIdbool_V7_t exempted;
+} pd_bridge_change_bridge_exempted_V7_t;
+
+#define PD_CALL_BRIDGE_FORCE_HANDLE_BRIDGE_TX_V7 7
+typedef struct {
+    pd_BridgeTx_V7_t bridge_tx;
+} pd_bridge_force_handle_bridge_tx_V7_t;
+
+#define PD_CALL_BRIDGE_BATCH_PROPOSE_BRIDGE_TX_V7 8
+typedef struct {
+    pd_VecBridgeTx_V7_t bridge_txs;
+} pd_bridge_batch_propose_bridge_tx_V7_t;
+
+#define PD_CALL_BRIDGE_PROPOSE_BRIDGE_TX_V7 9
+typedef struct {
+    pd_BridgeTx_V7_t bridge_tx;
+} pd_bridge_propose_bridge_tx_V7_t;
+
+#define PD_CALL_BRIDGE_HANDLE_BRIDGE_TX_V7 10
+typedef struct {
+    pd_BridgeTx_V7_t bridge_tx;
+} pd_bridge_handle_bridge_tx_V7_t;
+
+#define PD_CALL_BRIDGE_FREEZE_TXS_V7 11
+typedef struct {
+    pd_VecBridgeTx_V7_t bridge_txs;
+} pd_bridge_freeze_txs_V7_t;
+
+#define PD_CALL_BRIDGE_UNFREEZE_TXS_V7 12
+typedef struct {
+    pd_VecBridgeTx_V7_t bridge_txs;
+} pd_bridge_unfreeze_txs_V7_t;
+
+#define PD_CALL_BRIDGE_HANDLE_SCHEDULED_BRIDGE_TX_V7 13
+typedef struct {
+    pd_BridgeTx_V7_t bridge_tx;
+} pd_bridge_handle_scheduled_bridge_tx_V7_t;
 
 #define PD_CALL_STAKING_SET_VALIDATOR_COUNT_V7 9
 typedef struct {
@@ -942,289 +1192,6 @@ typedef struct {
     pd_OptionMetaUrl_V7_t new_url;
 } pd_contracts_change_template_meta_url_V7_t;
 
-#define PD_CALL_TREASURY_DISBURSEMENT_V7 0
-typedef struct {
-    pd_VecBeneficiary_V7_t beneficiaries;
-} pd_treasury_disbursement_V7_t;
-
-#define PD_CALL_TREASURY_REIMBURSEMENT_V7 1
-typedef struct {
-    pd_BalanceOf_t amount;
-} pd_treasury_reimbursement_V7_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_SET_VOTE_THRESHOLD_V7 0
-typedef struct {
-    pd_u32_t n;
-    pd_u32_t d;
-} pd_polymeshcommittee_set_vote_threshold_V7_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
-typedef struct {
-    pd_IdentityId_V7_t id;
-} pd_polymeshcommittee_set_release_coordinator_V7_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_SET_EXPIRES_AFTER_V7 2
-typedef struct {
-    pd_MaybeBlock_V7_t expiry;
-} pd_polymeshcommittee_set_expires_after_V7_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_VOTE_OR_PROPOSE_V7 3
-typedef struct {
-    pd_bool_t approve;
-    pd_Call_t call;
-} pd_polymeshcommittee_vote_or_propose_V7_t;
-
-#define PD_CALL_POLYMESHCOMMITTEE_VOTE_V7 4
-typedef struct {
-    pd_Hash_t proposal;
-    pd_ProposalIndex_V7_t index;
-    pd_bool_t approve;
-} pd_polymeshcommittee_vote_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
-typedef struct {
-    pd_MemberCount_V7_t limit;
-} pd_committeemembership_set_active_members_limit_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
-typedef struct {
-    pd_IdentityId_V7_t who;
-    pd_OptionMoment_V7_t expiry;
-    pd_OptionMoment_V7_t at;
-} pd_committeemembership_disable_member_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_committeemembership_add_member_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_committeemembership_remove_member_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
-typedef struct {
-    pd_IdentityId_V7_t remove;
-    pd_IdentityId_V7_t add;
-} pd_committeemembership_swap_member_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
-typedef struct {
-    pd_VecIdentityId_V7_t members;
-} pd_committeemembership_reset_members_V7_t;
-
-#define PD_CALL_COMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
-typedef struct {
-} pd_committeemembership_abdicate_membership_V7_t;
-
-#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
-typedef struct {
-    pd_bool_t prune;
-} pd_pips_set_prune_historical_pips_V7_t;
-
-#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
-typedef struct {
-    pd_BalanceOf_t deposit;
-} pd_pips_set_min_proposal_deposit_V7_t;
-
-#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
-typedef struct {
-    pd_BlockNumber_t duration;
-} pd_pips_set_default_enactment_period_V7_t;
-
-#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
-typedef struct {
-    pd_MaybeBlock_V7_t expiry;
-} pd_pips_set_pending_pip_expiry_V7_t;
-
-#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
-typedef struct {
-    pd_SkippedCount_V7_t max;
-} pd_pips_set_max_pip_skip_count_V7_t;
-
-#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
-typedef struct {
-    pd_u32_t limit;
-} pd_pips_set_active_pip_limit_V7_t;
-
-#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
-typedef struct {
-    pd_PipId_V7_t id;
-} pd_pips_approve_committee_proposal_V7_t;
-
-#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
-typedef struct {
-    pd_PipId_V7_t id;
-} pd_pips_reject_proposal_V7_t;
-
-#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
-typedef struct {
-    pd_PipId_V7_t id;
-} pd_pips_prune_proposal_V7_t;
-
-#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
-typedef struct {
-    pd_PipId_V7_t id;
-    pd_OptionBlockNumber_t until;
-} pd_pips_reschedule_execution_V7_t;
-
-#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
-typedef struct {
-} pd_pips_clear_snapshot_V7_t;
-
-#define PD_CALL_PIPS_SNAPSHOT_V7 13
-typedef struct {
-} pd_pips_snapshot_V7_t;
-
-#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS_V7 14
-typedef struct {
-    pd_VecTuplePipIdSnapshotResult_V7_t results;
-} pd_pips_enact_snapshot_results_V7_t;
-
-#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
-typedef struct {
-    pd_PipId_V7_t id;
-} pd_pips_execute_scheduled_pip_V7_t;
-
-#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
-typedef struct {
-    pd_IdentityId_V7_t did;
-    pd_PipId_V7_t id;
-} pd_pips_expire_scheduled_pip_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_SET_VOTE_THRESHOLD_V7 0
-typedef struct {
-    pd_u32_t n;
-    pd_u32_t d;
-} pd_technicalcommittee_set_vote_threshold_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
-typedef struct {
-    pd_IdentityId_V7_t id;
-} pd_technicalcommittee_set_release_coordinator_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_SET_EXPIRES_AFTER_V7 2
-typedef struct {
-    pd_MaybeBlock_V7_t expiry;
-} pd_technicalcommittee_set_expires_after_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_VOTE_OR_PROPOSE_V7 3
-typedef struct {
-    pd_bool_t approve;
-    pd_Call_t call;
-} pd_technicalcommittee_vote_or_propose_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEE_VOTE_V7 4
-typedef struct {
-    pd_Hash_t proposal;
-    pd_ProposalIndex_V7_t index;
-    pd_bool_t approve;
-} pd_technicalcommittee_vote_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
-typedef struct {
-    pd_MemberCount_V7_t limit;
-} pd_technicalcommitteemembership_set_active_members_limit_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
-typedef struct {
-    pd_IdentityId_V7_t who;
-    pd_OptionMoment_V7_t expiry;
-    pd_OptionMoment_V7_t at;
-} pd_technicalcommitteemembership_disable_member_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_technicalcommitteemembership_add_member_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_technicalcommitteemembership_remove_member_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
-typedef struct {
-    pd_IdentityId_V7_t remove;
-    pd_IdentityId_V7_t add;
-} pd_technicalcommitteemembership_swap_member_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
-typedef struct {
-    pd_VecIdentityId_V7_t members;
-} pd_technicalcommitteemembership_reset_members_V7_t;
-
-#define PD_CALL_TECHNICALCOMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
-typedef struct {
-} pd_technicalcommitteemembership_abdicate_membership_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_SET_VOTE_THRESHOLD_V7 0
-typedef struct {
-    pd_u32_t n;
-    pd_u32_t d;
-} pd_upgradecommittee_set_vote_threshold_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_SET_RELEASE_COORDINATOR_V7 1
-typedef struct {
-    pd_IdentityId_V7_t id;
-} pd_upgradecommittee_set_release_coordinator_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_SET_EXPIRES_AFTER_V7 2
-typedef struct {
-    pd_MaybeBlock_V7_t expiry;
-} pd_upgradecommittee_set_expires_after_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_VOTE_OR_PROPOSE_V7 3
-typedef struct {
-    pd_bool_t approve;
-    pd_Call_t call;
-} pd_upgradecommittee_vote_or_propose_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEE_VOTE_V7 4
-typedef struct {
-    pd_Hash_t proposal;
-    pd_ProposalIndex_V7_t index;
-    pd_bool_t approve;
-} pd_upgradecommittee_vote_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_SET_ACTIVE_MEMBERS_LIMIT_V7 0
-typedef struct {
-    pd_MemberCount_V7_t limit;
-} pd_upgradecommitteemembership_set_active_members_limit_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_DISABLE_MEMBER_V7 1
-typedef struct {
-    pd_IdentityId_V7_t who;
-    pd_OptionMoment_V7_t expiry;
-    pd_OptionMoment_V7_t at;
-} pd_upgradecommitteemembership_disable_member_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_ADD_MEMBER_V7 2
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_upgradecommitteemembership_add_member_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_REMOVE_MEMBER_V7 3
-typedef struct {
-    pd_IdentityId_V7_t who;
-} pd_upgradecommitteemembership_remove_member_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_SWAP_MEMBER_V7 4
-typedef struct {
-    pd_IdentityId_V7_t remove;
-    pd_IdentityId_V7_t add;
-} pd_upgradecommitteemembership_swap_member_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_RESET_MEMBERS_V7 5
-typedef struct {
-    pd_VecIdentityId_V7_t members;
-} pd_upgradecommitteemembership_reset_members_V7_t;
-
-#define PD_CALL_UPGRADECOMMITTEEMEMBERSHIP_ABDICATE_MEMBERSHIP_V7 6
-typedef struct {
-} pd_upgradecommitteemembership_abdicate_membership_V7_t;
-
 #define PD_CALL_ASSET_REGISTER_TICKER_V7 0
 typedef struct {
     pd_Ticker_V7_t ticker;
@@ -1355,74 +1322,59 @@ typedef struct {
     pd_TickerRegistrationConfig_V7_t config;
 } pd_asset_reserve_classic_ticker_V7_t;
 
-#define PD_CALL_BRIDGE_CHANGE_CONTROLLER_V7 0
+#define PD_CALL_CAPITALDISTRIBUTION_DISTRIBUTE_V7 0
 typedef struct {
-    pd_AccountId_V7_t controller;
-} pd_bridge_change_controller_V7_t;
-
-#define PD_CALL_BRIDGE_CHANGE_ADMIN_V7 1
-typedef struct {
-    pd_AccountId_V7_t admin;
-} pd_bridge_change_admin_V7_t;
-
-#define PD_CALL_BRIDGE_CHANGE_TIMELOCK_V7 2
-typedef struct {
-    pd_BlockNumber_t timelock;
-} pd_bridge_change_timelock_V7_t;
-
-#define PD_CALL_BRIDGE_FREEZE_V7 3
-typedef struct {
-} pd_bridge_freeze_V7_t;
-
-#define PD_CALL_BRIDGE_UNFREEZE_V7 4
-typedef struct {
-} pd_bridge_unfreeze_V7_t;
-
-#define PD_CALL_BRIDGE_CHANGE_BRIDGE_LIMIT_V7 5
-typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_OptionPortfolioNumber_V7_t portfolio;
+    pd_Ticker_V7_t currency;
+    pd_Balance_t per_share;
     pd_Balance_t amount;
-    pd_BlockNumber_t duration;
-} pd_bridge_change_bridge_limit_V7_t;
+    pd_Moment_V7_t payment_at;
+    pd_OptionMoment_V7_t expires_at;
+} pd_capitaldistribution_distribute_V7_t;
 
-#define PD_CALL_BRIDGE_CHANGE_BRIDGE_EXEMPTED_V7 6
+#define PD_CALL_CAPITALDISTRIBUTION_CLAIM_V7 1
 typedef struct {
-    pd_VecTupleIdentityIdbool_V7_t exempted;
-} pd_bridge_change_bridge_exempted_V7_t;
+    pd_CAId_V7_t ca_id;
+} pd_capitaldistribution_claim_V7_t;
 
-#define PD_CALL_BRIDGE_FORCE_HANDLE_BRIDGE_TX_V7 7
+#define PD_CALL_CAPITALDISTRIBUTION_PUSH_BENEFIT_V7 2
 typedef struct {
-    pd_BridgeTx_V7_t bridge_tx;
-} pd_bridge_force_handle_bridge_tx_V7_t;
+    pd_CAId_V7_t ca_id;
+    pd_IdentityId_V7_t holder;
+} pd_capitaldistribution_push_benefit_V7_t;
 
-#define PD_CALL_BRIDGE_BATCH_PROPOSE_BRIDGE_TX_V7 8
+#define PD_CALL_CAPITALDISTRIBUTION_RECLAIM_V7 3
 typedef struct {
-    pd_VecBridgeTx_V7_t bridge_txs;
-} pd_bridge_batch_propose_bridge_tx_V7_t;
+    pd_CAId_V7_t ca_id;
+} pd_capitaldistribution_reclaim_V7_t;
 
-#define PD_CALL_BRIDGE_PROPOSE_BRIDGE_TX_V7 9
+#define PD_CALL_CAPITALDISTRIBUTION_REMOVE_DISTRIBUTION_V7 4
 typedef struct {
-    pd_BridgeTx_V7_t bridge_tx;
-} pd_bridge_propose_bridge_tx_V7_t;
+    pd_CAId_V7_t ca_id;
+} pd_capitaldistribution_remove_distribution_V7_t;
 
-#define PD_CALL_BRIDGE_HANDLE_BRIDGE_TX_V7 10
+#define PD_CALL_CHECKPOINT_CREATE_CHECKPOINT_V7 0
 typedef struct {
-    pd_BridgeTx_V7_t bridge_tx;
-} pd_bridge_handle_bridge_tx_V7_t;
+    pd_Ticker_V7_t ticker;
+} pd_checkpoint_create_checkpoint_V7_t;
 
-#define PD_CALL_BRIDGE_FREEZE_TXS_V7 11
+#define PD_CALL_CHECKPOINT_SET_SCHEDULES_MAX_COMPLEXITY_V7 1
 typedef struct {
-    pd_VecBridgeTx_V7_t bridge_txs;
-} pd_bridge_freeze_txs_V7_t;
+    pd_u64_t max_complexity;
+} pd_checkpoint_set_schedules_max_complexity_V7_t;
 
-#define PD_CALL_BRIDGE_UNFREEZE_TXS_V7 12
+#define PD_CALL_CHECKPOINT_CREATE_SCHEDULE_V7 2
 typedef struct {
-    pd_VecBridgeTx_V7_t bridge_txs;
-} pd_bridge_unfreeze_txs_V7_t;
+    pd_Ticker_V7_t ticker;
+    pd_ScheduleSpec_V7_t schedule;
+} pd_checkpoint_create_schedule_V7_t;
 
-#define PD_CALL_BRIDGE_HANDLE_SCHEDULED_BRIDGE_TX_V7 13
+#define PD_CALL_CHECKPOINT_REMOVE_SCHEDULE_V7 3
 typedef struct {
-    pd_BridgeTx_V7_t bridge_tx;
-} pd_bridge_handle_scheduled_bridge_tx_V7_t;
+    pd_Ticker_V7_t ticker;
+    pd_ScheduleId_V7_t id;
+} pd_checkpoint_remove_schedule_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_ADD_COMPLIANCE_REQUIREMENT_V7 0
 typedef struct {
@@ -1475,6 +1427,255 @@ typedef struct {
     pd_Ticker_V7_t ticker;
     pd_ComplianceRequirement_V7_t new_req;
 } pd_compliancemanager_change_compliance_requirement_V7_t;
+
+#define PD_CALL_CORPORATEACTION_SET_MAX_DETAILS_LENGTH_V7 0
+typedef struct {
+    pd_u32_t length;
+} pd_corporateaction_set_max_details_length_V7_t;
+
+#define PD_CALL_CORPORATEACTION_RESET_CAA_V7 1
+typedef struct {
+    pd_Ticker_V7_t ticker;
+} pd_corporateaction_reset_caa_V7_t;
+
+#define PD_CALL_CORPORATEACTION_SET_DEFAULT_TARGETS_V7 2
+typedef struct {
+    pd_Ticker_V7_t ticker;
+    pd_TargetIdentities_V7_t targets;
+} pd_corporateaction_set_default_targets_V7_t;
+
+#define PD_CALL_CORPORATEACTION_SET_DEFAULT_WITHHOLDING_TAX_V7 3
+typedef struct {
+    pd_Ticker_V7_t ticker;
+    pd_Tax_V7_t tax;
+} pd_corporateaction_set_default_withholding_tax_V7_t;
+
+#define PD_CALL_CORPORATEACTION_SET_DID_WITHHOLDING_TAX_V7 4
+typedef struct {
+    pd_Ticker_V7_t ticker;
+    pd_IdentityId_V7_t taxed_did;
+    pd_OptionTax_V7_t tax;
+} pd_corporateaction_set_did_withholding_tax_V7_t;
+
+#define PD_CALL_CORPORATEACTION_INITIATE_CORPORATE_ACTION_V7 5
+typedef struct {
+    pd_Ticker_V7_t ticker;
+    pd_CAKind_V7_t kind;
+    pd_Moment_V7_t decl_date;
+    pd_OptionRecordDateSpec_V7_t record_date;
+    pd_CADetails_V7_t details;
+    pd_OptionTargetIdentities_V7_t targets;
+    pd_OptionTax_V7_t default_withholding_tax;
+    pd_OptionVecTupleIdentityIdTax_V7_t withholding_tax;
+} pd_corporateaction_initiate_corporate_action_V7_t;
+
+#define PD_CALL_CORPORATEACTION_LINK_CA_DOC_V7 6
+typedef struct {
+    pd_CAId_V7_t id;
+    pd_VecDocumentId_V7_t docs;
+} pd_corporateaction_link_ca_doc_V7_t;
+
+#define PD_CALL_CORPORATEACTION_REMOVE_CA_V7 7
+typedef struct {
+    pd_CAId_V7_t ca_id;
+} pd_corporateaction_remove_ca_V7_t;
+
+#define PD_CALL_CORPORATEACTION_CHANGE_RECORD_DATE_V7 8
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_OptionRecordDateSpec_V7_t record_date;
+} pd_corporateaction_change_record_date_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_ATTACH_BALLOT_V7 0
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_BallotTimeRange_V7_t range;
+    pd_BallotMeta_V7_t meta;
+    pd_bool_t rcv;
+} pd_corporateballot_attach_ballot_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_VOTE_V7 1
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_VecBallotVote_V7_t votes;
+} pd_corporateballot_vote_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_CHANGE_END_V7 2
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_Moment_V7_t end;
+} pd_corporateballot_change_end_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_CHANGE_META_V7 3
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_BallotMeta_V7_t meta;
+} pd_corporateballot_change_meta_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_CHANGE_RCV_V7 4
+typedef struct {
+    pd_CAId_V7_t ca_id;
+    pd_bool_t rcv;
+} pd_corporateballot_change_rcv_V7_t;
+
+#define PD_CALL_CORPORATEBALLOT_REMOVE_BALLOT_V7 5
+typedef struct {
+    pd_CAId_V7_t ca_id;
+} pd_corporateballot_remove_ballot_V7_t;
+
+#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
+typedef struct {
+    pd_bool_t prune;
+} pd_pips_set_prune_historical_pips_V7_t;
+
+#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
+typedef struct {
+    pd_BalanceOf_t deposit;
+} pd_pips_set_min_proposal_deposit_V7_t;
+
+#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
+typedef struct {
+    pd_BlockNumber_t duration;
+} pd_pips_set_default_enactment_period_V7_t;
+
+#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
+typedef struct {
+    pd_MaybeBlock_V7_t expiry;
+} pd_pips_set_pending_pip_expiry_V7_t;
+
+#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
+typedef struct {
+    pd_SkippedCount_V7_t max;
+} pd_pips_set_max_pip_skip_count_V7_t;
+
+#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
+typedef struct {
+    pd_u32_t limit;
+} pd_pips_set_active_pip_limit_V7_t;
+
+#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
+typedef struct {
+    pd_PipId_V7_t id;
+} pd_pips_approve_committee_proposal_V7_t;
+
+#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
+typedef struct {
+    pd_PipId_V7_t id;
+} pd_pips_reject_proposal_V7_t;
+
+#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
+typedef struct {
+    pd_PipId_V7_t id;
+} pd_pips_prune_proposal_V7_t;
+
+#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
+typedef struct {
+    pd_PipId_V7_t id;
+    pd_OptionBlockNumber_t until;
+} pd_pips_reschedule_execution_V7_t;
+
+#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
+typedef struct {
+} pd_pips_clear_snapshot_V7_t;
+
+#define PD_CALL_PIPS_SNAPSHOT_V7 13
+typedef struct {
+} pd_pips_snapshot_V7_t;
+
+#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS_V7 14
+typedef struct {
+    pd_VecTuplePipIdSnapshotResult_V7_t results;
+} pd_pips_enact_snapshot_results_V7_t;
+
+#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
+typedef struct {
+    pd_PipId_V7_t id;
+} pd_pips_execute_scheduled_pip_V7_t;
+
+#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
+typedef struct {
+    pd_IdentityId_V7_t did;
+    pd_PipId_V7_t id;
+} pd_pips_expire_scheduled_pip_V7_t;
+
+#define PD_CALL_PORTFOLIO_CREATE_PORTFOLIO_V7 0
+typedef struct {
+    pd_PortfolioName_V7_t name;
+} pd_portfolio_create_portfolio_V7_t;
+
+#define PD_CALL_PORTFOLIO_DELETE_PORTFOLIO_V7 1
+typedef struct {
+    pd_PortfolioNumber_V7_t num;
+} pd_portfolio_delete_portfolio_V7_t;
+
+#define PD_CALL_PORTFOLIO_MOVE_PORTFOLIO_FUNDS_V7 2
+typedef struct {
+    pd_PortfolioId_V7_t from;
+    pd_PortfolioId_V7_t to;
+    pd_VecMovePortfolioItem_V7_t items;
+} pd_portfolio_move_portfolio_funds_V7_t;
+
+#define PD_CALL_PORTFOLIO_RENAME_PORTFOLIO_V7 3
+typedef struct {
+    pd_PortfolioNumber_V7_t num;
+    pd_PortfolioName_V7_t to_name;
+} pd_portfolio_rename_portfolio_V7_t;
+
+#define PD_CALL_PROTOCOLFEE_CHANGE_COEFFICIENT_V7 0
+typedef struct {
+    pd_PosRatio_V7_t coefficient;
+} pd_protocolfee_change_coefficient_V7_t;
+
+#define PD_CALL_PROTOCOLFEE_CHANGE_BASE_FEE_V7 1
+typedef struct {
+    pd_ProtocolOp_V7_t op;
+    pd_BalanceOf_t base_fee;
+} pd_protocolfee_change_base_fee_V7_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_V7 0
+typedef struct {
+    pd_BlockNumber_t when;
+    pd_OptionPeriod_V7_t maybe_periodic;
+    pd_Priority_V7_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_V7_t;
+
+#define PD_CALL_SCHEDULER_CANCEL_V7 1
+typedef struct {
+    pd_BlockNumber_t when;
+    pd_u32_t index;
+} pd_scheduler_cancel_V7_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_V7 2
+typedef struct {
+    pd_Bytes_t id;
+    pd_BlockNumber_t when;
+    pd_OptionPeriod_V7_t maybe_periodic;
+    pd_Priority_V7_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_named_V7_t;
+
+#define PD_CALL_SCHEDULER_CANCEL_NAMED_V7 3
+typedef struct {
+    pd_Bytes_t id;
+} pd_scheduler_cancel_named_V7_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_AFTER_V7 4
+typedef struct {
+    pd_BlockNumber_t after;
+    pd_OptionPeriod_V7_t maybe_periodic;
+    pd_Priority_V7_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_after_V7_t;
+
+#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_AFTER_V7 5
+typedef struct {
+    pd_Bytes_t id;
+    pd_BlockNumber_t after;
+    pd_OptionPeriod_V7_t maybe_periodic;
+    pd_Priority_V7_t priority;
+    pd_Call_t call;
+} pd_scheduler_schedule_named_after_V7_t;
 
 #define PD_CALL_SETTLEMENT_CREATE_VENUE_V7 0
 typedef struct {
@@ -1600,16 +1801,15 @@ typedef struct {
     pd_VecScopeId_V7_t entities;
 } pd_statistics_remove_exempted_entities_V7_t;
 
-#define PD_CALL_PROTOCOLFEE_CHANGE_COEFFICIENT_V7 0
+#define PD_CALL_TREASURY_DISBURSEMENT_V7 0
 typedef struct {
-    pd_PosRatio_V7_t coefficient;
-} pd_protocolfee_change_coefficient_V7_t;
+    pd_VecBeneficiary_V7_t beneficiaries;
+} pd_treasury_disbursement_V7_t;
 
-#define PD_CALL_PROTOCOLFEE_CHANGE_BASE_FEE_V7 1
+#define PD_CALL_TREASURY_REIMBURSEMENT_V7 1
 typedef struct {
-    pd_ProtocolOp_V7_t op;
-    pd_BalanceOf_t base_fee;
-} pd_protocolfee_change_base_fee_V7_t;
+    pd_BalanceOf_t amount;
+} pd_treasury_reimbursement_V7_t;
 
 #define PD_CALL_UTILITY_RELAY_TX_V7 3
 typedef struct {
@@ -1617,223 +1817,6 @@ typedef struct {
     pd_OffChainSignature_V7_t signature;
     pd_UniqueCall_V7_t call;
 } pd_utility_relay_tx_V7_t;
-
-#define PD_CALL_PORTFOLIO_CREATE_PORTFOLIO_V7 0
-typedef struct {
-    pd_PortfolioName_V7_t name;
-} pd_portfolio_create_portfolio_V7_t;
-
-#define PD_CALL_PORTFOLIO_DELETE_PORTFOLIO_V7 1
-typedef struct {
-    pd_PortfolioNumber_V7_t num;
-} pd_portfolio_delete_portfolio_V7_t;
-
-#define PD_CALL_PORTFOLIO_MOVE_PORTFOLIO_FUNDS_V7 2
-typedef struct {
-    pd_PortfolioId_V7_t from;
-    pd_PortfolioId_V7_t to;
-    pd_VecMovePortfolioItem_V7_t items;
-} pd_portfolio_move_portfolio_funds_V7_t;
-
-#define PD_CALL_PORTFOLIO_RENAME_PORTFOLIO_V7 3
-typedef struct {
-    pd_PortfolioNumber_V7_t num;
-    pd_PortfolioName_V7_t to_name;
-} pd_portfolio_rename_portfolio_V7_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_V7 0
-typedef struct {
-    pd_BlockNumber_t when;
-    pd_OptionPeriod_V7_t maybe_periodic;
-    pd_Priority_V7_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_V7_t;
-
-#define PD_CALL_SCHEDULER_CANCEL_V7 1
-typedef struct {
-    pd_BlockNumber_t when;
-    pd_u32_t index;
-} pd_scheduler_cancel_V7_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_V7 2
-typedef struct {
-    pd_Bytes_t id;
-    pd_BlockNumber_t when;
-    pd_OptionPeriod_V7_t maybe_periodic;
-    pd_Priority_V7_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_named_V7_t;
-
-#define PD_CALL_SCHEDULER_CANCEL_NAMED_V7 3
-typedef struct {
-    pd_Bytes_t id;
-} pd_scheduler_cancel_named_V7_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_AFTER_V7 4
-typedef struct {
-    pd_BlockNumber_t after;
-    pd_OptionPeriod_V7_t maybe_periodic;
-    pd_Priority_V7_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_after_V7_t;
-
-#define PD_CALL_SCHEDULER_SCHEDULE_NAMED_AFTER_V7 5
-typedef struct {
-    pd_Bytes_t id;
-    pd_BlockNumber_t after;
-    pd_OptionPeriod_V7_t maybe_periodic;
-    pd_Priority_V7_t priority;
-    pd_Call_t call;
-} pd_scheduler_schedule_named_after_V7_t;
-
-#define PD_CALL_CORPORATEACTION_SET_MAX_DETAILS_LENGTH_V7 0
-typedef struct {
-    pd_u32_t length;
-} pd_corporateaction_set_max_details_length_V7_t;
-
-#define PD_CALL_CORPORATEACTION_RESET_CAA_V7 1
-typedef struct {
-    pd_Ticker_V7_t ticker;
-} pd_corporateaction_reset_caa_V7_t;
-
-#define PD_CALL_CORPORATEACTION_SET_DEFAULT_TARGETS_V7 2
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_TargetIdentities_V7_t targets;
-} pd_corporateaction_set_default_targets_V7_t;
-
-#define PD_CALL_CORPORATEACTION_SET_DEFAULT_WITHHOLDING_TAX_V7 3
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_Tax_V7_t tax;
-} pd_corporateaction_set_default_withholding_tax_V7_t;
-
-#define PD_CALL_CORPORATEACTION_SET_DID_WITHHOLDING_TAX_V7 4
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_IdentityId_V7_t taxed_did;
-    pd_OptionTax_V7_t tax;
-} pd_corporateaction_set_did_withholding_tax_V7_t;
-
-#define PD_CALL_CORPORATEACTION_INITIATE_CORPORATE_ACTION_V7 5
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_CAKind_V7_t kind;
-    pd_Moment_V7_t decl_date;
-    pd_OptionRecordDateSpec_V7_t record_date;
-    pd_CADetails_V7_t details;
-    pd_OptionTargetIdentities_V7_t targets;
-    pd_OptionTax_V7_t default_withholding_tax;
-    pd_OptionVecTupleIdentityIdTax_V7_t withholding_tax;
-} pd_corporateaction_initiate_corporate_action_V7_t;
-
-#define PD_CALL_CORPORATEACTION_LINK_CA_DOC_V7 6
-typedef struct {
-    pd_CAId_V7_t id;
-    pd_VecDocumentId_V7_t docs;
-} pd_corporateaction_link_ca_doc_V7_t;
-
-#define PD_CALL_CORPORATEACTION_REMOVE_CA_V7 7
-typedef struct {
-    pd_CAId_V7_t ca_id;
-} pd_corporateaction_remove_ca_V7_t;
-
-#define PD_CALL_CORPORATEACTION_CHANGE_RECORD_DATE_V7 8
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_OptionRecordDateSpec_V7_t record_date;
-} pd_corporateaction_change_record_date_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_ATTACH_BALLOT_V7 0
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_BallotTimeRange_V7_t range;
-    pd_BallotMeta_V7_t meta;
-    pd_bool_t rcv;
-} pd_corporateballot_attach_ballot_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_VOTE_V7 1
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_VecBallotVote_V7_t votes;
-} pd_corporateballot_vote_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_CHANGE_END_V7 2
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_Moment_V7_t end;
-} pd_corporateballot_change_end_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_CHANGE_META_V7 3
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_BallotMeta_V7_t meta;
-} pd_corporateballot_change_meta_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_CHANGE_RCV_V7 4
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_bool_t rcv;
-} pd_corporateballot_change_rcv_V7_t;
-
-#define PD_CALL_CORPORATEBALLOT_REMOVE_BALLOT_V7 5
-typedef struct {
-    pd_CAId_V7_t ca_id;
-} pd_corporateballot_remove_ballot_V7_t;
-
-#define PD_CALL_CAPITALDISTRIBUTION_DISTRIBUTE_V7 0
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_OptionPortfolioNumber_V7_t portfolio;
-    pd_Ticker_V7_t currency;
-    pd_Balance_t per_share;
-    pd_Balance_t amount;
-    pd_Moment_V7_t payment_at;
-    pd_OptionMoment_V7_t expires_at;
-} pd_capitaldistribution_distribute_V7_t;
-
-#define PD_CALL_CAPITALDISTRIBUTION_CLAIM_V7 1
-typedef struct {
-    pd_CAId_V7_t ca_id;
-} pd_capitaldistribution_claim_V7_t;
-
-#define PD_CALL_CAPITALDISTRIBUTION_PUSH_BENEFIT_V7 2
-typedef struct {
-    pd_CAId_V7_t ca_id;
-    pd_IdentityId_V7_t holder;
-} pd_capitaldistribution_push_benefit_V7_t;
-
-#define PD_CALL_CAPITALDISTRIBUTION_RECLAIM_V7 3
-typedef struct {
-    pd_CAId_V7_t ca_id;
-} pd_capitaldistribution_reclaim_V7_t;
-
-#define PD_CALL_CAPITALDISTRIBUTION_REMOVE_DISTRIBUTION_V7 4
-typedef struct {
-    pd_CAId_V7_t ca_id;
-} pd_capitaldistribution_remove_distribution_V7_t;
-
-#define PD_CALL_CHECKPOINT_CREATE_CHECKPOINT_V7 0
-typedef struct {
-    pd_Ticker_V7_t ticker;
-} pd_checkpoint_create_checkpoint_V7_t;
-
-#define PD_CALL_CHECKPOINT_SET_SCHEDULES_MAX_COMPLEXITY_V7 1
-typedef struct {
-    pd_u64_t max_complexity;
-} pd_checkpoint_set_schedules_max_complexity_V7_t;
-
-#define PD_CALL_CHECKPOINT_CREATE_SCHEDULE_V7 2
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_ScheduleSpec_V7_t schedule;
-} pd_checkpoint_create_schedule_V7_t;
-
-#define PD_CALL_CHECKPOINT_REMOVE_SCHEDULE_V7 3
-typedef struct {
-    pd_Ticker_V7_t ticker;
-    pd_ScheduleId_V7_t id;
-} pd_checkpoint_remove_schedule_V7_t;
 
 #endif
 
@@ -1857,16 +1840,6 @@ typedef union {
     pd_identity_accept_authorization_V7_t identity_accept_authorization_V7;
     pd_identity_add_secondary_keys_with_authorization_V7_t identity_add_secondary_keys_with_authorization_V7;
     pd_identity_add_investor_uniqueness_claim_V7_t identity_add_investor_uniqueness_claim_V7;
-    pd_staking_bond_V7_t staking_bond_V7;
-    pd_staking_bond_extra_V7_t staking_bond_extra_V7;
-    pd_staking_unbond_V7_t staking_unbond_V7;
-    pd_staking_withdraw_unbonded_V7_t staking_withdraw_unbonded_V7;
-    pd_staking_validate_V7_t staking_validate_V7;
-    pd_staking_nominate_V7_t staking_nominate_V7;
-    pd_staking_chill_V7_t staking_chill_V7;
-    pd_staking_set_payee_V7_t staking_set_payee_V7;
-    pd_staking_set_controller_V7_t staking_set_controller_V7;
-    pd_staking_rebond_V7_t staking_rebond_V7;
     pd_multisig_create_multisig_V7_t multisig_create_multisig_V7;
     pd_multisig_create_or_approve_proposal_as_identity_V7_t multisig_create_or_approve_proposal_as_identity_V7;
     pd_multisig_create_or_approve_proposal_as_key_V7_t multisig_create_or_approve_proposal_as_key_V7;
@@ -1886,6 +1859,16 @@ typedef union {
     pd_multisig_make_multisig_signer_V7_t multisig_make_multisig_signer_V7;
     pd_multisig_make_multisig_primary_V7_t multisig_make_multisig_primary_V7;
     pd_multisig_execute_scheduled_proposal_V7_t multisig_execute_scheduled_proposal_V7;
+    pd_staking_bond_V7_t staking_bond_V7;
+    pd_staking_bond_extra_V7_t staking_bond_extra_V7;
+    pd_staking_unbond_V7_t staking_unbond_V7;
+    pd_staking_withdraw_unbonded_V7_t staking_withdraw_unbonded_V7;
+    pd_staking_validate_V7_t staking_validate_V7;
+    pd_staking_nominate_V7_t staking_nominate_V7;
+    pd_staking_chill_V7_t staking_chill_V7;
+    pd_staking_set_payee_V7_t staking_set_payee_V7;
+    pd_staking_set_controller_V7_t staking_set_controller_V7;
+    pd_staking_rebond_V7_t staking_rebond_V7;
     pd_pips_propose_V7_t pips_propose_V7;
     pd_pips_vote_V7_t pips_vote_V7;
     pd_utility_batch_V7_t utility_batch_V7;
@@ -1910,6 +1893,7 @@ typedef union {
     pd_indices_free_V7_t indices_free_V7;
     pd_indices_force_transfer_V7_t indices_force_transfer_V7;
     pd_indices_freeze_V7_t indices_freeze_V7;
+    pd_authorship_set_uncles_V7_t authorship_set_uncles_V7;
     pd_balances_deposit_block_reward_reserve_balance_V7_t balances_deposit_block_reward_reserve_balance_V7;
     pd_balances_set_balance_V7_t balances_set_balance_V7;
     pd_balances_force_transfer_V7_t balances_force_transfer_V7;
@@ -1921,7 +1905,6 @@ typedef union {
     pd_identity_revoke_offchain_authorization_V7_t identity_revoke_offchain_authorization_V7;
     pd_identity_gc_add_cdd_claim_V7_t identity_gc_add_cdd_claim_V7;
     pd_identity_gc_revoke_cdd_claim_V7_t identity_gc_revoke_cdd_claim_V7;
-    pd_authorship_set_uncles_V7_t authorship_set_uncles_V7;
     pd_cddserviceproviders_set_active_members_limit_V7_t cddserviceproviders_set_active_members_limit_V7;
     pd_cddserviceproviders_disable_member_V7_t cddserviceproviders_disable_member_V7;
     pd_cddserviceproviders_add_member_V7_t cddserviceproviders_add_member_V7;
@@ -1929,6 +1912,56 @@ typedef union {
     pd_cddserviceproviders_swap_member_V7_t cddserviceproviders_swap_member_V7;
     pd_cddserviceproviders_reset_members_V7_t cddserviceproviders_reset_members_V7;
     pd_cddserviceproviders_abdicate_membership_V7_t cddserviceproviders_abdicate_membership_V7;
+    pd_polymeshcommittee_set_vote_threshold_V7_t polymeshcommittee_set_vote_threshold_V7;
+    pd_polymeshcommittee_set_release_coordinator_V7_t polymeshcommittee_set_release_coordinator_V7;
+    pd_polymeshcommittee_set_expires_after_V7_t polymeshcommittee_set_expires_after_V7;
+    pd_polymeshcommittee_vote_or_propose_V7_t polymeshcommittee_vote_or_propose_V7;
+    pd_polymeshcommittee_vote_V7_t polymeshcommittee_vote_V7;
+    pd_committeemembership_set_active_members_limit_V7_t committeemembership_set_active_members_limit_V7;
+    pd_committeemembership_disable_member_V7_t committeemembership_disable_member_V7;
+    pd_committeemembership_add_member_V7_t committeemembership_add_member_V7;
+    pd_committeemembership_remove_member_V7_t committeemembership_remove_member_V7;
+    pd_committeemembership_swap_member_V7_t committeemembership_swap_member_V7;
+    pd_committeemembership_reset_members_V7_t committeemembership_reset_members_V7;
+    pd_committeemembership_abdicate_membership_V7_t committeemembership_abdicate_membership_V7;
+    pd_technicalcommittee_set_vote_threshold_V7_t technicalcommittee_set_vote_threshold_V7;
+    pd_technicalcommittee_set_release_coordinator_V7_t technicalcommittee_set_release_coordinator_V7;
+    pd_technicalcommittee_set_expires_after_V7_t technicalcommittee_set_expires_after_V7;
+    pd_technicalcommittee_vote_or_propose_V7_t technicalcommittee_vote_or_propose_V7;
+    pd_technicalcommittee_vote_V7_t technicalcommittee_vote_V7;
+    pd_technicalcommitteemembership_set_active_members_limit_V7_t technicalcommitteemembership_set_active_members_limit_V7;
+    pd_technicalcommitteemembership_disable_member_V7_t technicalcommitteemembership_disable_member_V7;
+    pd_technicalcommitteemembership_add_member_V7_t technicalcommitteemembership_add_member_V7;
+    pd_technicalcommitteemembership_remove_member_V7_t technicalcommitteemembership_remove_member_V7;
+    pd_technicalcommitteemembership_swap_member_V7_t technicalcommitteemembership_swap_member_V7;
+    pd_technicalcommitteemembership_reset_members_V7_t technicalcommitteemembership_reset_members_V7;
+    pd_technicalcommitteemembership_abdicate_membership_V7_t technicalcommitteemembership_abdicate_membership_V7;
+    pd_upgradecommittee_set_vote_threshold_V7_t upgradecommittee_set_vote_threshold_V7;
+    pd_upgradecommittee_set_release_coordinator_V7_t upgradecommittee_set_release_coordinator_V7;
+    pd_upgradecommittee_set_expires_after_V7_t upgradecommittee_set_expires_after_V7;
+    pd_upgradecommittee_vote_or_propose_V7_t upgradecommittee_vote_or_propose_V7;
+    pd_upgradecommittee_vote_V7_t upgradecommittee_vote_V7;
+    pd_upgradecommitteemembership_set_active_members_limit_V7_t upgradecommitteemembership_set_active_members_limit_V7;
+    pd_upgradecommitteemembership_disable_member_V7_t upgradecommitteemembership_disable_member_V7;
+    pd_upgradecommitteemembership_add_member_V7_t upgradecommitteemembership_add_member_V7;
+    pd_upgradecommitteemembership_remove_member_V7_t upgradecommitteemembership_remove_member_V7;
+    pd_upgradecommitteemembership_swap_member_V7_t upgradecommitteemembership_swap_member_V7;
+    pd_upgradecommitteemembership_reset_members_V7_t upgradecommitteemembership_reset_members_V7;
+    pd_upgradecommitteemembership_abdicate_membership_V7_t upgradecommitteemembership_abdicate_membership_V7;
+    pd_bridge_change_controller_V7_t bridge_change_controller_V7;
+    pd_bridge_change_admin_V7_t bridge_change_admin_V7;
+    pd_bridge_change_timelock_V7_t bridge_change_timelock_V7;
+    pd_bridge_freeze_V7_t bridge_freeze_V7;
+    pd_bridge_unfreeze_V7_t bridge_unfreeze_V7;
+    pd_bridge_change_bridge_limit_V7_t bridge_change_bridge_limit_V7;
+    pd_bridge_change_bridge_exempted_V7_t bridge_change_bridge_exempted_V7;
+    pd_bridge_force_handle_bridge_tx_V7_t bridge_force_handle_bridge_tx_V7;
+    pd_bridge_batch_propose_bridge_tx_V7_t bridge_batch_propose_bridge_tx_V7;
+    pd_bridge_propose_bridge_tx_V7_t bridge_propose_bridge_tx_V7;
+    pd_bridge_handle_bridge_tx_V7_t bridge_handle_bridge_tx_V7;
+    pd_bridge_freeze_txs_V7_t bridge_freeze_txs_V7;
+    pd_bridge_unfreeze_txs_V7_t bridge_unfreeze_txs_V7;
+    pd_bridge_handle_scheduled_bridge_tx_V7_t bridge_handle_scheduled_bridge_tx_V7;
     pd_staking_set_validator_count_V7_t staking_set_validator_count_V7;
     pd_staking_increase_validator_count_V7_t staking_increase_validator_count_V7;
     pd_staking_scale_validator_count_V7_t staking_scale_validator_count_V7;
@@ -1971,59 +2004,6 @@ typedef union {
     pd_contracts_transfer_template_ownership_V7_t contracts_transfer_template_ownership_V7;
     pd_contracts_change_template_fees_V7_t contracts_change_template_fees_V7;
     pd_contracts_change_template_meta_url_V7_t contracts_change_template_meta_url_V7;
-    pd_treasury_disbursement_V7_t treasury_disbursement_V7;
-    pd_treasury_reimbursement_V7_t treasury_reimbursement_V7;
-    pd_polymeshcommittee_set_vote_threshold_V7_t polymeshcommittee_set_vote_threshold_V7;
-    pd_polymeshcommittee_set_release_coordinator_V7_t polymeshcommittee_set_release_coordinator_V7;
-    pd_polymeshcommittee_set_expires_after_V7_t polymeshcommittee_set_expires_after_V7;
-    pd_polymeshcommittee_vote_or_propose_V7_t polymeshcommittee_vote_or_propose_V7;
-    pd_polymeshcommittee_vote_V7_t polymeshcommittee_vote_V7;
-    pd_committeemembership_set_active_members_limit_V7_t committeemembership_set_active_members_limit_V7;
-    pd_committeemembership_disable_member_V7_t committeemembership_disable_member_V7;
-    pd_committeemembership_add_member_V7_t committeemembership_add_member_V7;
-    pd_committeemembership_remove_member_V7_t committeemembership_remove_member_V7;
-    pd_committeemembership_swap_member_V7_t committeemembership_swap_member_V7;
-    pd_committeemembership_reset_members_V7_t committeemembership_reset_members_V7;
-    pd_committeemembership_abdicate_membership_V7_t committeemembership_abdicate_membership_V7;
-    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
-    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
-    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
-    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
-    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
-    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
-    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
-    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
-    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
-    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
-    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
-    pd_pips_snapshot_V7_t pips_snapshot_V7;
-    pd_pips_enact_snapshot_results_V7_t pips_enact_snapshot_results_V7;
-    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
-    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
-    pd_technicalcommittee_set_vote_threshold_V7_t technicalcommittee_set_vote_threshold_V7;
-    pd_technicalcommittee_set_release_coordinator_V7_t technicalcommittee_set_release_coordinator_V7;
-    pd_technicalcommittee_set_expires_after_V7_t technicalcommittee_set_expires_after_V7;
-    pd_technicalcommittee_vote_or_propose_V7_t technicalcommittee_vote_or_propose_V7;
-    pd_technicalcommittee_vote_V7_t technicalcommittee_vote_V7;
-    pd_technicalcommitteemembership_set_active_members_limit_V7_t technicalcommitteemembership_set_active_members_limit_V7;
-    pd_technicalcommitteemembership_disable_member_V7_t technicalcommitteemembership_disable_member_V7;
-    pd_technicalcommitteemembership_add_member_V7_t technicalcommitteemembership_add_member_V7;
-    pd_technicalcommitteemembership_remove_member_V7_t technicalcommitteemembership_remove_member_V7;
-    pd_technicalcommitteemembership_swap_member_V7_t technicalcommitteemembership_swap_member_V7;
-    pd_technicalcommitteemembership_reset_members_V7_t technicalcommitteemembership_reset_members_V7;
-    pd_technicalcommitteemembership_abdicate_membership_V7_t technicalcommitteemembership_abdicate_membership_V7;
-    pd_upgradecommittee_set_vote_threshold_V7_t upgradecommittee_set_vote_threshold_V7;
-    pd_upgradecommittee_set_release_coordinator_V7_t upgradecommittee_set_release_coordinator_V7;
-    pd_upgradecommittee_set_expires_after_V7_t upgradecommittee_set_expires_after_V7;
-    pd_upgradecommittee_vote_or_propose_V7_t upgradecommittee_vote_or_propose_V7;
-    pd_upgradecommittee_vote_V7_t upgradecommittee_vote_V7;
-    pd_upgradecommitteemembership_set_active_members_limit_V7_t upgradecommitteemembership_set_active_members_limit_V7;
-    pd_upgradecommitteemembership_disable_member_V7_t upgradecommitteemembership_disable_member_V7;
-    pd_upgradecommitteemembership_add_member_V7_t upgradecommitteemembership_add_member_V7;
-    pd_upgradecommitteemembership_remove_member_V7_t upgradecommitteemembership_remove_member_V7;
-    pd_upgradecommitteemembership_swap_member_V7_t upgradecommitteemembership_swap_member_V7;
-    pd_upgradecommitteemembership_reset_members_V7_t upgradecommitteemembership_reset_members_V7;
-    pd_upgradecommitteemembership_abdicate_membership_V7_t upgradecommitteemembership_abdicate_membership_V7;
     pd_asset_register_ticker_V7_t asset_register_ticker_V7;
     pd_asset_accept_ticker_transfer_V7_t asset_accept_ticker_transfer_V7;
     pd_asset_accept_primary_issuance_agent_transfer_V7_t asset_accept_primary_issuance_agent_transfer_V7;
@@ -2046,20 +2026,15 @@ typedef union {
     pd_asset_remove_primary_issuance_agent_V7_t asset_remove_primary_issuance_agent_V7;
     pd_asset_claim_classic_ticker_V7_t asset_claim_classic_ticker_V7;
     pd_asset_reserve_classic_ticker_V7_t asset_reserve_classic_ticker_V7;
-    pd_bridge_change_controller_V7_t bridge_change_controller_V7;
-    pd_bridge_change_admin_V7_t bridge_change_admin_V7;
-    pd_bridge_change_timelock_V7_t bridge_change_timelock_V7;
-    pd_bridge_freeze_V7_t bridge_freeze_V7;
-    pd_bridge_unfreeze_V7_t bridge_unfreeze_V7;
-    pd_bridge_change_bridge_limit_V7_t bridge_change_bridge_limit_V7;
-    pd_bridge_change_bridge_exempted_V7_t bridge_change_bridge_exempted_V7;
-    pd_bridge_force_handle_bridge_tx_V7_t bridge_force_handle_bridge_tx_V7;
-    pd_bridge_batch_propose_bridge_tx_V7_t bridge_batch_propose_bridge_tx_V7;
-    pd_bridge_propose_bridge_tx_V7_t bridge_propose_bridge_tx_V7;
-    pd_bridge_handle_bridge_tx_V7_t bridge_handle_bridge_tx_V7;
-    pd_bridge_freeze_txs_V7_t bridge_freeze_txs_V7;
-    pd_bridge_unfreeze_txs_V7_t bridge_unfreeze_txs_V7;
-    pd_bridge_handle_scheduled_bridge_tx_V7_t bridge_handle_scheduled_bridge_tx_V7;
+    pd_capitaldistribution_distribute_V7_t capitaldistribution_distribute_V7;
+    pd_capitaldistribution_claim_V7_t capitaldistribution_claim_V7;
+    pd_capitaldistribution_push_benefit_V7_t capitaldistribution_push_benefit_V7;
+    pd_capitaldistribution_reclaim_V7_t capitaldistribution_reclaim_V7;
+    pd_capitaldistribution_remove_distribution_V7_t capitaldistribution_remove_distribution_V7;
+    pd_checkpoint_create_checkpoint_V7_t checkpoint_create_checkpoint_V7;
+    pd_checkpoint_set_schedules_max_complexity_V7_t checkpoint_set_schedules_max_complexity_V7;
+    pd_checkpoint_create_schedule_V7_t checkpoint_create_schedule_V7;
+    pd_checkpoint_remove_schedule_V7_t checkpoint_remove_schedule_V7;
     pd_compliancemanager_add_compliance_requirement_V7_t compliancemanager_add_compliance_requirement_V7;
     pd_compliancemanager_remove_compliance_requirement_V7_t compliancemanager_remove_compliance_requirement_V7;
     pd_compliancemanager_replace_asset_compliance_V7_t compliancemanager_replace_asset_compliance_V7;
@@ -2069,6 +2044,48 @@ typedef union {
     pd_compliancemanager_add_default_trusted_claim_issuer_V7_t compliancemanager_add_default_trusted_claim_issuer_V7;
     pd_compliancemanager_remove_default_trusted_claim_issuer_V7_t compliancemanager_remove_default_trusted_claim_issuer_V7;
     pd_compliancemanager_change_compliance_requirement_V7_t compliancemanager_change_compliance_requirement_V7;
+    pd_corporateaction_set_max_details_length_V7_t corporateaction_set_max_details_length_V7;
+    pd_corporateaction_reset_caa_V7_t corporateaction_reset_caa_V7;
+    pd_corporateaction_set_default_targets_V7_t corporateaction_set_default_targets_V7;
+    pd_corporateaction_set_default_withholding_tax_V7_t corporateaction_set_default_withholding_tax_V7;
+    pd_corporateaction_set_did_withholding_tax_V7_t corporateaction_set_did_withholding_tax_V7;
+    pd_corporateaction_initiate_corporate_action_V7_t corporateaction_initiate_corporate_action_V7;
+    pd_corporateaction_link_ca_doc_V7_t corporateaction_link_ca_doc_V7;
+    pd_corporateaction_remove_ca_V7_t corporateaction_remove_ca_V7;
+    pd_corporateaction_change_record_date_V7_t corporateaction_change_record_date_V7;
+    pd_corporateballot_attach_ballot_V7_t corporateballot_attach_ballot_V7;
+    pd_corporateballot_vote_V7_t corporateballot_vote_V7;
+    pd_corporateballot_change_end_V7_t corporateballot_change_end_V7;
+    pd_corporateballot_change_meta_V7_t corporateballot_change_meta_V7;
+    pd_corporateballot_change_rcv_V7_t corporateballot_change_rcv_V7;
+    pd_corporateballot_remove_ballot_V7_t corporateballot_remove_ballot_V7;
+    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
+    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
+    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
+    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
+    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
+    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
+    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
+    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
+    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
+    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
+    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
+    pd_pips_snapshot_V7_t pips_snapshot_V7;
+    pd_pips_enact_snapshot_results_V7_t pips_enact_snapshot_results_V7;
+    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
+    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
+    pd_portfolio_create_portfolio_V7_t portfolio_create_portfolio_V7;
+    pd_portfolio_delete_portfolio_V7_t portfolio_delete_portfolio_V7;
+    pd_portfolio_move_portfolio_funds_V7_t portfolio_move_portfolio_funds_V7;
+    pd_portfolio_rename_portfolio_V7_t portfolio_rename_portfolio_V7;
+    pd_protocolfee_change_coefficient_V7_t protocolfee_change_coefficient_V7;
+    pd_protocolfee_change_base_fee_V7_t protocolfee_change_base_fee_V7;
+    pd_scheduler_schedule_V7_t scheduler_schedule_V7;
+    pd_scheduler_cancel_V7_t scheduler_cancel_V7;
+    pd_scheduler_schedule_named_V7_t scheduler_schedule_named_V7;
+    pd_scheduler_cancel_named_V7_t scheduler_cancel_named_V7;
+    pd_scheduler_schedule_after_V7_t scheduler_schedule_after_V7;
+    pd_scheduler_schedule_named_after_V7_t scheduler_schedule_named_after_V7;
     pd_settlement_create_venue_V7_t settlement_create_venue_V7;
     pd_settlement_update_venue_V7_t settlement_update_venue_V7;
     pd_settlement_add_instruction_V7_t settlement_add_instruction_V7;
@@ -2087,43 +2104,9 @@ typedef union {
     pd_statistics_remove_transfer_manager_V7_t statistics_remove_transfer_manager_V7;
     pd_statistics_add_exempted_entities_V7_t statistics_add_exempted_entities_V7;
     pd_statistics_remove_exempted_entities_V7_t statistics_remove_exempted_entities_V7;
-    pd_protocolfee_change_coefficient_V7_t protocolfee_change_coefficient_V7;
-    pd_protocolfee_change_base_fee_V7_t protocolfee_change_base_fee_V7;
+    pd_treasury_disbursement_V7_t treasury_disbursement_V7;
+    pd_treasury_reimbursement_V7_t treasury_reimbursement_V7;
     pd_utility_relay_tx_V7_t utility_relay_tx_V7;
-    pd_portfolio_create_portfolio_V7_t portfolio_create_portfolio_V7;
-    pd_portfolio_delete_portfolio_V7_t portfolio_delete_portfolio_V7;
-    pd_portfolio_move_portfolio_funds_V7_t portfolio_move_portfolio_funds_V7;
-    pd_portfolio_rename_portfolio_V7_t portfolio_rename_portfolio_V7;
-    pd_scheduler_schedule_V7_t scheduler_schedule_V7;
-    pd_scheduler_cancel_V7_t scheduler_cancel_V7;
-    pd_scheduler_schedule_named_V7_t scheduler_schedule_named_V7;
-    pd_scheduler_cancel_named_V7_t scheduler_cancel_named_V7;
-    pd_scheduler_schedule_after_V7_t scheduler_schedule_after_V7;
-    pd_scheduler_schedule_named_after_V7_t scheduler_schedule_named_after_V7;
-    pd_corporateaction_set_max_details_length_V7_t corporateaction_set_max_details_length_V7;
-    pd_corporateaction_reset_caa_V7_t corporateaction_reset_caa_V7;
-    pd_corporateaction_set_default_targets_V7_t corporateaction_set_default_targets_V7;
-    pd_corporateaction_set_default_withholding_tax_V7_t corporateaction_set_default_withholding_tax_V7;
-    pd_corporateaction_set_did_withholding_tax_V7_t corporateaction_set_did_withholding_tax_V7;
-    pd_corporateaction_initiate_corporate_action_V7_t corporateaction_initiate_corporate_action_V7;
-    pd_corporateaction_link_ca_doc_V7_t corporateaction_link_ca_doc_V7;
-    pd_corporateaction_remove_ca_V7_t corporateaction_remove_ca_V7;
-    pd_corporateaction_change_record_date_V7_t corporateaction_change_record_date_V7;
-    pd_corporateballot_attach_ballot_V7_t corporateballot_attach_ballot_V7;
-    pd_corporateballot_vote_V7_t corporateballot_vote_V7;
-    pd_corporateballot_change_end_V7_t corporateballot_change_end_V7;
-    pd_corporateballot_change_meta_V7_t corporateballot_change_meta_V7;
-    pd_corporateballot_change_rcv_V7_t corporateballot_change_rcv_V7;
-    pd_corporateballot_remove_ballot_V7_t corporateballot_remove_ballot_V7;
-    pd_capitaldistribution_distribute_V7_t capitaldistribution_distribute_V7;
-    pd_capitaldistribution_claim_V7_t capitaldistribution_claim_V7;
-    pd_capitaldistribution_push_benefit_V7_t capitaldistribution_push_benefit_V7;
-    pd_capitaldistribution_reclaim_V7_t capitaldistribution_reclaim_V7;
-    pd_capitaldistribution_remove_distribution_V7_t capitaldistribution_remove_distribution_V7;
-    pd_checkpoint_create_checkpoint_V7_t checkpoint_create_checkpoint_V7;
-    pd_checkpoint_set_schedules_max_complexity_V7_t checkpoint_set_schedules_max_complexity_V7;
-    pd_checkpoint_create_schedule_V7_t checkpoint_create_schedule_V7;
-    pd_checkpoint_remove_schedule_V7_t checkpoint_remove_schedule_V7;
 #endif
 } pd_MethodNested_V7_t;
 

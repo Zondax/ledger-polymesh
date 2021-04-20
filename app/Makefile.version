@@ -1,6 +1,6 @@
 # This is the `transaction_version` field of `Runtime`
 APPVERSION_M=7
 # This is the `spec_version` field of `Runtime`
-APPVERSION_N=17
+APPVERSION_N=18
 # This is the `impl_version` field of `Runtime`
 APPVERSION_P=0
