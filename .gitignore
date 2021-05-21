@@ -84,3 +84,7 @@ tests_zemu/yarn.lock
 /fuzz/corpora
 /tests_tools/target/
 !/tests_tools/neon/yarn.lock
+
+node_modules/.yarn-integrity
+
+yarn.lock
