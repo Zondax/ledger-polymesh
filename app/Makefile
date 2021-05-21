@@ -1,6 +1,6 @@
 #*******************************************************************************
 #   Ledger App
-#   (c) 2018-2020 Zondax GmbH
+#   (c) 2018-2021 Zondax GmbH
 #   (c) 2017 Ledger
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,12 +68,16 @@ $(info COIN  = [$(COIN)])
 ifeq ($(COIN),POLYX)
 # Main app configuration
 DEFINES += APP_STANDARD
+ifeq ($(TARGET_NAME),TARGET_NANOX)
+DEFINES += SUBSTRATE_PARSER_FULL
+endif
 APPNAME = "Polymesh"
 APPPATH = "44'/595'"
 
-else ifeq ($(COIN),Ledgeracio)
-DEFINES += APP_RESTRICTED
-APPNAME = "Polymesh_sec"
+else ifeq ($(COIN),POLYX_XL)
+# XL app configuration
+DEFINES += APP_STANDARD SUBSTRATE_PARSER_FULL
+APPNAME = "Polymesh XL"
 APPPATH = "44'/595'"
 
 else
@@ -148,7 +152,6 @@ SDK_SOURCE_PATH  += lib_blewbxx lib_blewbxx_impl
 else
 # Assume Nano S
 DEFINES       += IO_SEPROXYHAL_BUFFER_SIZE_B=128
-DEFINES       += HAVE_BOLOS_UX COMPLIANCE_UX_160 HAVE_UX_LEGACY
 endif
 
 # X specific
@@ -160,8 +163,8 @@ DEFINES   += LEDGER_SPECIFIC
 
 ifneq ($(BOLOS_ENV),)
 $(info BOLOS_ENV is $(BOLOS_ENV))
-CLANGPATH := $(BOLOS_ENV)/clang-arm-fropi/bin/
-GCCPATH := $(BOLOS_ENV)/gcc-arm-none-eabi-5_3-2016q1/bin/
+CLANGPATH := /usr/bin/
+GCCPATH := /usr/bin/
 else
 $(info BOLOS_ENV is not set: falling back to CLANGPATH and GCCPATH)
 endif
@@ -177,7 +180,7 @@ endif
 #########################
 
 CC := $(CLANGPATH)clang
-CFLAGS += -O3 -Os -Wno-unknown-pragmas
+CFLAGS += -O3 -Os -Wno-unknown-pragmas -Wno-unused-parameter
 
 AS := $(GCCPATH)arm-none-eabi-gcc
 AFLAGS +=
@@ -239,4 +242,8 @@ dep/%.d: %.c Makefile
 
 .PHONY: listvariants
 listvariants:
+ifeq ($(TARGET_NAME),TARGET_NANOS)
+	@echo VARIANTS COIN POLYX POLYX_XL Ledgeracio
+else ifeq ($(TARGET_NAME),TARGET_NANOX)
 	@echo VARIANTS COIN POLYX
+endif
