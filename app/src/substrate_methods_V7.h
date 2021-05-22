@@ -173,19 +173,6 @@ typedef union {
 #endif
 } pd_MethodBasic_V7_t;
 
-#define PD_CALL_BALANCES_TRANSFER_V7 0
-typedef struct {
-    pd_LookupSource_V7_t dest;
-    pd_CompactBalance_t value;
-} pd_balances_transfer_V7_t;
-
-#define PD_CALL_BALANCES_TRANSFER_WITH_MEMO_V7 1
-typedef struct {
-    pd_LookupSource_V7_t dest;
-    pd_CompactBalance_t value;
-    pd_OptionMemo_V7_t memo;
-} pd_balances_transfer_with_memo_V7_t;
-
 #define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V7 2
 typedef struct {
     pd_VecSignatory_V7_t signers_to_remove;
@@ -581,6 +568,19 @@ typedef struct {
 typedef struct {
     pd_VecHeader_t new_uncles;
 } pd_authorship_set_uncles_V7_t;
+
+#define PD_CALL_BALANCES_TRANSFER_V7 0
+typedef struct {
+    pd_LookupSource_V7_t dest;
+    pd_CompactBalance_t value;
+} pd_balances_transfer_V7_t;
+
+#define PD_CALL_BALANCES_TRANSFER_WITH_MEMO_V7 1
+typedef struct {
+    pd_LookupSource_V7_t dest;
+    pd_CompactBalance_t value;
+    pd_OptionMemo_V7_t memo;
+} pd_balances_transfer_with_memo_V7_t;
 
 #define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V7 2
 typedef struct {
@@ -1821,8 +1821,6 @@ typedef struct {
 #endif
 
 typedef union {
-    pd_balances_transfer_V7_t balances_transfer_V7;
-    pd_balances_transfer_with_memo_V7_t balances_transfer_with_memo_V7;
     pd_identity_remove_secondary_keys_V7_t identity_remove_secondary_keys_V7;
     pd_identity_accept_primary_key_V7_t identity_accept_primary_key_V7;
     pd_identity_join_identity_as_key_V7_t identity_join_identity_as_key_V7;
@@ -1894,6 +1892,8 @@ typedef union {
     pd_indices_force_transfer_V7_t indices_force_transfer_V7;
     pd_indices_freeze_V7_t indices_freeze_V7;
     pd_authorship_set_uncles_V7_t authorship_set_uncles_V7;
+    pd_balances_transfer_V7_t balances_transfer_V7;
+    pd_balances_transfer_with_memo_V7_t balances_transfer_with_memo_V7;
     pd_balances_deposit_block_reward_reserve_balance_V7_t balances_deposit_block_reward_reserve_balance_V7;
     pd_balances_set_balance_V7_t balances_set_balance_V7;
     pd_balances_force_transfer_V7_t balances_force_transfer_V7;
