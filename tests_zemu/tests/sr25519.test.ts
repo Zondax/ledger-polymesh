@@ -31,6 +31,7 @@ const defaultOptions = {
   logging: true,
   custom: `-s "${APP_SEED}"`,
   X11: false,
+  pressDelay: 1500,
 }
 
 jest.setTimeout(60000)
