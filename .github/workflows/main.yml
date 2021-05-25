@@ -62,7 +62,7 @@ jobs:
       image: zondax/builder-bolos:latest
       options: --user ${{ needs.configure.outputs.uid_gid }}
     env:
-      BOLOS_SDK: /__w/ledger-polymesh/ledger-polymesh/deps/nanos-secure-sdk
+      BOLOS_SDK: ${{ github.workspace }}/deps/nanos-secure-sdk
       BOLOS_ENV: /opt/bolos
       HOME: /home/zondax_circle
     steps:
@@ -102,15 +102,13 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v2
         with:
-          node-version: '14.4.0'
+          node-version: '14.17.0'
       - name: Install yarn
         run: |
           npm install -g yarn
       - name: Build Ledger app
         run: |
-          make build_full_parser_s
-          make clean
-          make build_full_parser_x
+          make SUBSTRATE_PARSER_FULL=1
       - name: Build/Install build js deps
         run: |
           export PATH=~/.cargo/bin:$PATH
@@ -136,13 +134,13 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v2
         with:
-          node-version: '14.4.0'
+          node-version: '14.17.0'
       - name: Install yarn
         run: |
           npm install -g yarn
       - name: Build Ledger app
         run: |
-          make build_sr25519
+          make clean_build && SUBSTRATE_PARSER_FULL=1 SUPPORT_SR25519=1 make buildS
       - name: Build/Install build js deps
         run: |
           export PATH=~/.cargo/bin:$PATH

@@ -1,9 +1,14 @@
 # Ledger Polymesh app
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![CircleCI](https://circleci.com/gh/Zondax/ledger-polymesh.svg?style=shield&circle-token=b007e4cf939982d5342c8d82bb1148f097065497)](https://circleci.com/gh/Zondax/ledger-polymesh)
+[![CircleCI](https://circleci.com/gh/Zondax/ledger-polymesh.svg?style=shield)](https://circleci.com/gh/Zondax/ledger-polymesh)
 
->NOTE: The minor value in the version number indicates runtime compatibility. For instance: 0.1042.1, Indicates that the app is compatible with runtime 1042*
+-------------------
 
+![zondax](docs/zondax.jpg)
+
+_Please visit our website at [zondax.ch](zondax.ch)_
+
+------------------
 This project contains the Polymesh app (https://polymath.network/) for Ledger Nano S and X.
 
 - Ledger Nano S/X BOLOS app
@@ -19,249 +24,527 @@ Please:
 - **Do not use a Ledger device with funds for development purposes.**
 - **Have a separate and marked device that is used ONLY for development and testing**
 
-Tip:
+# Polymesh  7.2019.x
+
+## System
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|fill_block |    | :heavy_check_mark: | :heavy_check_mark: | `Perbill` _ratio <br/> |
+|remark |    | :heavy_check_mark: | :heavy_check_mark: | `Bytes` _remark <br/> |
+|set_heap_pages |    | :heavy_check_mark: | :heavy_check_mark: | `u64` pages <br/> |
+|set_code |    | :heavy_check_mark: | :heavy_check_mark: | `Bytes` code <br/> |
+|set_code_without_checks |    | :heavy_check_mark: | :heavy_check_mark: | `Bytes` code <br/> |
+|set_changes_trie_config |    |   |   | `Option<ChangesTrieConfiguration>` changes_trie_config <br/> |
+|set_storage |    |   |   | `Vec<KeyValue>` items <br/> |
+|kill_storage |    |   |   | `Vec<Key>` keys <br/> |
+|kill_prefix |    |   |   | `Key` prefix <br/>`u32` _subkeys <br/> |
+|suicide |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## Babe
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|report_equivocation |    |   |   | `BabeEquivocationProof` equivocation_proof <br/>`KeyOwnerProof` key_owner_proof <br/> |
+|report_equivocation_unsigned |    |   |   | `BabeEquivocationProof` equivocation_proof <br/>`KeyOwnerProof` key_owner_proof <br/> |
+
+## Timestamp
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<Moment>` now <br/> |
+
+## Indices
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|claim |    | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex` index <br/> |
+|transfer |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` new <br/>`AccountIndex` index <br/> |
+|free |    | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex` index <br/> |
+|force_transfer |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` new <br/>`AccountIndex` index <br/>`bool` freeze <br/> |
+|freeze |    | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex` index <br/> |
+
+## Authorship
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_uncles |    |   |   | `Vec<Header>` new_uncles <br/> |
+
+## Balances
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|transfer |    | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` dest <br/>`Compact<Balance>` value <br/> |
+|transfer_with_memo |    | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` dest <br/>`Compact<Balance>` value <br/>`Option<Memo>` memo <br/> |
+|deposit_block_reward_reserve_balance |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<Balance>` value <br/> |
+|set_balance |    | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` who <br/>`Compact<Balance>` new_free <br/>`Compact<Balance>` new_reserved <br/> |
+|force_transfer |    | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` source <br/>`LookupSource` dest <br/>`Compact<Balance>` value <br/> |
+|burn_account_balance |    | :heavy_check_mark: | :heavy_check_mark: | `Balance` amount <br/> |
+
+## TransactionPayment
+
+Empty
+
+## Identity
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|cdd_register_did |    |   |   | `AccountId` target_account <br/>`Vec<SecondaryKey>` secondary_keys <br/> |
+|invalidate_cdd_claims |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` cdd <br/>`Moment` disable_from <br/>`Option<Moment>` expiry <br/> |
+|remove_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<Signatory>` signers_to_remove <br/> |
+|accept_primary_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` rotation_auth_id <br/>`Option<u64>` optional_cdd_auth_id <br/> |
+|change_cdd_requirement_for_mk_rotation |    | :heavy_check_mark: | :heavy_check_mark: | `bool` auth_required <br/> |
+|join_identity_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|join_identity_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|leave_identity_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
+|leave_identity_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` did <br/> |
+|add_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/>`Option<Moment>` expiry <br/> |
+|forwarded_call |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target_did <br/>`Proposal` proposal <br/> |
+|revoke_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/> |
+|set_permission_to_signer | :heavy_check_mark:  |   |   | `Signatory` signer <br/>`Permissions` permissions <br/> |
+|legacy_set_permission_to_signer | :heavy_check_mark:  |   |   | `Signatory` signer <br/>`LegacyPermissions` permissions <br/> |
+|freeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
+|unfreeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
+|add_authorization | :heavy_check_mark:  |   |   | `Signatory` target <br/>`AuthorizationData` authorization_data <br/>`Option<Moment>` expiry <br/> |
+|remove_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` target <br/>`u64` auth_id <br/>`bool` _auth_issuer_pays <br/> |
+|accept_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|add_secondary_keys_with_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<SecondaryKeyWithAuth>` additional_keys <br/>`Moment` expires_at <br/> |
+|revoke_offchain_authorization |    | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/>`TargetIdAuthorization` auth <br/> |
+|add_investor_uniqueness_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/>`InvestorZKProofData` proof <br/>`Option<Moment>` expiry <br/> |
+|gc_add_cdd_claim |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/> |
+|gc_revoke_cdd_claim |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/> |
+|add_investor_uniqueness_claim_v2 |    |   |   | `IdentityId` target <br/>`Scope` scope <br/>`Claim` claim <br/>`ScopeClaimProof` proof <br/>`Option<Moment>` expiry <br/> |
+|revoke_claim_by_index |    | :heavy_check_mark: |   | `IdentityId` target <br/>`ClaimType` claim_type <br/>`Option<Scope>` scope <br/> |
+
+## CddServiceProviders
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_active_members_limit |    | :heavy_check_mark: | :heavy_check_mark: | `MemberCount` limit <br/> |
+|disable_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/>`Option<Moment>` expiry <br/>`Option<Moment>` at <br/> |
+|add_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|remove_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|swap_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` remove <br/>`IdentityId` add <br/> |
+|reset_members |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<IdentityId>` members <br/> |
+|abdicate_membership |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## PolymeshCommittee
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_vote_threshold |    | :heavy_check_mark: | :heavy_check_mark: | `u32` n <br/>`u32` d <br/> |
+|set_release_coordinator |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` id <br/> |
+|set_expires_after |    | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlock` expiry <br/> |
+|vote_or_propose |    | :heavy_check_mark: | :heavy_check_mark: | `bool` approve <br/>`Call` call <br/> |
+|vote |    | :heavy_check_mark: | :heavy_check_mark: | `Hash` proposal <br/>`ProposalIndex` index <br/>`bool` approve <br/> |
+
+## CommitteeMembership
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_active_members_limit |    | :heavy_check_mark: | :heavy_check_mark: | `MemberCount` limit <br/> |
+|disable_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/>`Option<Moment>` expiry <br/>`Option<Moment>` at <br/> |
+|add_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|remove_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|swap_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` remove <br/>`IdentityId` add <br/> |
+|reset_members |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<IdentityId>` members <br/> |
+|abdicate_membership |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## TechnicalCommittee
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_vote_threshold |    | :heavy_check_mark: | :heavy_check_mark: | `u32` n <br/>`u32` d <br/> |
+|set_release_coordinator |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` id <br/> |
+|set_expires_after |    | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlock` expiry <br/> |
+|vote_or_propose |    | :heavy_check_mark: | :heavy_check_mark: | `bool` approve <br/>`Call` call <br/> |
+|vote |    | :heavy_check_mark: | :heavy_check_mark: | `Hash` proposal <br/>`ProposalIndex` index <br/>`bool` approve <br/> |
+
+## TechnicalCommitteeMembership
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_active_members_limit |    | :heavy_check_mark: | :heavy_check_mark: | `MemberCount` limit <br/> |
+|disable_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/>`Option<Moment>` expiry <br/>`Option<Moment>` at <br/> |
+|add_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|remove_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|swap_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` remove <br/>`IdentityId` add <br/> |
+|reset_members |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<IdentityId>` members <br/> |
+|abdicate_membership |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## UpgradeCommittee
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_vote_threshold |    | :heavy_check_mark: | :heavy_check_mark: | `u32` n <br/>`u32` d <br/> |
+|set_release_coordinator |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` id <br/> |
+|set_expires_after |    | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlock` expiry <br/> |
+|vote_or_propose |    | :heavy_check_mark: | :heavy_check_mark: | `bool` approve <br/>`Call` call <br/> |
+|vote |    | :heavy_check_mark: | :heavy_check_mark: | `Hash` proposal <br/>`ProposalIndex` index <br/>`bool` approve <br/> |
+
+## UpgradeCommitteeMembership
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_active_members_limit |    | :heavy_check_mark: | :heavy_check_mark: | `MemberCount` limit <br/> |
+|disable_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/>`Option<Moment>` expiry <br/>`Option<Moment>` at <br/> |
+|add_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|remove_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` who <br/> |
+|swap_member |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` remove <br/>`IdentityId` add <br/> |
+|reset_members |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<IdentityId>` members <br/> |
+|abdicate_membership |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## MultiSig
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|create_multisig | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<Signatory>` signers <br/>`u64` sigs_required <br/> |
+|create_or_approve_proposal_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Proposal` proposal <br/>`Option<Moment>` expiry <br/>`bool` auto_close <br/> |
+|create_or_approve_proposal_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Proposal` proposal <br/>`Option<Moment>` expiry <br/>`bool` auto_close <br/> |
+|create_proposal_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Proposal` proposal <br/>`Option<Moment>` expiry <br/>`bool` auto_close <br/> |
+|create_proposal_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Proposal` proposal <br/>`Option<Moment>` expiry <br/>`bool` auto_close <br/> |
+|approve_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`u64` proposal_id <br/> |
+|approve_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`u64` proposal_id <br/> |
+|reject_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`u64` proposal_id <br/> |
+|reject_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`u64` proposal_id <br/> |
+|accept_multisig_signer_as_identity | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|accept_multisig_signer_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|add_multisig_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/> |
+|remove_multisig_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/> |
+|add_multisig_signers_via_creator | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Vec<Signatory>` signers <br/> |
+|remove_multisig_signers_via_creator | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Vec<Signatory>` signers <br/> |
+|change_sigs_required | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u64` sigs_required <br/> |
+|make_multisig_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/> |
+|make_multisig_primary | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`Option<u64>` optional_cdd_auth_id <br/> |
+|execute_scheduled_proposal | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `AccountId` multisig <br/>`u64` proposal_id <br/>`IdentityId` multisig_did <br/>`Weight` proposal_weight <br/> |
+
+## Bridge
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|change_controller |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` controller <br/> |
+|change_admin |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` admin <br/> |
+|change_timelock |    | :heavy_check_mark: | :heavy_check_mark: | `BlockNumber` timelock <br/> |
+|freeze |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|unfreeze |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|change_bridge_limit |    | :heavy_check_mark: | :heavy_check_mark: | `Balance` amount <br/>`BlockNumber` duration <br/> |
+|change_bridge_exempted |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<(IdentityId,bool)>` exempted <br/> |
+|force_handle_bridge_tx |    | :heavy_check_mark: | :heavy_check_mark: | `BridgeTx` bridge_tx <br/> |
+|batch_propose_bridge_tx |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<BridgeTx>` bridge_txs <br/> |
+|propose_bridge_tx |    | :heavy_check_mark: | :heavy_check_mark: | `BridgeTx` bridge_tx <br/> |
+|handle_bridge_tx |    | :heavy_check_mark: | :heavy_check_mark: | `BridgeTx` bridge_tx <br/> |
+|freeze_txs |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<BridgeTx>` bridge_txs <br/> |
+|unfreeze_txs |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<BridgeTx>` bridge_txs <br/> |
+|handle_scheduled_bridge_tx |    | :heavy_check_mark: | :heavy_check_mark: | `BridgeTx` bridge_tx <br/> |
+
+## Staking
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|bond | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` controller <br/>`Compact<BalanceOf>` value <br/>`RewardDestination` payee <br/> |
+|bond_extra | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Compact<BalanceOf>` max_additional <br/> |
+|unbond | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Compact<BalanceOf>` value <br/> |
+|withdraw_unbonded | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `u32` num_slashing_spans <br/> |
+|validate | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `ValidatorPrefs` prefs <br/> |
+|nominate | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<LookupSource>` targets <br/> |
+|chill | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
+|set_payee | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `RewardDestination` payee <br/> |
+|set_controller | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` controller <br/> |
+|set_validator_count |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<u32>` new <br/> |
+|increase_validator_count |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<u32>` additional <br/> |
+|scale_validator_count |    |   |   | `Percent` factor <br/> |
+|add_permissioned_validator |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` identity <br/>`Option<u32>` intended_count <br/> |
+|remove_permissioned_validator |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` identity <br/> |
+|validate_cdd_expiry_nominators |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<AccountId>` targets <br/> |
+|set_commission_cap |    | :heavy_check_mark: | :heavy_check_mark: | `Perbill` new_cap <br/> |
+|set_min_bond_threshold |    | :heavy_check_mark: | :heavy_check_mark: | `BalanceOf` new_value <br/> |
+|force_no_eras |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|force_new_era |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|set_invulnerables |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<AccountId>` validators <br/> |
+|force_unstake |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` stash <br/>`u32` num_slashing_spans <br/> |
+|force_new_era_always |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|cancel_deferred_slash |    | :heavy_check_mark: | :heavy_check_mark: | `EraIndex` era <br/>`Vec<u32>` slash_indices <br/> |
+|payout_stakers |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` validator_stash <br/>`EraIndex` era <br/> |
+|rebond | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Compact<BalanceOf>` value <br/> |
+|set_history_depth |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<EraIndex>` new_history_depth <br/>`Compact<u32>` _era_items_deleted <br/> |
+|reap_stash |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` stash <br/>`u32` num_slashing_spans <br/> |
+|submit_election_solution |    |   |   | `Vec<ValidatorIndex>` winners <br/>`CompactAssignments` compact <br/>`ElectionScore` score <br/>`EraIndex` era <br/>`ElectionSize` size <br/> |
+|submit_election_solution_unsigned |    |   |   | `Vec<ValidatorIndex>` winners <br/>`CompactAssignments` compact <br/>`ElectionScore` score <br/>`EraIndex` era <br/>`ElectionSize` size <br/> |
+|payout_stakers_by_system |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` validator_stash <br/>`EraIndex` era <br/> |
+|change_slashing_allowed_for |    | :heavy_check_mark: | :heavy_check_mark: | `SlashingSwitch` slashing_switch <br/> |
+|update_permissioned_validator_intended_count |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` identity <br/>`u32` new_intended_count <br/> |
+
+## Offences
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+
+## Session
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_keys |    | :heavy_check_mark: | :heavy_check_mark: | `Keys` keys <br/>`Bytes` proof <br/> |
+|purge_keys |    | :heavy_check_mark: | :heavy_check_mark: |  |
+
+## AuthorityDiscovery
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+
+## FinalityTracker
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|final_hint |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<BlockNumber>` hint <br/> |
+
+## Grandpa
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|report_equivocation |    |   |   | `GrandpaEquivocationProof` equivocation_proof <br/>`KeyOwnerProof` key_owner_proof <br/> |
+|report_equivocation_unsigned |    |   |   | `GrandpaEquivocationProof` equivocation_proof <br/>`KeyOwnerProof` key_owner_proof <br/> |
+|note_stalled |    | :heavy_check_mark: | :heavy_check_mark: | `BlockNumber` delay <br/>`BlockNumber` best_finalized_block_number <br/> |
+
+## Historical
+
+Empty
+
+## ImOnline
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|heartbeat |    |   |   | `Heartbeat` heartbeat <br/>`Signature` _signature <br/> |
+
+## RandomnessCollectiveFlip
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+
+## Sudo
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|sudo |    |   |   | `Call` call <br/> |
+|sudo_unchecked_weight |    |   |   | `Call` call <br/>`Weight` _weight <br/> |
+|set_key |    |   |   | `LookupSource` new <br/> |
+|sudo_as |    |   |   | `LookupSource` who <br/>`Call` call <br/> |
+
+## BaseContracts
+
+Empty
+
+## Contracts
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|update_schedule |    |   |   | `Schedule` schedule <br/> |
+|set_put_code_flag |    | :heavy_check_mark: |   | `bool` is_enabled <br/> |
+|put_code |    | :heavy_check_mark: | :heavy_check_mark: | `TemplateMetadata` meta_info <br/>`BalanceOf` instantiation_fee <br/>`Bytes` code <br/> |
+|call |    | :heavy_check_mark: | :heavy_check_mark: | `LookupSource` dest <br/>`Compact<BalanceOf>` value <br/>`Compact<Gas>` gas_limit <br/>`Bytes` data <br/> |
+|instantiate |    | :heavy_check_mark: | :heavy_check_mark: | `Compact<BalanceOf>` endowment <br/>`Compact<Gas>` gas_limit <br/>`CodeHash` code_hash <br/>`Bytes` data <br/>`BalanceOf` max_fee <br/> |
+|freeze_instantiation |    | :heavy_check_mark: | :heavy_check_mark: | `CodeHash` code_hash <br/> |
+|unfreeze_instantiation |    | :heavy_check_mark: | :heavy_check_mark: | `CodeHash` code_hash <br/> |
+|transfer_template_ownership |    | :heavy_check_mark: | :heavy_check_mark: | `CodeHash` code_hash <br/>`IdentityId` new_owner <br/> |
+|change_template_fees |    | :heavy_check_mark: | :heavy_check_mark: | `CodeHash` code_hash <br/>`Option<BalanceOf>` new_instantiation_fee <br/>`Option<BalanceOf>` new_usage_fee <br/> |
+|change_template_meta_url |    | :heavy_check_mark: | :heavy_check_mark: | `CodeHash` code_hash <br/>`Option<MetaUrl>` new_url <br/> |
+
+## Asset
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|register_ticker |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|accept_ticker_transfer |    | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|accept_primary_issuance_agent_transfer |    | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|accept_asset_ownership_transfer |    | :heavy_check_mark: | :heavy_check_mark: | `u64` auth_id <br/> |
+|create_asset |    | :heavy_check_mark: | :heavy_check_mark: | `AssetName` name <br/>`Ticker` ticker <br/>`Balance` total_supply <br/>`bool` divisible <br/>`AssetType` asset_type <br/>`Vec<AssetIdentifier>` identifiers <br/>`Option<FundingRoundName>` funding_round <br/> |
+|freeze |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|unfreeze |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|rename_asset |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`AssetName` name <br/> |
+|issue |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Balance` value <br/> |
+|redeem |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Balance` value <br/> |
+|make_divisible |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|add_documents |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<Document>` docs <br/>`Ticker` ticker <br/> |
+|remove_documents |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<DocumentId>` ids <br/>`Ticker` ticker <br/> |
+|set_funding_round |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`FundingRoundName` name <br/> |
+|update_identifiers |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<AssetIdentifier>` identifiers <br/> |
+|add_extension |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`SmartExtension` extension_details <br/> |
+|remove_smart_extension |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`AccountId` extension_id <br/> |
+|archive_extension |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`AccountId` extension_id <br/> |
+|unarchive_extension |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`AccountId` extension_id <br/> |
+|remove_primary_issuance_agent |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|claim_classic_ticker |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`EcdsaSignature` ethereum_signature <br/> |
+|reserve_classic_ticker |    | :heavy_check_mark: | :heavy_check_mark: | `ClassicTickerImport` classic_ticker_import <br/>`IdentityId` contract_did <br/>`TickerRegistrationConfig` config <br/> |
+|controller_transfer |    | :heavy_check_mark: |   | `Ticker` ticker <br/>`Balance` value <br/>`PortfolioId` from_portfolio <br/> |
+
+## CapitalDistribution
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|distribute |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`Option<PortfolioNumber>` portfolio <br/>`Ticker` currency <br/>`Balance` per_share <br/>`Balance` amount <br/>`Moment` payment_at <br/>`Option<Moment>` expires_at <br/> |
+|claim |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/> |
+|push_benefit |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`IdentityId` holder <br/> |
+|reclaim |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/> |
+|remove_distribution |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/> |
+
+## Checkpoint
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|create_checkpoint |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|set_schedules_max_complexity |    | :heavy_check_mark: | :heavy_check_mark: | `u64` max_complexity <br/> |
+|create_schedule |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`ScheduleSpec` schedule <br/> |
+|remove_schedule |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`ScheduleId` id <br/> |
+
+## ComplianceManager
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|add_compliance_requirement |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<Condition>` sender_conditions <br/>`Vec<Condition>` receiver_conditions <br/> |
+|remove_compliance_requirement |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`u32` id <br/> |
+|replace_asset_compliance |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<ComplianceRequirement>` asset_compliance <br/> |
+|reset_asset_compliance |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|pause_asset_compliance |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|resume_asset_compliance |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|add_default_trusted_claim_issuer |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TrustedIssuer` issuer <br/> |
+|remove_default_trusted_claim_issuer |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`IdentityId` issuer <br/> |
+|change_compliance_requirement |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`ComplianceRequirement` new_req <br/> |
+
+## CorporateAction
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_max_details_length |    | :heavy_check_mark: | :heavy_check_mark: | `u32` length <br/> |
+|reset_caa |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/> |
+|set_default_targets |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TargetIdentities` targets <br/> |
+|set_default_withholding_tax |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Tax` tax <br/> |
+|set_did_withholding_tax |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`IdentityId` taxed_did <br/>`Option<Tax>` tax <br/> |
+|initiate_corporate_action |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`CAKind` kind <br/>`Moment` decl_date <br/>`Option<RecordDateSpec>` record_date <br/>`CADetails` details <br/>`Option<TargetIdentities>` targets <br/>`Option<Tax>` default_withholding_tax <br/>`Option<Vec<(IdentityId,Tax)>>` withholding_tax <br/> |
+|link_ca_doc |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` id <br/>`Vec<DocumentId>` docs <br/> |
+|remove_ca |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/> |
+|change_record_date |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`Option<RecordDateSpec>` record_date <br/> |
+
+## CorporateBallot
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|attach_ballot |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`BallotTimeRange` range <br/>`BallotMeta` meta <br/>`bool` rcv <br/> |
+|vote |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`Vec<BallotVote>` votes <br/> |
+|change_end |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`Moment` end <br/> |
+|change_meta |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`BallotMeta` meta <br/> |
+|change_rcv |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/>`bool` rcv <br/> |
+|remove_ballot |    | :heavy_check_mark: | :heavy_check_mark: | `CAId` ca_id <br/> |
+
+## Permissions
+
+Empty
+
+## Pips
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|set_prune_historical_pips |    | :heavy_check_mark: | :heavy_check_mark: | `bool` prune <br/> |
+|set_min_proposal_deposit |    | :heavy_check_mark: | :heavy_check_mark: | `BalanceOf` deposit <br/> |
+|set_default_enactment_period |    | :heavy_check_mark: | :heavy_check_mark: | `BlockNumber` duration <br/> |
+|set_pending_pip_expiry |    | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlock` expiry <br/> |
+|set_max_pip_skip_count |    | :heavy_check_mark: | :heavy_check_mark: | `SkippedCount` max <br/> |
+|set_active_pip_limit |    | :heavy_check_mark: | :heavy_check_mark: | `u32` limit <br/> |
+|propose | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Proposal` proposal <br/>`BalanceOf` deposit <br/>`Option<Url>` url <br/>`Option<PipDescription>` description <br/> |
+|vote | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/>`bool` aye_or_nay <br/>`BalanceOf` deposit <br/> |
+|approve_committee_proposal |    | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/> |
+|reject_proposal |    | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/> |
+|prune_proposal |    | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/> |
+|reschedule_execution |    | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/>`Option<BlockNumber>` until <br/> |
+|clear_snapshot |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|snapshot |    | :heavy_check_mark: | :heavy_check_mark: |  |
+|enact_snapshot_results |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<(PipId,SnapshotResult)>` results <br/> |
+|execute_scheduled_pip |    | :heavy_check_mark: | :heavy_check_mark: | `PipId` id <br/> |
+|expire_scheduled_pip |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` did <br/>`PipId` id <br/> |
+
+## Portfolio
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|create_portfolio |    | :heavy_check_mark: | :heavy_check_mark: | `PortfolioName` name <br/> |
+|delete_portfolio |    | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber` num <br/> |
+|move_portfolio_funds |    | :heavy_check_mark: | :heavy_check_mark: | `PortfolioId` from <br/>`PortfolioId` to <br/>`Vec<MovePortfolioItem>` items <br/> |
+|rename_portfolio |    | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber` num <br/>`PortfolioName` to_name <br/> |
+
+## ProtocolFee
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|change_coefficient |    | :heavy_check_mark: | :heavy_check_mark: | `PosRatio` coefficient <br/> |
+|change_base_fee |    |   |   | `ProtocolOp` op <br/>`BalanceOf` base_fee <br/> |
+
+## Scheduler
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|schedule |    |   |   | `BlockNumber` when <br/>`Option<Period>` maybe_periodic <br/>`Priority` priority <br/>`Call` call <br/> |
+|cancel |    |   |   | `BlockNumber` when <br/>`u32` index <br/> |
+|schedule_named |    |   |   | `Bytes` id <br/>`BlockNumber` when <br/>`Option<Period>` maybe_periodic <br/>`Priority` priority <br/>`Call` call <br/> |
+|cancel_named |    |   |   | `Bytes` id <br/> |
+|schedule_after |    |   |   | `BlockNumber` after <br/>`Option<Period>` maybe_periodic <br/>`Priority` priority <br/>`Call` call <br/> |
+|schedule_named_after |    |   |   | `Bytes` id <br/>`BlockNumber` after <br/>`Option<Period>` maybe_periodic <br/>`Priority` priority <br/>`Call` call <br/> |
+
+## Settlement
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|create_venue |    | :heavy_check_mark: | :heavy_check_mark: | `VenueDetails` details <br/>`Vec<AccountId>` signers <br/>`VenueType` venue_type <br/> |
+|update_venue |    | :heavy_check_mark: | :heavy_check_mark: | `u64` venue_id <br/>`Option<VenueDetails>` details <br/>`Option<VenueType>` typ <br/> |
+|add_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/> |
+|add_and_affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/>`Vec<PortfolioId>` portfolios <br/> |
+|affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|withdraw_affirmation |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|reject_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|affirm_with_receipts |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<ReceiptDetails>` receipt_details <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|claim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`ReceiptDetails` receipt_details <br/> |
+|unclaim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`u64` leg_id <br/> |
+|set_venue_filtering |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`bool` enabled <br/> |
+|allow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
+|disallow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
+|change_receipt_validity |    | :heavy_check_mark: |   | `u64` receipt_uid <br/>`bool` validity <br/> |
+|execute_scheduled_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`u32` legs_count <br/> |
+
+## Statistics
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|add_transfer_manager |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TransferManager` new_transfer_manager <br/> |
+|remove_transfer_manager |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TransferManager` transfer_manager <br/> |
+|add_exempted_entities |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TransferManager` transfer_manager <br/>`Vec<ScopeId>` exempted_entities <br/> |
+|remove_exempted_entities |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`TransferManager` transfer_manager <br/>`Vec<ScopeId>` entities <br/> |
+
+## Sto
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|create_fundraiser |    | :heavy_check_mark: |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`u64` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
+|invest |    | :heavy_check_mark: |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
+|freeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|unfreeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|modify_fundraiser_window |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
+|stop |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+
+## Treasury
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|disbursement |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<Beneficiary>` beneficiaries <br/> |
+|reimbursement |    | :heavy_check_mark: | :heavy_check_mark: | `BalanceOf` amount <br/> |
+
+## Utility
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|batch | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<Call>` calls <br/> |
+|batch_atomic | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<Call>` calls <br/> |
+|batch_optimistic | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<Call>` calls <br/> |
+|relay_tx |    | :heavy_check_mark: | :heavy_check_mark: | `AccountId` target <br/>`OffChainSignature` signature <br/>`UniqueCall` call <br/> |
+
+## Base
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
 
-- In releases, you will find a precompiled test app. If you are just curious, you can run `install_app.sh` and avoid building.
-
-## Download and install
-
-*Once the app is approved by Ledger, it will be available in their app store (Ledger Live).
-You can get builds generated by CircleCI from the release tab. THESE ARE UNVETTED DEVELOPMENT RELEASES*
-
-Download a release from here (https://github.com/Zondax/ledger-polymesh/releases). You only need `installer_s.sh`
-
-If the file is not executable, run
-```sh
-chmod +x ./installer_s.sh
-```
-
-then run:
-
-```sh
-./installer_s.sh load
-```
-
-# Development
-
-## Preconditions
-
-- Be sure you checkout submodules too:
-
-    ```
-    git submodule update --init --recursive
-    ```
-
-- Install Docker CE
-    - Instructions can be found here: https://docs.docker.com/install/
-
-- We only officially support Ubuntu. Install the following packages:
-   ```
-   sudo apt update && apt-get -y install build-essential git wget cmake \
-  libssl-dev libgmp-dev autoconf libtool
-   ```
-
-- Install `node > v14.0`. We typically recommend using `n`
-
-- You will need python 3 and then run
-    - `make deps`
-
-- This project requires Ledger firmware 1.6.1
-    - The current repository keeps track of Ledger's SDK but it is possible to override it by changing the git submodule.
-
-*Warning*: Some IDEs may not use the same python interpreter or virtual enviroment as the one you used when running `pip`.
-If you see conan is not found, check that you installed the package in the same interpreter as the one that launches `cmake`.
-
-## How to build ?
-
-> We like clion or vscode but let's have some reproducible command line steps
->
-
-- Building the app itself
-
-    If you installed the what is described above, just run:
-    ```bash
-    make
-    ```
-
-## Running tests
-
-- Running rust tests (x64)
-
-    If you installed the what is described above, just run:
-    ```bash
-    make rust_test
-    ```
-
-- Running C/C++ tests (x64)
-
-    If you installed the what is described above, just run:
-    ```bash
-    make cpp_test
-    ```
-
-- Running device emulation+integration tests!!
-
-   ```bash
-    Use Zemu! Explained below!
-    ```
-
-## How to test with Zemu?
-
-> What is Zemu?? Great you asked!!
-> As part of this project, we are making public a beta version of our internal testing+emulation framework for Ledger apps.
->
-> Npm Package here: https://www.npmjs.com/package/@zondax/zemu
->
-> Repo here: https://github.com/Zondax/zemu
-
-Let's go! First install everything:
-> At this moment, if you change the app you will need to run `make` before running the test again.
-
-```bash
-make zemu_install
-```
-
-Then you can run JS tests:
-
-```bash
-make zemu_test
-```
-
-To run a single specific test:
-
-> At the moment, the recommendation is to run from the IDE. Remember to run `make` if you change the app.
-
-## How to debug a Ledger app?
-
-You can use vscode or clion to debug the app. We recommend using CLion but we provide a vscode (unsupported) configuration too.
-
-### Preconditions
-
-If you are using CLion, you need to a configuration file in your home directory: `$HOME/.gdbinit` with the following content:
-
-```
-set auto-load local-gdbinit on
-add-auto-load-safe-path /
-```
-
-### Warnings
-
-There are a few things to take into account when enabling Ledger App debugging:
-
-- Once you enable the local .gdbinit that is located in your project workspace. You **will break** local Rust debugging in your host. The reason is that debugging unit tests will use the same `.gdbinit` configuration that sets the environment to ARM. We are looking at some possible fixes. For now, if you want to debug unit tests instead of the ledger app, you need to comment out the lines in `.gdbinit`
-
-### Debugging
-
-1. Build your app
-
-    ```bash
-    make
-    ```
-
-2. Define your debug scenario
-
-    Open `tests/zemu/tools/debug.mjs` and look for the line:
-
-    ```bash
-    /// TIP you can use zemu commands here to take the app ...
-    ```
-
-    You can adjust this code to get the emulator to trigger a breakpoint in your app:
-    - send clicks
-    - send APDUs, etc
-
-3. Launch the emulator in debug mode
-
-    > If you didnt install Zemu yet (previous section), then run `make zemu_install`
-
-    ```bash
-    make zemu_debug
-    ```
-
-    The emulator will launch and immediately stop. You should see a black window
-
-4. Configure Clion debugger
-
-    Your configuration should look similar to this:
-
-     ![image](docs/img/clion_debugging.png)
-
-    Check that the path mappings are correct
-
-5. Start CLion debugger
-
-    You will hit a breakpoint in main.
-    Add breakpoints in other places and continue.
-
-    Enjoy :)
-
-## Using a real device
-
-### How to prepare your DEVELOPMENT! device:
-
->  You can use an emulated device for development. This is only required if you are using a physical device
->
->    **Please do not use a Ledger device with funds for development purposes.**
->>
->    **Have a separate and marked device that is used ONLY for development and testing**
-
-   There are a few additional steps that increase reproducibility and simplify development:
-
-**1 - Ensure your device works in your OS**
-- In Linux hosts it might be necessary to adjust udev rules, etc.
-
-  Refer to Ledger documentation: https://support.ledger.com/hc/en-us/articles/115005165269-Fix-connection-issues
-
-**2 - Set a test mnemonic**
-
-Many of our integration tests expect the device to be configured with a known test mnemonic.
-
-- Plug your device while pressing the right button
-
-- Your device will show "Recovery" in the screen
-
-- Double click
-
-- Run `make dev_init`. This will take about 2 minutes. The device will be initialized to:
-
-   ```
-   PIN: 5555
-   Mnemonic: equip will roof matter pink blind book anxiety banner elbow sun young
-   ```
-
-**3 - Add a development certificate**
-
-- Plug your device while pressing the right button
-
-- Your device will show "Recovery" in the screen
-
-- Click both buttons at the same time
-
-- Enter your pin if necessary
-
-- Run `make dev_ca`. The device will receive a development certificate to avoid constant manual confirmations.
-
-## Building the Ledger App
-
-### Loading into your development device
-
-The Makefile will build the firmware in a docker container and leave the binary in the correct directory.
-
-- Build
-
-   ```
-   make                # Builds the app
-   ```
-
-- Upload to a device
-
-   The following command will upload the application to the ledger:
-
-   _Warning: The application will be deleted before uploading._
-   ```
-   make load          # Builds and loads the app to the device
-   ```
-
-## APDU Specifications
-
-- [APDU Protocol](docs/APDUSPEC.md)

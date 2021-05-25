@@ -30,7 +30,7 @@ extern "C" {
 #define SCALAR_LEN_ED25519   32u
 #define SIG_PLUS_TYPE_LEN    65u
 
-#define PK_LEN_25519           32u
+#define PK_LEN_25519         32u
 #define MAX_SIGN_SIZE        256u
 #define BLAKE2B_DIGEST_SIZE  32u
 
@@ -58,13 +58,7 @@ typedef enum {
 
 #define COIN_SECRET_REQUIRED_CLICKS         0
 
-#if defined(APP_STANDARD)
 #include "coin_standard.h"
-#elif defined(APP_RESTRICTED)
-#include "coin_restricted.h"
-#else
-#error "APP VARIANT IS NOT SUPPORTED"
-#endif
 
 #ifdef __cplusplus
 }
