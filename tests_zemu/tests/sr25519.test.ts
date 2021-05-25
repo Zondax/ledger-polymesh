@@ -31,7 +31,6 @@ const defaultOptions = {
   logging: true,
   custom: `-s "${APP_SEED}"`,
   X11: false,
-  pressDelay: 1500,
 }
 
 jest.setTimeout(60000)
@@ -131,7 +130,7 @@ describe('SR25519', function () {
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
 
-      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_normal', 5)
+      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_normal', 4)
 
       const signatureResponse = await signatureRequest
       console.log(signatureResponse)
