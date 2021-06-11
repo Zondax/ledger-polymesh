@@ -19,6 +19,14 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
+__Z_INLINE parser_error_t _readMethod_balances_transfer_V7(
+    parser_context_t* c, pd_balances_transfer_V7_t* m)
+{
+    CHECK_ERROR(_readLookupSource_V7(c, &m->dest))
+    CHECK_ERROR(_readCompactBalance(c, &m->value))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_identity_remove_secondary_keys_V7(
     parser_context_t* c, pd_identity_remove_secondary_keys_V7_t* m)
 {
@@ -552,14 +560,6 @@ __Z_INLINE parser_error_t _readMethod_authorship_set_uncles_V7(
     parser_context_t* c, pd_authorship_set_uncles_V7_t* m)
 {
     CHECK_ERROR(_readVecHeader(c, &m->new_uncles))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_balances_transfer_V7(
-    parser_context_t* c, pd_balances_transfer_V7_t* m)
-{
-    CHECK_ERROR(_readLookupSource_V7(c, &m->dest))
-    CHECK_ERROR(_readCompactBalance(c, &m->value))
     return parser_ok;
 }
 
@@ -2353,6 +2353,9 @@ parser_error_t _readMethod_V7(
 
     switch (callPrivIdx) {
 
+    case 1280: /* module 5 call 0 */
+        CHECK_ERROR(_readMethod_balances_transfer_V7(c, &method->nested.balances_transfer_V7))
+        break;
     case 1794: /* module 7 call 2 */
         CHECK_ERROR(_readMethod_identity_remove_secondary_keys_V7(c, &method->nested.identity_remove_secondary_keys_V7))
         break;
@@ -2564,9 +2567,6 @@ parser_error_t _readMethod_V7(
         break;
     case 1024: /* module 4 call 0 */
         CHECK_ERROR(_readMethod_authorship_set_uncles_V7(c, &method->nested.authorship_set_uncles_V7))
-        break;
-    case 1280: /* module 5 call 0 */
-        CHECK_ERROR(_readMethod_balances_transfer_V7(c, &method->nested.balances_transfer_V7))
         break;
     case 1281: /* module 5 call 1 */
         CHECK_ERROR(_readMethod_balances_transfer_with_memo_V7(c, &method->nested.balances_transfer_with_memo_V7))
@@ -3259,6 +3259,8 @@ parser_error_t _readMethod_V7(
 const char* _getMethod_ModuleName_V7(uint8_t moduleIdx)
 {
     switch (moduleIdx) {
+    case 5:
+        return STR_MO_BALANCES;
     case 7:
         return STR_MO_IDENTITY;
     case 15:
@@ -3280,8 +3282,6 @@ const char* _getMethod_ModuleName_V7(uint8_t moduleIdx)
         return STR_MO_INDICES;
     case 4:
         return STR_MO_AUTHORSHIP;
-    case 5:
-        return STR_MO_BALANCES;
     case 8:
         return STR_MO_CDDSERVICEPROVIDERS;
     case 10:
@@ -3357,6 +3357,8 @@ const char* _getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1280: /* module 5 call 0 */
+        return STR_ME_TRANSFER;
     case 1794: /* module 7 call 2 */
         return STR_ME_REMOVE_SECONDARY_KEYS;
     case 1795: /* module 7 call 3 */
@@ -3498,8 +3500,6 @@ const char* _getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_FREEZE;
     case 1024: /* module 4 call 0 */
         return STR_ME_SET_UNCLES;
-    case 1280: /* module 5 call 0 */
-        return STR_ME_TRANSFER;
     case 1281: /* module 5 call 1 */
         return STR_ME_TRANSFER_WITH_MEMO;
     case 1282: /* module 5 call 2 */
@@ -3963,6 +3963,8 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1280: /* module 5 call 0 */
+        return 2;
     case 1794: /* module 7 call 2 */
         return 1;
     case 1795: /* module 7 call 3 */
@@ -4104,8 +4106,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 1;
     case 1024: /* module 4 call 0 */
         return 1;
-    case 1280: /* module 5 call 0 */
-        return 2;
     case 1281: /* module 5 call 1 */
         return 3;
     case 1282: /* module 5 call 2 */
@@ -4569,6 +4569,15 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1280: /* module 5 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_dest;
+        case 1:
+            return STR_IT_value;
+        default:
+            return NULL;
+        }
     case 1794: /* module 7 call 2 */
         switch (itemIdx) {
         case 0:
@@ -5147,15 +5156,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_new_uncles;
-        default:
-            return NULL;
-        }
-    case 1280: /* module 5 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_dest;
-        case 1:
-            return STR_IT_value;
         default:
             return NULL;
         }
@@ -7157,6 +7157,21 @@ parser_error_t _getMethod_ItemValue_V7(
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
     switch (callPrivIdx) {
+    case 1280: /* module 5 call 0 */
+        switch (itemIdx) {
+        case 0: /* balances_transfer_V7 - dest */;
+            return _toStringLookupSource_V7(
+                &m->nested.balances_transfer_V7.dest,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* balances_transfer_V7 - value */;
+            return _toStringCompactBalance(
+                &m->nested.balances_transfer_V7.value,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 1794: /* module 7 call 2 */
         switch (itemIdx) {
         case 0: /* identity_remove_secondary_keys_V7 - signers_to_remove */;
@@ -8078,21 +8093,6 @@ parser_error_t _getMethod_ItemValue_V7(
         case 0: /* authorship_set_uncles_V7 - new_uncles */;
             return _toStringVecHeader(
                 &m->nested.authorship_set_uncles_V7.new_uncles,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 1280: /* module 5 call 0 */
-        switch (itemIdx) {
-        case 0: /* balances_transfer_V7 - dest */;
-            return _toStringLookupSource_V7(
-                &m->nested.balances_transfer_V7.dest,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* balances_transfer_V7 - value */;
-            return _toStringCompactBalance(
-                &m->nested.balances_transfer_V7.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
