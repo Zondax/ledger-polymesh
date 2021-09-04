@@ -15,8 +15,8 @@
  ******************************************************************************* */
 
 import Zemu, { DEFAULT_START_OPTIONS } from '@zondax/zemu'
-import { newPolymeshApp } from '@zondax/ledger-polkadot'
-import { APP_SEED } from './common'
+import { newPolymeshApp } from '@zondax/ledger-substrate'
+import { APP_SEED, txBasic, txNomination } from './common'
 
 // @ts-ignore
 import { blake2bFinal, blake2bInit, blake2bUpdate } from 'blakejs'
@@ -30,10 +30,14 @@ const defaultOptions = {
   ...DEFAULT_START_OPTIONS,
   logging: true,
   custom: `-s "${APP_SEED}"`,
-  X11: false,
+  X11: true,
 }
 
 jest.setTimeout(60000)
+
+beforeAll(async () => {
+  await Zemu.checkAndPullImage()
+})
 
 describe('SR25519', function () {
   test('get address sr25519', async function () {
@@ -117,10 +121,7 @@ describe('SR25519', function () {
       const pathChange = 0x80000000
       const pathIndex = 0x80000000
 
-      const txBlobStr =
-        '0500ff40f53afc3e2ac603eae342a2f18e4cc456cd12e77aaf4eddea2045c4fb5d39966d0fd5030000e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f'
-
-      const txBlob = Buffer.from(txBlobStr, 'hex')
+      const txBlob = Buffer.from(txBasic, 'hex')
 
       const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1)
       const pubKey = Buffer.from(responseAddr.pubKey, 'hex')
@@ -130,7 +131,7 @@ describe('SR25519', function () {
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
 
-      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_normal', 4)
+      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_normal', 5)
 
       const signatureResponse = await signatureRequest
       console.log(signatureResponse)
@@ -141,7 +142,7 @@ describe('SR25519', function () {
       // Now verify the signature
       let prehash = txBlob
       if (txBlob.length > 256) {
-        const context = blake2bInit(32, null)
+        const context = blake2bInit(32)
         blake2bUpdate(context, txBlob)
         prehash = Buffer.from(blake2bFinal(context))
       }
@@ -167,10 +168,7 @@ describe('SR25519', function () {
       await sim.clickBoth()
       await sim.clickLeft()
 
-      const txBlobStr =
-        '0500ff40f53afc3e2ac603eae342a2f18e4cc456cd12e77aaf4eddea2045c4fb5d39966d0fd5030000e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f'
-
-      const txBlob = Buffer.from(txBlobStr, 'hex')
+      const txBlob = Buffer.from(txBasic, 'hex')
 
       const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1)
       const pubKey = Buffer.from(responseAddr.pubKey, 'hex')
@@ -181,7 +179,7 @@ describe('SR25519', function () {
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
 
-      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_expert', 10)
+      await sim.compareSnapshotsAndAccept('.', 's-sign_basic_expert', 11)
 
       const signatureResponse = await signatureRequest
       console.log(signatureResponse)
@@ -192,7 +190,7 @@ describe('SR25519', function () {
       // Now verify the signature
       let prehash = txBlob
       if (txBlob.length > 256) {
-        const context = blake2bInit(32, null)
+        const context = blake2bInit(32)
         blake2bUpdate(context, txBlob)
         prehash = Buffer.from(blake2bFinal(context))
       }
@@ -204,7 +202,7 @@ describe('SR25519', function () {
     }
   })
 
-  test('sign large nomination', async function () {
+  test('sign nomination', async function () {
     const sim = new Zemu(APP_PATH)
     try {
       await sim.start({ ...defaultOptions })
@@ -213,10 +211,7 @@ describe('SR25519', function () {
       const pathChange = 0x80000000
       const pathIndex = 0x80000000
 
-      const txBlobStr =
-        '110520ff3a74572ba8f3136c8fadd394cea53e7f1e8b6cb0dd35969db363abf52fc99b30ff305429035c83eab3af45c8324d5bc36a659f2cedfb36198156d0287f7f501107ff1a81532ef75c44acf3e5bf12d614b91fd5019276879bc8f0eac5a046b0c15277ffc8ee4c5e6d3ae0468077fa791e0468c90efff0ad9d3098b58f578d97a6465801ffc4faf3ff6cea6d0cc39dce4af2f126087a5b4221a0fe9903d22aaf5bd248e010ff06ea6ede1e2dd9cc9ab286762ed6732db47df39fc0f9d5a47a53325100c94f75fff065ea2f702c2cdd21abcfc6867404423fe2c0ecce2fecbdcfee28d481994d18ff8a9170375fef6774fe9381eace15328d1a2cce7809ced520edd75be93567e82dd5038d2400e2070000070000009deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f9deeb940c92ae02111c3bd5baca89970384f4c9849f02a1b2e53e66414d30f9f'
-
-      const txBlob = Buffer.from(txBlobStr, 'hex')
+      const txBlob = Buffer.from(txNomination, 'hex')
 
       const responseAddr = await app.getAddress(pathAccount, pathChange, pathIndex, false, 1)
       const pubKey = Buffer.from(responseAddr.pubKey, 'hex')
@@ -226,7 +221,7 @@ describe('SR25519', function () {
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
 
-      await sim.compareSnapshotsAndAccept('.', `s-sign_large_nomination_sr25519`, 17)
+      await sim.compareSnapshotsAndAccept('.', `s-sign_nomination`, 10)
 
       const signatureResponse = await signatureRequest
       console.log(signatureResponse)
@@ -237,7 +232,7 @@ describe('SR25519', function () {
       // Now verify the signature
       let prehash = txBlob
       if (txBlob.length > 256) {
-        const context = blake2bInit(32, null)
+        const context = blake2bInit(32)
         blake2bUpdate(context, txBlob)
         prehash = Buffer.from(blake2bFinal(context))
       }
