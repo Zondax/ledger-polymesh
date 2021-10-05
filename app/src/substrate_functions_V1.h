@@ -79,6 +79,7 @@ parser_error_t _readFundingRoundName_V1(parser_context_t* c, pd_FundingRoundName
 parser_error_t _readFundraiserName_V1(parser_context_t* c, pd_FundraiserName_V1_t* v);
 parser_error_t _readGrandpaEquivocationProof_V1(parser_context_t* c, pd_GrandpaEquivocationProof_V1_t* v);
 parser_error_t _readIdentityId_V1(parser_context_t* c, pd_IdentityId_V1_t* v);
+parser_error_t _readInvestorUid_V1(parser_context_t* c, pd_InvestorUid_V1_t* v);
 parser_error_t _readInvestorZKProofData_V1(parser_context_t* c, pd_InvestorZKProofData_V1_t* v);
 parser_error_t _readItnRewardStatus_V1(parser_context_t* c, pd_ItnRewardStatus_V1_t* v);
 parser_error_t _readKeyOwnerProof_V1(parser_context_t* c, pd_KeyOwnerProof_V1_t* v);
@@ -580,6 +581,13 @@ parser_error_t _toStringGrandpaEquivocationProof_V1(
 
 parser_error_t _toStringIdentityId_V1(
     const pd_IdentityId_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringInvestorUid_V1(
+    const pd_InvestorUid_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

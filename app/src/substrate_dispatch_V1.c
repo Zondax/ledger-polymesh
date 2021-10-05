@@ -2316,6 +2316,34 @@ __Z_INLINE parser_error_t _readMethod_rewards_set_itn_reward_status_V1(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_testutils_register_did_V1(
+    parser_context_t* c, pd_testutils_register_did_V1_t* m)
+{
+    CHECK_ERROR(_readInvestorUid_V1(c, &m->uid))
+    CHECK_ERROR(_readVecSecondaryKey_V1(c, &m->secondary_keys))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_testutils_mock_cdd_register_did_V1(
+    parser_context_t* c, pd_testutils_mock_cdd_register_did_V1_t* m)
+{
+    CHECK_ERROR(_readAccountId_V1(c, &m->target_account))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_testutils_get_my_did_V1(
+    parser_context_t* c, pd_testutils_get_my_did_V1_t* m)
+{
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_testutils_get_cdd_of_V1(
+    parser_context_t* c, pd_testutils_get_cdd_of_V1_t* m)
+{
+    CHECK_ERROR(_readAccountId_V1(c, &m->of))
+    return parser_ok;
+}
+
 #endif
 
 parser_error_t _readMethod_V1(
@@ -3209,6 +3237,18 @@ parser_error_t _readMethod_V1(
     case 11521: /* module 45 call 1 */
         CHECK_ERROR(_readMethod_rewards_set_itn_reward_status_V1(c, &method->basic.rewards_set_itn_reward_status_V1))
         break;
+    case 12800: /* module 50 call 0 */
+        CHECK_ERROR(_readMethod_testutils_register_did_V1(c, &method->basic.testutils_register_did_V1))
+        break;
+    case 12801: /* module 50 call 1 */
+        CHECK_ERROR(_readMethod_testutils_mock_cdd_register_did_V1(c, &method->basic.testutils_mock_cdd_register_did_V1))
+        break;
+    case 12802: /* module 50 call 2 */
+        CHECK_ERROR(_readMethod_testutils_get_my_did_V1(c, &method->basic.testutils_get_my_did_V1))
+        break;
+    case 12803: /* module 50 call 3 */
+        CHECK_ERROR(_readMethod_testutils_get_cdd_of_V1(c, &method->basic.testutils_get_cdd_of_V1))
+        break;
 #endif
     default:
         return parser_not_supported;
@@ -3312,6 +3352,8 @@ const char* _getMethod_ModuleName_V1(uint8_t moduleIdx)
         return STR_MO_RELAYER;
     case 45:
         return STR_MO_REWARDS;
+    case 50:
+        return STR_MO_TESTUTILS;
 #endif
     default:
         return NULL;
@@ -3912,6 +3954,14 @@ const char* _getMethod_Name_V1(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_CLAIM_ITN_REWARD;
     case 11521: /* module 45 call 1 */
         return STR_ME_SET_ITN_REWARD_STATUS;
+    case 12800: /* module 50 call 0 */
+        return STR_ME_REGISTER_DID;
+    case 12801: /* module 50 call 1 */
+        return STR_ME_MOCK_CDD_REGISTER_DID;
+    case 12802: /* module 50 call 2 */
+        return STR_ME_GET_MY_DID;
+    case 12803: /* module 50 call 3 */
+        return STR_ME_GET_CDD_OF;
 #endif
     default:
         return NULL;
@@ -4512,6 +4562,14 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
         return 3;
     case 11521: /* module 45 call 1 */
         return 2;
+    case 12800: /* module 50 call 0 */
+        return 2;
+    case 12801: /* module 50 call 1 */
+        return 1;
+    case 12802: /* module 50 call 2 */
+        return 0;
+    case 12803: /* module 50 call 3 */
+        return 1;
 #endif
     default:
         return 0;
@@ -7064,6 +7122,34 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_itn_address;
         case 1:
             return STR_IT_status;
+        default:
+            return NULL;
+        }
+    case 12800: /* module 50 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_uid;
+        case 1:
+            return STR_IT_secondary_keys;
+        default:
+            return NULL;
+        }
+    case 12801: /* module 50 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_target_account;
+        default:
+            return NULL;
+        }
+    case 12802: /* module 50 call 2 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
+    case 12803: /* module 50 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_of;
         default:
             return NULL;
         }
@@ -11240,6 +11326,46 @@ parser_error_t _getMethod_ItemValue_V1(
         default:
             return parser_no_data;
         }
+    case 12800: /* module 50 call 0 */
+        switch (itemIdx) {
+        case 0: /* testutils_register_did_V1 - uid */;
+            return _toStringInvestorUid_V1(
+                &m->basic.testutils_register_did_V1.uid,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* testutils_register_did_V1 - secondary_keys */;
+            return _toStringVecSecondaryKey_V1(
+                &m->basic.testutils_register_did_V1.secondary_keys,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12801: /* module 50 call 1 */
+        switch (itemIdx) {
+        case 0: /* testutils_mock_cdd_register_did_V1 - target_account */;
+            return _toStringAccountId_V1(
+                &m->basic.testutils_mock_cdd_register_did_V1.target_account,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12802: /* module 50 call 2 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
+    case 12803: /* module 50 call 3 */
+        switch (itemIdx) {
+        case 0: /* testutils_get_cdd_of_V1 - of */;
+            return _toStringAccountId_V1(
+                &m->basic.testutils_get_cdd_of_V1.of,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
 #endif
     default:
         return parser_ok;
@@ -11317,6 +11443,10 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
     case 11269: // Relayer:Decrease polyx limit
     case 11520: // Rewards:Claim itn reward
     case 11521: // Rewards:Set itn reward status
+    case 12800: // TestUtils:Register did
+    case 12801: // TestUtils:Mock cdd register did
+    case 12802: // TestUtils:Get my did
+    case 12803: // TestUtils:Get cdd of
         return false;
     default:
         return true;

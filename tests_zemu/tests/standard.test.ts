@@ -27,7 +27,7 @@ const defaultOptions = {
   ...DEFAULT_START_OPTIONS,
   logging: true,
   custom: `-s "${APP_SEED}"`,
-  X11: true,
+  X11: false,
 }
 
 jest.setTimeout(60000)
@@ -106,8 +106,9 @@ describe('Standard', function () {
       const app = newPolymeshApp(sim.getTransport())
 
       const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
+      // // Wait until we are not in the main menu
+      const mainSnapshot = sim.getMainMenuSnapshot()
+      await sim.waitUntilScreenIsNot(mainSnapshot)
 
       await sim.compareSnapshotsAndAccept('.', `${m.prefix.toLowerCase()}-show_address`, 2)
 

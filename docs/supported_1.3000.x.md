@@ -520,3 +520,12 @@ Empty
 |claim_itn_reward |    | :heavy_check_mark: |   | `AccountId` reward_address <br/>`AccountId` itn_address <br/>`OffChainSignature` signature <br/> | 
 |set_itn_reward_status |    |   |   | `AccountId` itn_address <br/>`ItnRewardStatus` status <br/> | 
 
+## TestUtils
+
+| Name        | Light | XL | Nesting | Arguments | 
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|register_did |    |   |   | `InvestorUid` uid <br/>`Vec<SecondaryKey>` secondary_keys <br/> | 
+|mock_cdd_register_did |    |   |   | `AccountId` target_account <br/> | 
+|get_my_did |    |   |   |  | 
+|get_cdd_of |    |   |   | `AccountId` of <br/> | 
+

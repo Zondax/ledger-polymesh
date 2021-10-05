@@ -227,6 +227,11 @@ typedef struct {
 } pd_LegacyPalletPermissions_V1_t;
 
 typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+} pd_Memo_V1_t;
+
+typedef struct {
     uint64_t value;
 } pd_Moment_V1_t;
 
@@ -304,6 +309,11 @@ typedef struct {
     uint8_t some;
     pd_DocumentType_V1_t contained;
 } pd_OptionDocumentType_V1_t;
+
+typedef struct {
+    uint8_t some;
+    pd_Memo_V1_t contained;
+} pd_OptionMemo_V1_t;
 
 typedef struct {
     uint8_t some;
@@ -460,13 +470,9 @@ typedef struct {
 } pd_LookupSource_V1_t;
 
 typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-} pd_Memo_V1_t;
-
-typedef struct {
     pd_Ticker_V1_t ticker;
     pd_Balance_t balance;
+    pd_OptionMemo_V1_t memo;
 } pd_MovePortfolioItem_V1_t;
 
 typedef struct {
@@ -666,6 +672,7 @@ typedef struct {
 
 typedef struct {
     pd_CompactPerBill_V1_t commission;
+    pd_bool_t blocked;
 } pd_ValidatorPrefs_V1_t;
 
 typedef struct {
@@ -832,6 +839,10 @@ typedef struct {
 
 typedef struct {
     const uint8_t* _ptr;
+} pd_InvestorUid_V1_t;
+
+typedef struct {
+    const uint8_t* _ptr;
 } pd_InvestorZKProofData_V1_t;
 
 typedef struct {
@@ -856,11 +867,6 @@ typedef struct {
     uint8_t some;
     pd_FundingRoundName_V1_t contained;
 } pd_OptionFundingRoundName_V1_t;
-
-typedef struct {
-    uint8_t some;
-    pd_Memo_V1_t contained;
-} pd_OptionMemo_V1_t;
 
 typedef struct {
     uint8_t some;

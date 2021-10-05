@@ -581,6 +581,10 @@ parser_error_t _readIdentityId_V1(parser_context_t* c, pd_IdentityId_V1_t* v) {
     GEN_DEF_READARRAY(32)
 }
 
+parser_error_t _readInvestorUid_V1(parser_context_t* c, pd_InvestorUid_V1_t* v) {
+    GEN_DEF_READARRAY(16)
+}
+
 parser_error_t _readInvestorZKProofData_V1(parser_context_t* c, pd_InvestorZKProofData_V1_t* v) {
     GEN_DEF_READARRAY(64)
 }
@@ -731,6 +735,7 @@ parser_error_t _readMovePortfolioItem_V1(parser_context_t* c, pd_MovePortfolioIt
 {
     CHECK_ERROR(_readTicker_V1(c, &v->ticker));
     CHECK_ERROR(_readBalance(c, &v->balance));
+    CHECK_ERROR(_readOptionMemo_V1(c, &v->memo));
     return parser_ok;
 }
 
@@ -1281,6 +1286,7 @@ parser_error_t _readValidatorPrefs_V1(parser_context_t* c, pd_ValidatorPrefs_V1_
 {
     CHECK_INPUT();
     CHECK_ERROR(_readCompactPerBill_V1(c, &v->commission));
+    CHECK_ERROR(_readBool(c, &v->blocked));
     return parser_ok;
 }
 
@@ -2922,6 +2928,15 @@ parser_error_t _toStringIdentityId_V1(
     GEN_DEF_TOSTRING_ARRAY(32)
 }
 
+parser_error_t _toStringInvestorUid_V1(
+    const pd_InvestorUid_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount) {
+    GEN_DEF_TOSTRING_ARRAY(16)
+}
+
 parser_error_t _toStringInvestorZKProofData_V1(
     const pd_InvestorZKProofData_V1_t* v,
     char* outValue,
@@ -3178,14 +3193,9 @@ parser_error_t _toStringMemo_V1(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    char bufferUI[v->_len + 1];
-    memset(bufferUI, 0, sizeof(bufferUI));
-    memcpy(bufferUI, v->_ptr, v->_len);
-    memset(outValue, 0, outValueLen);
-
-    asciify(bufferUI);
-    pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
-
+    if (formatBufferData(v->_ptr, v->_len, outValue, outValueLen, pageIdx, pageCount) != zxerr_ok) {
+        return parser_print_not_supported;
+    }
     return parser_ok;
 }
 
@@ -3288,11 +3298,12 @@ parser_error_t _toStringMovePortfolioItem_V1(
     CLEAN_AND_CHECK()
 
     // Index + count pages
-    uint8_t pages[2];
+    uint8_t pages[3];
     CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringOptionMemo_V1(&v->memo, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = pages[0] + pages[1] + pages[2];
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3306,6 +3317,13 @@ parser_error_t _toStringMovePortfolioItem_V1(
     //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringOptionMemo_V1(&v->memo, outValue, outValueLen, 0, &pages[2]))
         return parser_ok;
     }
 

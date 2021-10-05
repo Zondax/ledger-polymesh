@@ -69,6 +69,7 @@ extern "C" {
 #define PD_CALL_EXTERNALAGENTS_V1 43
 #define PD_CALL_RELAYER_V1 44
 #define PD_CALL_REWARDS_V1 45
+#define PD_CALL_TESTUTILS_V1 50
 
 #ifdef SUBSTRATE_PARSER_FULL
 #define PD_CALL_IDENTITY_ADD_INVESTOR_UNIQUENESS_CLAIM_V2_V1 19
@@ -277,6 +278,26 @@ typedef struct {
     pd_ItnRewardStatus_V1_t status;
 } pd_rewards_set_itn_reward_status_V1_t;
 
+#define PD_CALL_TESTUTILS_REGISTER_DID_V1 0
+typedef struct {
+    pd_InvestorUid_V1_t uid;
+    pd_VecSecondaryKey_V1_t secondary_keys;
+} pd_testutils_register_did_V1_t;
+
+#define PD_CALL_TESTUTILS_MOCK_CDD_REGISTER_DID_V1 1
+typedef struct {
+    pd_AccountId_V1_t target_account;
+} pd_testutils_mock_cdd_register_did_V1_t;
+
+#define PD_CALL_TESTUTILS_GET_MY_DID_V1 2
+typedef struct {
+} pd_testutils_get_my_did_V1_t;
+
+#define PD_CALL_TESTUTILS_GET_CDD_OF_V1 3
+typedef struct {
+    pd_AccountId_V1_t of;
+} pd_testutils_get_cdd_of_V1_t;
+
 #endif
 
 typedef union {
@@ -313,6 +334,10 @@ typedef union {
     pd_relayer_decrease_polyx_limit_V1_t relayer_decrease_polyx_limit_V1;
     pd_rewards_claim_itn_reward_V1_t rewards_claim_itn_reward_V1;
     pd_rewards_set_itn_reward_status_V1_t rewards_set_itn_reward_status_V1;
+    pd_testutils_register_did_V1_t testutils_register_did_V1;
+    pd_testutils_mock_cdd_register_did_V1_t testutils_mock_cdd_register_did_V1;
+    pd_testutils_get_my_did_V1_t testutils_get_my_did_V1;
+    pd_testutils_get_cdd_of_V1_t testutils_get_cdd_of_V1;
 #endif
 } pd_MethodBasic_V1_t;
 
