@@ -18,8 +18,8 @@
 # BOLOS_SDK IS  DEFINED	 	We use the plain Makefile for Ledger
 # BOLOS_SDK NOT DEFINED		We use a containerized build approach
 
-#TESTS_JS_PACKAGE = "@zondax/ledger-polkadot"
-#TESTS_JS_DIR = $(CURDIR)/../ledger-polkadot-js
+#TESTS_JS_PACKAGE = "@zondax/ledger-substrate"
+#TESTS_JS_DIR = $(CURDIR)/../ledger-substrate-js
 
 ifeq ($(BOLOS_SDK),)
 # In this case, there is not predefined SDK and we run dockerized
@@ -27,14 +27,6 @@ ifeq ($(BOLOS_SDK),)
 
 SUBSTRATE_PARSER_FULL ?= 1
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
-
-else
-default:
-	$(MAKE) -C app
-%:
-	$(info "Calling app Makefile for target $@")
-	COIN=$(COIN) $(MAKE) -C app $@
-endif
 
 tests_tools_build:
 	cd tests_tools/neon && yarn install
@@ -44,11 +36,21 @@ tests_tools_test: tests_tools_build
 
 zemu_install: tests_tools_build
 
-test_all:
-	make zemu_install
-	# test sr25519
+build_all:
 	make clean_build && SUBSTRATE_PARSER_FULL=1 SUPPORT_SR25519=1 make buildS
+	SUBSTRATE_PARSER_FULL=1 make buildS
+	make clean_build
+	SUBSTRATE_PARSER_FULL=1 make buildX
+
+test_all: build_all
+	make zemu_install
 	cd tests_zemu && yarn testSR25519
-	make clean_build && SUBSTRATE_PARSER_FULL=1 make
 	make zemu_test
 
+else
+default:
+	$(MAKE) -C app
+%:
+	$(info "Calling app Makefile for target $@")
+	COIN=$(COIN) $(MAKE) -C app $@
+endif
