@@ -51,7 +51,7 @@ typedef enum {
 
 #define COIN_AMOUNT_DECIMAL_PLACES          6
 
-#define COIN_GENESIS_HASH                   "2b27450d7b686de217da741583720165f31b1f6fd496a6cf9cba7e700b559b7d"
+#define COIN_GENESIS_HASH                   "6fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063"
 #define COIN_NAME                           "Polymesh"
 #define COIN_TICKER                         "POLYX "
 
