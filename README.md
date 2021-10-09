@@ -98,7 +98,7 @@ Empty
 |leave_identity_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  | 
 |add_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/>`Option<Moment>` expiry <br/> | 
 |revoke_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/> | 
-|set_permission_to_signer | :heavy_check_mark:  |   |   | `Signatory` signer <br/>`Permissions` permissions <br/> | 
+|set_permission_to_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/>`Permissions` permissions <br/> | 
 |legacy_set_permission_to_signer | :heavy_check_mark:  |   |   | `Signatory` signer <br/>`LegacyPermissions` permissions <br/> | 
 |freeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  | 
 |unfreeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  | 
