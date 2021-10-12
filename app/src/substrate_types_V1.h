@@ -41,10 +41,6 @@ typedef struct {
 } pd_Ticker_V1_t;
 
 typedef struct {
-    const uint8_t* _ptr;
-} pd_CddId_V1_t;
-
-typedef struct {
     uint8_t value;
 } pd_ClaimType_V1_t;
 
@@ -55,10 +51,6 @@ typedef struct {
 typedef struct {
     uint64_t value;
 } pd_PortfolioNumber_V1_t;
-
-typedef struct {
-    const uint8_t* _ptr;
-} pd_ScopeId_V1_t;
 
 typedef struct {
     uint8_t value;
@@ -75,6 +67,10 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecDispatchableName_V1_t;
+
+typedef struct {
+    const uint8_t* _ptr;
+} pd_CddId_V1_t;
 
 typedef struct {
     uint8_t some;
@@ -97,12 +93,6 @@ typedef struct {
 } pd_TupleCountryCodeScope_V1_t;
 
 typedef struct {
-    pd_Scope_V1_t scope;
-    pd_ScopeId_V1_t scopeId;
-    pd_CddId_V1_t cddId;
-} pd_TupleScopeScopeIdCddId_V1_t;
-
-typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
@@ -114,7 +104,6 @@ typedef struct {
         pd_Scope_V1_t scope;
         pd_CddId_V1_t cddId;
         pd_TupleCountryCodeScope_V1_t jurisdiction;
-        pd_TupleScopeScopeIdCddId_V1_t investorUniqueness;
     };
 } pd_Claim_V1_t;
 
@@ -211,6 +200,10 @@ typedef struct {
 } pd_VecTrustedIssuer_V1_t;
 
 typedef struct {
+    uint32_t value;
+} pd_AGId_V1_t;
+
+typedef struct {
     pd_ConditionType_V1_t conditionType;
     pd_VecTrustedIssuer_V1_t issuers;
 } pd_Condition_V1_t;
@@ -268,6 +261,12 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecChoiceTitle_V1_t;
+
+typedef struct {
+    uint8_t value;
+    pd_AGId_V1_t agId;
+
+} pd_AgentGroup_V1_t;
 
 typedef struct {
     uint8_t value;
@@ -374,6 +373,12 @@ typedef struct {
 } pd_VecLegacyPalletPermissions_V1_t;
 
 typedef struct {
+    pd_AccountId_V1_t accountId_1;
+    pd_AccountId_V1_t accountId_2;
+    pd_Balance_t balance;
+} pd_AddRelayerPayingKey_V1_t;
+
+typedef struct {
     uint8_t value;
     uint64_t _len;
     const uint8_t* _ptr;
@@ -388,6 +393,11 @@ typedef struct {
     pd_Balance_t power;
     pd_Optionu16_t fallback;
 } pd_BallotVote_V1_t;
+
+typedef struct {
+    pd_Ticker_V1_t ticker;
+    pd_AgentGroup_V1_t agentGroup;
+} pd_BecomeAgent_V1_t;
 
 typedef struct {
     pd_IdentityId_V1_t identity;
@@ -424,6 +434,10 @@ typedef struct {
 typedef struct {
     uint64_t value;
 } pd_Counter_V1_t;
+
+typedef struct {
+    uint32_t value;
+} pd_CustomAssetTypeId_V1_t;
 
 typedef struct {
     uint32_t value;
@@ -516,6 +530,10 @@ typedef struct {
 } pd_RecordDateSpec_V1_t;
 
 typedef struct {
+    const uint8_t* _ptr;
+} pd_ScopeId_V1_t;
+
+typedef struct {
     pd_SecondaryKey_V1_t secondary_key;
     pd_Signature_V1_t auth_signature;
 } pd_SecondaryKeyWithAuth_V1_t;
@@ -564,12 +582,19 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
+    pd_CustomAssetTypeId_V1_t custom;
+} pd_AssetType_V1_t;
+
+typedef struct {
+    uint8_t value;
     union {
         pd_IdentityId_V1_t identityId;
         pd_AccountId_V1_t accountId;
         pd_Ticker_V1_t ticker;
         pd_Permissions_V1_t permissions;
         pd_PortfolioId_V1_t portfolioId;
+        pd_BecomeAgent_V1_t becomeAgent;
+        pd_AddRelayerPayingKey_V1_t addRelayerPayingKey;
     };
 } pd_AuthorizationData_V1_t;
 
@@ -760,29 +785,13 @@ typedef struct {
 } pd_VecTuplePipIdSnapshotResult_V1_t;
 
 typedef struct {
-    // TODO: Not implemented
-    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_AGId_V1_t;
-
-typedef struct {
     uint32_t value;
 } pd_AccountIndex_V1_t;
-
-typedef struct {
-    // TODO: Not implemented
-    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_AgentGroup_V1_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
 } pd_AssetName_V1_t;
-
-typedef struct {
-    uint8_t value;
-    uint64_t _len;
-    const uint8_t* _ptr;
-} pd_AssetType_V1_t;
 
 typedef struct {
     // TODO: Not implemented

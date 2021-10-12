@@ -41,7 +41,8 @@ parser_error_t _readCompactMoment_V1(parser_context_t* c, pd_CompactMoment_V1_t*
 
 parser_error_t _readAGId_V1(parser_context_t* c, pd_AGId_V1_t* v)
 {
-    return parser_not_supported;
+    CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readAccountId_V1(parser_context_t* c, pd_AccountId_V1_t* v) {
@@ -53,9 +54,35 @@ parser_error_t _readAccountIndex_V1(parser_context_t* c, pd_AccountIndex_V1_t* v
     return _readUInt32(c, &v->value);
 }
 
+parser_error_t _readAddRelayerPayingKey_V1(parser_context_t* c, pd_AddRelayerPayingKey_V1_t* v)
+{
+    CHECK_INPUT();
+    CHECK_ERROR(_readAccountId_V1(c, &v->accountId_1));
+    CHECK_ERROR(_readAccountId_V1(c, &v->accountId_2));
+    CHECK_ERROR(_readBalance(c, &v->balance));
+    return parser_ok;
+}
+
 parser_error_t _readAgentGroup_V1(parser_context_t* c, pd_AgentGroup_V1_t* v)
 {
-    return parser_not_supported;
+    CHECK_INPUT();
+
+    CHECK_ERROR(_readUInt8(c, &v->value))
+
+    switch (v->value) {
+    case 0: // Full
+    case 2: // ExceptMeta
+    case 3: // PolymeshV1CAA
+    case 4: // PolymeshV1PIA
+        break;
+    case 1: // Custom
+        CHECK_ERROR(_readAGId_V1(c, &v->agId))
+        break;
+    default:
+        return parser_unexpected_value;
+    }
+
+    return parser_ok;
 }
 
 parser_error_t _readAssetIdentifier_V1(parser_context_t* c, pd_AssetIdentifier_V1_t* v)
@@ -98,20 +125,15 @@ parser_error_t _readAssetName_V1(parser_context_t* c, pd_AssetName_V1_t* v)
 parser_error_t _readAssetType_V1(parser_context_t* c, pd_AssetType_V1_t* v)
 {
     CHECK_INPUT()
-
     CHECK_ERROR(_readUInt8(c, &v->value))
 
-    if (v->value > 9) {
+    if (v->value > 10) {
         return parser_unexpected_value;
     }
 
     if (v->value == 9) {
         // Custom type
-        compactInt_t clen;
-        CHECK_ERROR(_readCompactInt(c, &clen))
-        CHECK_ERROR(_getValue(&clen, &v->_len))
-        v->_ptr = c->buffer + c->offset;
-        CTX_CHECK_AND_ADVANCE(c, v->_len);
+        CHECK_ERROR(_readCustomAssetTypeId_V1(c, &v->custom))
     }
 
     return parser_ok;
@@ -124,28 +146,31 @@ parser_error_t _readAuthorizationData_V1(parser_context_t* c, pd_AuthorizationDa
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
-    case 0:
-    case 1:
+    case 0: // AttestPrimaryKeyRotation
         CHECK_ERROR(_readIdentityId_V1(c, &v->identityId))
         break;
-    case 2:
-    case 3:
-    case 5:
-    case 8:
-    case 10:
+    case 1: // RotatePrimaryKey
+        break;
+    case 2: // TransferTicker
         CHECK_ERROR(_readTicker_V1(c, &v->ticker))
         break;
-    case 4:
+    case 3: // AddMultiSigSigner
         CHECK_ERROR(_readAccountId_V1(c, &v->accountId))
         break;
-    case 6:
+    case 4: // TransferAssetOwnership
+        CHECK_ERROR(_readTicker_V1(c, &v->ticker))
+        break;
+    case 5: // JoinIdentity
         CHECK_ERROR(_readPermissions_V1(c, &v->permissions))
         break;
-    case 7:
+    case 6: // PortfolioCustody
         CHECK_ERROR(_readPortfolioId_V1(c, &v->portfolioId))
         break;
-    case 9:
-        // noData
+    case 7: // BecomeAgent
+        CHECK_ERROR(_readBecomeAgent_V1(c, &v->becomeAgent))
+        break;
+    case 8: // AddRelayerPayingKey
+        CHECK_ERROR(_readAddRelayerPayingKey_V1(c, &v->addRelayerPayingKey))
         break;
     default:
         return parser_unexpected_value;
@@ -194,6 +219,14 @@ parser_error_t _readBallotVote_V1(parser_context_t* c, pd_BallotVote_V1_t* v)
     CHECK_INPUT();
     CHECK_ERROR(_readBalance(c, &v->power))
     CHECK_ERROR(_readOptionu16(c, &v->fallback))
+    return parser_ok;
+}
+
+parser_error_t _readBecomeAgent_V1(parser_context_t* c, pd_BecomeAgent_V1_t* v)
+{
+    CHECK_INPUT();
+    CHECK_ERROR(_readTicker_V1(c, &v->ticker));
+    CHECK_ERROR(_readAgentGroup_V1(c, &v->agentGroup));
     return parser_ok;
 }
 
@@ -314,15 +347,13 @@ parser_error_t _readClaim_V1(parser_context_t* c, pd_Claim_V1_t* v)
         CHECK_ERROR(_readScope_V1(c, &v->scope))
         break;
     case 4: // CustomerDueDiligence
+    case 10: // InvestorUniquenessV2
         CHECK_ERROR(_readCddId_V1(c, &v->cddId))
         break;
     case 6: // Jurisdiction
         CHECK_ERROR(_readTupleCountryCodeScope_V1(c, &v->jurisdiction))
         break;
-    case 9: // InvestorUniqueness
-        CHECK_ERROR(_readTupleScopeScopeIdCddId_V1(c, &v->investorUniqueness))
-        break;
-    case 10: // NoData
+    case 9: // NoData
         break;
     default:
         return parser_unexpected_value;
@@ -398,6 +429,12 @@ parser_error_t _readCounter_V1(parser_context_t* c, pd_Counter_V1_t* v)
 parser_error_t _readCountryCode_V1(parser_context_t* c, pd_CountryCode_V1_t* v)
 {
     CHECK_ERROR(_readUInt8(c, &v->value))
+    return parser_ok;
+}
+
+parser_error_t _readCustomAssetTypeId_V1(parser_context_t* c, pd_CustomAssetTypeId_V1_t* v)
+{
+    CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
 
@@ -917,7 +954,7 @@ parser_error_t _readProtocolOp_V1(parser_context_t* c, pd_ProtocolOp_V1_t* v)
     CHECK_INPUT();
     CHECK_ERROR(_readUInt8(c, &v->value))
 
-    if (v->value > 16) {
+    if (v->value > 12) {
         return parser_unexpected_value;
     }
 
@@ -1241,15 +1278,6 @@ parser_error_t _readTuplePipIdSnapshotResult_V1(parser_context_t* c, pd_TuplePip
     CHECK_INPUT();
     CHECK_ERROR(_readPipId_V1(c, &v->pip_id))
     CHECK_ERROR(_readSnapshotResult_V1(c, &v->snapshot_result))
-    return parser_ok;
-}
-
-parser_error_t _readTupleScopeScopeIdCddId_V1(parser_context_t* c, pd_TupleScopeScopeIdCddId_V1_t* v)
-{
-    CHECK_INPUT();
-    CHECK_ERROR(_readScope_V1(c, &v->scope))
-    CHECK_ERROR(_readScopeId_V1(c, &v->scopeId))
-    CHECK_ERROR(_readCddId_V1(c, &v->cddId))
     return parser_ok;
 }
 
@@ -1682,8 +1710,7 @@ parser_error_t _toStringAGId_V1(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+    return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringAccountId_V1(
@@ -1706,6 +1733,49 @@ parser_error_t _toStringAccountIndex_V1(
     return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
+parser_error_t _toStringAddRelayerPayingKey_V1(
+    const pd_AddRelayerPayingKey_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringAccountId_V1(&v->accountId_1, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAccountId_V1(&v->accountId_2, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringAccountId_V1(&v->accountId_1, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringAccountId_V1(&v->accountId_2, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringAgentGroup_V1(
     const pd_AgentGroup_V1_t* v,
     char* outValue,
@@ -1714,7 +1784,35 @@ parser_error_t _toStringAgentGroup_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
+    // If pageIdx == 0, prints enum name, else prints value.
+
+    switch (v->value) {
+    case 0: // Full
+        GEN_DEF_TOSTRING_ENUM("Full")
+        break;
+    case 1: // RotatePrimaryKey
+        CHECK_ERROR(_toStringAGId_V1(&v->agId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Custom")
+        CHECK_ERROR(_toStringAGId_V1(&v->agId, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 2: // ExceptMeta
+        GEN_DEF_TOSTRING_ENUM("ExceptMeta")
+        break;
+    case 3: // PolymeshV1CAA
+        GEN_DEF_TOSTRING_ENUM("PolymeshV1CAA")
+        break;
+    case 4: // PolymeshV1PIA
+        GEN_DEF_TOSTRING_ENUM("PolymeshV1PIA")
+        break;
+    default:
+        return parser_unexpected_value;
+    }
+
+    return parser_ok;
 }
 
 parser_error_t _toStringAssetIdentifier_V1(
@@ -1761,44 +1859,44 @@ parser_error_t _toStringAssetType_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
     switch (v->value) {
     case 0:
-        snprintf(outValue, outValueLen, "EquityCommon");
+        GEN_DEF_TOSTRING_ENUM("EquityCommon");
         break;
     case 1:
-        snprintf(outValue, outValueLen, "EquityPreferred");
+        GEN_DEF_TOSTRING_ENUM("EquityPreferred");
         break;
     case 2:
-        snprintf(outValue, outValueLen, "Commodity");
+        GEN_DEF_TOSTRING_ENUM("Commodity");
         break;
     case 3:
-        snprintf(outValue, outValueLen, "FixedIncome");
+        GEN_DEF_TOSTRING_ENUM("FixedIncome");
         break;
     case 4:
-        snprintf(outValue, outValueLen, "REIT");
+        GEN_DEF_TOSTRING_ENUM("REIT");
         break;
     case 5:
-        snprintf(outValue, outValueLen, "Fund");
+        GEN_DEF_TOSTRING_ENUM("Fund");
         break;
     case 6:
-        snprintf(outValue, outValueLen, "RevenueShareAgreement");
+        GEN_DEF_TOSTRING_ENUM("RevenueShareAgreement");
         break;
     case 7:
-        snprintf(outValue, outValueLen, "StructuredProduct");
+        GEN_DEF_TOSTRING_ENUM("StructuredProduct");
         break;
     case 8:
-        snprintf(outValue, outValueLen, "Derivative");
+        GEN_DEF_TOSTRING_ENUM("Derivative");
         break;
-    case 9: {
-        char bufferUI[v->_len + 1];
-        memset(bufferUI, 0, sizeof(bufferUI));
-        memcpy(bufferUI, v->_ptr, v->_len);
-        memset(outValue, 0, outValueLen);
-
-        asciify(bufferUI);
-        pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+    case 9:
+        CHECK_ERROR(_toStringCustomAssetTypeId_V1(&v->custom, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Custom")
+        CHECK_ERROR(_toStringCustomAssetTypeId_V1(&v->custom, outValue, outValueLen, pageIdx, &_dummy))
         break;
-    }
+    case 10:
+        GEN_DEF_TOSTRING_ENUM("StableCoin");
+        break;
     }
 
     return parser_ok;
@@ -1825,53 +1923,42 @@ parser_error_t _toStringAuthorizationData_V1(
         CHECK_ERROR(_toStringIdentityId_V1(&v->identityId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     case 1: // RotatePrimaryKey
-        CHECK_ERROR(_toStringIdentityId_V1(&v->identityId, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("RotatePrimaryKey")
-        CHECK_ERROR(_toStringIdentityId_V1(&v->identityId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     case 2: // TransferTicker
         CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("TransferTicker")
         CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 3: // TransferPrimaryIssuanceAgent
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("TransferPrimaryIssuanceAgent")
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 5: // TransferAssetOwnership
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("TransferAssetOwnership")
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 8: // Custom
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("Custom")
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 10: // TransferCorporateActionAgent
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("TransferCorporateActionAgent")
-        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 4: // AddMultiSigSigner
+    case 3: // AddMultiSigSigner
         CHECK_ERROR(_toStringAccountId_V1(&v->accountId, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("AddMultiSigSigner")
         CHECK_ERROR(_toStringAccountId_V1(&v->accountId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 6: // JoinIdentity
+    case 4: // TransferAssetOwnership
+        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("TransferAssetOwnership")
+        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 5: // JoinIdentity
         CHECK_ERROR(_toStringPermissions_V1(&v->permissions, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("JoinIdentity")
         CHECK_ERROR(_toStringPermissions_V1(&v->permissions, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 7: // PortfolioCustody
+    case 6: // PortfolioCustody
         CHECK_ERROR(_toStringPortfolioId_V1(&v->portfolioId, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("PortfolioCustody")
         CHECK_ERROR(_toStringPortfolioId_V1(&v->portfolioId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
-    case 9: // NoData
-        snprintf(outValue, outValueLen, "NoData");
-        *pageCount = 1;
+    case 7: // BecomeAgent
+        CHECK_ERROR(_toStringBecomeAgent_V1(&v->becomeAgent, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("BecomeAgent")
+        CHECK_ERROR(_toStringBecomeAgent_V1(&v->becomeAgent, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 8: // AddRelayerPayingKey
+        CHECK_ERROR(_toStringAddRelayerPayingKey_V1(&v->addRelayerPayingKey, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("AddRelayerPayingKey")
+        CHECK_ERROR(_toStringAddRelayerPayingKey_V1(&v->addRelayerPayingKey, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     default:
         return parser_unexpected_value;
@@ -2005,6 +2092,40 @@ parser_error_t _toStringBallotVote_V1(
     //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringOptionu16(&v->fallback, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringBecomeAgent_V1(
+    const pd_BecomeAgent_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // Index + count pages
+    uint8_t pages[2];
+    CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAgentGroup_V1(&v->agentGroup, outValue, outValueLen, 0, &pages[1]))
+
+    *pageCount = pages[0] + pages[1];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringTicker_V1(&v->ticker, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringAgentGroup_V1(&v->agentGroup, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 
@@ -2341,8 +2462,14 @@ parser_error_t _toStringClaimType_V1(
     case 3: // SellLockup
         snprintf(outValue, outValueLen, "SellLockup");
         break;
+    case 4: // CustomerDueDiligence
+        snprintf(outValue, outValueLen, "CustomerDueDiligence");
+        break;
     case 5: // KnowYourCustomer
         snprintf(outValue, outValueLen, "KnowYourCustomer");
+        break;
+    case 6: // Jurisdiction
+        snprintf(outValue, outValueLen, "Jurisdiction");
         break;
     case 7: // Exempted
         snprintf(outValue, outValueLen, "Exempted");
@@ -2350,17 +2477,14 @@ parser_error_t _toStringClaimType_V1(
     case 8: // Blocked
         snprintf(outValue, outValueLen, "Blocked");
         break;
-    case 4: // CustomerDueDiligence
-        snprintf(outValue, outValueLen, "CustomerDueDiligence");
-        break;
-    case 6: // Jurisdiction
-        snprintf(outValue, outValueLen, "Jurisdiction");
-        break;
     case 9: // InvestorUniqueness
         snprintf(outValue, outValueLen, "InvestorUniqueness");
         break;
     case 10: // NoData
         snprintf(outValue, outValueLen, "NoData");
+        break;
+    case 11: // InvestorUniquenessV2
+        snprintf(outValue, outValueLen, "InvestorUniquenessV2");
         break;
     default:
         return parser_unexpected_value;
@@ -2404,10 +2528,20 @@ parser_error_t _toStringClaim_V1(
         GEN_DEF_TOSTRING_ENUM("SellLockup");
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
         break;
+    case 4: // CustomerDueDiligence
+        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("CustomerDueDiligence");
+        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &_dummy));
+        break;
     case 5: // KnowYourCustomer
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, 0, pageCount));
         GEN_DEF_TOSTRING_ENUM("KnowYourCustomer");
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
+        break;
+    case 6: // Jurisdiction
+        CHECK_ERROR(_toStringTupleCountryCodeScope_V1(&v->jurisdiction, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("Jurisdiction");
+        CHECK_ERROR(_toStringTupleCountryCodeScope_V1(&v->jurisdiction, outValue, outValueLen, pageIdx, &_dummy));
         break;
     case 7: // Exempted
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, 0, pageCount));
@@ -2419,24 +2553,14 @@ parser_error_t _toStringClaim_V1(
         GEN_DEF_TOSTRING_ENUM("Blocked");
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
         break;
-    case 4: // CustomerDueDiligence
-        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, pageCount));
-        GEN_DEF_TOSTRING_ENUM("CustomerDueDiligence");
-        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &_dummy));
-        break;
-    case 6: // Jurisdiction
-        CHECK_ERROR(_toStringTupleCountryCodeScope_V1(&v->jurisdiction, outValue, outValueLen, 0, pageCount));
-        GEN_DEF_TOSTRING_ENUM("Jurisdiction");
-        CHECK_ERROR(_toStringTupleCountryCodeScope_V1(&v->jurisdiction, outValue, outValueLen, pageIdx, &_dummy));
-        break;
-    case 9: // InvestorUniqueness
-        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V1(&v->investorUniqueness, outValue, outValueLen, 0, pageCount));
-        GEN_DEF_TOSTRING_ENUM("InvestorUniqueness");
-        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V1(&v->investorUniqueness, outValue, outValueLen, pageIdx, &_dummy));
-        break;
-    case 10: // NoData
+    case 9: // NoData
         snprintf(outValue, outValueLen, "NoData");
         *pageCount = 1;
+        break;
+    case 10: // InvestorUniquenessV2
+        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("InvestorUniquenessV2");
+        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &_dummy));
         break;
     default:
         return parser_unexpected_value;
@@ -2637,6 +2761,16 @@ parser_error_t _toStringCountryCode_V1(
     snprintf(outValue, outValueLen, "%s", STR_COUNTRY_CODES[v->value]);
     *pageCount = 1;
     return parser_ok;
+}
+
+parser_error_t _toStringCustomAssetTypeId_V1(
+    const pd_CustomAssetTypeId_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringDispatchableName_V1(
@@ -3765,44 +3899,34 @@ parser_error_t _toStringProtocolOp_V1(
         snprintf(outValue, outValueLen, "AssetCreateAsset");
         break;
     case 4:
-        snprintf(outValue, outValueLen, "AssetCreateCheckpointSchedule");
+        snprintf(outValue, outValueLen, "CheckpointCreateSchedule");
         break;
     case 5:
-        snprintf(outValue, outValueLen, "DividendNew");
-        break;
-    case 6:
         snprintf(outValue, outValueLen, "ComplianceManagerAddComplianceRequirement");
         break;
-    case 7:
-        snprintf(outValue, outValueLen, "IdentityRegisterDid");
-        break;
-    case 8:
+    case 6:
         snprintf(outValue, outValueLen, "IdentityCddRegisterDid");
         break;
-    case 9:
+    case 7:
         snprintf(outValue, outValueLen, "IdentityAddClaim");
         break;
-    case 10:
-        snprintf(outValue, outValueLen, "IdentitySetPrimaryKey");
-        break;
-    case 11:
+    case 8:
         snprintf(outValue, outValueLen, "IdentityAddSecondaryKeysWithAuthorization");
         break;
-    case 12:
+    case 9:
         snprintf(outValue, outValueLen, "PipsPropose");
         break;
-    case 13:
-        snprintf(outValue, outValueLen, "VotingAddBallot");
-        break;
-    case 14:
+    case 10:
         snprintf(outValue, outValueLen, "ContractsPutCode");
         break;
-    case 15:
-        snprintf(outValue, outValueLen, "BallotAttachBallot");
+    case 11:
+        snprintf(outValue, outValueLen, "CorporateBallotAttachBallot");
         break;
-    case 16:
-        snprintf(outValue, outValueLen, "DistributionDistribute");
+    case 12:
+        snprintf(outValue, outValueLen, "CapitalDistributionDistribute");
         break;
+    default:
+        return parser_unexpected_value;
     }
 
     return parser_ok;
@@ -4306,7 +4430,7 @@ parser_error_t _toStringTargetIdentity_V1(
     CLEAN_AND_CHECK()
     switch (v->value) {
     case 0:
-        snprintf(outValue, outValueLen, "PrimaryIssuanceAgent");
+        snprintf(outValue, outValueLen, "ExternalAgent");
         break;
     case 1:
         _toStringIdentityId_V1(&v->specific, outValue, outValueLen, pageIdx, pageCount);
@@ -4363,7 +4487,7 @@ parser_error_t _toStringTickerRegistrationConfig_V1(
 
     // Index + count pages
     uint8_t pages[2];
-    CHECK_ERROR(_toStringu16((const pd_u16_t*)&v->max_ticker_length, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringu8(&v->max_ticker_length, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringOptionMoment_V1(&v->registration_length, outValue, outValueLen, 0, &pages[1]))
 
     *pageCount = pages[0] + pages[1];
@@ -4372,7 +4496,7 @@ parser_error_t _toStringTickerRegistrationConfig_V1(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringu16((const pd_u16_t*)&v->max_ticker_length, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringu8(&v->max_ticker_length, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -4610,49 +4734,6 @@ parser_error_t _toStringTuplePipIdSnapshotResult_V1(
     //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringSnapshotResult_V1(&v->snapshot_result, outValue, outValueLen, pageIdx, &pages[1]))
-        return parser_ok;
-    }
-
-    return parser_display_idx_out_of_range;
-}
-
-parser_error_t _toStringTupleScopeScopeIdCddId_V1(
-    const pd_TupleScopeScopeIdCddId_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-
-    // Index + count pages
-    uint8_t pages[3];
-    CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, 0, &pages[0]))
-    CHECK_ERROR(_toStringScopeId_V1(&v->scopeId, outValue, outValueLen, 0, &pages[1]))
-    CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, &pages[2]))
-
-    *pageCount = pages[0] + pages[1] + pages[2];
-    if (pageIdx > *pageCount) {
-        return parser_display_idx_out_of_range;
-    }
-
-    if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &pages[0]))
-        return parser_ok;
-    }
-    pageIdx -= pages[0];
-
-    //////
-    if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringScopeId_V1(&v->scopeId, outValue, outValueLen, pageIdx, &pages[1]))
-        return parser_ok;
-    }
-
-    pageIdx -= pages[1];
-
-    //////
-    if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
