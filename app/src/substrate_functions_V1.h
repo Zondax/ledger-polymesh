@@ -29,6 +29,7 @@ extern "C" {
 parser_error_t _readAGId_V1(parser_context_t* c, pd_AGId_V1_t* v);
 parser_error_t _readAccountId_V1(parser_context_t* c, pd_AccountId_V1_t* v);
 parser_error_t _readAccountIndex_V1(parser_context_t* c, pd_AccountIndex_V1_t* v);
+parser_error_t _readAddRelayerPayingKey_V1(parser_context_t* c, pd_AddRelayerPayingKey_V1_t* v);
 parser_error_t _readAgentGroup_V1(parser_context_t* c, pd_AgentGroup_V1_t* v);
 parser_error_t _readAssetIdentifier_V1(parser_context_t* c, pd_AssetIdentifier_V1_t* v);
 parser_error_t _readAssetName_V1(parser_context_t* c, pd_AssetName_V1_t* v);
@@ -39,6 +40,7 @@ parser_error_t _readBallotMeta_V1(parser_context_t* c, pd_BallotMeta_V1_t* v);
 parser_error_t _readBallotTimeRange_V1(parser_context_t* c, pd_BallotTimeRange_V1_t* v);
 parser_error_t _readBallotTitle_V1(parser_context_t* c, pd_BallotTitle_V1_t* v);
 parser_error_t _readBallotVote_V1(parser_context_t* c, pd_BallotVote_V1_t* v);
+parser_error_t _readBecomeAgent_V1(parser_context_t* c, pd_BecomeAgent_V1_t* v);
 parser_error_t _readBeneficiary_V1(parser_context_t* c, pd_Beneficiary_V1_t* v);
 parser_error_t _readBridgeTx_V1(parser_context_t* c, pd_BridgeTx_V1_t* v);
 parser_error_t _readCADetails_V1(parser_context_t* c, pd_CADetails_V1_t* v);
@@ -62,6 +64,7 @@ parser_error_t _readConditionType_V1(parser_context_t* c, pd_ConditionType_V1_t*
 parser_error_t _readCondition_V1(parser_context_t* c, pd_Condition_V1_t* v);
 parser_error_t _readCounter_V1(parser_context_t* c, pd_Counter_V1_t* v);
 parser_error_t _readCountryCode_V1(parser_context_t* c, pd_CountryCode_V1_t* v);
+parser_error_t _readCustomAssetTypeId_V1(parser_context_t* c, pd_CustomAssetTypeId_V1_t* v);
 parser_error_t _readDispatchableName_V1(parser_context_t* c, pd_DispatchableName_V1_t* v);
 parser_error_t _readDocumentHash_V1(parser_context_t* c, pd_DocumentHash_V1_t* v);
 parser_error_t _readDocumentId_V1(parser_context_t* c, pd_DocumentId_V1_t* v);
@@ -170,7 +173,6 @@ parser_error_t _readTupleCountryCodeScope_V1(parser_context_t* c, pd_TupleCountr
 parser_error_t _readTupleIdentityIdTax_V1(parser_context_t* c, pd_TupleIdentityIdTax_V1_t* v);
 parser_error_t _readTupleIdentityIdbool_V1(parser_context_t* c, pd_TupleIdentityIdbool_V1_t* v);
 parser_error_t _readTuplePipIdSnapshotResult_V1(parser_context_t* c, pd_TuplePipIdSnapshotResult_V1_t* v);
-parser_error_t _readTupleScopeScopeIdCddId_V1(parser_context_t* c, pd_TupleScopeScopeIdCddId_V1_t* v);
 parser_error_t _readUniqueCall_V1(parser_context_t* c, pd_UniqueCall_V1_t* v);
 parser_error_t _readUrl_V1(parser_context_t* c, pd_Url_V1_t* v);
 parser_error_t _readValidatorIndex_V1(parser_context_t* c, pd_ValidatorIndex_V1_t* v);
@@ -231,6 +233,13 @@ parser_error_t _toStringAccountId_V1(
 
 parser_error_t _toStringAccountIndex_V1(
     const pd_AccountIndex_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringAddRelayerPayingKey_V1(
+    const pd_AddRelayerPayingKey_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -301,6 +310,13 @@ parser_error_t _toStringBallotTitle_V1(
 
 parser_error_t _toStringBallotVote_V1(
     const pd_BallotVote_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringBecomeAgent_V1(
+    const pd_BecomeAgent_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -462,6 +478,13 @@ parser_error_t _toStringCounter_V1(
 
 parser_error_t _toStringCountryCode_V1(
     const pd_CountryCode_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringCustomAssetTypeId_V1(
+    const pd_CustomAssetTypeId_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1218,13 +1241,6 @@ parser_error_t _toStringTupleIdentityIdbool_V1(
 
 parser_error_t _toStringTuplePipIdSnapshotResult_V1(
     const pd_TuplePipIdSnapshotResult_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringTupleScopeScopeIdCddId_V1(
-    const pd_TupleScopeScopeIdCddId_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
