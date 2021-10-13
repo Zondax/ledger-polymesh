@@ -347,13 +347,16 @@ parser_error_t _readClaim_V1(parser_context_t* c, pd_Claim_V1_t* v)
         CHECK_ERROR(_readScope_V1(c, &v->scope))
         break;
     case 4: // CustomerDueDiligence
-    case 10: // InvestorUniquenessV2
+    case 11: // InvestorUniquenessV2
         CHECK_ERROR(_readCddId_V1(c, &v->cddId))
         break;
     case 6: // Jurisdiction
         CHECK_ERROR(_readTupleCountryCodeScope_V1(c, &v->jurisdiction))
         break;
-    case 9: // NoData
+    case 9: // InvestorUniqueness
+        CHECK_ERROR(_readTupleScopeScopeIdCddId_V1(c, &v->investorUniqueness))
+        break;
+    case 10: // NoData
         break;
     default:
         return parser_unexpected_value;
@@ -1278,6 +1281,15 @@ parser_error_t _readTuplePipIdSnapshotResult_V1(parser_context_t* c, pd_TuplePip
     CHECK_INPUT();
     CHECK_ERROR(_readPipId_V1(c, &v->pip_id))
     CHECK_ERROR(_readSnapshotResult_V1(c, &v->snapshot_result))
+    return parser_ok;
+}
+
+parser_error_t _readTupleScopeScopeIdCddId_V1(parser_context_t* c, pd_TupleScopeScopeIdCddId_V1_t* v)
+{
+    CHECK_INPUT();
+    CHECK_ERROR(_readScope_V1(c, &v->scope))
+    CHECK_ERROR(_readScopeId_V1(c, &v->scopeId))
+    CHECK_ERROR(_readCddId_V1(c, &v->cddId))
     return parser_ok;
 }
 
@@ -2553,11 +2565,16 @@ parser_error_t _toStringClaim_V1(
         GEN_DEF_TOSTRING_ENUM("Blocked");
         CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &_dummy));
         break;
-    case 9: // NoData
+    case 9: // InvestorUniqueness
+        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V1(&v->investorUniqueness, outValue, outValueLen, 0, pageCount));
+        GEN_DEF_TOSTRING_ENUM("InvestorUniqueness");
+        CHECK_ERROR(_toStringTupleScopeScopeIdCddId_V1(&v->investorUniqueness, outValue, outValueLen, pageIdx, &_dummy));
+        break;
+    case 10: // NoData
         snprintf(outValue, outValueLen, "NoData");
         *pageCount = 1;
         break;
-    case 10: // InvestorUniquenessV2
+    case 11: // InvestorUniquenessV2
         CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, pageCount));
         GEN_DEF_TOSTRING_ENUM("InvestorUniquenessV2");
         CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &_dummy));
@@ -4734,6 +4751,49 @@ parser_error_t _toStringTuplePipIdSnapshotResult_V1(
     //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringSnapshotResult_V1(&v->snapshot_result, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringTupleScopeScopeIdCddId_V1(
+    const pd_TupleScopeScopeIdCddId_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // Index + count pages
+    uint8_t pages[3];
+    CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringScopeId_V1(&v->scopeId, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = pages[0] + pages[1] + pages[2];
+    if (pageIdx > *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringScope_V1(&v->scope, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    //////
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringScopeId_V1(&v->scopeId, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    pageIdx -= pages[1];
+
+    //////
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringCddId_V1(&v->cddId, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
