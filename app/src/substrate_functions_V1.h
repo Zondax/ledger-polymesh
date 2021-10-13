@@ -173,6 +173,7 @@ parser_error_t _readTupleCountryCodeScope_V1(parser_context_t* c, pd_TupleCountr
 parser_error_t _readTupleIdentityIdTax_V1(parser_context_t* c, pd_TupleIdentityIdTax_V1_t* v);
 parser_error_t _readTupleIdentityIdbool_V1(parser_context_t* c, pd_TupleIdentityIdbool_V1_t* v);
 parser_error_t _readTuplePipIdSnapshotResult_V1(parser_context_t* c, pd_TuplePipIdSnapshotResult_V1_t* v);
+parser_error_t _readTupleScopeScopeIdCddId_V1(parser_context_t* c, pd_TupleScopeScopeIdCddId_V1_t* v);
 parser_error_t _readUniqueCall_V1(parser_context_t* c, pd_UniqueCall_V1_t* v);
 parser_error_t _readUrl_V1(parser_context_t* c, pd_Url_V1_t* v);
 parser_error_t _readValidatorIndex_V1(parser_context_t* c, pd_ValidatorIndex_V1_t* v);
@@ -1241,6 +1242,13 @@ parser_error_t _toStringTupleIdentityIdbool_V1(
 
 parser_error_t _toStringTuplePipIdSnapshotResult_V1(
     const pd_TuplePipIdSnapshotResult_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringTupleScopeScopeIdCddId_V1(
+    const pd_TupleScopeScopeIdCddId_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
