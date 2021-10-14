@@ -41,6 +41,10 @@ typedef struct {
 } pd_Ticker_V1_t;
 
 typedef struct {
+    const uint8_t* _ptr;
+} pd_CddId_V1_t;
+
+typedef struct {
     uint8_t value;
 } pd_ClaimType_V1_t;
 
@@ -51,6 +55,10 @@ typedef struct {
 typedef struct {
     uint64_t value;
 } pd_PortfolioNumber_V1_t;
+
+typedef struct {
+    const uint8_t* _ptr;
+} pd_ScopeId_V1_t;
 
 typedef struct {
     uint8_t value;
@@ -67,10 +75,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecDispatchableName_V1_t;
-
-typedef struct {
-    const uint8_t* _ptr;
-} pd_CddId_V1_t;
 
 typedef struct {
     uint8_t some;
@@ -93,6 +97,12 @@ typedef struct {
 } pd_TupleCountryCodeScope_V1_t;
 
 typedef struct {
+    pd_Scope_V1_t scope;
+    pd_ScopeId_V1_t scopeId;
+    pd_CddId_V1_t cddId;
+} pd_TupleScopeScopeIdCddId_V1_t;
+
+typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
@@ -104,6 +114,7 @@ typedef struct {
         pd_Scope_V1_t scope;
         pd_CddId_V1_t cddId;
         pd_TupleCountryCodeScope_V1_t jurisdiction;
+        pd_TupleScopeScopeIdCddId_V1_t investorUniqueness;
     };
 } pd_Claim_V1_t;
 
@@ -528,10 +539,6 @@ typedef struct {
         pd_CheckpointId_V1_t existing;
     };
 } pd_RecordDateSpec_V1_t;
-
-typedef struct {
-    const uint8_t* _ptr;
-} pd_ScopeId_V1_t;
 
 typedef struct {
     pd_SecondaryKey_V1_t secondary_key;
