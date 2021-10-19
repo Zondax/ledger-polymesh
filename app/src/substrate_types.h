@@ -94,10 +94,6 @@ typedef struct {
 } pd_Optionu16_t;
 
 typedef struct {
-    pd_Balance_t value;
-} pd_BalanceOf_t;
-
-typedef struct {
     pd_CallIndex_t callIndex;
     const uint32_t* _txVerPtr;
     pd_NestCallIdx_t nestCallIdx;
@@ -109,9 +105,8 @@ typedef struct {
 } pd_Header_t;
 
 typedef struct {
-    uint8_t some;
-    pd_BalanceOf_t contained;
-} pd_OptionBalanceOf_t;
+    pd_Balance_t value;
+} pd_BalanceOf_t;
 
 typedef struct {
     pd_Call_t call;
@@ -136,8 +131,6 @@ typedef struct {
 typedef struct {
     compactInt_t value;
 } pd_CompactBalanceOf_t;
-
-typedef compactInt_t pd_CompactBlockNumber_t;
 
 typedef struct {
     // TODO: Not implemented

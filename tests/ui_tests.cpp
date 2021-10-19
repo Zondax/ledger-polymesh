@@ -116,9 +116,9 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
 
     parser_tx_t tx_obj;
     err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
-    ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
+    EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
-    auto output = dumpUI(&ctx, 40, 40);
+    auto output = dumpUI(&ctx, 39, 39);
 
     std::cout << std::endl;
     for (const auto &i : output) {
@@ -127,6 +127,12 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
     std::cout << std::endl << std::endl;
 
     std::vector<std::string> expected = app_mode_expert() ? tc.expected_expert : tc.expected;
+    for (size_t i = 0; i < expected.size(); i++) {
+        if (i < output.size()) {
+            std::cout << expected[i] << std::endl;
+        }
+    }
+
     EXPECT_EQ(output.size(), expected.size());
     for (size_t i = 0; i < expected.size(); i++) {
         if (i < output.size()) {

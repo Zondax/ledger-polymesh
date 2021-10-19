@@ -64,6 +64,9 @@ static const char* STR_MO_CHECKPOINT = "Checkpoint";
 static const char* STR_MO_CONFIDENTIAL = "Confidential";
 static const char* STR_MO_TESTUTILS = "Testutils";
 static const char* STR_MO_BASE = "Base";
+static const char* STR_MO_EXTERNALAGENTS = "Externalagents";
+static const char* STR_MO_RELAYER = "Relayer";
+static const char* STR_MO_REWARDS = "Rewards";
 
 // Methods names
 static const char* STR_ME_FILL_BLOCK = "Fill block";
@@ -329,6 +332,28 @@ static const char* STR_ME_ADD_VERIFY_RANGE_PROOF = "Add verify range proof";
 static const char* STR_ME_ADD_INVESTOR_UNIQUENESS_CLAIM_V2 = "Add investor uniqueness claim v2";
 static const char* STR_ME_SET_PUT_CODE_FLAG = "Set put code flag";
 static const char* STR_ME_REVOKE_CLAIM_BY_INDEX = "Revoke claim by index";
+static const char* STR_ME_QUIT_PORTFOLIO_CUSTODY = "Quit portfolio custody";
+static const char* STR_ME_RESCHEDULE_INSTRUCTION = "Reschedule instruction";
+static const char* STR_ME_CREATE_GROUP = "Create group";
+static const char* STR_ME_SET_GROUP_PERMISSIONS = "Set group permissions";
+static const char* STR_ME_REMOVE_AGENT = "Remove agent";
+static const char* STR_ME_ABDICATE = "Abdicate";
+static const char* STR_ME_CHANGE_GROUP = "Change group";
+static const char* STR_ME_ADD_FREEZE_ADMIN = "Add freeze admin";
+static const char* STR_ME_REMOVE_FREEZE_ADMIN = "Remove freeze admin";
+static const char* STR_ME_REGISTER_CUSTOM_ASSET_TYPE = "Register custom asset type";
+static const char* STR_ME_ACCEPT_PORTFOLIO_CUSTODY = "Accept portfolio custody";
+static const char* STR_ME_UPDATE_VENUE_DETAILS = "Update venue details";
+static const char* STR_ME_UPDATE_VENUE_TYPE = "Update venue type";
+static const char* STR_ME_ACCEPT_BECOME_AGENT = "Accept become agent";
+static const char* STR_ME_SET_PAYING_KEY = "Set paying key";
+static const char* STR_ME_ACCEPT_PAYING_KEY = "Accept paying key";
+static const char* STR_ME_REMOVE_PAYING_KEY = "Remove paying key";
+static const char* STR_ME_UPDATE_POLYX_LIMIT = "Update polyx limit";
+static const char* STR_ME_INCREASE_POLYX_LIMIT = "Increase polyx limit";
+static const char* STR_ME_DECREASE_POLYX_LIMIT = "Decrease polyx limit";
+static const char* STR_ME_CLAIM_ITN_REWARD = "Claim itn reward";
+static const char* STR_ME_SET_ITN_REWARD_STATUS = "Set itn reward status";
 
 // Items names
 static const char* STR_IT__ratio = "Ratio";
@@ -553,6 +578,24 @@ static const char* STR_IT_is_enabled = "Is enabled";
 static const char* STR_IT_per_share = "Per share";
 static const char* STR_IT_scope = "Scope";
 static const char* STR_IT_claim_type = "Claim type";
+static const char* STR_IT__proposal_weight = "Proposal weight";
+static const char* STR_IT_invulnerables = "Invulnerables";
+static const char* STR_IT_portfolio_id = "Portfolio id";
+static const char* STR_IT__legs_count = "Legs count";
+static const char* STR_IT_perms = "Perms";
+static const char* STR_IT_agent = "Agent";
+static const char* STR_IT_group = "Group";
+static const char* STR_IT_freeze_admin = "Freeze admin";
+static const char* STR_IT_disable_iu = "Disable iu";
+static const char* STR_IT_ty = "Ty";
+static const char* STR_IT_pid = "Pid";
+static const char* STR_IT_user_key = "User key";
+static const char* STR_IT_polyx_limit = "Polyx limit";
+static const char* STR_IT_paying_key = "Paying key";
+static const char* STR_IT_reward_address = "Reward address";
+static const char* STR_IT_itn_address = "Itn address";
+static const char* STR_IT_status = "Status";
+static const char* STR_IT_num_of_legs = "Num of legs";
 
 // Country Codes
 static const uint8_t COUNTRY_CODES_SIZE = 250;
