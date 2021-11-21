@@ -77,7 +77,10 @@ parser_error_t _readElectionScore_V1(parser_context_t* c, pd_ElectionScore_V1_t*
 parser_error_t _readElectionSize_V1(parser_context_t* c, pd_ElectionSize_V1_t* v);
 parser_error_t _readEraIndex_V1(parser_context_t* c, pd_EraIndex_V1_t* v);
 parser_error_t _readEthereumAddress_V1(parser_context_t* c, pd_EthereumAddress_V1_t* v);
+parser_error_t _readDispatchableNames_V1(parser_context_t* c, pd_DispatchableNames_V1_t* v);
+parser_error_t _readAssetPermissions_V1(parser_context_t* c, pd_AssetPermissions_V1_t* v);
 parser_error_t _readExtrinsicPermissions_V1(parser_context_t* c, pd_ExtrinsicPermissions_V1_t* v);
+parser_error_t _readPortfolioPermissions_V1(parser_context_t* c, pd_PortfolioPermissions_V1_t* v);
 parser_error_t _readFundingRoundName_V1(parser_context_t* c, pd_FundingRoundName_V1_t* v);
 parser_error_t _readFundraiserName_V1(parser_context_t* c, pd_FundraiserName_V1_t* v);
 parser_error_t _readGrandpaEquivocationProof_V1(parser_context_t* c, pd_GrandpaEquivocationProof_V1_t* v);
@@ -575,8 +578,29 @@ parser_error_t _toStringEthereumAddress_V1(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringDispatchableNames_V1(
+    const pd_DispatchableNames_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringAssetPermissions_V1(
+    const pd_AssetPermissions_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringExtrinsicPermissions_V1(
     const pd_ExtrinsicPermissions_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringPortfolioPermissions_V1(
+    const pd_PortfolioPermissions_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
