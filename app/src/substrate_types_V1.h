@@ -937,6 +937,9 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
+    union {
+        pd_AccountId_V1_t accountId;
+    };
 } pd_RewardDestination_V1_t;
 
 typedef struct {

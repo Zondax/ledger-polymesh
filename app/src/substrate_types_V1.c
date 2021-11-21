@@ -1015,9 +1015,20 @@ parser_error_t _readRewardDestination_V1(parser_context_t* c, pd_RewardDestinati
     CHECK_INPUT();
 
     CHECK_ERROR(_readUInt8(c, &v->value))
-    if (v->value > 2) {
-        return parser_value_out_of_range;
+    switch (v->value) {
+    case 0: // Staked
+        break;
+    case 1: // Stash
+        break;
+    case 2: // Controller
+        break;
+    case 3: // Account
+        CHECK_ERROR(_readAccountId_V1(c, &v->accountId))
+        break;
+    default:
+        return parser_unexpected_value;
     }
+
 
     return parser_ok;
 }
@@ -4061,17 +4072,23 @@ parser_error_t _toStringRewardDestination_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
 
-    *pageCount = 1;
     switch (v->value) {
     case 0:
-        snprintf(outValue, outValueLen, "Staked");
+        GEN_DEF_TOSTRING_ENUM("Staked")
         break;
     case 1:
-        snprintf(outValue, outValueLen, "Stash");
+        GEN_DEF_TOSTRING_ENUM("Stash")
         break;
     case 2:
-        snprintf(outValue, outValueLen, "Controller");
+        GEN_DEF_TOSTRING_ENUM("Controller")
+        break;
+    case 3:
+        CHECK_ERROR(_toStringAccountId_V1(&v->accountId, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Account")
+        CHECK_ERROR(_toStringAccountId_V1(&v->accountId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     default:
         return parser_print_not_supported;
