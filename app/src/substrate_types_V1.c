@@ -2845,7 +2845,7 @@ parser_error_t _toStringCountryCode_V1(
     if (v->value > COUNTRY_CODES_SIZE - 1) {
         return parser_value_out_of_range;
     }
-    snprintf(outValue, outValueLen, "%s", STR_COUNTRY_CODES[v->value]);
+    snprintf(outValue, outValueLen, "%s", PIC(STR_COUNTRY_CODES[v->value]));
     *pageCount = 1;
     return parser_ok;
 }
