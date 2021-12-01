@@ -119,11 +119,6 @@ typedef struct {
 } pd_Claim_V1_t;
 
 typedef struct {
-    pd_PalletName_V1_t palletName;
-    pd_OptionVecDispatchableName_V1_t dispatchableNames;
-} pd_PalletPermissions_V1_t;
-
-typedef struct {
     pd_IdentityId_V1_t did;
     pd_PortfolioKind_V1_t kind;
 } pd_PortfolioId_V1_t;
@@ -250,9 +245,34 @@ typedef struct {
 } pd_MotionTitle_V1_t;
 
 typedef struct {
-    pd_OptionVecTicker_V1_t asset;
-    pd_OptionVecPalletPermissions_V1_t extrinsic;
-    pd_OptionVecPortfolioId_V1_t portfolio;
+    uint8_t value;
+    pd_VecDispatchableName_V1_t contained;
+} pd_DispatchableNames_V1_t;
+
+typedef struct {
+    pd_PalletName_V1_t palletName;
+    pd_DispatchableNames_V1_t dispatchableNames;
+} pd_PalletPermissions_V1_t;
+
+typedef struct {
+    uint8_t value;
+    pd_VecTicker_V1_t contained;
+} pd_AssetPermissions_V1_t;
+
+typedef struct {
+    uint8_t value;
+    pd_VecPalletPermissions_V1_t contained;
+} pd_ExtrinsicPermissions_V1_t;
+
+typedef struct {
+    uint8_t value;
+    pd_VecPortfolioId_V1_t contained;
+} pd_PortfolioPermissions_V1_t;
+
+typedef struct {
+    pd_AssetPermissions_V1_t asset;
+    pd_ExtrinsicPermissions_V1_t extrinsic;
+    pd_PortfolioPermissions_V1_t portfolio;
 } pd_Permissions_V1_t;
 
 typedef struct {
@@ -839,11 +859,6 @@ typedef struct {
 } pd_EraIndex_V1_t;
 
 typedef struct {
-    // TODO: Not implemented
-    uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
-} pd_ExtrinsicPermissions_V1_t;
-
-typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
 } pd_FundraiserName_V1_t;
@@ -937,6 +952,9 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
+    union {
+        pd_AccountId_V1_t accountId;
+    };
 } pd_RewardDestination_V1_t;
 
 typedef struct {
