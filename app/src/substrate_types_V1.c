@@ -3826,7 +3826,6 @@ parser_error_t _toStringPermissions_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-
     // Index + count pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringAssetPermissions_V1(&v->asset, outValue, outValueLen, 0, &pages[0]))
@@ -3933,6 +3932,7 @@ parser_error_t _toStringPortfolioKind_V1(
     switch (v->value) {
     case 0:
         snprintf(outValue, outValueLen, "Default");
+        (*pageCount)++;
         break;
     case 1:
         _toStringPortfolioNumber_V1(&v->number, outValue, outValueLen, pageIdx, pageCount);
