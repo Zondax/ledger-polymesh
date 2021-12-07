@@ -3929,10 +3929,10 @@ parser_error_t _toStringPortfolioKind_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 1;
     switch (v->value) {
     case 0:
         snprintf(outValue, outValueLen, "Default");
-        (*pageCount)++;
         break;
     case 1:
         _toStringPortfolioNumber_V1(&v->number, outValue, outValueLen, pageIdx, pageCount);
