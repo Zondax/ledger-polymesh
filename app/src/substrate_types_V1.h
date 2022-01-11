@@ -77,9 +77,9 @@ typedef struct {
 } pd_VecDispatchableName_V1_t;
 
 typedef struct {
-    uint8_t some;
+    uint8_t value;
     pd_VecDispatchableName_V1_t contained;
-} pd_OptionVecDispatchableName_V1_t;
+} pd_DispatchableNames_V1_t;
 
 typedef struct {
     uint64_t _len;
@@ -117,6 +117,11 @@ typedef struct {
         pd_TupleScopeScopeIdCddId_V1_t investorUniqueness;
     };
 } pd_Claim_V1_t;
+
+typedef struct {
+    pd_PalletName_V1_t palletName;
+    pd_DispatchableNames_V1_t dispatchableNames;
+} pd_PalletPermissions_V1_t;
 
 typedef struct {
     pd_IdentityId_V1_t did;
@@ -167,6 +172,11 @@ typedef struct {
 } pd_AccountId_V1_t;
 
 typedef struct {
+    uint8_t value;
+    pd_VecTicker_V1_t contained;
+} pd_AssetPermissions_V1_t;
+
+typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
 } pd_ChoiceTitle_V1_t;
@@ -181,23 +191,18 @@ typedef struct {
 } pd_ConditionType_V1_t;
 
 typedef struct {
-    uint8_t some;
+    uint8_t value;
     pd_VecPalletPermissions_V1_t contained;
-} pd_OptionVecPalletPermissions_V1_t;
-
-typedef struct {
-    uint8_t some;
-    pd_VecPortfolioId_V1_t contained;
-} pd_OptionVecPortfolioId_V1_t;
-
-typedef struct {
-    uint8_t some;
-    pd_VecTicker_V1_t contained;
-} pd_OptionVecTicker_V1_t;
+} pd_ExtrinsicPermissions_V1_t;
 
 typedef struct {
     uint32_t value;
 } pd_Permill_V1_t;
+
+typedef struct {
+    uint8_t value;
+    pd_VecPortfolioId_V1_t contained;
+} pd_PortfolioPermissions_V1_t;
 
 typedef struct {
     uint64_t _len;
@@ -245,31 +250,6 @@ typedef struct {
 } pd_MotionTitle_V1_t;
 
 typedef struct {
-    uint8_t value;
-    pd_VecDispatchableName_V1_t contained;
-} pd_DispatchableNames_V1_t;
-
-typedef struct {
-    pd_PalletName_V1_t palletName;
-    pd_DispatchableNames_V1_t dispatchableNames;
-} pd_PalletPermissions_V1_t;
-
-typedef struct {
-    uint8_t value;
-    pd_VecTicker_V1_t contained;
-} pd_AssetPermissions_V1_t;
-
-typedef struct {
-    uint8_t value;
-    pd_VecPalletPermissions_V1_t contained;
-} pd_ExtrinsicPermissions_V1_t;
-
-typedef struct {
-    uint8_t value;
-    pd_VecPortfolioId_V1_t contained;
-} pd_PortfolioPermissions_V1_t;
-
-typedef struct {
     pd_AssetPermissions_V1_t asset;
     pd_ExtrinsicPermissions_V1_t extrinsic;
     pd_PortfolioPermissions_V1_t portfolio;
@@ -306,6 +286,10 @@ typedef struct {
 typedef struct {
     uint64_t value;
 } pd_CheckpointId_V1_t;
+
+typedef struct {
+    compactInt_t value;
+} pd_CompactAccountIndex_V1_t;
 
 typedef struct {
     uint8_t value;
@@ -511,7 +495,13 @@ typedef struct {
 } pd_LocalCAId_V1_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    uint8_t value;
+    union {
+        pd_AccountId_V1_t id;
+        pd_CompactAccountIndex_V1_t index;
+        pd_Bytes_t raw;
+        const uint8_t* _ptr;
+    };
 } pd_LookupSource_V1_t;
 
 typedef struct {
@@ -524,6 +514,16 @@ typedef struct {
     uint8_t some;
     pd_VecLegacyPalletPermissions_V1_t contained;
 } pd_OptionVecLegacyPalletPermissions_V1_t;
+
+typedef struct {
+    uint8_t some;
+    pd_VecPortfolioId_V1_t contained;
+} pd_OptionVecPortfolioId_V1_t;
+
+typedef struct {
+    uint8_t some;
+    pd_VecTicker_V1_t contained;
+} pd_OptionVecTicker_V1_t;
 
 typedef struct {
     pd_Permill_V1_t value;
@@ -694,6 +694,13 @@ typedef struct {
 } pd_Priority_V1_t;
 
 typedef struct {
+    uint8_t value;
+    union {
+        pd_AccountId_V1_t accountId;
+    };
+} pd_RewardDestination_V1_t;
+
+typedef struct {
     pd_OptionMoment_V1_t start;
     pd_CalendarPeriod_V1_t period;
     uint32_t remaining;
@@ -762,6 +769,12 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecLeg_V1_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecLookupSource_V1_t;
 
 typedef struct {
     uint64_t _len;
@@ -870,10 +883,6 @@ typedef struct {
 
 typedef struct {
     const uint8_t* _ptr;
-} pd_InvestorUid_V1_t;
-
-typedef struct {
-    const uint8_t* _ptr;
 } pd_InvestorZKProofData_V1_t;
 
 typedef struct {
@@ -951,13 +960,6 @@ typedef struct {
 } pd_ProtocolOp_V1_t;
 
 typedef struct {
-    uint8_t value;
-    union {
-        pd_AccountId_V1_t accountId;
-    };
-} pd_RewardDestination_V1_t;
-
-typedef struct {
     // TODO: Not implemented
     uint8_t _NOT_IMPLEMENTED__DO_NOT_USE;
 } pd_ScopeClaimProof_V1_t;
@@ -999,12 +1001,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecKey_V1_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecLookupSource_V1_t;
 
 typedef struct {
     uint64_t _len;

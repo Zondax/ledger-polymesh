@@ -122,6 +122,22 @@ parser_error_t _readAssetName_V1(parser_context_t* c, pd_AssetName_V1_t* v)
     return parser_ok;
 }
 
+parser_error_t _readAssetPermissions_V1(parser_context_t* c, pd_AssetPermissions_V1_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->value))
+    switch (v->value) {
+    case 0: // Whole
+        break;
+    case 1: // These
+    case 2: // Except
+        CHECK_ERROR(_readVecTicker_V1(c, &v->contained))
+        break;
+    default:
+        return parser_unexpected_value;
+    }
+    return parser_ok;
+}
+
 parser_error_t _readAssetType_V1(parser_context_t* c, pd_AssetType_V1_t* v)
 {
     CHECK_INPUT()
@@ -375,6 +391,11 @@ parser_error_t _readClassicTickerImport_V1(parser_context_t* c, pd_ClassicTicker
     return parser_ok;
 }
 
+parser_error_t _readCompactAccountIndex_V1(parser_context_t* c, pd_CompactAccountIndex_V1_t* v)
+{
+    return _readCompactInt(c, &v->value);
+}
+
 parser_error_t _readCompactPerBill_V1(parser_context_t* c, pd_CompactPerBill_V1_t* v)
 {
     return _readCompactInt(c, &v->value);
@@ -452,6 +473,22 @@ parser_error_t _readDispatchableName_V1(parser_context_t* c, pd_DispatchableName
     v->_ptr = c->buffer + c->offset;
     CTX_CHECK_AND_ADVANCE(c, v->_len);
 
+    return parser_ok;
+}
+
+parser_error_t _readDispatchableNames_V1(parser_context_t* c, pd_DispatchableNames_V1_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->value))
+    switch (v->value) {
+    case 0: // Whole
+        break;
+    case 1: // These
+    case 2: // Except
+        CHECK_ERROR(_readVecDispatchableName_V1(c, &v->contained))
+        break;
+    default:
+        return parser_unexpected_value;
+    }
     return parser_ok;
 }
 
@@ -579,38 +616,6 @@ parser_error_t _readEthereumAddress_V1(parser_context_t* c, pd_EthereumAddress_V
     GEN_DEF_READARRAY(20)
 }
 
-parser_error_t _readDispatchableNames_V1(parser_context_t* c, pd_DispatchableNames_V1_t* v)
-{
-    CHECK_ERROR(_readUInt8(c, &v->value))
-    switch (v->value) {
-    case 0: // Whole
-        break;
-    case 1: // These
-    case 2: // Except
-        CHECK_ERROR(_readVecDispatchableName_V1(c, &v->contained))
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-    return parser_ok;
-}
-
-parser_error_t _readAssetPermissions_V1(parser_context_t* c, pd_AssetPermissions_V1_t* v)
-{
-    CHECK_ERROR(_readUInt8(c, &v->value))
-    switch (v->value) {
-    case 0: // Whole
-        break;
-    case 1: // These
-    case 2: // Except
-        CHECK_ERROR(_readVecTicker_V1(c, &v->contained))
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-    return parser_ok;
-}
-
 parser_error_t _readExtrinsicPermissions_V1(parser_context_t* c, pd_ExtrinsicPermissions_V1_t* v)
 {
     CHECK_ERROR(_readUInt8(c, &v->value))
@@ -620,22 +625,6 @@ parser_error_t _readExtrinsicPermissions_V1(parser_context_t* c, pd_ExtrinsicPer
     case 1: // These
     case 2: // Except
         CHECK_ERROR(_readVecPalletPermissions_V1(c, &v->contained))
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-    return parser_ok;
-}
-
-parser_error_t _readPortfolioPermissions_V1(parser_context_t* c, pd_PortfolioPermissions_V1_t* v)
-{
-    CHECK_ERROR(_readUInt8(c, &v->value))
-    switch (v->value) {
-    case 0: // Whole
-        break;
-    case 1: // These
-    case 2: // Except
-        CHECK_ERROR(_readVecPortfolioId_V1(c, &v->contained))
         break;
     default:
         return parser_unexpected_value;
@@ -678,10 +667,6 @@ parser_error_t _readGrandpaEquivocationProof_V1(parser_context_t* c, pd_GrandpaE
 
 parser_error_t _readIdentityId_V1(parser_context_t* c, pd_IdentityId_V1_t* v) {
     GEN_DEF_READARRAY(32)
-}
-
-parser_error_t _readInvestorUid_V1(parser_context_t* c, pd_InvestorUid_V1_t* v) {
-    GEN_DEF_READARRAY(16)
 }
 
 parser_error_t _readInvestorZKProofData_V1(parser_context_t* c, pd_InvestorZKProofData_V1_t* v) {
@@ -752,9 +737,26 @@ parser_error_t _readLocalCAId_V1(parser_context_t* c, pd_LocalCAId_V1_t* v)
 
 parser_error_t _readLookupSource_V1(parser_context_t* c, pd_LookupSource_V1_t* v)
 {
-    uint8_t len;
-    CHECK_ERROR(_readUInt8(c, &len))
-    GEN_DEF_READARRAY(32)
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt8(c, &v->value))
+    switch (v->value) {
+    case 0: // Id
+        CHECK_ERROR(_readAccountId_V1(c, &v->id))
+        break;
+    case 1: // Index
+        CHECK_ERROR(_readCompactAccountIndex_V1(c, &v->index))
+        break;
+    case 2: // Raw
+        CHECK_ERROR(_readBytes(c, &v->raw))
+        break;
+    case 3: // Address32
+        GEN_DEF_READARRAY(32)
+    case 4: // Address20
+        GEN_DEF_READARRAY(20)
+    default:
+        return parser_unexpected_value;
+    }
+
     return parser_ok;
 }
 
@@ -983,6 +985,22 @@ parser_error_t _readPortfolioNumber_V1(parser_context_t* c, pd_PortfolioNumber_V
     return _readUInt64(c, &v->value);
 }
 
+parser_error_t _readPortfolioPermissions_V1(parser_context_t* c, pd_PortfolioPermissions_V1_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->value))
+    switch (v->value) {
+    case 0: // Whole
+        break;
+    case 1: // These
+    case 2: // Except
+        CHECK_ERROR(_readVecPortfolioId_V1(c, &v->contained))
+        break;
+    default:
+        return parser_unexpected_value;
+    }
+    return parser_ok;
+}
+
 parser_error_t _readPosRatio_V1(parser_context_t* c, pd_PosRatio_V1_t* v)
 {
     CHECK_ERROR(_readUInt32(c, &v->numerator))
@@ -1087,7 +1105,6 @@ parser_error_t _readRewardDestination_V1(parser_context_t* c, pd_RewardDestinati
     default:
         return parser_unexpected_value;
     }
-
 
     return parser_ok;
 }
@@ -1697,29 +1714,11 @@ parser_error_t _readOptionUrl_V1(parser_context_t* c, pd_OptionUrl_V1_t* v)
     return parser_ok;
 }
 
-parser_error_t _readOptionVecDispatchableName_V1(parser_context_t* c, pd_OptionVecDispatchableName_V1_t* v)
-{
-    CHECK_ERROR(_readUInt8(c, &v->some))
-    if (v->some > 0) {
-        CHECK_ERROR(_readVecDispatchableName_V1(c, &v->contained))
-    }
-    return parser_ok;
-}
-
 parser_error_t _readOptionVecLegacyPalletPermissions_V1(parser_context_t* c, pd_OptionVecLegacyPalletPermissions_V1_t* v)
 {
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readVecLegacyPalletPermissions_V1(c, &v->contained))
-    }
-    return parser_ok;
-}
-
-parser_error_t _readOptionVecPalletPermissions_V1(parser_context_t* c, pd_OptionVecPalletPermissions_V1_t* v)
-{
-    CHECK_ERROR(_readUInt8(c, &v->some))
-    if (v->some > 0) {
-        CHECK_ERROR(_readVecPalletPermissions_V1(c, &v->contained))
     }
     return parser_ok;
 }
@@ -1929,6 +1928,38 @@ parser_error_t _toStringAssetName_V1(
 
     asciify(bufferUI);
     pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+
+    return parser_ok;
+}
+
+parser_error_t _toStringAssetPermissions_V1(
+    const pd_AssetPermissions_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    switch (v->value) {
+    case 0: // Whole
+        GEN_DEF_TOSTRING_ENUM("Whole")
+        break;
+    case 1: // These
+        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("These")
+        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 2: // Except
+        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Except")
+        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    default:
+        return parser_unexpected_value;
+    }
 
     return parser_ok;
 }
@@ -2530,7 +2561,7 @@ parser_error_t _toStringClaimType_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
-    *pageCount = 0;
+    *pageCount = 1;
     switch (v->value) {
     case 0: // Accredited
         snprintf(outValue, outValueLen, "Accredited");
@@ -2708,6 +2739,16 @@ parser_error_t _toStringClassicTickerImport_V1(
     return parser_display_idx_out_of_range;
 }
 
+parser_error_t _toStringCompactAccountIndex_V1(
+    const pd_CompactAccountIndex_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringCompactInt(&v->value, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+}
+
 parser_error_t _toStringCompactPerBill_V1(
     const pd_CompactPerBill_V1_t* v,
     char* outValue,
@@ -2804,6 +2845,10 @@ parser_error_t _toStringCondition_V1(
     CHECK_ERROR(_toStringConditionType_V1(&v->conditionType, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecTrustedIssuer_V1(&v->issuers, outValue, outValueLen, 0, &pages[1]))
 
+    if (v->issuers._len == 0) {
+        pages[1] = 0;
+    }
+
     *pageCount = pages[0] + pages[1];
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
@@ -2874,6 +2919,38 @@ parser_error_t _toStringDispatchableName_V1(
 
     asciify(bufferUI);
     pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
+
+    return parser_ok;
+}
+
+parser_error_t _toStringDispatchableNames_V1(
+    const pd_DispatchableNames_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    switch (v->value) {
+    case 0: // Whole
+        GEN_DEF_TOSTRING_ENUM("Whole")
+        break;
+    case 1: // These
+        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("These")
+        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 2: // Except
+        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Except")
+        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    default:
+        return parser_unexpected_value;
+    }
 
     return parser_ok;
 }
@@ -3082,70 +3159,6 @@ parser_error_t _toStringEthereumAddress_V1(
     GEN_DEF_TOSTRING_ARRAY(20)
 }
 
-parser_error_t _toStringDispatchableNames_V1(
-    const pd_DispatchableNames_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-    *pageCount = 0;
-    uint8_t _dummy;
-
-    switch (v->value) {
-    case 0: // Whole
-        GEN_DEF_TOSTRING_ENUM("Whole")
-        break;
-    case 1: // These
-        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("These")
-        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 2: // Except
-        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("Except")
-        CHECK_ERROR(_toStringVecDispatchableName_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-
-    return parser_ok;
-}
-
-parser_error_t _toStringAssetPermissions_V1(
-    const pd_AssetPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-    *pageCount = 0;
-    uint8_t _dummy;
-
-    switch (v->value) {
-    case 0: // Whole
-        GEN_DEF_TOSTRING_ENUM("Whole")
-        break;
-    case 1: // These
-        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("These")
-        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 2: // Except
-        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("Except")
-        CHECK_ERROR(_toStringVecTicker_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-
-    return parser_ok;
-}
-
 parser_error_t _toStringExtrinsicPermissions_V1(
     const pd_ExtrinsicPermissions_V1_t* v,
     char* outValue,
@@ -3170,38 +3183,6 @@ parser_error_t _toStringExtrinsicPermissions_V1(
         CHECK_ERROR(_toStringVecPalletPermissions_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("Except")
         CHECK_ERROR(_toStringVecPalletPermissions_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    default:
-        return parser_unexpected_value;
-    }
-
-    return parser_ok;
-}
-
-parser_error_t _toStringPortfolioPermissions_V1(
-    const pd_PortfolioPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-    *pageCount = 0;
-    uint8_t _dummy;
-
-    switch (v->value) {
-    case 0: // Whole
-        GEN_DEF_TOSTRING_ENUM("Whole")
-        break;
-    case 1: // These
-        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("These")
-        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
-        break;
-    case 2: // Except
-        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
-        GEN_DEF_TOSTRING_ENUM("Except")
-        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     default:
         return parser_unexpected_value;
@@ -3264,15 +3245,6 @@ parser_error_t _toStringIdentityId_V1(
     uint8_t pageIdx,
     uint8_t* pageCount) {
     GEN_DEF_TOSTRING_ARRAY(32)
-}
-
-parser_error_t _toStringInvestorUid_V1(
-    const pd_InvestorUid_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount) {
-    GEN_DEF_TOSTRING_ARRAY(16)
 }
 
 parser_error_t _toStringInvestorZKProofData_V1(
@@ -3489,7 +3461,30 @@ parser_error_t _toStringLookupSource_V1(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringPubkeyAsAddress(v->_ptr, outValue, outValueLen, pageIdx, pageCount);
+    CLEAN_AND_CHECK()
+    switch (v->value) {
+    case 0: // Id
+        CHECK_ERROR(_toStringAccountId_V1(&v->id, outValue, outValueLen, pageIdx, pageCount))
+        break;
+    case 1: // Index
+        CHECK_ERROR(_toStringCompactAccountIndex_V1(&v->index, outValue, outValueLen, pageIdx, pageCount))
+        break;
+    case 2: // Raw
+        CHECK_ERROR(_toStringBytes(&v->raw, outValue, outValueLen, pageIdx, pageCount))
+        break;
+    case 3: // Address32
+    {
+        GEN_DEF_TOSTRING_ARRAY(32)
+    }
+    case 4: // Address20
+    {
+        GEN_DEF_TOSTRING_ARRAY(20)
+    }
+    default:
+        return parser_not_supported;
+    }
+
+    return parser_ok;
 }
 
 parser_error_t _toStringMaybeBlock_V1(
@@ -3500,6 +3495,7 @@ parser_error_t _toStringMaybeBlock_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 1;
     switch (v->value) {
     case 0:
         _toStringBlockNumber(&v->blockNumber, outValue, outValueLen, pageIdx, pageCount);
@@ -3826,6 +3822,7 @@ parser_error_t _toStringPermissions_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+
     // Index + count pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringAssetPermissions_V1(&v->asset, outValue, outValueLen, 0, &pages[0]))
@@ -3972,6 +3969,38 @@ parser_error_t _toStringPortfolioNumber_V1(
     return _toStringu64(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
+parser_error_t _toStringPortfolioPermissions_V1(
+    const pd_PortfolioPermissions_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+    *pageCount = 0;
+    uint8_t _dummy;
+
+    switch (v->value) {
+    case 0: // Whole
+        GEN_DEF_TOSTRING_ENUM("Whole")
+        break;
+    case 1: // These
+        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("These")
+        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 2: // Except
+        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("Except")
+        CHECK_ERROR(_toStringVecPortfolioId_V1(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    default:
+        return parser_unexpected_value;
+    }
+
+    return parser_ok;
+}
+
 parser_error_t _toStringPosRatio_V1(
     const pd_PosRatio_V1_t* v,
     char* outValue,
@@ -4089,6 +4118,7 @@ parser_error_t _toStringProtocolOp_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 1;
     switch (v->value) {
     case 0:
         snprintf(outValue, outValueLen, "AssetRegisterTicker");
@@ -4269,7 +4299,6 @@ parser_error_t _toStringRewardDestination_V1(
     default:
         return parser_print_not_supported;
     }
-
     return parser_ok;
 }
 
@@ -4638,6 +4667,7 @@ parser_error_t _toStringTargetIdentity_V1(
     uint8_t* pageCount)
 {
     CLEAN_AND_CHECK()
+    *pageCount = 1;
     switch (v->value) {
     case 0:
         snprintf(outValue, outValueLen, "ExternalAgent");
@@ -5764,27 +5794,6 @@ parser_error_t _toStringOptionUrl_V1(
     return parser_ok;
 }
 
-parser_error_t _toStringOptionVecDispatchableName_V1(
-    const pd_OptionVecDispatchableName_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-
-    *pageCount = 1;
-    if (v->some > 0) {
-        CHECK_ERROR(_toStringVecDispatchableName_V1(
-            &v->contained,
-            outValue, outValueLen,
-            pageIdx, pageCount));
-    } else {
-        snprintf(outValue, outValueLen, "None");
-    }
-    return parser_ok;
-}
-
 parser_error_t _toStringOptionVecLegacyPalletPermissions_V1(
     const pd_OptionVecLegacyPalletPermissions_V1_t* v,
     char* outValue,
@@ -5797,27 +5806,6 @@ parser_error_t _toStringOptionVecLegacyPalletPermissions_V1(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringVecLegacyPalletPermissions_V1(
-            &v->contained,
-            outValue, outValueLen,
-            pageIdx, pageCount));
-    } else {
-        snprintf(outValue, outValueLen, "None");
-    }
-    return parser_ok;
-}
-
-parser_error_t _toStringOptionVecPalletPermissions_V1(
-    const pd_OptionVecPalletPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-
-    *pageCount = 1;
-    if (v->some > 0) {
-        CHECK_ERROR(_toStringVecPalletPermissions_V1(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));
