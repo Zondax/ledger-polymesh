@@ -197,13 +197,13 @@ Empty
 |unfreeze |    | :heavy_check_mark: | :heavy_check_mark: |  |
 |change_bridge_limit |    | :heavy_check_mark: | :heavy_check_mark: | `Balance` amount <br/>`BlockNumber` duration <br/> |
 |change_bridge_exempted |    | :heavy_check_mark: | :heavy_check_mark: | `Vec<(IdentityId,bool)>` exempted <br/> |
-|force_handle_bridge_tx |    |   |   | `BridgeTx` bridge_tx <br/> |
-|batch_propose_bridge_tx |    |   |   | `Vec<BridgeTx>` bridge_txs <br/> |
-|propose_bridge_tx |    |   |   | `BridgeTx` bridge_tx <br/> |
-|handle_bridge_tx |    |   |   | `BridgeTx` bridge_tx <br/> |
-|freeze_txs |    |   |   | `Vec<BridgeTx>` bridge_txs <br/> |
-|unfreeze_txs |    |   |   | `Vec<BridgeTx>` bridge_txs <br/> |
-|handle_scheduled_bridge_tx |    |   |   | `BridgeTx` bridge_tx <br/> |
+|force_handle_bridge_tx |    | :heavy_check_mark: |   | `BridgeTx` bridge_tx <br/> |
+|batch_propose_bridge_tx |    | :heavy_check_mark: |   | `Vec<BridgeTx>` bridge_txs <br/> |
+|propose_bridge_tx |    | :heavy_check_mark: |   | `BridgeTx` bridge_tx <br/> |
+|handle_bridge_tx |    | :heavy_check_mark: |   | `BridgeTx` bridge_tx <br/> |
+|freeze_txs |    | :heavy_check_mark: |   | `Vec<BridgeTx>` bridge_txs <br/> |
+|unfreeze_txs |    | :heavy_check_mark: |   | `Vec<BridgeTx>` bridge_txs <br/> |
+|handle_scheduled_bridge_tx |    | :heavy_check_mark: |   | `BridgeTx` bridge_tx <br/> |
 |add_freeze_admin |    | :heavy_check_mark: |   | `AccountId` freeze_admin <br/> |
 |remove_freeze_admin |    | :heavy_check_mark: |   | `AccountId` freeze_admin <br/> |
 
@@ -464,7 +464,7 @@ Empty
 | Name        | Light | XL | Nesting | Arguments |
 | :---------- |:------------:|:--------:|:--------:|:--------|
 |create_fundraiser |    | :heavy_check_mark: |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`u64` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
-|invest |    |   |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
+|invest |    | :heavy_check_mark: |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
 |freeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
 |unfreeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
 |modify_fundraiser_window |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
