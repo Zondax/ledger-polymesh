@@ -71,6 +71,41 @@ typedef struct {
     pd_OptionScope_V1_t scope;
 } pd_identity_revoke_claim_by_index_V1_t;
 
+#define PD_CALL_BRIDGE_FORCE_HANDLE_BRIDGE_TX_V1 7
+typedef struct {
+    pd_BridgeTx_V1_t bridge_tx;
+} pd_bridge_force_handle_bridge_tx_V1_t;
+
+#define PD_CALL_BRIDGE_BATCH_PROPOSE_BRIDGE_TX_V1 8
+typedef struct {
+    pd_VecBridgeTx_V1_t bridge_txs;
+} pd_bridge_batch_propose_bridge_tx_V1_t;
+
+#define PD_CALL_BRIDGE_PROPOSE_BRIDGE_TX_V1 9
+typedef struct {
+    pd_BridgeTx_V1_t bridge_tx;
+} pd_bridge_propose_bridge_tx_V1_t;
+
+#define PD_CALL_BRIDGE_HANDLE_BRIDGE_TX_V1 10
+typedef struct {
+    pd_BridgeTx_V1_t bridge_tx;
+} pd_bridge_handle_bridge_tx_V1_t;
+
+#define PD_CALL_BRIDGE_FREEZE_TXS_V1 11
+typedef struct {
+    pd_VecBridgeTx_V1_t bridge_txs;
+} pd_bridge_freeze_txs_V1_t;
+
+#define PD_CALL_BRIDGE_UNFREEZE_TXS_V1 12
+typedef struct {
+    pd_VecBridgeTx_V1_t bridge_txs;
+} pd_bridge_unfreeze_txs_V1_t;
+
+#define PD_CALL_BRIDGE_HANDLE_SCHEDULED_BRIDGE_TX_V1 13
+typedef struct {
+    pd_BridgeTx_V1_t bridge_tx;
+} pd_bridge_handle_scheduled_bridge_tx_V1_t;
+
 #define PD_CALL_BRIDGE_ADD_FREEZE_ADMIN_V1 14
 typedef struct {
     pd_AccountId_V1_t freeze_admin;
@@ -240,6 +275,13 @@ typedef struct {
 typedef union {
 #ifdef SUBSTRATE_PARSER_FULL
     pd_identity_revoke_claim_by_index_V1_t identity_revoke_claim_by_index_V1;
+    pd_bridge_force_handle_bridge_tx_V1_t bridge_force_handle_bridge_tx_V1;
+    pd_bridge_batch_propose_bridge_tx_V1_t bridge_batch_propose_bridge_tx_V1;
+    pd_bridge_propose_bridge_tx_V1_t bridge_propose_bridge_tx_V1;
+    pd_bridge_handle_bridge_tx_V1_t bridge_handle_bridge_tx_V1;
+    pd_bridge_freeze_txs_V1_t bridge_freeze_txs_V1;
+    pd_bridge_unfreeze_txs_V1_t bridge_unfreeze_txs_V1;
+    pd_bridge_handle_scheduled_bridge_tx_V1_t bridge_handle_scheduled_bridge_tx_V1;
     pd_bridge_add_freeze_admin_V1_t bridge_add_freeze_admin_V1;
     pd_bridge_remove_freeze_admin_V1_t bridge_remove_freeze_admin_V1;
     pd_asset_controller_transfer_V1_t asset_controller_transfer_V1;

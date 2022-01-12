@@ -925,6 +925,55 @@ __Z_INLINE parser_error_t _readMethod_bridge_change_bridge_exempted_V1(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_bridge_force_handle_bridge_tx_V1(
+    parser_context_t* c, pd_bridge_force_handle_bridge_tx_V1_t* m)
+{
+    CHECK_ERROR(_readBridgeTx_V1(c, &m->bridge_tx))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_batch_propose_bridge_tx_V1(
+    parser_context_t* c, pd_bridge_batch_propose_bridge_tx_V1_t* m)
+{
+    CHECK_ERROR(_readVecBridgeTx_V1(c, &m->bridge_txs))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_propose_bridge_tx_V1(
+    parser_context_t* c, pd_bridge_propose_bridge_tx_V1_t* m)
+{
+    CHECK_ERROR(_readBridgeTx_V1(c, &m->bridge_tx))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_handle_bridge_tx_V1(
+    parser_context_t* c, pd_bridge_handle_bridge_tx_V1_t* m)
+{
+    CHECK_ERROR(_readBridgeTx_V1(c, &m->bridge_tx))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_freeze_txs_V1(
+    parser_context_t* c, pd_bridge_freeze_txs_V1_t* m)
+{
+    CHECK_ERROR(_readVecBridgeTx_V1(c, &m->bridge_txs))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_unfreeze_txs_V1(
+    parser_context_t* c, pd_bridge_unfreeze_txs_V1_t* m)
+{
+    CHECK_ERROR(_readVecBridgeTx_V1(c, &m->bridge_txs))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_bridge_handle_scheduled_bridge_tx_V1(
+    parser_context_t* c, pd_bridge_handle_scheduled_bridge_tx_V1_t* m)
+{
+    CHECK_ERROR(_readBridgeTx_V1(c, &m->bridge_tx))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_bridge_add_freeze_admin_V1(
     parser_context_t* c, pd_bridge_add_freeze_admin_V1_t* m)
 {
@@ -2385,6 +2434,27 @@ parser_error_t _readMethod_V1(
     case 4102: /* module 16 call 6 */
         CHECK_ERROR(_readMethod_bridge_change_bridge_exempted_V1(c, &method->nested.bridge_change_bridge_exempted_V1))
         break;
+    case 4103: /* module 16 call 7 */
+        CHECK_ERROR(_readMethod_bridge_force_handle_bridge_tx_V1(c, &method->basic.bridge_force_handle_bridge_tx_V1))
+        break;
+    case 4104: /* module 16 call 8 */
+        CHECK_ERROR(_readMethod_bridge_batch_propose_bridge_tx_V1(c, &method->basic.bridge_batch_propose_bridge_tx_V1))
+        break;
+    case 4105: /* module 16 call 9 */
+        CHECK_ERROR(_readMethod_bridge_propose_bridge_tx_V1(c, &method->basic.bridge_propose_bridge_tx_V1))
+        break;
+    case 4106: /* module 16 call 10 */
+        CHECK_ERROR(_readMethod_bridge_handle_bridge_tx_V1(c, &method->basic.bridge_handle_bridge_tx_V1))
+        break;
+    case 4107: /* module 16 call 11 */
+        CHECK_ERROR(_readMethod_bridge_freeze_txs_V1(c, &method->basic.bridge_freeze_txs_V1))
+        break;
+    case 4108: /* module 16 call 12 */
+        CHECK_ERROR(_readMethod_bridge_unfreeze_txs_V1(c, &method->basic.bridge_unfreeze_txs_V1))
+        break;
+    case 4109: /* module 16 call 13 */
+        CHECK_ERROR(_readMethod_bridge_handle_scheduled_bridge_tx_V1(c, &method->basic.bridge_handle_scheduled_bridge_tx_V1))
+        break;
     case 4110: /* module 16 call 14 */
         CHECK_ERROR(_readMethod_bridge_add_freeze_admin_V1(c, &method->basic.bridge_add_freeze_admin_V1))
         break;
@@ -3733,6 +3803,20 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 4102: /* module 16 call 6 */
         return 1;
+    case 4103: /* module 16 call 7 */
+        return 1;
+    case 4104: /* module 16 call 8 */
+        return 1;
+    case 4105: /* module 16 call 9 */
+        return 1;
+    case 4106: /* module 16 call 10 */
+        return 1;
+    case 4107: /* module 16 call 11 */
+        return 1;
+    case 4108: /* module 16 call 12 */
+        return 1;
+    case 4109: /* module 16 call 13 */
+        return 1;
     case 4110: /* module 16 call 14 */
         return 1;
     case 4111: /* module 16 call 15 */
@@ -4995,6 +5079,55 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_exempted;
+        default:
+            return NULL;
+        }
+    case 4103: /* module 16 call 7 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_tx;
+        default:
+            return NULL;
+        }
+    case 4104: /* module 16 call 8 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_txs;
+        default:
+            return NULL;
+        }
+    case 4105: /* module 16 call 9 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_tx;
+        default:
+            return NULL;
+        }
+    case 4106: /* module 16 call 10 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_tx;
+        default:
+            return NULL;
+        }
+    case 4107: /* module 16 call 11 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_txs;
+        default:
+            return NULL;
+        }
+    case 4108: /* module 16 call 12 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_txs;
+        default:
+            return NULL;
+        }
+    case 4109: /* module 16 call 13 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_bridge_tx;
         default:
             return NULL;
         }
@@ -7785,6 +7918,76 @@ parser_error_t _getMethod_ItemValue_V1(
         default:
             return parser_no_data;
         }
+    case 4103: /* module 16 call 7 */
+        switch (itemIdx) {
+        case 0: /* bridge_force_handle_bridge_tx_V1 - bridge_tx */;
+            return _toStringBridgeTx_V1(
+                &m->basic.bridge_force_handle_bridge_tx_V1.bridge_tx,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4104: /* module 16 call 8 */
+        switch (itemIdx) {
+        case 0: /* bridge_batch_propose_bridge_tx_V1 - bridge_txs */;
+            return _toStringVecBridgeTx_V1(
+                &m->basic.bridge_batch_propose_bridge_tx_V1.bridge_txs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4105: /* module 16 call 9 */
+        switch (itemIdx) {
+        case 0: /* bridge_propose_bridge_tx_V1 - bridge_tx */;
+            return _toStringBridgeTx_V1(
+                &m->basic.bridge_propose_bridge_tx_V1.bridge_tx,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4106: /* module 16 call 10 */
+        switch (itemIdx) {
+        case 0: /* bridge_handle_bridge_tx_V1 - bridge_tx */;
+            return _toStringBridgeTx_V1(
+                &m->basic.bridge_handle_bridge_tx_V1.bridge_tx,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4107: /* module 16 call 11 */
+        switch (itemIdx) {
+        case 0: /* bridge_freeze_txs_V1 - bridge_txs */;
+            return _toStringVecBridgeTx_V1(
+                &m->basic.bridge_freeze_txs_V1.bridge_txs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4108: /* module 16 call 12 */
+        switch (itemIdx) {
+        case 0: /* bridge_unfreeze_txs_V1 - bridge_txs */;
+            return _toStringVecBridgeTx_V1(
+                &m->basic.bridge_unfreeze_txs_V1.bridge_txs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 4109: /* module 16 call 13 */
+        switch (itemIdx) {
+        case 0: /* bridge_handle_scheduled_bridge_tx_V1 - bridge_tx */;
+            return _toStringBridgeTx_V1(
+                &m->basic.bridge_handle_scheduled_bridge_tx_V1.bridge_tx,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 4110: /* module 16 call 14 */
         switch (itemIdx) {
         case 0: /* bridge_add_freeze_admin_V1 - freeze_admin */;
@@ -9851,6 +10054,13 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
 
     switch (callPrivIdx) {
     case 1812: // Identity:Revoke claim by index
+    case 4103: // Bridge:Force handle bridge tx
+    case 4104: // Bridge:Batch propose bridge tx
+    case 4105: // Bridge:Propose bridge tx
+    case 4106: // Bridge:Handle bridge tx
+    case 4107: // Bridge:Freeze txs
+    case 4108: // Bridge:Unfreeze txs
+    case 4109: // Bridge:Handle scheduled bridge tx
     case 4110: // Bridge:Add freeze admin
     case 4111: // Bridge:Remove freeze admin
     case 6672: // Asset:Controller transfer
