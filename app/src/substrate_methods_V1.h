@@ -140,6 +140,17 @@ typedef struct {
     pd_FundraiserName_V1_t fundraiser_name;
 } pd_sto_create_fundraiser_V1_t;
 
+#define PD_CALL_STO_INVEST_V1 1
+typedef struct {
+    pd_PortfolioId_V1_t investment_portfolio;
+    pd_PortfolioId_V1_t funding_portfolio;
+    pd_Ticker_V1_t offering_asset;
+    pd_u64_t fundraiser_id;
+    pd_BalanceNoSymbol_t purchase_amount;
+    pd_OptionBalance_t max_price;
+    pd_OptionReceiptDetails_V1_t receipt;
+} pd_sto_invest_V1_t;
+
 #define PD_CALL_STO_FREEZE_FUNDRAISER_V1 2
 typedef struct {
     pd_Ticker_V1_t offering_asset;
@@ -240,6 +251,7 @@ typedef union {
     pd_settlement_change_receipt_validity_V1_t settlement_change_receipt_validity_V1;
     pd_settlement_reschedule_instruction_V1_t settlement_reschedule_instruction_V1;
     pd_sto_create_fundraiser_V1_t sto_create_fundraiser_V1;
+    pd_sto_invest_V1_t sto_invest_V1;
     pd_sto_freeze_fundraiser_V1_t sto_freeze_fundraiser_V1;
     pd_sto_unfreeze_fundraiser_V1_t sto_unfreeze_fundraiser_V1;
     pd_sto_modify_fundraiser_window_V1_t sto_modify_fundraiser_window_V1;

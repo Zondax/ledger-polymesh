@@ -1866,6 +1866,19 @@ __Z_INLINE parser_error_t _readMethod_sto_create_fundraiser_V1(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_sto_invest_V1(
+    parser_context_t* c, pd_sto_invest_V1_t* m)
+{
+    CHECK_ERROR(_readPortfolioId_V1(c, &m->investment_portfolio))
+    CHECK_ERROR(_readPortfolioId_V1(c, &m->funding_portfolio))
+    CHECK_ERROR(_readTicker_V1(c, &m->offering_asset))
+    CHECK_ERROR(_readu64(c, &m->fundraiser_id))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->purchase_amount))
+    CHECK_ERROR(_readOptionBalance(c, &m->max_price))
+    CHECK_ERROR(_readOptionReceiptDetails_V1(c, &m->receipt))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_sto_freeze_fundraiser_V1(
     parser_context_t* c, pd_sto_freeze_fundraiser_V1_t* m)
 {
@@ -2728,6 +2741,9 @@ parser_error_t _readMethod_V1(
         break;
     case 9984: /* module 39 call 0 */
         CHECK_ERROR(_readMethod_sto_create_fundraiser_V1(c, &method->basic.sto_create_fundraiser_V1))
+        break;
+    case 9985: /* module 39 call 1 */
+        CHECK_ERROR(_readMethod_sto_invest_V1(c, &method->basic.sto_invest_V1))
         break;
     case 9986: /* module 39 call 2 */
         CHECK_ERROR(_readMethod_sto_freeze_fundraiser_V1(c, &method->basic.sto_freeze_fundraiser_V1))
@@ -3955,6 +3971,8 @@ uint8_t _getMethod_NumItems_V1(uint8_t moduleIdx, uint8_t callIdx)
         return 3;
     case 9984: /* module 39 call 0 */
         return 10;
+    case 9985: /* module 39 call 1 */
+        return 7;
     case 9986: /* module 39 call 2 */
         return 2;
     case 9987: /* module 39 call 3 */
@@ -6026,6 +6044,25 @@ const char* _getMethod_ItemName_V1(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_minimum_investment;
         case 9:
             return STR_IT_fundraiser_name;
+        default:
+            return NULL;
+        }
+    case 9985: /* module 39 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_investment_portfolio;
+        case 1:
+            return STR_IT_funding_portfolio;
+        case 2:
+            return STR_IT_offering_asset;
+        case 3:
+            return STR_IT_fundraiser_id;
+        case 4:
+            return STR_IT_purchase_amount;
+        case 5:
+            return STR_IT_max_price;
+        case 6:
+            return STR_IT_receipt;
         default:
             return NULL;
         }
@@ -9478,6 +9515,46 @@ parser_error_t _getMethod_ItemValue_V1(
         default:
             return parser_no_data;
         }
+    case 9985: /* module 39 call 1 */
+        switch (itemIdx) {
+        case 0: /* sto_invest_V1 - investment_portfolio */;
+            return _toStringPortfolioId_V1(
+                &m->basic.sto_invest_V1.investment_portfolio,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* sto_invest_V1 - funding_portfolio */;
+            return _toStringPortfolioId_V1(
+                &m->basic.sto_invest_V1.funding_portfolio,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* sto_invest_V1 - offering_asset */;
+            return _toStringTicker_V1(
+                &m->basic.sto_invest_V1.offering_asset,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* sto_invest_V1 - fundraiser_id */;
+            return _toStringu64(
+                &m->basic.sto_invest_V1.fundraiser_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* sto_invest_V1 - purchase_amount */;
+            return _toStringBalanceNoSymbol(
+                &m->basic.sto_invest_V1.purchase_amount,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* sto_invest_V1 - max_price */;
+            return _toStringOptionBalance(
+                &m->basic.sto_invest_V1.max_price,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 6: /* sto_invest_V1 - receipt */;
+            return _toStringOptionReceiptDetails_V1(
+                &m->basic.sto_invest_V1.receipt,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 9986: /* module 39 call 2 */
         switch (itemIdx) {
         case 0: /* sto_freeze_fundraiser_V1 - offering_asset */;
@@ -9785,6 +9862,7 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
     case 9486: // Settlement:Change receipt validity
     case 9488: // Settlement:Reschedule instruction
     case 9984: // Sto:Create fundraiser
+    case 9985: // Sto:Invest
     case 9986: // Sto:Freeze fundraiser
     case 9987: // Sto:Unfreeze fundraiser
     case 9988: // Sto:Modify fundraiser window
