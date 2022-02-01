@@ -7,7 +7,7 @@
 
 ![zondax](docs/zondax.jpg)
 
-_Please visit our website at [zondax.ch](zondax.ch)_
+_Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
 ---
 
@@ -462,22 +462,22 @@ Empty
 | Name        | Light | XL | Nesting | Arguments |
 | :---------- |:------------:|:--------:|:--------:|:--------|
 |create_venue |    | :heavy_check_mark: | :heavy_check_mark: | `VenueDetails` details <br/>`Vec<AccountId>` signers <br/>`VenueType` typ <br/> |
-|update_venue_details |    | :heavy_check_mark: |   | `u64` id <br/>`VenueDetails` details <br/> |
-|update_venue_type |    | :heavy_check_mark: |   | `u64` id <br/>`VenueType` typ <br/> |
-|add_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/> |
-|add_and_affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/>`Vec<PortfolioId>` portfolios <br/> |
-|affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|withdraw_affirmation |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|reject_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`PortfolioId` portfolio <br/>`u32` num_of_legs <br/> |
-|affirm_with_receipts |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`Vec<ReceiptDetails>` receipt_details <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|claim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`ReceiptDetails` receipt_details <br/> |
-|unclaim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`u64` leg_id <br/> |
+|update_venue_details |    |   |   | `u64` id <br/>`VenueDetails` details <br/> |
+|update_venue_type |    |   |   | `u64` id <br/>`VenueType` typ <br/> |
+|add_instruction |    |   |   | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/> |
+|add_and_affirm_instruction |    |   |   | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/>`Vec<PortfolioId>` portfolios <br/> |
+|affirm_instruction |    |   |   | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|withdraw_affirmation |    |   |   | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|reject_instruction |    |   |   | `u64` instruction_id <br/>`PortfolioId` portfolio <br/>`u32` num_of_legs <br/> |
+|affirm_with_receipts |    |   |   | `u64` instruction_id <br/>`Vec<ReceiptDetails>` receipt_details <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|claim_receipt |    |   |   | `u64` instruction_id <br/>`ReceiptDetails` receipt_details <br/> |
+|unclaim_receipt |    |   |   | `u64` instruction_id <br/>`u64` leg_id <br/> |
 |set_venue_filtering |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`bool` enabled <br/> |
-|allow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
-|disallow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
+|allow_venues |    |   |   | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
+|disallow_venues |    |   |   | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
 |change_receipt_validity |    | :heavy_check_mark: |   | `u64` receipt_uid <br/>`bool` validity <br/> |
-|execute_scheduled_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `u64` instruction_id <br/>`u32` _legs_count <br/> |
-|reschedule_instruction |    | :heavy_check_mark: |   | `u64` instruction_id <br/> |
+|execute_scheduled_instruction |    |   |   | `u64` instruction_id <br/>`u32` _legs_count <br/> |
+|reschedule_instruction |    |   |   | `u64` instruction_id <br/> |
 
 ## Statistics
 
@@ -492,12 +492,12 @@ Empty
 
 | Name        | Light | XL | Nesting | Arguments |
 | :---------- |:------------:|:--------:|:--------:|:--------|
-|create_fundraiser |    | :heavy_check_mark: |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`u64` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
-|invest |    | :heavy_check_mark: |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
-|freeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
-|unfreeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
-|modify_fundraiser_window |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
-|stop |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|create_fundraiser |    |   |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`u64` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
+|invest |    |   |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
+|freeze_fundraiser |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|unfreeze_fundraiser |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|modify_fundraiser_window |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
+|stop |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
 
 ## Treasury
 
