@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 Zondax GmbH
+*  (c) 2019 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -55,7 +55,6 @@ extern "C" {
 #define PD_CALL_PROTOCOLFEE_V1 35
 #define PD_CALL_SETTLEMENT_V1 37
 #define PD_CALL_STATISTICS_V1 38
-#define PD_CALL_STO_V1 39
 #define PD_CALL_TREASURY_V1 40
 #define PD_CALL_UTILITY_V1 41
 #define PD_CALL_EXTERNALAGENTS_V1 43
@@ -119,7 +118,7 @@ typedef struct {
 #define PD_CALL_ASSET_CONTROLLER_TRANSFER_V1 16
 typedef struct {
     pd_Ticker_V1_t ticker;
-    pd_BalanceNoSymbol_t value;
+    pd_BalanceNoSymbol_t amount;
     pd_PortfolioId_V1_t from_portfolio;
 } pd_asset_controller_transfer_V1_t;
 
@@ -138,79 +137,11 @@ typedef struct {
     pd_u64_t auth_id;
 } pd_portfolio_accept_portfolio_custody_V1_t;
 
-#define PD_CALL_SETTLEMENT_UPDATE_VENUE_DETAILS_V1 1
-typedef struct {
-    pd_u64_t id;
-    pd_VenueDetails_V1_t details;
-} pd_settlement_update_venue_details_V1_t;
-
-#define PD_CALL_SETTLEMENT_UPDATE_VENUE_TYPE_V1 2
-typedef struct {
-    pd_u64_t id;
-    pd_VenueType_V1_t typ;
-} pd_settlement_update_venue_type_V1_t;
-
 #define PD_CALL_SETTLEMENT_CHANGE_RECEIPT_VALIDITY_V1 14
 typedef struct {
     pd_u64_t receipt_uid;
     pd_bool_t validity;
 } pd_settlement_change_receipt_validity_V1_t;
-
-#define PD_CALL_SETTLEMENT_RESCHEDULE_INSTRUCTION_V1 16
-typedef struct {
-    pd_u64_t instruction_id;
-} pd_settlement_reschedule_instruction_V1_t;
-
-#define PD_CALL_STO_CREATE_FUNDRAISER_V1 0
-typedef struct {
-    pd_PortfolioId_V1_t offering_portfolio;
-    pd_Ticker_V1_t offering_asset;
-    pd_PortfolioId_V1_t raising_portfolio;
-    pd_Ticker_V1_t raising_asset;
-    pd_VecPriceTier_V1_t tiers;
-    pd_u64_t venue_id;
-    pd_OptionMoment_V1_t start;
-    pd_OptionMoment_V1_t end;
-    pd_BalanceNoSymbol_t minimum_investment;
-    pd_FundraiserName_V1_t fundraiser_name;
-} pd_sto_create_fundraiser_V1_t;
-
-#define PD_CALL_STO_INVEST_V1 1
-typedef struct {
-    pd_PortfolioId_V1_t investment_portfolio;
-    pd_PortfolioId_V1_t funding_portfolio;
-    pd_Ticker_V1_t offering_asset;
-    pd_u64_t fundraiser_id;
-    pd_BalanceNoSymbol_t purchase_amount;
-    pd_OptionBalance_t max_price;
-    pd_OptionReceiptDetails_V1_t receipt;
-} pd_sto_invest_V1_t;
-
-#define PD_CALL_STO_FREEZE_FUNDRAISER_V1 2
-typedef struct {
-    pd_Ticker_V1_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_freeze_fundraiser_V1_t;
-
-#define PD_CALL_STO_UNFREEZE_FUNDRAISER_V1 3
-typedef struct {
-    pd_Ticker_V1_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_unfreeze_fundraiser_V1_t;
-
-#define PD_CALL_STO_MODIFY_FUNDRAISER_WINDOW_V1 4
-typedef struct {
-    pd_Ticker_V1_t offering_asset;
-    pd_u64_t fundraiser_id;
-    pd_Moment_V1_t start;
-    pd_OptionMoment_V1_t end;
-} pd_sto_modify_fundraiser_window_V1_t;
-
-#define PD_CALL_STO_STOP_V1 5
-typedef struct {
-    pd_Ticker_V1_t offering_asset;
-    pd_u64_t fundraiser_id;
-} pd_sto_stop_V1_t;
 
 #define PD_CALL_EXTERNALAGENTS_REMOVE_AGENT_V1 2
 typedef struct {
@@ -288,16 +219,7 @@ typedef union {
     pd_asset_register_custom_asset_type_V1_t asset_register_custom_asset_type_V1;
     pd_portfolio_quit_portfolio_custody_V1_t portfolio_quit_portfolio_custody_V1;
     pd_portfolio_accept_portfolio_custody_V1_t portfolio_accept_portfolio_custody_V1;
-    pd_settlement_update_venue_details_V1_t settlement_update_venue_details_V1;
-    pd_settlement_update_venue_type_V1_t settlement_update_venue_type_V1;
     pd_settlement_change_receipt_validity_V1_t settlement_change_receipt_validity_V1;
-    pd_settlement_reschedule_instruction_V1_t settlement_reschedule_instruction_V1;
-    pd_sto_create_fundraiser_V1_t sto_create_fundraiser_V1;
-    pd_sto_invest_V1_t sto_invest_V1;
-    pd_sto_freeze_fundraiser_V1_t sto_freeze_fundraiser_V1;
-    pd_sto_unfreeze_fundraiser_V1_t sto_unfreeze_fundraiser_V1;
-    pd_sto_modify_fundraiser_window_V1_t sto_modify_fundraiser_window_V1;
-    pd_sto_stop_V1_t sto_stop_V1;
     pd_externalagents_remove_agent_V1_t externalagents_remove_agent_V1;
     pd_externalagents_abdicate_V1_t externalagents_abdicate_V1;
     pd_externalagents_accept_become_agent_V1_t externalagents_accept_become_agent_V1;
@@ -314,7 +236,7 @@ typedef union {
 #define PD_CALL_BALANCES_TRANSFER_V1 0
 typedef struct {
     pd_LookupSource_V1_t dest;
-    pd_CompactBalance_t value;
+    pd_CompactBalance_t amount;
 } pd_balances_transfer_V1_t;
 
 #define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V1 2
@@ -513,18 +435,18 @@ typedef struct {
 #define PD_CALL_STAKING_BOND_V1 0
 typedef struct {
     pd_LookupSource_V1_t controller;
-    pd_CompactBalanceOf_t value;
+    pd_CompactBalanceOf_t amount;
     pd_RewardDestination_V1_t payee;
 } pd_staking_bond_V1_t;
 
 #define PD_CALL_STAKING_BOND_EXTRA_V1 1
 typedef struct {
-    pd_CompactBalanceOf_t max_additional;
+    pd_CompactBalanceOf_t amount;
 } pd_staking_bond_extra_V1_t;
 
 #define PD_CALL_STAKING_UNBOND_V1 2
 typedef struct {
-    pd_CompactBalanceOf_t value;
+    pd_CompactBalanceOf_t amount;
 } pd_staking_unbond_V1_t;
 
 #define PD_CALL_STAKING_WITHDRAW_UNBONDED_V1 3
@@ -558,7 +480,7 @@ typedef struct {
 
 #define PD_CALL_STAKING_REBOND_V1 24
 typedef struct {
-    pd_CompactBalanceOf_t value;
+    pd_CompactBalanceOf_t amount;
 } pd_staking_rebond_V1_t;
 
 #define PD_CALL_PIPS_PROPOSE_V1 6
@@ -653,13 +575,13 @@ typedef struct {
 #define PD_CALL_BALANCES_TRANSFER_WITH_MEMO_V1 1
 typedef struct {
     pd_LookupSource_V1_t dest;
-    pd_CompactBalance_t value;
+    pd_CompactBalance_t amount;
     pd_OptionMemo_V1_t memo;
 } pd_balances_transfer_with_memo_V1_t;
 
 #define PD_CALL_BALANCES_DEPOSIT_BLOCK_REWARD_RESERVE_BALANCE_V1 2
 typedef struct {
-    pd_CompactBalance_t value;
+    pd_CompactBalance_t amount;
 } pd_balances_deposit_block_reward_reserve_balance_V1_t;
 
 #define PD_CALL_BALANCES_SET_BALANCE_V1 3
@@ -673,7 +595,7 @@ typedef struct {
 typedef struct {
     pd_LookupSource_V1_t source;
     pd_LookupSource_V1_t dest;
-    pd_CompactBalance_t value;
+    pd_CompactBalance_t amount;
 } pd_balances_force_transfer_V1_t;
 
 #define PD_CALL_BALANCES_BURN_ACCOUNT_BALANCE_V1 5
@@ -1145,7 +1067,7 @@ typedef struct {
 #define PD_CALL_ASSET_REDEEM_V1 8
 typedef struct {
     pd_Ticker_V1_t ticker;
-    pd_BalanceNoSymbol_t value;
+    pd_BalanceNoSymbol_t amount;
 } pd_asset_redeem_V1_t;
 
 #define PD_CALL_ASSET_MAKE_DIVISIBLE_V1 9
@@ -1496,89 +1418,11 @@ typedef struct {
     pd_VenueType_V1_t typ;
 } pd_settlement_create_venue_V1_t;
 
-#define PD_CALL_SETTLEMENT_ADD_INSTRUCTION_V1 3
-typedef struct {
-    pd_u64_t venue_id;
-    pd_SettlementType_V1_t settlement_type;
-    pd_OptionMoment_V1_t trade_date;
-    pd_OptionMoment_V1_t value_date;
-    pd_VecLeg_V1_t legs;
-} pd_settlement_add_instruction_V1_t;
-
-#define PD_CALL_SETTLEMENT_ADD_AND_AFFIRM_INSTRUCTION_V1 4
-typedef struct {
-    pd_u64_t venue_id;
-    pd_SettlementType_V1_t settlement_type;
-    pd_OptionMoment_V1_t trade_date;
-    pd_OptionMoment_V1_t value_date;
-    pd_VecLeg_V1_t legs;
-    pd_VecPortfolioId_V1_t portfolios;
-} pd_settlement_add_and_affirm_instruction_V1_t;
-
-#define PD_CALL_SETTLEMENT_AFFIRM_INSTRUCTION_V1 5
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_VecPortfolioId_V1_t portfolios;
-    pd_u32_t max_legs_count;
-} pd_settlement_affirm_instruction_V1_t;
-
-#define PD_CALL_SETTLEMENT_WITHDRAW_AFFIRMATION_V1 6
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_VecPortfolioId_V1_t portfolios;
-    pd_u32_t max_legs_count;
-} pd_settlement_withdraw_affirmation_V1_t;
-
-#define PD_CALL_SETTLEMENT_REJECT_INSTRUCTION_V1 7
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_PortfolioId_V1_t portfolio;
-    pd_u32_t num_of_legs;
-} pd_settlement_reject_instruction_V1_t;
-
-#define PD_CALL_SETTLEMENT_AFFIRM_WITH_RECEIPTS_V1 8
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_VecReceiptDetails_V1_t receipt_details;
-    pd_VecPortfolioId_V1_t portfolios;
-    pd_u32_t max_legs_count;
-} pd_settlement_affirm_with_receipts_V1_t;
-
-#define PD_CALL_SETTLEMENT_CLAIM_RECEIPT_V1 9
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_ReceiptDetails_V1_t receipt_details;
-} pd_settlement_claim_receipt_V1_t;
-
-#define PD_CALL_SETTLEMENT_UNCLAIM_RECEIPT_V1 10
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_u64_t leg_id;
-} pd_settlement_unclaim_receipt_V1_t;
-
 #define PD_CALL_SETTLEMENT_SET_VENUE_FILTERING_V1 11
 typedef struct {
     pd_Ticker_V1_t ticker;
     pd_bool_t enabled;
 } pd_settlement_set_venue_filtering_V1_t;
-
-#define PD_CALL_SETTLEMENT_ALLOW_VENUES_V1 12
-typedef struct {
-    pd_Ticker_V1_t ticker;
-    pd_Vecu64_t venues;
-} pd_settlement_allow_venues_V1_t;
-
-#define PD_CALL_SETTLEMENT_DISALLOW_VENUES_V1 13
-typedef struct {
-    pd_Ticker_V1_t ticker;
-    pd_Vecu64_t venues;
-} pd_settlement_disallow_venues_V1_t;
-
-#define PD_CALL_SETTLEMENT_EXECUTE_SCHEDULED_INSTRUCTION_V1 15
-typedef struct {
-    pd_u64_t instruction_id;
-    pd_u32_t _legs_count;
-} pd_settlement_execute_scheduled_instruction_V1_t;
 
 #define PD_CALL_STATISTICS_ADD_TRANSFER_MANAGER_V1 0
 typedef struct {
@@ -1837,18 +1681,7 @@ typedef union {
     pd_portfolio_rename_portfolio_V1_t portfolio_rename_portfolio_V1;
     pd_protocolfee_change_coefficient_V1_t protocolfee_change_coefficient_V1;
     pd_settlement_create_venue_V1_t settlement_create_venue_V1;
-    pd_settlement_add_instruction_V1_t settlement_add_instruction_V1;
-    pd_settlement_add_and_affirm_instruction_V1_t settlement_add_and_affirm_instruction_V1;
-    pd_settlement_affirm_instruction_V1_t settlement_affirm_instruction_V1;
-    pd_settlement_withdraw_affirmation_V1_t settlement_withdraw_affirmation_V1;
-    pd_settlement_reject_instruction_V1_t settlement_reject_instruction_V1;
-    pd_settlement_affirm_with_receipts_V1_t settlement_affirm_with_receipts_V1;
-    pd_settlement_claim_receipt_V1_t settlement_claim_receipt_V1;
-    pd_settlement_unclaim_receipt_V1_t settlement_unclaim_receipt_V1;
     pd_settlement_set_venue_filtering_V1_t settlement_set_venue_filtering_V1;
-    pd_settlement_allow_venues_V1_t settlement_allow_venues_V1;
-    pd_settlement_disallow_venues_V1_t settlement_disallow_venues_V1;
-    pd_settlement_execute_scheduled_instruction_V1_t settlement_execute_scheduled_instruction_V1;
     pd_statistics_add_transfer_manager_V1_t statistics_add_transfer_manager_V1;
     pd_statistics_remove_transfer_manager_V1_t statistics_remove_transfer_manager_V1;
     pd_statistics_add_exempted_entities_V1_t statistics_add_exempted_entities_V1;
