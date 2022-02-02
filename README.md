@@ -27,7 +27,7 @@ Please:
 - **Do not use in production**
 - **Do not use a Ledger device with funds for development purposes.**
 - **Have a separate and marked device that is used ONLY for development and testing**
-# Polymesh  1.3001.x
+# Polymesh  2.3002.x
 
 ## System
 
@@ -100,11 +100,11 @@ Empty
 |leave_identity_as_key | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
 |add_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/>`Option<Moment>` expiry <br/> |
 |revoke_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/> |
-|set_permission_to_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/>`Permissions` permissions <br/> |
+|set_permission_to_signer | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` signer <br/>`Permissions` perms <br/> |
 |legacy_set_permission_to_signer |    |   |   | `Signatory` signer <br/>`LegacyPermissions` permissions <br/> |
 |freeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
 |unfreeze_secondary_keys | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |  |
-|add_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` target <br/>`AuthorizationData` authorization_data <br/>`Option<Moment>` expiry <br/> |
+|add_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` target <br/>`AuthorizationData` data <br/>`Option<Moment>` expiry <br/> |
 |remove_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Signatory` target <br/>`u64` auth_id <br/>`bool` _auth_issuer_pays <br/> |
 |add_secondary_keys_with_authorization | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `Vec<SecondaryKeyWithAuth>` additional_keys <br/>`Moment` expires_at <br/> |
 |add_investor_uniqueness_claim | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/>`Claim` claim <br/>`InvestorZKProofData` proof <br/>`Option<Moment>` expiry <br/> |
@@ -112,6 +112,7 @@ Empty
 |gc_revoke_cdd_claim |    | :heavy_check_mark: | :heavy_check_mark: | `IdentityId` target <br/> |
 |add_investor_uniqueness_claim_v2 |    |   |   | `IdentityId` target <br/>`Scope` scope <br/>`Claim` claim <br/>`ScopeClaimProof` proof <br/>`Option<Moment>` expiry <br/> |
 |revoke_claim_by_index |    | :heavy_check_mark: |   | `IdentityId` target <br/>`ClaimType` claim_type <br/>`Option<Scope>` scope <br/> |
+|rotate_primary_key_to_secondary |    | :heavy_check_mark: |   | `u64` auth_id <br/>`Option<u64>` optional_cdd_auth_id <br/> |
 
 ## CddServiceProviders
 
@@ -235,6 +236,7 @@ Empty
 |handle_scheduled_bridge_tx |    | :heavy_check_mark: |   | `BridgeTx` bridge_tx <br/> |
 |add_freeze_admin |    | :heavy_check_mark: |   | `AccountId` freeze_admin <br/> |
 |remove_freeze_admin |    | :heavy_check_mark: |   | `AccountId` freeze_admin <br/> |
+|remove_txs |    | :heavy_check_mark: |   | `Vec<BridgeTx>` bridge_txs <br/> |
 
 ## Staking
 
@@ -462,22 +464,22 @@ Empty
 | Name        | Light | XL | Nesting | Arguments |
 | :---------- |:------------:|:--------:|:--------:|:--------|
 |create_venue |    | :heavy_check_mark: | :heavy_check_mark: | `VenueDetails` details <br/>`Vec<AccountId>` signers <br/>`VenueType` typ <br/> |
-|update_venue_details |    |   |   | `u64` id <br/>`VenueDetails` details <br/> |
-|update_venue_type |    |   |   | `u64` id <br/>`VenueType` typ <br/> |
-|add_instruction |    |   |   | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/> |
-|add_and_affirm_instruction |    |   |   | `u64` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/>`Vec<PortfolioId>` portfolios <br/> |
-|affirm_instruction |    |   |   | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|withdraw_affirmation |    |   |   | `u64` instruction_id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|reject_instruction |    |   |   | `u64` instruction_id <br/>`PortfolioId` portfolio <br/>`u32` num_of_legs <br/> |
-|affirm_with_receipts |    |   |   | `u64` instruction_id <br/>`Vec<ReceiptDetails>` receipt_details <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
-|claim_receipt |    |   |   | `u64` instruction_id <br/>`ReceiptDetails` receipt_details <br/> |
-|unclaim_receipt |    |   |   | `u64` instruction_id <br/>`u64` leg_id <br/> |
+|update_venue_details |    | :heavy_check_mark: |   | `VenueId` id <br/>`VenueDetails` details <br/> |
+|update_venue_type |    | :heavy_check_mark: |   | `VenueId` id <br/>`VenueType` typ <br/> |
+|add_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `VenueId` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/> |
+|add_and_affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `VenueId` venue_id <br/>`SettlementType` settlement_type <br/>`Option<Moment>` trade_date <br/>`Option<Moment>` value_date <br/>`Vec<Leg>` legs <br/>`Vec<PortfolioId>` portfolios <br/> |
+|affirm_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|withdraw_affirmation |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|reject_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`PortfolioId` portfolio <br/>`u32` num_of_legs <br/> |
+|affirm_with_receipts |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`Vec<ReceiptDetails>` receipt_details <br/>`Vec<PortfolioId>` portfolios <br/>`u32` max_legs_count <br/> |
+|claim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`ReceiptDetails` receipt_details <br/> |
+|unclaim_receipt |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` instruction_id <br/>`LegId` leg_id <br/> |
 |set_venue_filtering |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`bool` enabled <br/> |
-|allow_venues |    |   |   | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
-|disallow_venues |    |   |   | `Ticker` ticker <br/>`Vec<u64>` venues <br/> |
+|allow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<VenueId>` venues <br/> |
+|disallow_venues |    | :heavy_check_mark: | :heavy_check_mark: | `Ticker` ticker <br/>`Vec<VenueId>` venues <br/> |
 |change_receipt_validity |    | :heavy_check_mark: |   | `u64` receipt_uid <br/>`bool` validity <br/> |
-|execute_scheduled_instruction |    |   |   | `u64` instruction_id <br/>`u32` _legs_count <br/> |
-|reschedule_instruction |    |   |   | `u64` instruction_id <br/> |
+|execute_scheduled_instruction |    | :heavy_check_mark: | :heavy_check_mark: | `InstructionId` id <br/>`u32` _legs_count <br/> |
+|reschedule_instruction |    | :heavy_check_mark: |   | `InstructionId` id <br/> |
 
 ## Statistics
 
@@ -492,12 +494,12 @@ Empty
 
 | Name        | Light | XL | Nesting | Arguments |
 | :---------- |:------------:|:--------:|:--------:|:--------|
-|create_fundraiser |    |   |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`u64` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
-|invest |    |   |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
-|freeze_fundraiser |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
-|unfreeze_fundraiser |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
-|modify_fundraiser_window |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
-|stop |    |   |   | `Ticker` offering_asset <br/>`u64` fundraiser_id <br/> |
+|create_fundraiser |    | :heavy_check_mark: |   | `PortfolioId` offering_portfolio <br/>`Ticker` offering_asset <br/>`PortfolioId` raising_portfolio <br/>`Ticker` raising_asset <br/>`Vec<PriceTier>` tiers <br/>`VenueId` venue_id <br/>`Option<Moment>` start <br/>`Option<Moment>` end <br/>`Balance` minimum_investment <br/>`FundraiserName` fundraiser_name <br/> |
+|invest |    | :heavy_check_mark: |   | `PortfolioId` investment_portfolio <br/>`PortfolioId` funding_portfolio <br/>`Ticker` offering_asset <br/>`FundraiserId` id <br/>`Balance` purchase_amount <br/>`Option<Balance>` max_price <br/>`Option<ReceiptDetails>` receipt <br/> |
+|freeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`FundraiserId` id <br/> |
+|unfreeze_fundraiser |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`FundraiserId` id <br/> |
+|modify_fundraiser_window |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`FundraiserId` id <br/>`Moment` start <br/>`Option<Moment>` end <br/> |
+|stop |    | :heavy_check_mark: |   | `Ticker` offering_asset <br/>`FundraiserId` id <br/> |
 
 ## Treasury
 
@@ -548,4 +550,13 @@ Empty
 | :---------- |:------------:|:--------:|:--------:|:--------|
 |claim_itn_reward |    | :heavy_check_mark: |   | `AccountId` reward_address <br/>`AccountId` itn_address <br/>`OffChainSignature` signature <br/> |
 |set_itn_reward_status |    |   |   | `AccountId` itn_address <br/>`ItnRewardStatus` status <br/> |
+
+## TestUtils
+
+| Name        | Light | XL | Nesting | Arguments |
+| :---------- |:------------:|:--------:|:--------:|:--------|
+|register_did |    |   |   | `InvestorUid` uid <br/>`Vec<SecondaryKey>` secondary_keys <br/> |
+|mock_cdd_register_did |    |   |   | `AccountId` target_account <br/> |
+|get_my_did |    |   |   |  |
+|get_cdd_of |    |   |   | `AccountId` of <br/> |
 
