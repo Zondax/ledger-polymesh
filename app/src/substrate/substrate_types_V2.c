@@ -188,6 +188,9 @@ parser_error_t _readAuthorizationData_V2(parser_context_t* c, pd_AuthorizationDa
     case 8: // AddRelayerPayingKey
         CHECK_ERROR(_readAddRelayerPayingKey_V2(c, &v->addRelayerPayingKey))
         break;
+    case 9: // RotatePrimaryKeyToSecondary
+        CHECK_ERROR(_readPermissions_V2(c, &v->permissions))
+        break;
     default:
         return parser_unexpected_value;
     }
@@ -2100,6 +2103,11 @@ parser_error_t _toStringAuthorizationData_V2(
         CHECK_ERROR(_toStringAddRelayerPayingKey_V2(&v->addRelayerPayingKey, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("AddRelayerPayingKey")
         CHECK_ERROR(_toStringAddRelayerPayingKey_V2(&v->addRelayerPayingKey, outValue, outValueLen, pageIdx, &_dummy);)
+        break;
+    case 9: // RotatePrimaryKeyToSecondary
+        CHECK_ERROR(_toStringPermissions_V2(&v->permissions, outValue, outValueLen, 0, pageCount);)
+        GEN_DEF_TOSTRING_ENUM("RotatePrimaryKeyToSecondary")
+        CHECK_ERROR(_toStringPermissions_V2(&v->permissions, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     default:
         return parser_unexpected_value;
