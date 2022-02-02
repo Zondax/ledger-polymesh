@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 Zondax GmbH
+*  (c) 2019 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -52,7 +52,6 @@ parser_error_t _readOptionu32(parser_context_t* c, pd_Optionu32_t* v);
 parser_error_t _readOptionu64(parser_context_t* c, pd_Optionu64_t* v);
 parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v);
 parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v);
-parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v);
 
 // Common toString functions
 
@@ -233,13 +232,6 @@ parser_error_t _toStringVecHeader(
 
 parser_error_t _toStringVecu32(
     const pd_Vecu32_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringVecu64(
-    const pd_Vecu64_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

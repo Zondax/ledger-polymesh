@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 Zondax GmbH
+*  (c) 2019 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -168,12 +168,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_Vecu32_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_Vecu64_t;
 
 ////////////////////////
 // /Common types
