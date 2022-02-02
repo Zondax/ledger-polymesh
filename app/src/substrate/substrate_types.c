@@ -214,10 +214,6 @@ parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v) {
     GEN_DEF_READVECTOR(u32)
 }
 
-parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v) {
-    GEN_DEF_READVECTOR(u64)
-}
-
 parser_error_t _readOptionu16(parser_context_t* c, pd_Optionu16_t* v)
 {
     CHECK_ERROR(_readUInt8(c, &v->some))
@@ -683,16 +679,6 @@ parser_error_t _toStringVecu32(
     uint8_t* pageCount)
 {
     GEN_DEF_TOSTRING_VECTOR(u32);
-}
-
-parser_error_t _toStringVecu64(
-    const pd_Vecu64_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    GEN_DEF_TOSTRING_VECTOR(u64);
 }
 
 parser_error_t _toStringOptionu16(

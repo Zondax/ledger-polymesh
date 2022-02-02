@@ -354,6 +354,8 @@ static const char* STR_ME_INCREASE_POLYX_LIMIT = "Increase polyx limit";
 static const char* STR_ME_DECREASE_POLYX_LIMIT = "Decrease polyx limit";
 static const char* STR_ME_CLAIM_ITN_REWARD = "Claim itn reward";
 static const char* STR_ME_SET_ITN_REWARD_STATUS = "Set itn reward status";
+static const char* STR_ME_ROTATE_PRIMARY_KEY_TO_SECONDARY = "Rotate primary key to secondary";
+static const char* STR_ME_REMOVE_TXS = "Remove txs";
 
 // Items names
 static const char* STR_IT__ratio = "Ratio";
