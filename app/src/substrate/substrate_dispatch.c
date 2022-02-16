@@ -26,10 +26,14 @@ parser_error_t _readMethod(
     pd_Method_t* method)
 {
     switch (c->tx_obj->transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _readMethod_V2(c, moduleIdx, callIdx, &method->V2);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _readMethod_V1(c, moduleIdx, callIdx, &method->V1);
+#endif
     default:
         return parser_tx_version_not_supported;
     }
@@ -38,10 +42,14 @@ parser_error_t _readMethod(
 uint8_t _getMethod_NumItems(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_NumItems_V2(moduleIdx, callIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_NumItems_V1(moduleIdx, callIdx);
+#endif
     default:
         return parser_tx_version_not_supported;
     }
@@ -50,10 +58,14 @@ uint8_t _getMethod_NumItems(uint32_t transactionVersion, uint8_t moduleIdx, uint
 const char* _getMethod_ModuleName(uint32_t transactionVersion, uint8_t moduleIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_ModuleName_V2(moduleIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_ModuleName_V1(moduleIdx);
+#endif
     default:
         return NULL;
     }
@@ -62,10 +74,14 @@ const char* _getMethod_ModuleName(uint32_t transactionVersion, uint8_t moduleIdx
 const char* _getMethod_Name(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_Name_V2(moduleIdx, callIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_Name_V1(moduleIdx, callIdx);
+#endif
     default:
         return 0;
     }
@@ -74,10 +90,14 @@ const char* _getMethod_Name(uint32_t transactionVersion, uint8_t moduleIdx, uint
 const char* _getMethod_ItemName(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx, uint8_t itemIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_ItemName_V2(moduleIdx, callIdx, itemIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_ItemName_V1(moduleIdx, callIdx, itemIdx);
+#endif
     default:
         return NULL;
     }
@@ -88,12 +108,16 @@ parser_error_t _getMethod_ItemValue(uint32_t transactionVersion, pd_Method_t* m,
     uint8_t pageIdx, uint8_t* pageCount)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_ItemValue_V2(&m->V2, moduleIdx, callIdx, itemIdx, outValue,
             outValueLen, pageIdx, pageCount);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_ItemValue_V1(&m->V1, moduleIdx, callIdx, itemIdx, outValue,
             outValueLen, pageIdx, pageCount);
+#endif
     default:
         return parser_tx_version_not_supported;
     }
@@ -102,10 +126,14 @@ parser_error_t _getMethod_ItemValue(uint32_t transactionVersion, pd_Method_t* m,
 bool _getMethod_ItemIsExpert(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx, uint8_t itemIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_ItemIsExpert_V2(moduleIdx, callIdx, itemIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_ItemIsExpert_V1(moduleIdx, callIdx, itemIdx);
+#endif
     default:
         return false;
     }
@@ -114,10 +142,14 @@ bool _getMethod_ItemIsExpert(uint32_t transactionVersion, uint8_t moduleIdx, uin
 bool _getMethod_IsNestingSupported(uint32_t transactionVersion, uint8_t moduleIdx, uint8_t callIdx)
 {
     switch (transactionVersion) {
+#ifndef DISABLE_V2
     case 2:
         return _getMethod_IsNestingSupported_V2(moduleIdx, callIdx);
+#endif
+#ifndef DISABLE_V1
     case 1:
         return _getMethod_IsNestingSupported_V1(moduleIdx, callIdx);
+#endif
     default:
         return false;
     }

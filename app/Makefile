@@ -61,6 +61,16 @@ DEFINES += SUBSTRATE_PARSER_FULL
 $(info ************ FULL PARSER ENABLED ************)
 endif
 
+ifeq ($(DISABLE_V1),1)
+DEFINES += DISABLE_V1
+$(info ************ DISABLE V1 SUPPORT ************)
+endif
+
+ifeq ($(DISABLE_V2),1)
+DEFINES += DISABLE_V2
+$(info ************ DISABLE V2 SUPPORT ************)
+endif
+
 ifndef COIN
 COIN=POLYX
 endif

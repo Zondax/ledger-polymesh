@@ -68,6 +68,8 @@ define run_docker
 	-v $(shell pwd):/project \
 	-e SUPPORT_SR25519=$(SUPPORT_SR25519) \
 	-e SUBSTRATE_PARSER_FULL=$(SUBSTRATE_PARSER_FULL) \
+	-e DISABLE_V1=$(DISABLE_V1) \
+	-e DISABLE_V2=$(DISABLE_V2) \
 	-e COIN=$(COIN) \
 	-e APP_TESTING=$(APP_TESTING) \
 	$(DOCKER_IMAGE_ZONDAX) "$(2)"
