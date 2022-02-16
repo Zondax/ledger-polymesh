@@ -51,7 +51,9 @@ parser_error_t _readAccountId_V2(parser_context_t* c, pd_AccountId_V2_t* v) {
 
 parser_error_t _readAccountIndex_V2(parser_context_t* c, pd_AccountIndex_V2_t* v)
 {
-    return _readUInt32(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readAddRelayerPayingKey_V2(parser_context_t* c, pd_AddRelayerPayingKey_V2_t* v)
@@ -612,7 +614,9 @@ parser_error_t _readElectionSize_V2(parser_context_t* c, pd_ElectionSize_V2_t* v
 
 parser_error_t _readEraIndex_V2(parser_context_t* c, pd_EraIndex_V2_t* v)
 {
-    return _readUInt32(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readEthereumAddress_V2(parser_context_t* c, pd_EthereumAddress_V2_t* v) {
@@ -802,7 +806,9 @@ parser_error_t _readMaybeBlock_V2(parser_context_t* c, pd_MaybeBlock_V2_t* v)
 
 parser_error_t _readMemberCount_V2(parser_context_t* c, pd_MemberCount_V2_t* v)
 {
-    return _readUInt32(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readMemo_V2(parser_context_t* c, pd_Memo_V2_t* v)
@@ -814,7 +820,9 @@ parser_error_t _readMemo_V2(parser_context_t* c, pd_Memo_V2_t* v)
 
 parser_error_t _readMoment_V2(parser_context_t* c, pd_Moment_V2_t* v)
 {
-    return _readUInt64(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt64(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readMotionInfoLink_V2(parser_context_t* c, pd_MotionInfoLink_V2_t* v)
@@ -905,7 +913,9 @@ parser_error_t _readPalletPermissions_V2(parser_context_t* c, pd_PalletPermissio
 
 parser_error_t _readPerbill_V2(parser_context_t* c, pd_Perbill_V2_t* v)
 {
-    return _readUInt32(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt32(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readPercent_V2(parser_context_t* c, pd_Percent_V2_t* v)
@@ -922,7 +932,9 @@ parser_error_t _readPercentage_V2(parser_context_t* c, pd_Percentage_V2_t* v)
 
 parser_error_t _readPeriod_V2(parser_context_t* c, pd_Period_V2_t* v)
 {
-    return _readUInt64(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt64(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readPermill_V2(parser_context_t* c, pd_Permill_V2_t* v)
@@ -1426,7 +1438,7 @@ parser_error_t _readUrl_V2(parser_context_t* c, pd_Url_V2_t* v)
 
 parser_error_t _readValidatorIndex_V2(parser_context_t* c, pd_ValidatorIndex_V2_t* v)
 {
-    CHECK_INPUT()
+    CHECK_INPUT();
     CHECK_ERROR(_readUInt16(c, &v->value))
     return parser_ok;
 }
@@ -1472,7 +1484,9 @@ parser_error_t _readVenueType_V2(parser_context_t* c, pd_VenueType_V2_t* v)
 
 parser_error_t _readWeight_V2(parser_context_t* c, pd_Weight_V2_t* v)
 {
-    return _readUInt64(c, &v->value);
+    CHECK_INPUT();
+    CHECK_ERROR(_readUInt64(c, &v->value))
+    return parser_ok;
 }
 
 parser_error_t _readVecAccountId_V2(parser_context_t* c, pd_VecAccountId_V2_t* v) {
@@ -1854,13 +1868,17 @@ parser_error_t _toStringAddRelayerPayingKey_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringAccountId_V2(&v->accountId_1, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringAccountId_V2(&v->accountId_2, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -1871,15 +1889,12 @@ parser_error_t _toStringAddRelayerPayingKey_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringAccountId_V2(&v->accountId_2, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -2136,12 +2151,16 @@ parser_error_t _toStringBallotMeta_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringBallotTitle_V2(&v->title, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecMotion_V2(&v->motions, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2152,7 +2171,6 @@ parser_error_t _toStringBallotMeta_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringVecMotion_V2(&v->motions, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2170,12 +2188,16 @@ parser_error_t _toStringBallotTimeRange_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringMoment_V2(&v->start, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringMoment_V2(&v->end, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2186,7 +2208,6 @@ parser_error_t _toStringBallotTimeRange_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringMoment_V2(&v->end, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2222,12 +2243,16 @@ parser_error_t _toStringBallotVote_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringBalance(&v->power, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringOptionu16(&v->fallback, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2238,7 +2263,6 @@ parser_error_t _toStringBallotVote_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringOptionu16(&v->fallback, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2256,12 +2280,16 @@ parser_error_t _toStringBecomeAgent_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringTicker_V2(&v->ticker, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringAgentGroup_V2(&v->agentGroup, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2272,7 +2300,6 @@ parser_error_t _toStringBecomeAgent_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringAgentGroup_V2(&v->agentGroup, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2290,12 +2317,16 @@ parser_error_t _toStringBeneficiary_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringIdentityId_V2(&v->identity, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2306,7 +2337,6 @@ parser_error_t _toStringBeneficiary_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2324,14 +2354,18 @@ parser_error_t _toStringBridgeTx_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[4];
     CHECK_ERROR(_toStringu32(&v->nonce, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringAccountId_V2(&v->recipient, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringBalance(&v->value, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringHash(&v->txHash, outValue, outValueLen, 0, &pages[3]))
 
-    *pageCount = pages[0] + pages[1] + pages[2] + pages[3];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2342,23 +2376,18 @@ parser_error_t _toStringBridgeTx_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringAccountId_V2(&v->recipient, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringBalance(&v->value, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
-
     pageIdx -= pages[2];
 
-    //////
     if (pageIdx < pages[3]) {
         CHECK_ERROR(_toStringHash(&v->txHash, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
@@ -2394,12 +2423,16 @@ parser_error_t _toStringCAId_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringTicker_V2(&v->ticker, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringLocalCAId_V2(&v->local_id, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2410,7 +2443,6 @@ parser_error_t _toStringCAId_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringLocalCAId_V2(&v->local_id, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2459,12 +2491,16 @@ parser_error_t _toStringCalendarPeriod_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringCalendarUnit_V2(&v->unit, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringu64(&v->amount, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2475,7 +2511,6 @@ parser_error_t _toStringCalendarPeriod_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringu64(&v->amount, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -2537,12 +2572,18 @@ parser_error_t _toStringChangesTrieConfiguration_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Get all pages first
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringu32(&v->digest_interval, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringu32(&v->digest_levels, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2732,14 +2773,18 @@ parser_error_t _toStringClassicTickerImport_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[4];
     CHECK_ERROR(_toStringEthereumAddress_V2(&v->eth_owner, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringTicker_V2(&v->ticker, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, 0, &pages[3]))
 
-    *pageCount = pages[0] + pages[1] + pages[2] + pages[3];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2750,23 +2795,18 @@ parser_error_t _toStringClassicTickerImport_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringTicker_V2(&v->ticker, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringbool(&v->is_contract, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
-
     pageIdx -= pages[2];
 
-    //////
     if (pageIdx < pages[3]) {
         CHECK_ERROR(_toStringbool(&v->is_created, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
@@ -2803,16 +2843,19 @@ parser_error_t _toStringComplianceRequirement_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringVecCondition_V2(&v->senderConditions, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecCondition_V2(&v->receiverConditions, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2823,14 +2866,12 @@ parser_error_t _toStringComplianceRequirement_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringVecCondition_V2(&v->receiverConditions, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringu32(&v->id, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -2876,7 +2917,7 @@ parser_error_t _toStringCondition_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringConditionType_V2(&v->conditionType, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecTrustedIssuer_V2(&v->issuers, outValue, outValueLen, 0, &pages[1]))
@@ -2885,7 +2926,11 @@ parser_error_t _toStringCondition_V2(
         pages[1] = 0;
     }
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -2896,7 +2941,6 @@ parser_error_t _toStringCondition_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringVecTrustedIssuer_V2(&v->issuers, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -3073,7 +3117,7 @@ parser_error_t _toStringDocument_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[5];
     CHECK_ERROR(_toStringDocumentUri_V2(&v->uri, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringDocumentHash_V2(&v->content_hash, outValue, outValueLen, 0, &pages[1]))
@@ -3081,7 +3125,11 @@ parser_error_t _toStringDocument_V2(
     CHECK_ERROR(_toStringOptionDocumentType_V2(&v->doc_type, outValue, outValueLen, 0, &pages[3]))
     CHECK_ERROR(_toStringOptionMoment_V2(&v->filing_date, outValue, outValueLen, 0, &pages[4]))
 
-    *pageCount = pages[0] + pages[1] + pages[2] + pages[3] + pages[4];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3092,31 +3140,24 @@ parser_error_t _toStringDocument_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringDocumentHash_V2(&v->content_hash, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringDocumentName_V2(&v->name, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
-
     pageIdx -= pages[2];
 
-    //////
     if (pageIdx < pages[3]) {
         CHECK_ERROR(_toStringOptionDocumentType_V2(&v->doc_type, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
     }
-
     pageIdx -= pages[3];
 
-    //////
     if (pageIdx < pages[4]) {
         CHECK_ERROR(_toStringOptionMoment_V2(&v->filing_date, outValue, outValueLen, pageIdx, &pages[4]))
         return parser_ok;
@@ -3152,12 +3193,18 @@ parser_error_t _toStringElectionSize_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Get all pages first
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3393,14 +3440,20 @@ parser_error_t _toStringLeg_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Index + count pages
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[4];
     CHECK_ERROR(_toStringPortfolioId_V2(&v->from, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringPortfolioId_V2(&v->to, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringTicker_V2(&v->asset, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringBalance(&v->amount, outValue, outValueLen, 0, &pages[3]))
 
-    *pageCount = pages[0] + pages[1] + pages[2] + pages[3];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3411,23 +3464,18 @@ parser_error_t _toStringLeg_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringPortfolioId_V2(&v->to, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringTicker_V2(&v->asset, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
-
     pageIdx -= pages[2];
 
-    //////
     if (pageIdx < pages[3]) {
         CHECK_ERROR(_toStringBalance(&v->amount, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
@@ -3443,13 +3491,19 @@ parser_error_t _toStringLegacyPalletPermissions_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Index + count pages
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringPalletName_V2(&v->palletName, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringVecDispatchableName_V2(&v->dispatchableNames, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3460,15 +3514,12 @@ parser_error_t _toStringLegacyPalletPermissions_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringbool(&v->total, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringVecDispatchableName_V2(&v->dispatchableNames, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -3486,13 +3537,17 @@ parser_error_t _toStringLegacyPermissions_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringOptionVecTicker_V2(&v->asset, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V2(&v->extrinsic, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringOptionVecPortfolioId_V2(&v->portfolio, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3503,14 +3558,12 @@ parser_error_t _toStringLegacyPermissions_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringOptionVecLegacyPalletPermissions_V2(&v->extrinsic, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringOptionVecPortfolioId_V2(&v->portfolio, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -3663,13 +3716,17 @@ parser_error_t _toStringMotion_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringMotionTitle_V2(&v->title, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringMotionInfoLink_V2(&v->info_link, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringVecChoiceTitle_V2(&v->choices, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3680,15 +3737,12 @@ parser_error_t _toStringMotion_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringMotionInfoLink_V2(&v->info_link, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringVecChoiceTitle_V2(&v->choices, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -3706,13 +3760,17 @@ parser_error_t _toStringMovePortfolioItem_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringTicker_V2(&v->ticker, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringOptionMemo_V2(&v->memo, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3723,16 +3781,14 @@ parser_error_t _toStringMovePortfolioItem_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringBalance(&v->balance, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringOptionMemo_V2(&v->memo, outValue, outValueLen, 0, &pages[2]))
+        CHECK_ERROR(_toStringOptionMemo_V2(&v->memo, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -3785,12 +3841,18 @@ parser_error_t _toStringPalletPermissions_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Index + count pages
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringPalletName_V2(&v->palletName, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringDispatchableNames_V2(&v->dispatchableNames, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3801,7 +3863,6 @@ parser_error_t _toStringPalletPermissions_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringDispatchableNames_V2(&v->dispatchableNames, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -3898,13 +3959,17 @@ parser_error_t _toStringPermissions_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringAssetPermissions_V2(&v->asset, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringExtrinsicPermissions_V2(&v->extrinsic, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringPortfolioPermissions_V2(&v->portfolio, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3915,14 +3980,12 @@ parser_error_t _toStringPermissions_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringExtrinsicPermissions_V2(&v->extrinsic, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringPortfolioPermissions_V2(&v->portfolio, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -3968,12 +4031,16 @@ parser_error_t _toStringPortfolioId_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringIdentityId_V2(&v->did, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringPortfolioKind_V2(&v->kind, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -3984,7 +4051,6 @@ parser_error_t _toStringPortfolioId_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringPortfolioKind_V2(&v->kind, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4085,12 +4151,16 @@ parser_error_t _toStringPosRatio_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringu32(&v->numerator, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringu32(&v->denominator, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4101,7 +4171,6 @@ parser_error_t _toStringPosRatio_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringu32(&v->denominator, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4119,12 +4188,16 @@ parser_error_t _toStringPriceTier_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringBalance(&v->total, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringBalance(&v->price, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4135,7 +4208,6 @@ parser_error_t _toStringPriceTier_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringBalance(&v->price, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4151,12 +4223,18 @@ parser_error_t _toStringPriority_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Get all pages first
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringu32(&v->stream_id, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringStreamDependency_V2(&v->dependency, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4250,7 +4328,7 @@ parser_error_t _toStringReceiptDetails_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[5];
     CHECK_ERROR(_toStringu64(&v->receipt_uid, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringu64(&v->leg_id, outValue, outValueLen, 0, &pages[1]))
@@ -4258,7 +4336,11 @@ parser_error_t _toStringReceiptDetails_V2(
     CHECK_ERROR(_toStringOffChainSignature_V2(&v->signature, outValue, outValueLen, 0, &pages[3]))
     CHECK_ERROR(_toStringReceiptMetadata_V2(&v->metadata, outValue, outValueLen, 0, &pages[4]))
 
-    *pageCount = pages[0] + pages[1] + pages[2] + pages[3] + pages[4];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4269,31 +4351,24 @@ parser_error_t _toStringReceiptDetails_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringu64(&v->leg_id, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringAccountId_V2(&v->signer, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
-
     pageIdx -= pages[2];
 
-    //////
     if (pageIdx < pages[3]) {
         CHECK_ERROR(_toStringOffChainSignature_V2(&v->signature, outValue, outValueLen, pageIdx, &pages[3]))
         return parser_ok;
     }
-
     pageIdx -= pages[3];
 
-    //////
     if (pageIdx < pages[4]) {
         CHECK_ERROR(_toStringReceiptMetadata_V2(&v->metadata, outValue, outValueLen, pageIdx, &pages[4]))
         return parser_ok;
@@ -4396,13 +4471,17 @@ parser_error_t _toStringScheduleSpec_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringOptionMoment_V2(&v->start, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringCalendarPeriod_V2(&v->period, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringu32(&v->remaining, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4413,14 +4492,12 @@ parser_error_t _toStringScheduleSpec_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringCalendarPeriod_V2(&v->period, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
-    //////
+
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringu32(&v->remaining, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -4483,12 +4560,16 @@ parser_error_t _toStringSecondaryKeyWithAuth_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringSecondaryKey_V2(&v->secondary_key, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringSignature_V2(&v->auth_signature, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4499,7 +4580,6 @@ parser_error_t _toStringSecondaryKeyWithAuth_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringSignature_V2(&v->auth_signature, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4517,12 +4597,16 @@ parser_error_t _toStringSecondaryKey_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringSignatory_V2(&v->signer, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringPermissions_V2(&v->permissions, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4533,7 +4617,6 @@ parser_error_t _toStringSecondaryKey_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringPermissions_V2(&v->permissions, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4667,13 +4750,17 @@ parser_error_t _toStringStreamDependency_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringu32(&v->dependency_id, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringu16((const pd_u16_t*)&v->weight, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringbool(&v->is_exclusive, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4684,14 +4771,12 @@ parser_error_t _toStringStreamDependency_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringu16((const pd_u16_t*)&v->weight, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringbool(&v->is_exclusive, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -4709,12 +4794,16 @@ parser_error_t _toStringTargetIdentities_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringVecIdentityId_V2(&v->identities, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringTargetTreatment_V2(&v->treatment, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4725,7 +4814,6 @@ parser_error_t _toStringTargetIdentities_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringTargetTreatment_V2(&v->treatment, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4800,12 +4888,16 @@ parser_error_t _toStringTickerRegistrationConfig_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringu8(&v->max_ticker_length, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringOptionMoment_V2(&v->registration_length, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4816,7 +4908,6 @@ parser_error_t _toStringTickerRegistrationConfig_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringOptionMoment_V2(&v->registration_length, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4897,12 +4988,16 @@ parser_error_t _toStringTrustedIssuer_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringIdentityId_V2(&v->issuer, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringTrustedFor_V2(&v->trustedFor, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4913,7 +5008,6 @@ parser_error_t _toStringTrustedIssuer_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringTrustedFor_V2(&v->trustedFor, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4931,12 +5025,16 @@ parser_error_t _toStringTupleCountryCodeScope_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringCountryCode_V2(&v->country_code, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringScope_V2(&v->scope, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4947,7 +5045,6 @@ parser_error_t _toStringTupleCountryCodeScope_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringScope_V2(&v->scope, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4965,12 +5062,16 @@ parser_error_t _toStringTupleIdentityIdTax_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringIdentityId_V2(&v->id, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringTax_V2(&v->tax, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -4981,7 +5082,6 @@ parser_error_t _toStringTupleIdentityIdTax_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringTax_V2(&v->tax, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -4997,12 +5097,18 @@ parser_error_t _toStringTupleIdentityIdbool_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    // Get all pages first
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringIdentityId_V2(&v->identity, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringbool(&v->val, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -5030,12 +5136,16 @@ parser_error_t _toStringTuplePipIdSnapshotResult_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringPipId_V2(&v->pip_id, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringSnapshotResult_V2(&v->snapshot_result, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -5046,7 +5156,6 @@ parser_error_t _toStringTuplePipIdSnapshotResult_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringSnapshotResult_V2(&v->snapshot_result, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
@@ -5064,13 +5173,17 @@ parser_error_t _toStringTupleScopeScopeIdCddId_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[3];
     CHECK_ERROR(_toStringScope_V2(&v->scope, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringScopeId_V2(&v->scopeId, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringCddId_V2(&v->cddId, outValue, outValueLen, 0, &pages[2]))
 
-    *pageCount = pages[0] + pages[1] + pages[2];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -5081,15 +5194,12 @@ parser_error_t _toStringTupleScopeScopeIdCddId_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringScopeId_V2(&v->scopeId, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
-
     pageIdx -= pages[1];
 
-    //////
     if (pageIdx < pages[2]) {
         CHECK_ERROR(_toStringCddId_V2(&v->cddId, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
@@ -5107,12 +5217,16 @@ parser_error_t _toStringUniqueCall_V2(
 {
     CLEAN_AND_CHECK()
 
-    // Index + count pages
+    // First measure number of pages
     uint8_t pages[2];
     CHECK_ERROR(_toStringu64(&v->nonce, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringCall(&v->call, outValue, outValueLen, 0, &pages[1]))
 
-    *pageCount = pages[0] + pages[1];
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
     if (pageIdx > *pageCount) {
         return parser_display_idx_out_of_range;
     }
@@ -5123,7 +5237,6 @@ parser_error_t _toStringUniqueCall_V2(
     }
     pageIdx -= pages[0];
 
-    //////
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringCall(&v->call, outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
