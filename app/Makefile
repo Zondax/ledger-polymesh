@@ -63,12 +63,12 @@ endif
 
 ifeq ($(DISABLE_PREVIOUS),1)
 DEFINES += DISABLE_PREVIOUS
-$(info ************ DISABLE V1 SUPPORT ************)
+$(info ************ DISABLE PREVIOUS VERSION SUPPORT ************)
 endif
 
 ifeq ($(DISABLE_CURRENT),1)
 DEFINES += DISABLE_CURRENT
-$(info ************ DISABLE V2 SUPPORT ************)
+$(info ************ DISABLE CURRENT VERSION SUPPORT ************)
 endif
 
 ifndef COIN
