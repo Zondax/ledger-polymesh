@@ -24,7 +24,7 @@
 #include <zxformat.h>
 #include <zxmacros.h>
 
-#ifndef DISABLE_V2
+#ifndef DISABLE_CURRENT
 
 parser_error_t _readCompactAssignments_V2(parser_context_t* c, pd_CompactAssignments_V2_t* v)
 {

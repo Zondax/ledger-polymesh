@@ -19,7 +19,7 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
-#ifndef DISABLE_V1
+#ifndef DISABLE_PREVIOUS
 
 __Z_INLINE parser_error_t _readMethod_balances_transfer_V1(
     parser_context_t* c, pd_balances_transfer_V1_t* m)

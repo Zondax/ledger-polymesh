@@ -61,13 +61,13 @@ DEFINES += SUBSTRATE_PARSER_FULL
 $(info ************ FULL PARSER ENABLED ************)
 endif
 
-ifeq ($(DISABLE_V1),1)
-DEFINES += DISABLE_V1
+ifeq ($(DISABLE_PREVIOUS),1)
+DEFINES += DISABLE_PREVIOUS
 $(info ************ DISABLE V1 SUPPORT ************)
 endif
 
-ifeq ($(DISABLE_V2),1)
-DEFINES += DISABLE_V2
+ifeq ($(DISABLE_CURRENT),1)
+DEFINES += DISABLE_CURRENT
 $(info ************ DISABLE V2 SUPPORT ************)
 endif
 

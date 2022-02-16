@@ -24,7 +24,7 @@
 #include <zxformat.h>
 #include <zxmacros.h>
 
-#ifndef DISABLE_V1
+#ifndef DISABLE_PREVIOUS
 
 parser_error_t _readCompactAssignments_V1(parser_context_t* c, pd_CompactAssignments_V1_t* v)
 {

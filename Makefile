@@ -26,8 +26,8 @@ ifeq ($(BOLOS_SDK),)
 # When not using the SDK, we override and build the XL complete app
 
 SUBSTRATE_PARSER_FULL ?= 1
-DISABLE_V1 ?= 0
-DISABLE_V2 ?= 0
+DISABLE_PREVIOUS ?= 0
+DISABLE_CURRENT ?= 0
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
 
 tests_tools_build:
