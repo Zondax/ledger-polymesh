@@ -57,7 +57,7 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
 #endif
 }
 
-__Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
+__Z_INLINE bool process_chunk(uint32_t rx) {
     const uint8_t payloadType = G_io_apdu_buffer[OFFSET_PAYLOAD_TYPE];
 #ifndef SUPPORT_SR25519
     if (G_io_apdu_buffer[OFFSET_P2] != 0) {
@@ -195,7 +195,7 @@ __Z_INLINE void handleSignEd25519(volatile uint32_t *flags, volatile uint32_t *t
 
 __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     zemu_log("handleSign\n");
-    if (!process_chunk(tx, rx)) {
+    if (!process_chunk(rx)) {
         THROW(APDU_CODE_OK);
     }
     if (app_mode_secret()) {

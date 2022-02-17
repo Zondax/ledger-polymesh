@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 Zondax GmbH
+*  (c) 2019 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
     CHECK_ERROR(_readCallIndex(c, &v->callIndex));
 
     if (!_getMethod_IsNestingSupported(c->tx_obj->transactionVersion, v->callIndex.moduleIdx, v->callIndex.idx)) {
-        return parser_not_supported;
+        return parser_tx_nesting_not_supported;
     }
 
     // Read and check the contained method on this Call
@@ -110,6 +110,19 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 
 parser_error_t _readBalance(parser_context_t* c, pd_Balance_t* v) {
     GEN_DEF_READARRAY(16)
+}
+
+parser_error_t _readBytes(parser_context_t* c, pd_Bytes_t* v)
+{
+    CHECK_INPUT()
+
+    compactInt_t clen;
+    CHECK_ERROR(_readCompactInt(c, &clen))
+    CHECK_ERROR(_getValue(&clen, &v->_len))
+
+    v->_ptr = c->buffer + c->offset;
+    CTX_CHECK_AND_ADVANCE(c, v->_len);
+    return parser_ok;
 }
 
 parser_error_t _readHash(parser_context_t* c, pd_Hash_t* v) {
@@ -181,19 +194,6 @@ parser_error_t _readBalanceNoSymbol(parser_context_t* c, pd_BalanceNoSymbol_t* v
     GEN_DEF_READARRAY(16)
 }
 
-parser_error_t _readBytes(parser_context_t* c, pd_Bytes_t* v)
-{
-    CHECK_INPUT()
-
-    compactInt_t clen;
-    CHECK_ERROR(_readCompactInt(c, &clen))
-    CHECK_ERROR(_getValue(&clen, &v->_len))
-
-    v->_ptr = c->buffer + c->offset;
-    CTX_CHECK_AND_ADVANCE(c, v->_len);
-    return parser_ok;
-}
-
 parser_error_t _readCompactBalanceOf(parser_context_t* c, pd_CompactBalanceOf_t* v)
 {
     CHECK_INPUT();
@@ -212,10 +212,6 @@ parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v) {
 
 parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v) {
     GEN_DEF_READVECTOR(u32)
-}
-
-parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v) {
-    GEN_DEF_READVECTOR(u64)
 }
 
 parser_error_t _readOptionu16(parser_context_t* c, pd_Optionu16_t* v)
@@ -369,6 +365,16 @@ parser_error_t _toStringCompactu32(
     return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
+parser_error_t _toStringCompactu64(
+    const pd_Compactu64_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+}
+
 ///////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////
@@ -408,6 +414,16 @@ parser_error_t _toStringBalance(
 
     pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
     return parser_ok;
+}
+
+parser_error_t _toStringBytes(
+    const pd_Bytes_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_ARRAY(v->_len);
 }
 
 parser_error_t _toStringHash(
@@ -623,16 +639,6 @@ parser_error_t _toStringBalanceNoSymbol(
     return parser_ok;
 }
 
-parser_error_t _toStringBytes(
-    const pd_Bytes_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    GEN_DEF_TOSTRING_ARRAY(v->_len);
-}
-
 parser_error_t _toStringCompactBalanceOf(
     const pd_CompactBalanceOf_t* v,
     char* outValue,
@@ -673,16 +679,6 @@ parser_error_t _toStringVecu32(
     uint8_t* pageCount)
 {
     GEN_DEF_TOSTRING_VECTOR(u32);
-}
-
-parser_error_t _toStringVecu64(
-    const pd_Vecu64_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    GEN_DEF_TOSTRING_VECTOR(u64);
 }
 
 parser_error_t _toStringOptionu16(

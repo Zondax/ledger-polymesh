@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 Zondax GmbH
+*  (c) 2019 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ parser_error_t _readAddRelayerPayingKey_V1(parser_context_t* c, pd_AddRelayerPay
 parser_error_t _readAgentGroup_V1(parser_context_t* c, pd_AgentGroup_V1_t* v);
 parser_error_t _readAssetIdentifier_V1(parser_context_t* c, pd_AssetIdentifier_V1_t* v);
 parser_error_t _readAssetName_V1(parser_context_t* c, pd_AssetName_V1_t* v);
+parser_error_t _readAssetPermissions_V1(parser_context_t* c, pd_AssetPermissions_V1_t* v);
 parser_error_t _readAssetType_V1(parser_context_t* c, pd_AssetType_V1_t* v);
 parser_error_t _readAuthorizationData_V1(parser_context_t* c, pd_AuthorizationData_V1_t* v);
 parser_error_t _readBabeEquivocationProof_V1(parser_context_t* c, pd_BabeEquivocationProof_V1_t* v);
@@ -55,6 +56,7 @@ parser_error_t _readChoiceTitle_V1(parser_context_t* c, pd_ChoiceTitle_V1_t* v);
 parser_error_t _readClaimType_V1(parser_context_t* c, pd_ClaimType_V1_t* v);
 parser_error_t _readClaim_V1(parser_context_t* c, pd_Claim_V1_t* v);
 parser_error_t _readClassicTickerImport_V1(parser_context_t* c, pd_ClassicTickerImport_V1_t* v);
+parser_error_t _readCompactAccountIndex_V1(parser_context_t* c, pd_CompactAccountIndex_V1_t* v);
 parser_error_t _readCompactAssignments_V1(parser_context_t* c, pd_CompactAssignments_V1_t* v);
 parser_error_t _readCompactEraIndex_V1(parser_context_t* c, pd_CompactEraIndex_V1_t* v);
 parser_error_t _readCompactMoment_V1(parser_context_t* c, pd_CompactMoment_V1_t* v);
@@ -66,6 +68,7 @@ parser_error_t _readCounter_V1(parser_context_t* c, pd_Counter_V1_t* v);
 parser_error_t _readCountryCode_V1(parser_context_t* c, pd_CountryCode_V1_t* v);
 parser_error_t _readCustomAssetTypeId_V1(parser_context_t* c, pd_CustomAssetTypeId_V1_t* v);
 parser_error_t _readDispatchableName_V1(parser_context_t* c, pd_DispatchableName_V1_t* v);
+parser_error_t _readDispatchableNames_V1(parser_context_t* c, pd_DispatchableNames_V1_t* v);
 parser_error_t _readDocumentHash_V1(parser_context_t* c, pd_DocumentHash_V1_t* v);
 parser_error_t _readDocumentId_V1(parser_context_t* c, pd_DocumentId_V1_t* v);
 parser_error_t _readDocumentName_V1(parser_context_t* c, pd_DocumentName_V1_t* v);
@@ -77,15 +80,11 @@ parser_error_t _readElectionScore_V1(parser_context_t* c, pd_ElectionScore_V1_t*
 parser_error_t _readElectionSize_V1(parser_context_t* c, pd_ElectionSize_V1_t* v);
 parser_error_t _readEraIndex_V1(parser_context_t* c, pd_EraIndex_V1_t* v);
 parser_error_t _readEthereumAddress_V1(parser_context_t* c, pd_EthereumAddress_V1_t* v);
-parser_error_t _readDispatchableNames_V1(parser_context_t* c, pd_DispatchableNames_V1_t* v);
-parser_error_t _readAssetPermissions_V1(parser_context_t* c, pd_AssetPermissions_V1_t* v);
 parser_error_t _readExtrinsicPermissions_V1(parser_context_t* c, pd_ExtrinsicPermissions_V1_t* v);
-parser_error_t _readPortfolioPermissions_V1(parser_context_t* c, pd_PortfolioPermissions_V1_t* v);
 parser_error_t _readFundingRoundName_V1(parser_context_t* c, pd_FundingRoundName_V1_t* v);
 parser_error_t _readFundraiserName_V1(parser_context_t* c, pd_FundraiserName_V1_t* v);
 parser_error_t _readGrandpaEquivocationProof_V1(parser_context_t* c, pd_GrandpaEquivocationProof_V1_t* v);
 parser_error_t _readIdentityId_V1(parser_context_t* c, pd_IdentityId_V1_t* v);
-parser_error_t _readInvestorUid_V1(parser_context_t* c, pd_InvestorUid_V1_t* v);
 parser_error_t _readInvestorZKProofData_V1(parser_context_t* c, pd_InvestorZKProofData_V1_t* v);
 parser_error_t _readItnRewardStatus_V1(parser_context_t* c, pd_ItnRewardStatus_V1_t* v);
 parser_error_t _readKeyOwnerProof_V1(parser_context_t* c, pd_KeyOwnerProof_V1_t* v);
@@ -120,9 +119,7 @@ parser_error_t _readOptionScope_V1(parser_context_t* c, pd_OptionScope_V1_t* v);
 parser_error_t _readOptionTargetIdentities_V1(parser_context_t* c, pd_OptionTargetIdentities_V1_t* v);
 parser_error_t _readOptionTax_V1(parser_context_t* c, pd_OptionTax_V1_t* v);
 parser_error_t _readOptionUrl_V1(parser_context_t* c, pd_OptionUrl_V1_t* v);
-parser_error_t _readOptionVecDispatchableName_V1(parser_context_t* c, pd_OptionVecDispatchableName_V1_t* v);
 parser_error_t _readOptionVecLegacyPalletPermissions_V1(parser_context_t* c, pd_OptionVecLegacyPalletPermissions_V1_t* v);
-parser_error_t _readOptionVecPalletPermissions_V1(parser_context_t* c, pd_OptionVecPalletPermissions_V1_t* v);
 parser_error_t _readOptionVecPortfolioId_V1(parser_context_t* c, pd_OptionVecPortfolioId_V1_t* v);
 parser_error_t _readOptionVecTicker_V1(parser_context_t* c, pd_OptionVecTicker_V1_t* v);
 parser_error_t _readOptionVecTupleIdentityIdTax_V1(parser_context_t* c, pd_OptionVecTupleIdentityIdTax_V1_t* v);
@@ -140,6 +137,7 @@ parser_error_t _readPortfolioId_V1(parser_context_t* c, pd_PortfolioId_V1_t* v);
 parser_error_t _readPortfolioKind_V1(parser_context_t* c, pd_PortfolioKind_V1_t* v);
 parser_error_t _readPortfolioName_V1(parser_context_t* c, pd_PortfolioName_V1_t* v);
 parser_error_t _readPortfolioNumber_V1(parser_context_t* c, pd_PortfolioNumber_V1_t* v);
+parser_error_t _readPortfolioPermissions_V1(parser_context_t* c, pd_PortfolioPermissions_V1_t* v);
 parser_error_t _readPosRatio_V1(parser_context_t* c, pd_PosRatio_V1_t* v);
 parser_error_t _readPriceTier_V1(parser_context_t* c, pd_PriceTier_V1_t* v);
 parser_error_t _readPriority_V1(parser_context_t* c, pd_Priority_V1_t* v);
@@ -265,6 +263,13 @@ parser_error_t _toStringAssetIdentifier_V1(
 
 parser_error_t _toStringAssetName_V1(
     const pd_AssetName_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringAssetPermissions_V1(
+    const pd_AssetPermissions_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -424,6 +429,13 @@ parser_error_t _toStringClassicTickerImport_V1(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringCompactAccountIndex_V1(
+    const pd_CompactAccountIndex_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringCompactAssignments_V1(
     const pd_CompactAssignments_V1_t* v,
     char* outValue,
@@ -496,6 +508,13 @@ parser_error_t _toStringCustomAssetTypeId_V1(
 
 parser_error_t _toStringDispatchableName_V1(
     const pd_DispatchableName_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringDispatchableNames_V1(
+    const pd_DispatchableNames_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -578,29 +597,8 @@ parser_error_t _toStringEthereumAddress_V1(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringDispatchableNames_V1(
-    const pd_DispatchableNames_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringAssetPermissions_V1(
-    const pd_AssetPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
 parser_error_t _toStringExtrinsicPermissions_V1(
     const pd_ExtrinsicPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringPortfolioPermissions_V1(
-    const pd_PortfolioPermissions_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -629,13 +627,6 @@ parser_error_t _toStringGrandpaEquivocationProof_V1(
 
 parser_error_t _toStringIdentityId_V1(
     const pd_IdentityId_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringInvestorUid_V1(
-    const pd_InvestorUid_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -879,22 +870,8 @@ parser_error_t _toStringOptionUrl_V1(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringOptionVecDispatchableName_V1(
-    const pd_OptionVecDispatchableName_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
 parser_error_t _toStringOptionVecLegacyPalletPermissions_V1(
     const pd_OptionVecLegacyPalletPermissions_V1_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringOptionVecPalletPermissions_V1(
-    const pd_OptionVecPalletPermissions_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1014,6 +991,13 @@ parser_error_t _toStringPortfolioName_V1(
 
 parser_error_t _toStringPortfolioNumber_V1(
     const pd_PortfolioNumber_V1_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringPortfolioPermissions_V1(
+    const pd_PortfolioPermissions_V1_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
