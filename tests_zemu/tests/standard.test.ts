@@ -32,7 +32,7 @@ const defaultOptions = {
   X11: false,
 }
 
-jest.setTimeout(60000)
+jest.setTimeout(150000)
 
 beforeAll(async () => {
   await Zemu.checkAndPullImage()
