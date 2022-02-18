@@ -19,6 +19,8 @@
 #include "zxmacros.h"
 #include <stdint.h>
 
+#ifndef DISABLE_PREVIOUS
+
 __Z_INLINE parser_error_t _readMethod_balances_transfer_V1(
     parser_context_t* c, pd_balances_transfer_V1_t* m)
 {
@@ -9133,3 +9135,4 @@ bool _getMethod_IsNestingSupported_V1(uint8_t moduleIdx, uint8_t callIdx)
         return true;
     }
 }
+#endif

@@ -24,6 +24,8 @@
 #include <zxformat.h>
 #include <zxmacros.h>
 
+#ifndef DISABLE_PREVIOUS
+
 parser_error_t _readCompactAssignments_V1(parser_context_t* c, pd_CompactAssignments_V1_t* v)
 {
     return _readCompactInt(c, v);
@@ -5877,3 +5879,4 @@ parser_error_t _toStringOptionVecTupleIdentityIdTax_V1(
     }
     return parser_ok;
 }
+#endif
