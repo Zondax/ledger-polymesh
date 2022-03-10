@@ -74,17 +74,17 @@ __Z_INLINE zxerr_t app_fill_address(key_kind_e addressKind) {
 }
 
 __Z_INLINE key_kind_e get_key_type(uint8_t num) {
-#ifdef SUPPORT_SR25519
+
     switch (num) {
         case 0x00:
             return key_ed25519;
+#ifdef SUPPORT_SR25519
         case 0x01:
             return key_sr25519;
-    }
-    return 0xff;
-#else
-    return key_ed25519;
 #endif
+        default:
+            return 0xff;
+    }
 }
 
 __Z_INLINE void app_reply_error() {

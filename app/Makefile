@@ -61,6 +61,16 @@ DEFINES += SUBSTRATE_PARSER_FULL
 $(info ************ FULL PARSER ENABLED ************)
 endif
 
+ifeq ($(DISABLE_PREVIOUS),1)
+DEFINES += DISABLE_PREVIOUS
+$(info ************ DISABLE PREVIOUS VERSION SUPPORT ************)
+endif
+
+ifeq ($(DISABLE_CURRENT),1)
+DEFINES += DISABLE_CURRENT
+$(info ************ DISABLE CURRENT VERSION SUPPORT ************)
+endif
+
 ifndef COIN
 COIN=POLYX
 endif
@@ -95,9 +105,10 @@ endef
 $(error "$(error_message)")
 endif
 
-APP_LOAD_PARAMS = --appFlags 0x200 --delete $(COMMON_LOAD_PARAMS) --path $(APPPATH)
+APP_LOAD_PARAMS = --delete $(COMMON_LOAD_PARAMS) --path $(APPPATH) --curve ed25519
 
 ifeq ($(TARGET_NAME),TARGET_NANOS)
+APP_LOAD_PARAMS += --appFlags 0x000
 APP_STACK_SIZE:=3172
 ICONNAME:=$(CURDIR)/nanos_icon.gif
 OUTPUT_ELF ?= $(CURDIR)/output/app_s.elf
@@ -105,10 +116,11 @@ OUTPUT_INSTALLER := $(CURDIR)/pkg/installer_s.sh
 endif
 
 ifeq ($(TARGET_NAME),TARGET_NANOX)
+APP_LOAD_PARAMS += --appFlags 0x200
 SCRIPT_LD:=$(CURDIR)/script_x.ld
 ICONNAME:=$(CURDIR)/nanox_icon.gif
 OUTPUT_ELF ?= $(CURDIR)/output/app_x.elf
-OUTPUT_INSTALLER:= $(CURDIR)/pkg/installer_x.sh
+OUTPUT_INSTALLER:= $(CURDIR)/pkg/installer_XL.sh
 endif
 
 $(info TARGET_NAME  = [$(TARGET_NAME)])
