@@ -1,18 +1,18 @@
 /*******************************************************************************
-*  (c) 2019 - 2022 Zondax GmbH
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *  (c) 2019 - 2022 Zondax GmbH
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 #include "bignum.h"
 #include "coin.h"
 #include "parser_impl.h"
@@ -53,14 +53,14 @@ parser_error_t _readAccountId_V2(parser_context_t* c, pd_AccountId_V2_t* v) {
 
 parser_error_t _readAccountIndex_V2(parser_context_t* c, pd_AccountIndex_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readAddRelayerPayingKey_V2(parser_context_t* c, pd_AddRelayerPayingKey_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readAccountId_V2(c, &v->accountId_1));
     CHECK_ERROR(_readAccountId_V2(c, &v->accountId_2));
     CHECK_ERROR(_readBalance(c, &v->balance));
@@ -69,7 +69,7 @@ parser_error_t _readAddRelayerPayingKey_V2(parser_context_t* c, pd_AddRelayerPay
 
 parser_error_t _readAgentGroup_V2(parser_context_t* c, pd_AgentGroup_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value))
 
@@ -161,7 +161,7 @@ parser_error_t _readAssetType_V2(parser_context_t* c, pd_AssetType_V2_t* v)
 
 parser_error_t _readAuthorizationData_V2(parser_context_t* c, pd_AuthorizationData_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value))
 
@@ -209,7 +209,7 @@ parser_error_t _readBabeEquivocationProof_V2(parser_context_t* c, pd_BabeEquivoc
 
 parser_error_t _readBallotMeta_V2(parser_context_t* c, pd_BallotMeta_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readBallotTitle_V2(c, &v->title))
     CHECK_ERROR(_readVecMotion_V2(c, &v->motions))
     return parser_ok;
@@ -217,7 +217,7 @@ parser_error_t _readBallotMeta_V2(parser_context_t* c, pd_BallotMeta_V2_t* v)
 
 parser_error_t _readBallotTimeRange_V2(parser_context_t* c, pd_BallotTimeRange_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readMoment_V2(c, &v->start))
     CHECK_ERROR(_readMoment_V2(c, &v->end))
     return parser_ok;
@@ -239,7 +239,7 @@ parser_error_t _readBallotTitle_V2(parser_context_t* c, pd_BallotTitle_V2_t* v)
 
 parser_error_t _readBallotVote_V2(parser_context_t* c, pd_BallotVote_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readBalance(c, &v->power))
     CHECK_ERROR(_readOptionu16(c, &v->fallback))
     return parser_ok;
@@ -247,7 +247,7 @@ parser_error_t _readBallotVote_V2(parser_context_t* c, pd_BallotVote_V2_t* v)
 
 parser_error_t _readBecomeAgent_V2(parser_context_t* c, pd_BecomeAgent_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readTicker_V2(c, &v->ticker));
     CHECK_ERROR(_readAgentGroup_V2(c, &v->agentGroup));
     return parser_ok;
@@ -288,7 +288,7 @@ parser_error_t _readCADetails_V2(parser_context_t* c, pd_CADetails_V2_t* v)
 
 parser_error_t _readCAId_V2(parser_context_t* c, pd_CAId_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readTicker_V2(c, &v->ticker))
     CHECK_ERROR(_readLocalCAId_V2(c, &v->local_id))
     return parser_ok;
@@ -296,7 +296,7 @@ parser_error_t _readCAId_V2(parser_context_t* c, pd_CAId_V2_t* v)
 
 parser_error_t _readCAKind_V2(parser_context_t* c, pd_CAKind_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value));
     return parser_ok;
@@ -304,7 +304,7 @@ parser_error_t _readCAKind_V2(parser_context_t* c, pd_CAKind_V2_t* v)
 
 parser_error_t _readCalendarPeriod_V2(parser_context_t* c, pd_CalendarPeriod_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readCalendarUnit_V2(c, &v->unit))
     CHECK_ERROR(_readUInt64(c, &v->amount))
     return parser_ok;
@@ -312,7 +312,7 @@ parser_error_t _readCalendarPeriod_V2(parser_context_t* c, pd_CalendarPeriod_V2_
 
 parser_error_t _readCalendarUnit_V2(parser_context_t* c, pd_CalendarUnit_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value));
     return parser_ok;
@@ -350,14 +350,14 @@ parser_error_t _readChoiceTitle_V2(parser_context_t* c, pd_ChoiceTitle_V2_t* v)
 
 parser_error_t _readClaimType_V2(parser_context_t* c, pd_ClaimType_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readClaim_V2(parser_context_t* c, pd_Claim_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Accredited
@@ -390,7 +390,7 @@ parser_error_t _readClaim_V2(parser_context_t* c, pd_Claim_V2_t* v)
 
 parser_error_t _readClassicTickerImport_V2(parser_context_t* c, pd_ClassicTickerImport_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readEthereumAddress_V2(c, &v->eth_owner))
     CHECK_ERROR(_readTicker_V2(c, &v->ticker))
     CHECK_ERROR(_readBool(c, &v->is_contract))
@@ -410,7 +410,7 @@ parser_error_t _readCompactPerBill_V2(parser_context_t* c, pd_CompactPerBill_V2_
 
 parser_error_t _readComplianceRequirement_V2(parser_context_t* c, pd_ComplianceRequirement_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readVecCondition_V2(c, &v->senderConditions))
     CHECK_ERROR(_readVecCondition_V2(c, &v->receiverConditions))
@@ -420,7 +420,7 @@ parser_error_t _readComplianceRequirement_V2(parser_context_t* c, pd_ComplianceR
 
 parser_error_t _readConditionType_V2(parser_context_t* c, pd_ConditionType_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value))
 
@@ -445,7 +445,7 @@ parser_error_t _readConditionType_V2(parser_context_t* c, pd_ConditionType_V2_t*
 
 parser_error_t _readCondition_V2(parser_context_t* c, pd_Condition_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readConditionType_V2(c, &v->conditionType))
     CHECK_ERROR(_readVecTrustedIssuer_V2(c, &v->issuers))
@@ -501,7 +501,7 @@ parser_error_t _readDispatchableNames_V2(parser_context_t* c, pd_DispatchableNam
 
 parser_error_t _readDocumentHash_V2(parser_context_t* c, pd_DocumentHash_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
@@ -589,7 +589,7 @@ parser_error_t _readDocumentUri_V2(parser_context_t* c, pd_DocumentUri_V2_t* v)
 
 parser_error_t _readDocument_V2(parser_context_t* c, pd_Document_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readDocumentUri_V2(c, &v->uri))
     CHECK_ERROR(_readDocumentHash_V2(c, &v->content_hash))
     CHECK_ERROR(_readDocumentName_V2(c, &v->name))
@@ -616,7 +616,7 @@ parser_error_t _readElectionSize_V2(parser_context_t* c, pd_ElectionSize_V2_t* v
 
 parser_error_t _readEraIndex_V2(parser_context_t* c, pd_EraIndex_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -688,10 +688,6 @@ parser_error_t _readInstructionId_V2(parser_context_t* c, pd_InstructionId_V2_t*
     return _readUInt64(c, &v->value);
 }
 
-parser_error_t _readInvestorUid_V2(parser_context_t* c, pd_InvestorUid_V2_t* v) {
-    GEN_DEF_READARRAY(16)
-}
-
 parser_error_t _readInvestorZKProofData_V2(parser_context_t* c, pd_InvestorZKProofData_V2_t* v) {
     GEN_DEF_READARRAY(64)
 }
@@ -739,7 +735,7 @@ parser_error_t _readLeg_V2(parser_context_t* c, pd_Leg_V2_t* v)
 
 parser_error_t _readLegacyPalletPermissions_V2(parser_context_t* c, pd_LegacyPalletPermissions_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readPalletName_V2(c, &v->palletName))
     CHECK_ERROR(_readBool(c, &v->total))
@@ -750,7 +746,7 @@ parser_error_t _readLegacyPalletPermissions_V2(parser_context_t* c, pd_LegacyPal
 
 parser_error_t _readLegacyPermissions_V2(parser_context_t* c, pd_LegacyPermissions_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readOptionVecTicker_V2(c, &v->asset))
     CHECK_ERROR(_readOptionVecLegacyPalletPermissions_V2(c, &v->extrinsic))
     CHECK_ERROR(_readOptionVecPortfolioId_V2(c, &v->portfolio))
@@ -765,7 +761,7 @@ parser_error_t _readLocalCAId_V2(parser_context_t* c, pd_LocalCAId_V2_t* v)
 
 parser_error_t _readLookupSource_V2(parser_context_t* c, pd_LookupSource_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Id
@@ -790,7 +786,7 @@ parser_error_t _readLookupSource_V2(parser_context_t* c, pd_LookupSource_V2_t* v
 
 parser_error_t _readMaybeBlock_V2(parser_context_t* c, pd_MaybeBlock_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
@@ -808,7 +804,7 @@ parser_error_t _readMaybeBlock_V2(parser_context_t* c, pd_MaybeBlock_V2_t* v)
 
 parser_error_t _readMemberCount_V2(parser_context_t* c, pd_MemberCount_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -822,7 +818,7 @@ parser_error_t _readMemo_V2(parser_context_t* c, pd_Memo_V2_t* v)
 
 parser_error_t _readMoment_V2(parser_context_t* c, pd_Moment_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt64(c, &v->value))
     return parser_ok;
 }
@@ -874,7 +870,7 @@ parser_error_t _readMovePortfolioItem_V2(parser_context_t* c, pd_MovePortfolioIt
 
 parser_error_t _readOffChainSignature_V2(parser_context_t* c, pd_OffChainSignature_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Ed25519
@@ -905,7 +901,7 @@ parser_error_t _readPalletName_V2(parser_context_t* c, pd_PalletName_V2_t* v)
 
 parser_error_t _readPalletPermissions_V2(parser_context_t* c, pd_PalletPermissions_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readPalletName_V2(c, &v->palletName))
     CHECK_ERROR(_readDispatchableNames_V2(c, &v->dispatchableNames))
@@ -915,7 +911,7 @@ parser_error_t _readPalletPermissions_V2(parser_context_t* c, pd_PalletPermissio
 
 parser_error_t _readPerbill_V2(parser_context_t* c, pd_Perbill_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -927,14 +923,14 @@ parser_error_t _readPercent_V2(parser_context_t* c, pd_Percent_V2_t* v)
 
 parser_error_t _readPercentage_V2(parser_context_t* c, pd_Percentage_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readPermill_V2(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readPeriod_V2(parser_context_t* c, pd_Period_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt64(c, &v->value))
     return parser_ok;
 }
@@ -947,7 +943,7 @@ parser_error_t _readPermill_V2(parser_context_t* c, pd_Permill_V2_t* v)
 
 parser_error_t _readPermissions_V2(parser_context_t* c, pd_Permissions_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readAssetPermissions_V2(c, &v->asset))
     CHECK_ERROR(_readExtrinsicPermissions_V2(c, &v->extrinsic))
     CHECK_ERROR(_readPortfolioPermissions_V2(c, &v->portfolio))
@@ -986,13 +982,13 @@ parser_error_t _readPortfolioId_V2(parser_context_t* c, pd_PortfolioId_V2_t* v)
 
 parser_error_t _readPortfolioKind_V2(parser_context_t* c, pd_PortfolioKind_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0:
         break;
     case 1:
-        CHECK_INPUT();
+        CHECK_INPUT()
         CHECK_ERROR(_readPortfolioNumber_V2(c, &v->number))
         break;
     default:
@@ -1046,7 +1042,7 @@ parser_error_t _readPosRatio_V2(parser_context_t* c, pd_PosRatio_V2_t* v)
 
 parser_error_t _readPriceTier_V2(parser_context_t* c, pd_PriceTier_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readBalance(c, &v->total))
     CHECK_ERROR(_readBalance(c, &v->price))
     return parser_ok;
@@ -1067,7 +1063,7 @@ parser_error_t _readProposalIndex_V2(parser_context_t* c, pd_ProposalIndex_V2_t*
 
 parser_error_t _readProtocolOp_V2(parser_context_t* c, pd_ProtocolOp_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     if (v->value > 12) {
@@ -1079,7 +1075,7 @@ parser_error_t _readProtocolOp_V2(parser_context_t* c, pd_ProtocolOp_V2_t* v)
 
 parser_error_t _readReceiptDetails_V2(parser_context_t* c, pd_ReceiptDetails_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt64(c, &v->receipt_uid))
     CHECK_ERROR(_readUInt64(c, &v->leg_id))
     CHECK_ERROR(_readAccountId_V2(c, &v->signer))
@@ -1104,7 +1100,7 @@ parser_error_t _readReceiptMetadata_V2(parser_context_t* c, pd_ReceiptMetadata_V
 
 parser_error_t _readRecordDateSpec_V2(parser_context_t* c, pd_RecordDateSpec_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Scheduled
@@ -1125,7 +1121,7 @@ parser_error_t _readRecordDateSpec_V2(parser_context_t* c, pd_RecordDateSpec_V2_
 
 parser_error_t _readRewardDestination_V2(parser_context_t* c, pd_RewardDestination_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
@@ -1152,7 +1148,7 @@ parser_error_t _readScheduleId_V2(parser_context_t* c, pd_ScheduleId_V2_t* v)
 
 parser_error_t _readScheduleSpec_V2(parser_context_t* c, pd_ScheduleSpec_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readOptionMoment_V2(c, &v->start))
     CHECK_ERROR(_readCalendarPeriod_V2(c, &v->period))
     CHECK_ERROR(_readUInt32(c, &v->remaining))
@@ -1170,7 +1166,7 @@ parser_error_t _readScopeId_V2(parser_context_t* c, pd_ScopeId_V2_t* v) {
 
 parser_error_t _readScope_V2(parser_context_t* c, pd_Scope_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0:
@@ -1195,7 +1191,7 @@ parser_error_t _readScope_V2(parser_context_t* c, pd_Scope_V2_t* v)
 
 parser_error_t _readSecondaryKeyWithAuth_V2(parser_context_t* c, pd_SecondaryKeyWithAuth_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readSecondaryKey_V2(c, &v->secondary_key))
     CHECK_ERROR(_readSignature_V2(c, &v->auth_signature))
     return parser_ok;
@@ -1203,7 +1199,7 @@ parser_error_t _readSecondaryKeyWithAuth_V2(parser_context_t* c, pd_SecondaryKey
 
 parser_error_t _readSecondaryKey_V2(parser_context_t* c, pd_SecondaryKey_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readSignatory_V2(c, &v->signer))
     CHECK_ERROR(_readPermissions_V2(c, &v->permissions))
     return parser_ok;
@@ -1211,7 +1207,7 @@ parser_error_t _readSecondaryKey_V2(parser_context_t* c, pd_SecondaryKey_V2_t* v
 
 parser_error_t _readSettlementType_V2(parser_context_t* c, pd_SettlementType_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
@@ -1229,7 +1225,7 @@ parser_error_t _readSettlementType_V2(parser_context_t* c, pd_SettlementType_V2_
 
 parser_error_t _readSignatory_V2(parser_context_t* c, pd_Signatory_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
@@ -1258,7 +1254,7 @@ parser_error_t _readSkippedCount_V2(parser_context_t* c, pd_SkippedCount_V2_t* v
 
 parser_error_t _readSlashingSwitch_V2(parser_context_t* c, pd_SlashingSwitch_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readUInt8(c, &v->value));
     return parser_ok;
@@ -1280,7 +1276,7 @@ parser_error_t _readStreamDependency_V2(parser_context_t* c, pd_StreamDependency
 
 parser_error_t _readTargetIdentities_V2(parser_context_t* c, pd_TargetIdentities_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readVecIdentityId_V2(c, &v->identities))
     CHECK_ERROR(_readTargetTreatment_V2(c, &v->treatment))
     return parser_ok;
@@ -1288,7 +1284,7 @@ parser_error_t _readTargetIdentities_V2(parser_context_t* c, pd_TargetIdentities
 
 parser_error_t _readTargetIdentity_V2(parser_context_t* c, pd_TargetIdentity_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0:
@@ -1305,21 +1301,21 @@ parser_error_t _readTargetIdentity_V2(parser_context_t* c, pd_TargetIdentity_V2_
 
 parser_error_t _readTargetTreatment_V2(parser_context_t* c, pd_TargetTreatment_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readTax_V2(parser_context_t* c, pd_Tax_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readPermill_V2(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readTickerRegistrationConfig_V2(parser_context_t* c, pd_TickerRegistrationConfig_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->max_ticker_length))
     CHECK_ERROR(_readOptionMoment_V2(c, &v->registration_length))
     return parser_ok;
@@ -1333,7 +1329,7 @@ parser_error_t _readTicker_V2(parser_context_t* c, pd_Ticker_V2_t* v)
 
 parser_error_t _readTransferManager_V2(parser_context_t* c, pd_TransferManager_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // CountTransferManager
@@ -1351,7 +1347,7 @@ parser_error_t _readTransferManager_V2(parser_context_t* c, pd_TransferManager_V
 
 parser_error_t _readTrustedFor_V2(parser_context_t* c, pd_TrustedFor_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     switch (v->value) {
@@ -1369,7 +1365,7 @@ parser_error_t _readTrustedFor_V2(parser_context_t* c, pd_TrustedFor_V2_t* v)
 
 parser_error_t _readTrustedIssuer_V2(parser_context_t* c, pd_TrustedIssuer_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
 
     CHECK_ERROR(_readIdentityId_V2(c, &v->issuer))
     CHECK_ERROR(_readTrustedFor_V2(c, &v->trustedFor))
@@ -1378,7 +1374,7 @@ parser_error_t _readTrustedIssuer_V2(parser_context_t* c, pd_TrustedIssuer_V2_t*
 
 parser_error_t _readTupleCountryCodeScope_V2(parser_context_t* c, pd_TupleCountryCodeScope_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readCountryCode_V2(c, &v->country_code))
     CHECK_ERROR(_readScope_V2(c, &v->scope))
     return parser_ok;
@@ -1386,7 +1382,7 @@ parser_error_t _readTupleCountryCodeScope_V2(parser_context_t* c, pd_TupleCountr
 
 parser_error_t _readTupleIdentityIdTax_V2(parser_context_t* c, pd_TupleIdentityIdTax_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readIdentityId_V2(c, &v->id))
     CHECK_ERROR(_readTax_V2(c, &v->tax))
     return parser_ok;
@@ -1401,7 +1397,7 @@ parser_error_t _readTupleIdentityIdbool_V2(parser_context_t* c, pd_TupleIdentity
 
 parser_error_t _readTuplePipIdSnapshotResult_V2(parser_context_t* c, pd_TuplePipIdSnapshotResult_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readPipId_V2(c, &v->pip_id))
     CHECK_ERROR(_readSnapshotResult_V2(c, &v->snapshot_result))
     return parser_ok;
@@ -1409,7 +1405,7 @@ parser_error_t _readTuplePipIdSnapshotResult_V2(parser_context_t* c, pd_TuplePip
 
 parser_error_t _readTupleScopeScopeIdCddId_V2(parser_context_t* c, pd_TupleScopeScopeIdCddId_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readScope_V2(c, &v->scope))
     CHECK_ERROR(_readScopeId_V2(c, &v->scopeId))
     CHECK_ERROR(_readCddId_V2(c, &v->cddId))
@@ -1418,7 +1414,7 @@ parser_error_t _readTupleScopeScopeIdCddId_V2(parser_context_t* c, pd_TupleScope
 
 parser_error_t _readUniqueCall_V2(parser_context_t* c, pd_UniqueCall_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt64(c, &v->nonce))
     CHECK_ERROR(_readCall(c, &v->call))
     return parser_ok;
@@ -1440,14 +1436,14 @@ parser_error_t _readUrl_V2(parser_context_t* c, pd_Url_V2_t* v)
 
 parser_error_t _readValidatorIndex_V2(parser_context_t* c, pd_ValidatorIndex_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt16(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readValidatorPrefs_V2(parser_context_t* c, pd_ValidatorPrefs_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readCompactPerBill_V2(c, &v->commission));
     CHECK_ERROR(_readBool(c, &v->blocked));
     return parser_ok;
@@ -1474,7 +1470,7 @@ parser_error_t _readVenueId_V2(parser_context_t* c, pd_VenueId_V2_t* v)
 
 parser_error_t _readVenueType_V2(parser_context_t* c, pd_VenueType_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
 
     if (v->value > 3) {
@@ -1486,7 +1482,7 @@ parser_error_t _readVenueType_V2(parser_context_t* c, pd_VenueType_V2_t* v)
 
 parser_error_t _readWeight_V2(parser_context_t* c, pd_Weight_V2_t* v)
 {
-    CHECK_INPUT();
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt64(c, &v->value))
     return parser_ok;
 }
@@ -3350,15 +3346,6 @@ parser_error_t _toStringInstructionId_V2(
     uint8_t* pageCount)
 {
     return _toStringu64(&v->value, outValue, outValueLen, pageIdx, pageCount);
-}
-
-parser_error_t _toStringInvestorUid_V2(
-    const pd_InvestorUid_V2_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount) {
-    GEN_DEF_TOSTRING_ARRAY(16)
 }
 
 parser_error_t _toStringInvestorZKProofData_V2(

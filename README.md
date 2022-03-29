@@ -5,7 +5,8 @@
 
 ---
 
-![zondax](docs/zondax.jpg)
+![zondax_light](docs/zondax_light.png#gh-light-mode-only)
+![zondax_dark](docs/zondax_dark.png#gh-dark-mode-only)
 
 _Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
@@ -27,7 +28,7 @@ Please:
 - **Do not use in production**
 - **Do not use a Ledger device with funds for development purposes.**
 - **Have a separate and marked device that is used ONLY for development and testing**
-# Polymesh  2.3002.x
+# Polymesh  2.3010.x
 
 ## System
 
@@ -550,13 +551,4 @@ Empty
 | :---------- |:------------:|:--------:|:--------:|:--------|
 |claim_itn_reward |    | :heavy_check_mark: |   | `AccountId` reward_address <br/>`AccountId` itn_address <br/>`OffChainSignature` signature <br/> |
 |set_itn_reward_status |    |   |   | `AccountId` itn_address <br/>`ItnRewardStatus` status <br/> |
-
-## TestUtils
-
-| Name        | Light | XL | Nesting | Arguments |
-| :---------- |:------------:|:--------:|:--------:|:--------|
-|register_did |    |   |   | `InvestorUid` uid <br/>`Vec<SecondaryKey>` secondary_keys <br/> |
-|mock_cdd_register_did |    |   |   | `AccountId` target_account <br/> |
-|get_my_did |    |   |   |  |
-|get_cdd_of |    |   |   | `AccountId` of <br/> |
 
