@@ -250,7 +250,7 @@ jobs:
         run: |
           source $HOME/.cargo/env
           make SUBSTRATE_PARSER_FULL=1 DISABLE_PREVIOUS=1
-          mv ./app/pkg/installer_XL.sh ./app/pkg/installer_nanos_xl_current.sh
+          mv ./app/pkg/installer_s.sh ./app/pkg/installer_nanos_xl_current.sh
       - name: Set tag
         id: nanos_xl
         run: echo ::set-output name=tag_name::$(./app/pkg/installer_nanos_xl_current.sh version)
