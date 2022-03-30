@@ -120,7 +120,7 @@ APP_LOAD_PARAMS += --appFlags 0x200
 SCRIPT_LD:=$(CURDIR)/script_x.ld
 ICONNAME:=$(CURDIR)/nanox_icon.gif
 OUTPUT_ELF ?= $(CURDIR)/output/app_x.elf
-OUTPUT_INSTALLER:= $(CURDIR)/pkg/installer_XL.sh
+OUTPUT_INSTALLER:= $(CURDIR)/pkg/installer_x.sh
 endif
 
 ifeq ($(TARGET_NAME),TARGET_NANOS2)
