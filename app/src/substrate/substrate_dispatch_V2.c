@@ -1,18 +1,18 @@
 /*******************************************************************************
-*  (c) 2019 - 2022 Zondax GmbH
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *  (c) 2019 - 2022 Zondax GmbH
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 
 #include "substrate_dispatch_V2.h"
 #include "substrate_strings.h"
@@ -3578,14 +3578,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_CLAIM_ITN_REWARD;
     case 11521: /* module 45 call 1 */
         return STR_ME_SET_ITN_REWARD_STATUS;
-    case 12800: /* module 50 call 0 */
-        return STR_ME_REGISTER_DID;
-    case 12801: /* module 50 call 1 */
-        return STR_ME_MOCK_CDD_REGISTER_DID;
-    case 12802: /* module 50 call 2 */
-        return STR_ME_GET_MY_DID;
-    case 12803: /* module 50 call 3 */
-        return STR_ME_GET_CDD_OF;
 #endif
     default:
         return NULL;
