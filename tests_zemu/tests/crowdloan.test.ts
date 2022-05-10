@@ -15,7 +15,7 @@
  ******************************************************************************* */
 
 import Zemu, { DEFAULT_START_OPTIONS } from '@zondax/zemu'
-import { newPolkadexApp } from '@zondax/ledger-substrate'
+import { newPolymeshApp } from '@zondax/ledger-substrate'
 import { APP_SEED, models } from './common'
 
 const defaultOptions = {
@@ -67,18 +67,18 @@ describe('Crowdloan', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newPolkadexApp(sim.getTransport())
+      const app = newPolymeshApp(sim.getTransport())
 
-      const polkadex_expected_address = 'esqUXfjDQV1P5jPtqrrL6MvF2KFjJWtk45TmVdAHWRGv9Efim'
-      const polkadex_expected_pk = 'd05081ebecf4f0c61e7e992696fc6c8b537533630c15642599f3c23f8d6db83d'
-      const polkadot_expected_address = 'esqsLHe7nCgTZ9SAfbBVtzimtoDKPtLi3Nr8kDHkDzFQE41sA'
+      const polymesh_expected_address = '2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr'
+      const polymesh_expected_pk = 'c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a'
+      const polkadot_expected_address = '2HYrbcQFUokNTpTBt49GA6sbgLj8Dfb6kCBgdWV7j5WqQfhL'
       const polkadot_expected_pk = 'e1b4d72d27b3e91b9b6116555b4ea17138ddc12ca7cdbab30e2e0509bd848419'
 
       let resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000)
 
       console.log(resp)
-      expect(resp.address).toEqual(polkadex_expected_address)
-      expect(resp.pubKey).toEqual(polkadex_expected_pk)
+      expect(resp.address).toEqual(polymesh_expected_address)
+      expect(resp.pubKey).toEqual(polymesh_expected_pk)
 
       expect(resp.return_code).toEqual(0x9000)
       expect(resp.error_message).toEqual('No errors')
