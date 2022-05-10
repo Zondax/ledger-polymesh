@@ -40,8 +40,6 @@ all: bin/app.elf
 
 include $(BOLOS_SDK)/Makefile.defines
 
-DEFINES += APP_ACCOUNT_MODE_ENABLED
-
 $(info ************ TARGET_NAME  = [$(TARGET_NAME)])
 
 ifeq ($(APP_TESTING),1)
@@ -269,7 +267,7 @@ dep/%.d: %.c Makefile
 listvariants:
 ifeq ($(TARGET_NAME),TARGET_NANOS)
 	@echo VARIANTS COIN POLYX POLYX_XL
-else ifeq ($(TARGET_NAME),TARGET_NANOX)
+else
 	@echo VARIANTS COIN POLYX
 endif
 
