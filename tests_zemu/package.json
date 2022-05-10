@@ -14,12 +14,12 @@
     "Ledger"
   ],
   "scripts": {
-    "test": "jest --detectOpenHandles -t 'Standard'",
+    "test": "jest -t 'Standard' && jest -t 'Crowdloan'",
     "testSR25519": "jest --detectOpenHandles --runInBand tests/sr25519.test.ts"
   },
   "dependencies": {
     "@zondax/ledger-substrate": "^0.24.0",
-    "@zondax/zemu": "^0.27.4"
+    "@zondax/zemu": "^0.29.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
