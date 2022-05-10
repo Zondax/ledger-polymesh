@@ -14,7 +14,7 @@
     "Ledger"
   ],
   "scripts": {
-    "test": "jest -t 'Standard' && jest -t 'Crowdloan'",
+    "test": "jest -t 'Standard'",
     "testSR25519": "jest --detectOpenHandles --runInBand tests/sr25519.test.ts"
   },
   "dependencies": {
