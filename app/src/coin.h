@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2020 Zondax GmbH
+*  (c) 2018 - 2022 Zondax GmbH
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -15,3 +15,6 @@
 ********************************************************************************/
 #pragma once
 #include "substrate_coin.h"
+
+#define ACCOUNT_DEFAULT "Legacy"
+#define ACCOUNT_SECONDARY "Crowdloan"
