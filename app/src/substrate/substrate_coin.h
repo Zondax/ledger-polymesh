@@ -25,7 +25,7 @@ extern "C" {
 #define HDPATH_LEN_DEFAULT 5
 #define HDPATH_0_DEFAULT (0x80000000 | 0x2c)
 #define HDPATH_1_DEFAULT (0x80000000 | 0x253)
-#define HDPATH_1_RECOVERY (0x80000000 | 0x162)
+#define HDPATH_1_RECOVERY (0x80000000 | 0x253)
 
 #define HDPATH_2_DEFAULT (0x80000000u | 0u)
 #define HDPATH_3_DEFAULT (0u)
@@ -61,11 +61,8 @@ typedef enum {
 #define COIN_NAME "Polymesh"
 #define COIN_TICKER "POLYX "
 
-#define COIN_SECRET_REQUIRED_CLICKS 10
-
 #define MENU_MAIN_APP_LINE1 "Polymesh"
 #define MENU_MAIN_APP_LINE2 "Ready"
-#define MENU_MAIN_APP_LINE2_SECRET "POLYX RECOVERY"
 #define APPVERSION_LINE1 "Polymesh"
 #define APPVERSION_LINE2 "v" APPVERSION
 
