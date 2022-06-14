@@ -1804,7 +1804,7 @@ parser_error_t _toStringCompactAssignments_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringCompactEraIndex_V2(
@@ -1814,7 +1814,7 @@ parser_error_t _toStringCompactEraIndex_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringCompactMoment_V2(
@@ -1824,7 +1824,7 @@ parser_error_t _toStringCompactMoment_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringAGId_V2(
@@ -2820,7 +2820,7 @@ parser_error_t _toStringCompactAccountIndex_V2(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(&v->value, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(&v->value, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringCompactPerBill_V2(
@@ -2831,7 +2831,7 @@ parser_error_t _toStringCompactPerBill_V2(
     uint8_t* pageCount)
 {
     // 9 but shift 2 to show as percentage
-    return _toStringCompactInt(&v->value, 7, "%", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(&v->value, 7, false, "%", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringComplianceRequirement_V2(
@@ -3195,8 +3195,8 @@ parser_error_t _toStringElectionSize_V2(
 
     // First measure number of pages
     uint8_t pages[2];
-    CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, 0, &pages[0]))
-    CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, false, "", "", outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, false, "", "", outValue, outValueLen, 0, &pages[1]))
 
     *pageCount = 0;
     for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
@@ -3208,13 +3208,13 @@ parser_error_t _toStringElectionSize_V2(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringCompactInt(&v->validators, COIN_AMOUNT_DECIMAL_PLACES, false, "", "", outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
 
     if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, "", "", outValue, outValueLen, pageIdx, &pages[1]))
+        CHECK_ERROR(_toStringCompactInt(&v->nominators, COIN_AMOUNT_DECIMAL_PLACES, false, "", "", outValue, outValueLen, pageIdx, &pages[1]))
         return parser_ok;
     }
 
@@ -3891,7 +3891,7 @@ parser_error_t _toStringPercent_V2(
     uint8_t* pageCount)
 {
     // 9 but shift 2 to show as percentage
-    return _toStringCompactInt(&v->value, 7, "%", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(&v->value, 7, false, "%", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringPercentage_V2(
