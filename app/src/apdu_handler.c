@@ -29,7 +29,6 @@
 #include "crypto.h"
 #include "coin.h"
 #include "zxmacros.h"
-#include "secret.h"
 #include "app_mode.h"
 
 static bool tx_initialized = false;
@@ -49,12 +48,6 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
     if (!mainnet) {
         THROW(APDU_CODE_DATA_INVALID);
     }
-
-#ifdef APP_SECRET_MODE_ENABLED
-    if (app_mode_secret()) {
-        hdPath[1] = HDPATH_1_RECOVERY;
-    }
-#endif
 }
 
 __Z_INLINE bool process_chunk(uint32_t rx) {
@@ -144,7 +137,7 @@ __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, u
     }
     if (requireConfirmation) {
         view_review_init(addr_getItem, addr_getNumItems, app_reply_address);
-        view_review_show();
+        view_review_show(0x03);
         *flags |= IO_ASYNCH_REPLY;
         return;
     }
@@ -173,7 +166,7 @@ __Z_INLINE void handleSignSr25519(volatile uint32_t *flags, volatile uint32_t *t
     }
 
     view_review_init(tx_getItem, tx_getNumItems, app_return_sr25519);
-    view_review_show();
+    view_review_show(0x03);
     *flags |= IO_ASYNCH_REPLY;
 }
 #endif
@@ -189,7 +182,7 @@ __Z_INLINE void handleSignEd25519(volatile uint32_t *flags, volatile uint32_t *t
     }
 
     view_review_init(tx_getItem, tx_getNumItems, app_sign_ed25519);
-    view_review_show();
+    view_review_show(0x03);
     *flags |= IO_ASYNCH_REPLY;
 }
 
