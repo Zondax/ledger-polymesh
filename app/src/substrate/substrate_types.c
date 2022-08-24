@@ -148,9 +148,11 @@ parser_error_t _readCall(parser_context_t* c, pd_Call_t* v)
     return parser_ok;
 }
 
-parser_error_t _readHeader(parser_context_t* c, pd_Header_t* v)
+parser_error_t _readCompactBalanceOf(parser_context_t* c, pd_CompactBalanceOf_t* v)
 {
-    return parser_not_supported;
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactInt(c, &v->value));
+    return parser_ok;
 }
 
 parser_error_t _readBalanceOf(parser_context_t* c, pd_BalanceOf_t* v)
@@ -194,24 +196,12 @@ parser_error_t _readBalanceNoSymbol(parser_context_t* c, pd_BalanceNoSymbol_t* v
     GEN_DEF_READARRAY(16)
 }
 
-parser_error_t _readCompactBalanceOf(parser_context_t* c, pd_CompactBalanceOf_t* v)
-{
-    CHECK_INPUT()
-    CHECK_ERROR(_readCompactInt(c, &v->value));
-    return parser_ok;
-}
-
-parser_error_t _readHeartbeat(parser_context_t* c, pd_Heartbeat_t* v)
-{
-    return parser_not_supported;
-}
-
-parser_error_t _readVecHeader(parser_context_t* c, pd_VecHeader_t* v) {
-    GEN_DEF_READVECTOR(Header)
-}
-
 parser_error_t _readVecu32(parser_context_t* c, pd_Vecu32_t* v) {
     GEN_DEF_READVECTOR(u32)
+}
+
+parser_error_t _readVecu8(parser_context_t* c, pd_Vecu8_t* v) {
+    GEN_DEF_READVECTOR(u8)
 }
 
 parser_error_t _readOptionu16(parser_context_t* c, pd_Optionu16_t* v)
@@ -219,6 +209,15 @@ parser_error_t _readOptionu16(parser_context_t* c, pd_Optionu16_t* v)
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readu16(c, &v->contained))
+    }
+    return parser_ok;
+}
+
+parser_error_t _readOptionBytes(parser_context_t* c, pd_OptionBytes_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readBytes(c, &v->contained))
     }
     return parser_ok;
 }
@@ -237,6 +236,15 @@ parser_error_t _readOptionBlockNumber(parser_context_t* c, pd_OptionBlockNumber_
     CHECK_ERROR(_readUInt8(c, &v->some))
     if (v->some > 0) {
         CHECK_ERROR(_readBlockNumber(c, &v->contained))
+    }
+    return parser_ok;
+}
+
+parser_error_t _readOptionCompactBalanceOf(parser_context_t* c, pd_OptionCompactBalanceOf_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readCompactBalanceOf(c, &v->contained))
     }
     return parser_ok;
 }
@@ -362,7 +370,7 @@ parser_error_t _toStringCompactu32(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 parser_error_t _toStringCompactu64(
@@ -372,7 +380,7 @@ parser_error_t _toStringCompactu64(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    return _toStringCompactInt(v, 0, "", "", outValue, outValueLen, pageIdx, pageCount);
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
 ///////////////////////////////////
@@ -515,15 +523,15 @@ parser_error_t _toStringCall(
     return parser_display_idx_out_of_range;
 }
 
-parser_error_t _toStringHeader(
-    const pd_Header_t* v,
+parser_error_t _toStringCompactBalanceOf(
+    const pd_CompactBalanceOf_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    CLEAN_AND_CHECK()
-    return parser_print_not_supported;
+    CHECK_ERROR(_toStringCompactInt(&v->value, COIN_AMOUNT_DECIMAL_PLACES, true, "", COIN_TICKER, outValue, outValueLen, pageIdx, pageCount))
+    return parser_ok;
 }
 
 parser_error_t _toStringBalanceOf(
@@ -639,38 +647,6 @@ parser_error_t _toStringBalanceNoSymbol(
     return parser_ok;
 }
 
-parser_error_t _toStringCompactBalanceOf(
-    const pd_CompactBalanceOf_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CHECK_ERROR(_toStringCompactInt(&v->value, COIN_AMOUNT_DECIMAL_PLACES, "", COIN_TICKER, outValue, outValueLen, pageIdx, pageCount))
-    number_inplace_trimming(outValue, 1);
-    return parser_ok;
-}
-
-parser_error_t _toStringHeartbeat(
-    const pd_Heartbeat_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-    return parser_print_not_supported;
-}
-
-parser_error_t _toStringVecHeader(
-    const pd_VecHeader_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount) {
-    GEN_DEF_TOSTRING_VECTOR(Header)
-}
-
 parser_error_t _toStringVecu32(
     const pd_Vecu32_t* v,
     char* outValue,
@@ -679,6 +655,16 @@ parser_error_t _toStringVecu32(
     uint8_t* pageCount)
 {
     GEN_DEF_TOSTRING_VECTOR(u32);
+}
+
+parser_error_t _toStringVecu8(
+    const pd_Vecu8_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(u8);
 }
 
 parser_error_t _toStringOptionu16(
@@ -693,6 +679,27 @@ parser_error_t _toStringOptionu16(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringu16(
+            &v->contained,
+            outValue, outValueLen,
+            pageIdx, pageCount));
+    } else {
+        snprintf(outValue, outValueLen, "None");
+    }
+    return parser_ok;
+}
+
+parser_error_t _toStringOptionBytes(
+    const pd_OptionBytes_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    *pageCount = 1;
+    if (v->some > 0) {
+        CHECK_ERROR(_toStringBytes(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));
@@ -735,6 +742,27 @@ parser_error_t _toStringOptionBlockNumber(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringBlockNumber(
+            &v->contained,
+            outValue, outValueLen,
+            pageIdx, pageCount));
+    } else {
+        snprintf(outValue, outValueLen, "None");
+    }
+    return parser_ok;
+}
+
+parser_error_t _toStringOptionCompactBalanceOf(
+    const pd_OptionCompactBalanceOf_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    *pageCount = 1;
+    if (v->some > 0) {
+        CHECK_ERROR(_toStringCompactBalanceOf(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));

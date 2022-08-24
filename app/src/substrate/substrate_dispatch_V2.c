@@ -3085,6 +3085,16 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_BATCH_ATOMIC;
     case 10498: /* module 41 call 2 */
         return STR_ME_BATCH_OPTIMISTIC;
+    default:
+        return _getMethod_Name_V2_ParserFull(callPrivIdx);
+    }
+
+    return NULL;
+}
+
+const char* _getMethod_Name_V2_ParserFull(uint16_t callPrivIdx)
+{
+    switch (callPrivIdx) {
 #ifdef SUBSTRATE_PARSER_FULL
     case 0: /* module 0 call 0 */
         return STR_ME_FILL_BLOCK;
@@ -3096,18 +3106,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_SET_CODE;
     case 4: /* module 0 call 4 */
         return STR_ME_SET_CODE_WITHOUT_CHECKS;
-    case 5: /* module 0 call 5 */
-        return STR_ME_SET_CHANGES_TRIE_CONFIG;
-    case 6: /* module 0 call 6 */
-        return STR_ME_SET_STORAGE;
-    case 7: /* module 0 call 7 */
-        return STR_ME_KILL_STORAGE;
-    case 8: /* module 0 call 8 */
-        return STR_ME_KILL_PREFIX;
-    case 256: /* module 1 call 0 */
-        return STR_ME_REPORT_EQUIVOCATION;
-    case 257: /* module 1 call 1 */
-        return STR_ME_REPORT_EQUIVOCATION_UNSIGNED;
     case 512: /* module 2 call 0 */
         return STR_ME_SET;
     case 768: /* module 3 call 0 */
@@ -3120,8 +3118,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_FORCE_TRANSFER;
     case 772: /* module 3 call 4 */
         return STR_ME_FREEZE;
-    case 1024: /* module 4 call 0 */
-        return STR_ME_SET_UNCLES;
     case 1281: /* module 5 call 1 */
         return STR_ME_TRANSFER_WITH_MEMO;
     case 1282: /* module 5 call 2 */
@@ -3132,8 +3128,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_FORCE_TRANSFER;
     case 1285: /* module 5 call 5 */
         return STR_ME_BURN_ACCOUNT_BALANCE;
-    case 1792: /* module 7 call 0 */
-        return STR_ME_CDD_REGISTER_DID;
     case 1793: /* module 7 call 1 */
         return STR_ME_INVALIDATE_CDD_CLAIMS;
     case 1796: /* module 7 call 4 */
@@ -3142,8 +3136,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_GC_ADD_CDD_CLAIM;
     case 1810: /* module 7 call 18 */
         return STR_ME_GC_REVOKE_CDD_CLAIM;
-    case 1811: /* module 7 call 19 */
-        return STR_ME_ADD_INVESTOR_UNIQUENESS_CLAIM_V2;
     case 1812: /* module 7 call 20 */
         return STR_ME_REVOKE_CLAIM_BY_INDEX;
     case 1813: /* module 7 call 21 */
@@ -3272,8 +3264,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_SET_VALIDATOR_COUNT;
     case 4362: /* module 17 call 10 */
         return STR_ME_INCREASE_VALIDATOR_COUNT;
-    case 4363: /* module 17 call 11 */
-        return STR_ME_SCALE_VALIDATOR_COUNT;
     case 4364: /* module 17 call 12 */
         return STR_ME_ADD_PERMISSIONED_VALIDATOR;
     case 4365: /* module 17 call 13 */
@@ -3302,10 +3292,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_SET_HISTORY_DEPTH;
     case 4378: /* module 17 call 26 */
         return STR_ME_REAP_STASH;
-    case 4379: /* module 17 call 27 */
-        return STR_ME_SUBMIT_ELECTION_SOLUTION;
-    case 4380: /* module 17 call 28 */
-        return STR_ME_SUBMIT_ELECTION_SOLUTION_UNSIGNED;
     case 4381: /* module 17 call 29 */
         return STR_ME_PAYOUT_STAKERS_BY_SYSTEM;
     case 4382: /* module 17 call 30 */
@@ -3316,20 +3302,8 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_SET_KEYS;
     case 4865: /* module 19 call 1 */
         return STR_ME_PURGE_KEYS;
-    case 5376: /* module 21 call 0 */
-        return STR_ME_REPORT_EQUIVOCATION;
-    case 5377: /* module 21 call 1 */
-        return STR_ME_REPORT_EQUIVOCATION_UNSIGNED;
     case 5378: /* module 21 call 2 */
         return STR_ME_NOTE_STALLED;
-    case 5888: /* module 23 call 0 */
-        return STR_ME_HEARTBEAT;
-    case 6400: /* module 25 call 0 */
-        return STR_ME_SUDO;
-    case 6401: /* module 25 call 1 */
-        return STR_ME_SUDO_UNCHECKED_WEIGHT;
-    case 6402: /* module 25 call 2 */
-        return STR_ME_SET_KEY;
     case 6403: /* module 25 call 3 */
         return STR_ME_SUDO_AS;
     case 6656: /* module 26 call 0 */
@@ -3476,20 +3450,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_ACCEPT_PORTFOLIO_CUSTODY;
     case 8960: /* module 35 call 0 */
         return STR_ME_CHANGE_COEFFICIENT;
-    case 8961: /* module 35 call 1 */
-        return STR_ME_CHANGE_BASE_FEE;
-    case 9216: /* module 36 call 0 */
-        return STR_ME_SCHEDULE;
-    case 9217: /* module 36 call 1 */
-        return STR_ME_CANCEL;
-    case 9218: /* module 36 call 2 */
-        return STR_ME_SCHEDULE_NAMED;
-    case 9219: /* module 36 call 3 */
-        return STR_ME_CANCEL_NAMED;
-    case 9220: /* module 36 call 4 */
-        return STR_ME_SCHEDULE_AFTER;
-    case 9221: /* module 36 call 5 */
-        return STR_ME_SCHEDULE_NAMED_AFTER;
     case 9472: /* module 37 call 0 */
         return STR_ME_CREATE_VENUE;
     case 9473: /* module 37 call 1 */
@@ -3550,16 +3510,10 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_REIMBURSEMENT;
     case 10499: /* module 41 call 3 */
         return STR_ME_RELAY_TX;
-    case 11008: /* module 43 call 0 */
-        return STR_ME_CREATE_GROUP;
-    case 11009: /* module 43 call 1 */
-        return STR_ME_SET_GROUP_PERMISSIONS;
     case 11010: /* module 43 call 2 */
         return STR_ME_REMOVE_AGENT;
     case 11011: /* module 43 call 3 */
         return STR_ME_ABDICATE;
-    case 11012: /* module 43 call 4 */
-        return STR_ME_CHANGE_GROUP;
     case 11013: /* module 43 call 5 */
         return STR_ME_ACCEPT_BECOME_AGENT;
     case 11264: /* module 44 call 0 */
@@ -3576,8 +3530,6 @@ const char* _getMethod_Name_V2(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_DECREASE_POLYX_LIMIT;
     case 11520: /* module 45 call 0 */
         return STR_ME_CLAIM_ITN_REWARD;
-    case 11521: /* module 45 call 1 */
-        return STR_ME_SET_ITN_REWARD_STATUS;
 #endif
     default:
         return NULL;

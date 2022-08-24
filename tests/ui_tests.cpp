@@ -48,21 +48,21 @@ public:
     };
 };
 
-//class JsonTestsB : public ::testing::TestWithParam<testcase_t> {
-//public:
-//    struct PrintToStringParamName {
-//        template<class ParamType>
-//        std::string operator()(const testing::TestParamInfo<ParamType> &info) const {
-//            auto p = static_cast<testcase_t>(info.param);
-//            std::stringstream ss;
-//            ss << p.index << "_" << p.name;
-//            return ss.str();
-//        }
-//    };
-//};
+class JsonTestsB : public ::testing::TestWithParam<testcase_t> {
+public:
+    struct PrintToStringParamName {
+        template<class ParamType>
+        std::string operator()(const testing::TestParamInfo<ParamType> &info) const {
+            auto p = static_cast<testcase_t>(info.param);
+            std::stringstream ss;
+            ss << p.index << "_" << p.name;
+            return ss.str();
+        }
+    };
+};
 
 // Retrieve testcases from json file
-std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
+std::vector<testcase_t> GetJsonTestCases(const std::string &jsonFile) {
     auto answer = std::vector<testcase_t>();
 
     Json::CharReaderBuilder builder;
@@ -83,12 +83,12 @@ std::vector<testcase_t> GetJsonTestCases(std::string jsonFile) {
     for (int i = 0; i < obj.size(); i++) {
 
         auto outputs = std::vector<std::string>();
-        for (auto s : obj[i]["output"]) {
+        for (auto s: obj[i]["output"]) {
             outputs.push_back(s.asString());
         }
 
         auto outputs_expert = std::vector<std::string>();
-        for (auto s : obj[i]["output_expert"]) {
+        for (auto s: obj[i]["output_expert"]) {
             outputs_expert.push_back(s.asString());
         }
 
@@ -116,23 +116,17 @@ void check_testcase(const testcase_t &tc, bool expert_mode) {
 
     parser_tx_t tx_obj;
     err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
-    EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
+    ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
     auto output = dumpUI(&ctx, 39, 39);
 
     std::cout << std::endl;
-    for (const auto &i : output) {
+    for (const auto &i: output) {
         std::cout << i << std::endl;
     }
     std::cout << std::endl << std::endl;
 
     std::vector<std::string> expected = app_mode_expert() ? tc.expected_expert : tc.expected;
-    for (size_t i = 0; i < expected.size(); i++) {
-        if (i < output.size()) {
-            std::cout << expected[i] << std::endl;
-        }
-    }
-
     EXPECT_EQ(output.size(), expected.size());
     for (size_t i = 0; i < expected.size(); i++) {
         if (i < output.size()) {
@@ -151,19 +145,21 @@ INSTANTIATE_TEST_SUITE_P
 );
 
 
-//INSTANTIATE_TEST_SUITE_P
-//
-//(
-//    JsonTestCasesPreviousTxVer,
-//    JsonTestsB,
-//    ::testing::ValuesIn(GetJsonTestCases("testcases_previous.json")),
-//    JsonTestsB::PrintToStringParamName()
-//);
+INSTANTIATE_TEST_SUITE_P
+
+(
+    JsonTestCasesPreviousTxVer,
+    JsonTestsB,
+    ::testing::ValuesIn(GetJsonTestCases("testcases_previous.json")),
+    JsonTestsB::PrintToStringParamName()
+);
 
 // Parametric test using current runtime:
 TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Normal) { check_testcase(GetParam(), false); }
+
 TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) { check_testcase(GetParam(), true); }
 
-//// Parametric test using previous runtime:
-//TEST_P(JsonTestsB, CheckUIOutput_PreviousTX_Normal) { check_testcase(GetParam(), false); }
-//TEST_P(JsonTestsB, CheckUIOutput_PreviousTX_Expert) { check_testcase(GetParam(), true); }
+// Parametric test using previous runtime:
+TEST_P(JsonTestsB, CheckUIOutput_PreviousTX_Normal) { check_testcase(GetParam(), false); }
+
+TEST_P(JsonTestsB, CheckUIOutput_PreviousTX_Expert) { check_testcase(GetParam(), true); }
