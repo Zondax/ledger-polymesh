@@ -28,7 +28,7 @@ Please:
 - **Do not use in production**
 - **Do not use a Ledger device with funds for development purposes.**
 - **Have a separate and marked device that is used ONLY for development and testing**
-# Polymesh  3.5000001.x
+# Polymesh  3.5000003.x
 
 ## System
 
@@ -563,13 +563,4 @@ Please:
 |Unnote preimage |    | :heavy_check_mark: |   | `Hash` hash <br/> |
 |Request preimage |    | :heavy_check_mark: |   | `Hash` hash <br/> |
 |Unrequest preimage |    | :heavy_check_mark: |   | `Hash` hash <br/> |
-
-## TestUtils
-
-| Name        | Light | XL | Nesting | Arguments |
-| :---------- |:------------:|:--------:|:--------:|:--------|
-|Register did |    |   |   | `InvestorUid` uid <br/>`VecSecondaryKeyAccountId` secondary_keys <br/> |
-|Mock cdd register did |    |   |   | `AccountId` target_account <br/> |
-|Get my did |    |   |   |  |
-|Get cdd of |    |   |   | `AccountId` of <br/> |
 
