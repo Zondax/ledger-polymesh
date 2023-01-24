@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2022 Zondax AG
+ *  (c) 2019 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,11 +18,14 @@
 #include "substrate_strings.h"
 #include "zxmacros.h"
 #include <stdint.h>
+#ifdef LEDGER_SPECIFIC
+#include "bolos_target.h"
+#endif
 
 __Z_INLINE parser_error_t _readMethod_balances_transfer_V3(
     parser_context_t* c, pd_balances_transfer_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->dest))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->dest))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     return parser_ok;
 }
@@ -30,9 +33,9 @@ __Z_INLINE parser_error_t _readMethod_balances_transfer_V3(
 __Z_INLINE parser_error_t _readMethod_balances_transfer_with_memo_V3(
     parser_context_t* c, pd_balances_transfer_with_memo_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->dest))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->dest))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
-    CHECK_ERROR(_readOptionMemo_V3(c, &m->memo))
+    CHECK_ERROR(_readOptionMemo(c, &m->memo))
     return parser_ok;
 }
 
@@ -60,25 +63,25 @@ __Z_INLINE parser_error_t _readMethod_identity_leave_identity_as_key_V3(
 __Z_INLINE parser_error_t _readMethod_identity_add_claim_V3(
     parser_context_t* c, pd_identity_add_claim_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
-    CHECK_ERROR(_readClaim_V3(c, &m->claim))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
+    CHECK_ERROR(_readClaim(c, &m->claim))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_revoke_claim_V3(
     parser_context_t* c, pd_identity_revoke_claim_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
-    CHECK_ERROR(_readClaim_V3(c, &m->claim))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
+    CHECK_ERROR(_readClaim(c, &m->claim))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_set_permission_to_signer_V3(
     parser_context_t* c, pd_identity_set_permission_to_signer_V3_t* m)
 {
-    CHECK_ERROR(_readSignatoryAccountId_V3(c, &m->key))
-    CHECK_ERROR(_readPermissions_V3(c, &m->perms))
+    CHECK_ERROR(_readSignatoryAccountId(c, &m->key))
+    CHECK_ERROR(_readPermissions(c, &m->perms))
     return parser_ok;
 }
 
@@ -97,16 +100,16 @@ __Z_INLINE parser_error_t _readMethod_identity_unfreeze_secondary_keys_V3(
 __Z_INLINE parser_error_t _readMethod_identity_add_authorization_V3(
     parser_context_t* c, pd_identity_add_authorization_V3_t* m)
 {
-    CHECK_ERROR(_readSignatoryAccountId_V3(c, &m->target))
-    CHECK_ERROR(_readAuthorizationDataAccountId_V3(c, &m->data))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readSignatoryAccountId(c, &m->target))
+    CHECK_ERROR(_readAuthorizationDataAccountId(c, &m->data))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_remove_authorization_V3(
     parser_context_t* c, pd_identity_remove_authorization_V3_t* m)
 {
-    CHECK_ERROR(_readSignatoryAccountId_V3(c, &m->target))
+    CHECK_ERROR(_readSignatoryAccountId(c, &m->target))
     CHECK_ERROR(_readu64(c, &m->auth_id))
     CHECK_ERROR(_readbool(c, &m->_auth_issuer_pays))
     return parser_ok;
@@ -115,32 +118,32 @@ __Z_INLINE parser_error_t _readMethod_identity_remove_authorization_V3(
 __Z_INLINE parser_error_t _readMethod_identity_add_investor_uniqueness_claim_V3(
     parser_context_t* c, pd_identity_add_investor_uniqueness_claim_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
-    CHECK_ERROR(_readClaim_V3(c, &m->claim))
-    CHECK_ERROR(_readInvestorZKProofData_V3(c, &m->proof))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
+    CHECK_ERROR(_readClaim(c, &m->claim))
+    CHECK_ERROR(_readInvestorZKProofData(c, &m->proof))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_add_secondary_keys_with_authorization_V3(
     parser_context_t* c, pd_identity_add_secondary_keys_with_authorization_V3_t* m)
 {
-    CHECK_ERROR(_readVecSecondaryKeyWithAuthAccountId_V3(c, &m->additional_keys))
-    CHECK_ERROR(_readMoment_V3(c, &m->expires_at))
+    CHECK_ERROR(_readVecSecondaryKeyWithAuthAccountId(c, &m->additional_keys))
+    CHECK_ERROR(_readMoment(c, &m->expires_at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_remove_secondary_keys_V3(
     parser_context_t* c, pd_identity_remove_secondary_keys_V3_t* m)
 {
-    CHECK_ERROR(_readVecAccountId_V3(c, &m->keys_to_remove))
+    CHECK_ERROR(_readVecAccountId(c, &m->keys_to_remove))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_multisig_create_multisig_V3(
     parser_context_t* c, pd_multisig_create_multisig_V3_t* m)
 {
-    CHECK_ERROR(_readVecSignatoryAccountId_V3(c, &m->signers))
+    CHECK_ERROR(_readVecSignatoryAccountId(c, &m->signers))
     CHECK_ERROR(_readu64(c, &m->sigs_required))
     return parser_ok;
 }
@@ -148,9 +151,9 @@ __Z_INLINE parser_error_t _readMethod_multisig_create_multisig_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_identity_V3(
     parser_context_t* c, pd_multisig_create_or_approve_proposal_as_identity_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     CHECK_ERROR(_readbool(c, &m->auto_close))
     return parser_ok;
 }
@@ -158,9 +161,9 @@ __Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_ide
 __Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_key_V3(
     parser_context_t* c, pd_multisig_create_or_approve_proposal_as_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     CHECK_ERROR(_readbool(c, &m->auto_close))
     return parser_ok;
 }
@@ -168,9 +171,9 @@ __Z_INLINE parser_error_t _readMethod_multisig_create_or_approve_proposal_as_key
 __Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_identity_V3(
     parser_context_t* c, pd_multisig_create_proposal_as_identity_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     CHECK_ERROR(_readbool(c, &m->auto_close))
     return parser_ok;
 }
@@ -178,9 +181,9 @@ __Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_identity_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_key_V3(
     parser_context_t* c, pd_multisig_create_proposal_as_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readProposal(c, &m->proposal))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     CHECK_ERROR(_readbool(c, &m->auto_close))
     return parser_ok;
 }
@@ -188,7 +191,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_create_proposal_as_key_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_approve_as_identity_V3(
     parser_context_t* c, pd_multisig_approve_as_identity_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readu64(c, &m->proposal_id))
     return parser_ok;
 }
@@ -196,7 +199,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_approve_as_identity_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_approve_as_key_V3(
     parser_context_t* c, pd_multisig_approve_as_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readu64(c, &m->proposal_id))
     return parser_ok;
 }
@@ -204,7 +207,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_approve_as_key_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_reject_as_identity_V3(
     parser_context_t* c, pd_multisig_reject_as_identity_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readu64(c, &m->proposal_id))
     return parser_ok;
 }
@@ -212,7 +215,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_reject_as_identity_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_reject_as_key_V3(
     parser_context_t* c, pd_multisig_reject_as_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readu64(c, &m->proposal_id))
     return parser_ok;
 }
@@ -234,30 +237,30 @@ __Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_key_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signer_V3(
     parser_context_t* c, pd_multisig_add_multisig_signer_V3_t* m)
 {
-    CHECK_ERROR(_readSignatoryAccountId_V3(c, &m->signer))
+    CHECK_ERROR(_readSignatoryAccountId(c, &m->signer))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signer_V3(
     parser_context_t* c, pd_multisig_remove_multisig_signer_V3_t* m)
 {
-    CHECK_ERROR(_readSignatoryAccountId_V3(c, &m->signer))
+    CHECK_ERROR(_readSignatoryAccountId(c, &m->signer))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_multisig_add_multisig_signers_via_creator_V3(
     parser_context_t* c, pd_multisig_add_multisig_signers_via_creator_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
-    CHECK_ERROR(_readVecSignatoryAccountId_V3(c, &m->signers))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
+    CHECK_ERROR(_readVecSignatoryAccountId(c, &m->signers))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_multisig_remove_multisig_signers_via_creator_V3(
     parser_context_t* c, pd_multisig_remove_multisig_signers_via_creator_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
-    CHECK_ERROR(_readVecSignatoryAccountId_V3(c, &m->signers))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
+    CHECK_ERROR(_readVecSignatoryAccountId(c, &m->signers))
     return parser_ok;
 }
 
@@ -271,7 +274,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_change_sigs_required_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_make_multisig_primary_V3(
     parser_context_t* c, pd_multisig_make_multisig_primary_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readOptionu64(c, &m->optional_cdd_auth_id))
     return parser_ok;
 }
@@ -279,19 +282,19 @@ __Z_INLINE parser_error_t _readMethod_multisig_make_multisig_primary_V3(
 __Z_INLINE parser_error_t _readMethod_multisig_execute_scheduled_proposal_V3(
     parser_context_t* c, pd_multisig_execute_scheduled_proposal_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     CHECK_ERROR(_readu64(c, &m->proposal_id))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->multisig_did))
-    CHECK_ERROR(_readWeight_V3(c, &m->_proposal_weight))
+    CHECK_ERROR(_readIdentityId(c, &m->multisig_did))
+    CHECK_ERROR(_readWeight(c, &m->_proposal_weight))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_bond_V3(
     parser_context_t* c, pd_staking_bond_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->controller))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->controller))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
-    CHECK_ERROR(_readRewardDestination_V3(c, &m->payee))
+    CHECK_ERROR(_readRewardDestination(c, &m->payee))
     return parser_ok;
 }
 
@@ -319,14 +322,14 @@ __Z_INLINE parser_error_t _readMethod_staking_withdraw_unbonded_V3(
 __Z_INLINE parser_error_t _readMethod_staking_validate_V3(
     parser_context_t* c, pd_staking_validate_V3_t* m)
 {
-    CHECK_ERROR(_readValidatorPrefs_V3(c, &m->prefs))
+    CHECK_ERROR(_readValidatorPrefs(c, &m->prefs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_nominate_V3(
     parser_context_t* c, pd_staking_nominate_V3_t* m)
 {
-    CHECK_ERROR(_readVecLookupasStaticLookupSource_V3(c, &m->targets))
+    CHECK_ERROR(_readVecLookupasStaticLookupSource(c, &m->targets))
     return parser_ok;
 }
 
@@ -339,14 +342,14 @@ __Z_INLINE parser_error_t _readMethod_staking_chill_V3(
 __Z_INLINE parser_error_t _readMethod_staking_set_payee_V3(
     parser_context_t* c, pd_staking_set_payee_V3_t* m)
 {
-    CHECK_ERROR(_readRewardDestination_V3(c, &m->payee))
+    CHECK_ERROR(_readRewardDestination(c, &m->payee))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_set_controller_V3(
     parser_context_t* c, pd_staking_set_controller_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->controller))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->controller))
     return parser_ok;
 }
 
@@ -362,15 +365,15 @@ __Z_INLINE parser_error_t _readMethod_pips_propose_V3(
 {
     CHECK_ERROR(_readProposal(c, &m->proposal))
     CHECK_ERROR(_readBalance(c, &m->deposit))
-    CHECK_ERROR(_readOptionUrl_V3(c, &m->url))
-    CHECK_ERROR(_readOptionPipDescription_V3(c, &m->description))
+    CHECK_ERROR(_readOptionUrl(c, &m->url))
+    CHECK_ERROR(_readOptionPipDescription(c, &m->description))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_vote_V3(
     parser_context_t* c, pd_pips_vote_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     CHECK_ERROR(_readbool(c, &m->aye_or_nay))
     CHECK_ERROR(_readBalance(c, &m->deposit))
     return parser_ok;
@@ -398,17 +401,19 @@ __Z_INLINE parser_error_t _readMethod_utility_batch_optimistic_V3(
 }
 
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
 __Z_INLINE parser_error_t _readMethod_system_fill_block_V3(
     parser_context_t* c, pd_system_fill_block_V3_t* m)
 {
-    CHECK_ERROR(_readPerbill_V3(c, &m->ratio))
+    CHECK_ERROR(_readPerbill(c, &m->ratio))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_system_remark_V3(
     parser_context_t* c, pd_system_remark_V3_t* m)
 {
-    CHECK_ERROR(_readVecu8(c, &m->remark))
+    CHECK_ERROR(_readBytes(c, &m->remark))
     return parser_ok;
 }
 
@@ -436,7 +441,7 @@ __Z_INLINE parser_error_t _readMethod_system_set_code_without_checks_V3(
 __Z_INLINE parser_error_t _readMethod_system_remark_with_event_V3(
     parser_context_t* c, pd_system_remark_with_event_V3_t* m)
 {
-    CHECK_ERROR(_readVecu8(c, &m->remark))
+    CHECK_ERROR(_readBytes(c, &m->remark))
     return parser_ok;
 }
 
@@ -450,30 +455,30 @@ __Z_INLINE parser_error_t _readMethod_timestamp_set_V3(
 __Z_INLINE parser_error_t _readMethod_indices_claim_V3(
     parser_context_t* c, pd_indices_claim_V3_t* m)
 {
-    CHECK_ERROR(_readAccountIndex_V3(c, &m->index))
+    CHECK_ERROR(_readAccountIndex(c, &m->index))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_indices_transfer_V3(
     parser_context_t* c, pd_indices_transfer_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->new_))
-    CHECK_ERROR(_readAccountIndex_V3(c, &m->index))
+    CHECK_ERROR(_readAccountId(c, &m->new_))
+    CHECK_ERROR(_readAccountIndex(c, &m->index))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_indices_free_V3(
     parser_context_t* c, pd_indices_free_V3_t* m)
 {
-    CHECK_ERROR(_readAccountIndex_V3(c, &m->index))
+    CHECK_ERROR(_readAccountIndex(c, &m->index))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_indices_force_transfer_V3(
     parser_context_t* c, pd_indices_force_transfer_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->new_))
-    CHECK_ERROR(_readAccountIndex_V3(c, &m->index))
+    CHECK_ERROR(_readAccountId(c, &m->new_))
+    CHECK_ERROR(_readAccountIndex(c, &m->index))
     CHECK_ERROR(_readbool(c, &m->freeze))
     return parser_ok;
 }
@@ -481,7 +486,7 @@ __Z_INLINE parser_error_t _readMethod_indices_force_transfer_V3(
 __Z_INLINE parser_error_t _readMethod_indices_freeze_V3(
     parser_context_t* c, pd_indices_freeze_V3_t* m)
 {
-    CHECK_ERROR(_readAccountIndex_V3(c, &m->index))
+    CHECK_ERROR(_readAccountIndex(c, &m->index))
     return parser_ok;
 }
 
@@ -495,7 +500,7 @@ __Z_INLINE parser_error_t _readMethod_balances_deposit_block_reward_reserve_bala
 __Z_INLINE parser_error_t _readMethod_balances_set_balance_V3(
     parser_context_t* c, pd_balances_set_balance_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->who))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->who))
     CHECK_ERROR(_readCompactBalance(c, &m->new_free))
     CHECK_ERROR(_readCompactBalance(c, &m->new_reserved))
     return parser_ok;
@@ -504,8 +509,8 @@ __Z_INLINE parser_error_t _readMethod_balances_set_balance_V3(
 __Z_INLINE parser_error_t _readMethod_balances_force_transfer_V3(
     parser_context_t* c, pd_balances_force_transfer_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->source))
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->dest))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->source))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->dest))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     return parser_ok;
 }
@@ -520,9 +525,9 @@ __Z_INLINE parser_error_t _readMethod_balances_burn_account_balance_V3(
 __Z_INLINE parser_error_t _readMethod_identity_invalidate_cdd_claims_V3(
     parser_context_t* c, pd_identity_invalidate_cdd_claims_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->cdd))
-    CHECK_ERROR(_readMoment_V3(c, &m->disable_from))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readIdentityId(c, &m->cdd))
+    CHECK_ERROR(_readMoment(c, &m->disable_from))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     return parser_ok;
 }
 
@@ -542,23 +547,23 @@ __Z_INLINE parser_error_t _readMethod_identity_placeholder_legacy_set_permission
 __Z_INLINE parser_error_t _readMethod_identity_gc_add_cdd_claim_V3(
     parser_context_t* c, pd_identity_gc_add_cdd_claim_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_gc_revoke_cdd_claim_V3(
     parser_context_t* c, pd_identity_gc_revoke_cdd_claim_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_identity_revoke_claim_by_index_V3(
     parser_context_t* c, pd_identity_revoke_claim_by_index_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
-    CHECK_ERROR(_readClaimType_V3(c, &m->claim_type))
-    CHECK_ERROR(_readOptionScope_V3(c, &m->scope))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
+    CHECK_ERROR(_readClaimType(c, &m->claim_type))
+    CHECK_ERROR(_readOptionScope(c, &m->scope))
     return parser_ok;
 }
 
@@ -573,53 +578,60 @@ __Z_INLINE parser_error_t _readMethod_identity_rotate_primary_key_to_secondary_V
 __Z_INLINE parser_error_t _readMethod_identity_set_secondary_key_permissions_V3(
     parser_context_t* c, pd_identity_set_secondary_key_permissions_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->key))
-    CHECK_ERROR(_readPermissions_V3(c, &m->perms))
+    CHECK_ERROR(_readAccountId(c, &m->key))
+    CHECK_ERROR(_readPermissions(c, &m->perms))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_identity_register_custom_claim_type_V3(
+    parser_context_t* c, pd_identity_register_custom_claim_type_V3_t* m)
+{
+    CHECK_ERROR(_readVecu8(c, &m->ty))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_set_active_members_limit_V3(
     parser_context_t* c, pd_cddserviceproviders_set_active_members_limit_V3_t* m)
 {
-    CHECK_ERROR(_readMemberCount_V3(c, &m->limit))
+    CHECK_ERROR(_readMemberCount(c, &m->limit))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_disable_member_V3(
     parser_context_t* c, pd_cddserviceproviders_disable_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->at))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_add_member_V3(
     parser_context_t* c, pd_cddserviceproviders_add_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_remove_member_V3(
     parser_context_t* c, pd_cddserviceproviders_remove_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_swap_member_V3(
     parser_context_t* c, pd_cddserviceproviders_swap_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->remove))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->add))
+    CHECK_ERROR(_readIdentityId(c, &m->remove))
+    CHECK_ERROR(_readIdentityId(c, &m->add))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_cddserviceproviders_reset_members_V3(
     parser_context_t* c, pd_cddserviceproviders_reset_members_V3_t* m)
 {
-    CHECK_ERROR(_readVecIdentityId_V3(c, &m->members))
+    CHECK_ERROR(_readVecIdentityId(c, &m->members))
     return parser_ok;
 }
 
@@ -640,14 +652,14 @@ __Z_INLINE parser_error_t _readMethod_polymeshcommittee_set_vote_threshold_V3(
 __Z_INLINE parser_error_t _readMethod_polymeshcommittee_set_release_coordinator_V3(
     parser_context_t* c, pd_polymeshcommittee_set_release_coordinator_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->id))
+    CHECK_ERROR(_readIdentityId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_polymeshcommittee_set_expires_after_V3(
     parser_context_t* c, pd_polymeshcommittee_set_expires_after_V3_t* m)
 {
-    CHECK_ERROR(_readMaybeBlockBlockNumber_V3(c, &m->expiry))
+    CHECK_ERROR(_readMaybeBlockBlockNumber(c, &m->expiry))
     return parser_ok;
 }
 
@@ -655,7 +667,7 @@ __Z_INLINE parser_error_t _readMethod_polymeshcommittee_vote_or_propose_V3(
     parser_context_t* c, pd_polymeshcommittee_vote_or_propose_V3_t* m)
 {
     CHECK_ERROR(_readbool(c, &m->approve))
-    CHECK_ERROR(_readCall(c, &m->call))
+    CHECK_ERROR(_readProposal(c, &m->call))
     return parser_ok;
 }
 
@@ -663,7 +675,7 @@ __Z_INLINE parser_error_t _readMethod_polymeshcommittee_vote_V3(
     parser_context_t* c, pd_polymeshcommittee_vote_V3_t* m)
 {
     CHECK_ERROR(_readHash(c, &m->proposal))
-    CHECK_ERROR(_readProposalIndex_V3(c, &m->index))
+    CHECK_ERROR(_readProposalIndex(c, &m->index))
     CHECK_ERROR(_readbool(c, &m->approve))
     return parser_ok;
 }
@@ -671,45 +683,45 @@ __Z_INLINE parser_error_t _readMethod_polymeshcommittee_vote_V3(
 __Z_INLINE parser_error_t _readMethod_committeemembership_set_active_members_limit_V3(
     parser_context_t* c, pd_committeemembership_set_active_members_limit_V3_t* m)
 {
-    CHECK_ERROR(_readMemberCount_V3(c, &m->limit))
+    CHECK_ERROR(_readMemberCount(c, &m->limit))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_committeemembership_disable_member_V3(
     parser_context_t* c, pd_committeemembership_disable_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->at))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_committeemembership_add_member_V3(
     parser_context_t* c, pd_committeemembership_add_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_committeemembership_remove_member_V3(
     parser_context_t* c, pd_committeemembership_remove_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_committeemembership_swap_member_V3(
     parser_context_t* c, pd_committeemembership_swap_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->remove))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->add))
+    CHECK_ERROR(_readIdentityId(c, &m->remove))
+    CHECK_ERROR(_readIdentityId(c, &m->add))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_committeemembership_reset_members_V3(
     parser_context_t* c, pd_committeemembership_reset_members_V3_t* m)
 {
-    CHECK_ERROR(_readVecIdentityId_V3(c, &m->members))
+    CHECK_ERROR(_readVecIdentityId(c, &m->members))
     return parser_ok;
 }
 
@@ -730,14 +742,14 @@ __Z_INLINE parser_error_t _readMethod_technicalcommittee_set_vote_threshold_V3(
 __Z_INLINE parser_error_t _readMethod_technicalcommittee_set_release_coordinator_V3(
     parser_context_t* c, pd_technicalcommittee_set_release_coordinator_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->id))
+    CHECK_ERROR(_readIdentityId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommittee_set_expires_after_V3(
     parser_context_t* c, pd_technicalcommittee_set_expires_after_V3_t* m)
 {
-    CHECK_ERROR(_readMaybeBlockBlockNumber_V3(c, &m->expiry))
+    CHECK_ERROR(_readMaybeBlockBlockNumber(c, &m->expiry))
     return parser_ok;
 }
 
@@ -745,7 +757,7 @@ __Z_INLINE parser_error_t _readMethod_technicalcommittee_vote_or_propose_V3(
     parser_context_t* c, pd_technicalcommittee_vote_or_propose_V3_t* m)
 {
     CHECK_ERROR(_readbool(c, &m->approve))
-    CHECK_ERROR(_readCall(c, &m->call))
+    CHECK_ERROR(_readProposal(c, &m->call))
     return parser_ok;
 }
 
@@ -753,7 +765,7 @@ __Z_INLINE parser_error_t _readMethod_technicalcommittee_vote_V3(
     parser_context_t* c, pd_technicalcommittee_vote_V3_t* m)
 {
     CHECK_ERROR(_readHash(c, &m->proposal))
-    CHECK_ERROR(_readProposalIndex_V3(c, &m->index))
+    CHECK_ERROR(_readProposalIndex(c, &m->index))
     CHECK_ERROR(_readbool(c, &m->approve))
     return parser_ok;
 }
@@ -761,45 +773,45 @@ __Z_INLINE parser_error_t _readMethod_technicalcommittee_vote_V3(
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_set_active_members_limit_V3(
     parser_context_t* c, pd_technicalcommitteemembership_set_active_members_limit_V3_t* m)
 {
-    CHECK_ERROR(_readMemberCount_V3(c, &m->limit))
+    CHECK_ERROR(_readMemberCount(c, &m->limit))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_disable_member_V3(
     parser_context_t* c, pd_technicalcommitteemembership_disable_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->at))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_add_member_V3(
     parser_context_t* c, pd_technicalcommitteemembership_add_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_remove_member_V3(
     parser_context_t* c, pd_technicalcommitteemembership_remove_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_swap_member_V3(
     parser_context_t* c, pd_technicalcommitteemembership_swap_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->remove))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->add))
+    CHECK_ERROR(_readIdentityId(c, &m->remove))
+    CHECK_ERROR(_readIdentityId(c, &m->add))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_technicalcommitteemembership_reset_members_V3(
     parser_context_t* c, pd_technicalcommitteemembership_reset_members_V3_t* m)
 {
-    CHECK_ERROR(_readVecIdentityId_V3(c, &m->members))
+    CHECK_ERROR(_readVecIdentityId(c, &m->members))
     return parser_ok;
 }
 
@@ -820,14 +832,14 @@ __Z_INLINE parser_error_t _readMethod_upgradecommittee_set_vote_threshold_V3(
 __Z_INLINE parser_error_t _readMethod_upgradecommittee_set_release_coordinator_V3(
     parser_context_t* c, pd_upgradecommittee_set_release_coordinator_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->id))
+    CHECK_ERROR(_readIdentityId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommittee_set_expires_after_V3(
     parser_context_t* c, pd_upgradecommittee_set_expires_after_V3_t* m)
 {
-    CHECK_ERROR(_readMaybeBlockBlockNumber_V3(c, &m->expiry))
+    CHECK_ERROR(_readMaybeBlockBlockNumber(c, &m->expiry))
     return parser_ok;
 }
 
@@ -835,7 +847,7 @@ __Z_INLINE parser_error_t _readMethod_upgradecommittee_vote_or_propose_V3(
     parser_context_t* c, pd_upgradecommittee_vote_or_propose_V3_t* m)
 {
     CHECK_ERROR(_readbool(c, &m->approve))
-    CHECK_ERROR(_readCall(c, &m->call))
+    CHECK_ERROR(_readProposal(c, &m->call))
     return parser_ok;
 }
 
@@ -843,7 +855,7 @@ __Z_INLINE parser_error_t _readMethod_upgradecommittee_vote_V3(
     parser_context_t* c, pd_upgradecommittee_vote_V3_t* m)
 {
     CHECK_ERROR(_readHash(c, &m->proposal))
-    CHECK_ERROR(_readProposalIndex_V3(c, &m->index))
+    CHECK_ERROR(_readProposalIndex(c, &m->index))
     CHECK_ERROR(_readbool(c, &m->approve))
     return parser_ok;
 }
@@ -851,45 +863,45 @@ __Z_INLINE parser_error_t _readMethod_upgradecommittee_vote_V3(
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_set_active_members_limit_V3(
     parser_context_t* c, pd_upgradecommitteemembership_set_active_members_limit_V3_t* m)
 {
-    CHECK_ERROR(_readMemberCount_V3(c, &m->limit))
+    CHECK_ERROR(_readMemberCount(c, &m->limit))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_disable_member_V3(
     parser_context_t* c, pd_upgradecommitteemembership_disable_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->at))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
+    CHECK_ERROR(_readOptionMoment(c, &m->at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_add_member_V3(
     parser_context_t* c, pd_upgradecommitteemembership_add_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_remove_member_V3(
     parser_context_t* c, pd_upgradecommitteemembership_remove_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->who))
+    CHECK_ERROR(_readIdentityId(c, &m->who))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_swap_member_V3(
     parser_context_t* c, pd_upgradecommitteemembership_swap_member_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->remove))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->add))
+    CHECK_ERROR(_readIdentityId(c, &m->remove))
+    CHECK_ERROR(_readIdentityId(c, &m->add))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_reset_members_V3(
     parser_context_t* c, pd_upgradecommitteemembership_reset_members_V3_t* m)
 {
-    CHECK_ERROR(_readVecIdentityId_V3(c, &m->members))
+    CHECK_ERROR(_readVecIdentityId(c, &m->members))
     return parser_ok;
 }
 
@@ -902,21 +914,21 @@ __Z_INLINE parser_error_t _readMethod_upgradecommitteemembership_abdicate_member
 __Z_INLINE parser_error_t _readMethod_multisig_make_multisig_secondary_V3(
     parser_context_t* c, pd_multisig_make_multisig_secondary_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->multisig))
+    CHECK_ERROR(_readAccountId(c, &m->multisig))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_change_controller_V3(
     parser_context_t* c, pd_bridge_change_controller_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->controller))
+    CHECK_ERROR(_readAccountId(c, &m->controller))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_change_admin_V3(
     parser_context_t* c, pd_bridge_change_admin_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->admin))
+    CHECK_ERROR(_readAccountId(c, &m->admin))
     return parser_ok;
 }
 
@@ -950,77 +962,77 @@ __Z_INLINE parser_error_t _readMethod_bridge_change_bridge_limit_V3(
 __Z_INLINE parser_error_t _readMethod_bridge_change_bridge_exempted_V3(
     parser_context_t* c, pd_bridge_change_bridge_exempted_V3_t* m)
 {
-    CHECK_ERROR(_readVecTupleIdentityIdbool_V3(c, &m->exempted))
+    CHECK_ERROR(_readVecTupleIdentityIdbool(c, &m->exempted))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_force_handle_bridge_tx_V3(
     parser_context_t* c, pd_bridge_force_handle_bridge_tx_V3_t* m)
 {
-    CHECK_ERROR(_readBridgeTxAccountId_V3(c, &m->bridge_tx))
+    CHECK_ERROR(_readBridgeTxAccountId(c, &m->bridge_tx))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_batch_propose_bridge_tx_V3(
     parser_context_t* c, pd_bridge_batch_propose_bridge_tx_V3_t* m)
 {
-    CHECK_ERROR(_readVecBridgeTxAccountId_V3(c, &m->bridge_txs))
+    CHECK_ERROR(_readVecBridgeTxAccountId(c, &m->bridge_txs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_propose_bridge_tx_V3(
     parser_context_t* c, pd_bridge_propose_bridge_tx_V3_t* m)
 {
-    CHECK_ERROR(_readBridgeTxAccountId_V3(c, &m->bridge_tx))
+    CHECK_ERROR(_readBridgeTxAccountId(c, &m->bridge_tx))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_handle_bridge_tx_V3(
     parser_context_t* c, pd_bridge_handle_bridge_tx_V3_t* m)
 {
-    CHECK_ERROR(_readBridgeTxAccountId_V3(c, &m->bridge_tx))
+    CHECK_ERROR(_readBridgeTxAccountId(c, &m->bridge_tx))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_freeze_txs_V3(
     parser_context_t* c, pd_bridge_freeze_txs_V3_t* m)
 {
-    CHECK_ERROR(_readVecBridgeTxAccountId_V3(c, &m->bridge_txs))
+    CHECK_ERROR(_readVecBridgeTxAccountId(c, &m->bridge_txs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_unfreeze_txs_V3(
     parser_context_t* c, pd_bridge_unfreeze_txs_V3_t* m)
 {
-    CHECK_ERROR(_readVecBridgeTxAccountId_V3(c, &m->bridge_txs))
+    CHECK_ERROR(_readVecBridgeTxAccountId(c, &m->bridge_txs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_handle_scheduled_bridge_tx_V3(
     parser_context_t* c, pd_bridge_handle_scheduled_bridge_tx_V3_t* m)
 {
-    CHECK_ERROR(_readBridgeTxAccountId_V3(c, &m->bridge_tx))
+    CHECK_ERROR(_readBridgeTxAccountId(c, &m->bridge_tx))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_add_freeze_admin_V3(
     parser_context_t* c, pd_bridge_add_freeze_admin_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->freeze_admin))
+    CHECK_ERROR(_readAccountId(c, &m->freeze_admin))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_remove_freeze_admin_V3(
     parser_context_t* c, pd_bridge_remove_freeze_admin_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->freeze_admin))
+    CHECK_ERROR(_readAccountId(c, &m->freeze_admin))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_bridge_remove_txs_V3(
     parser_context_t* c, pd_bridge_remove_txs_V3_t* m)
 {
-    CHECK_ERROR(_readVecBridgeTxAccountId_V3(c, &m->bridge_txs))
+    CHECK_ERROR(_readVecBridgeTxAccountId(c, &m->bridge_txs))
     return parser_ok;
 }
 
@@ -1038,10 +1050,17 @@ __Z_INLINE parser_error_t _readMethod_staking_increase_validator_count_V3(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_staking_scale_validator_count_V3(
+    parser_context_t* c, pd_staking_scale_validator_count_V3_t* m)
+{
+    CHECK_ERROR(_readPercent(c, &m->factor))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_staking_add_permissioned_validator_V3(
     parser_context_t* c, pd_staking_add_permissioned_validator_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->identity))
+    CHECK_ERROR(_readIdentityId(c, &m->identity))
     CHECK_ERROR(_readOptionu32(c, &m->intended_count))
     return parser_ok;
 }
@@ -1049,21 +1068,21 @@ __Z_INLINE parser_error_t _readMethod_staking_add_permissioned_validator_V3(
 __Z_INLINE parser_error_t _readMethod_staking_remove_permissioned_validator_V3(
     parser_context_t* c, pd_staking_remove_permissioned_validator_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->identity))
+    CHECK_ERROR(_readIdentityId(c, &m->identity))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_validate_cdd_expiry_nominators_V3(
     parser_context_t* c, pd_staking_validate_cdd_expiry_nominators_V3_t* m)
 {
-    CHECK_ERROR(_readVecAccountId_V3(c, &m->targets))
+    CHECK_ERROR(_readVecAccountId(c, &m->targets))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_set_commission_cap_V3(
     parser_context_t* c, pd_staking_set_commission_cap_V3_t* m)
 {
-    CHECK_ERROR(_readPerbill_V3(c, &m->new_cap))
+    CHECK_ERROR(_readPerbill(c, &m->new_cap))
     return parser_ok;
 }
 
@@ -1089,14 +1108,14 @@ __Z_INLINE parser_error_t _readMethod_staking_force_new_era_V3(
 __Z_INLINE parser_error_t _readMethod_staking_set_invulnerables_V3(
     parser_context_t* c, pd_staking_set_invulnerables_V3_t* m)
 {
-    CHECK_ERROR(_readVecAccountId_V3(c, &m->invulnerables))
+    CHECK_ERROR(_readVecAccountId(c, &m->invulnerables))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_force_unstake_V3(
     parser_context_t* c, pd_staking_force_unstake_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->stash))
+    CHECK_ERROR(_readAccountId(c, &m->stash))
     CHECK_ERROR(_readu32(c, &m->num_slashing_spans))
     return parser_ok;
 }
@@ -1110,7 +1129,7 @@ __Z_INLINE parser_error_t _readMethod_staking_force_new_era_always_V3(
 __Z_INLINE parser_error_t _readMethod_staking_cancel_deferred_slash_V3(
     parser_context_t* c, pd_staking_cancel_deferred_slash_V3_t* m)
 {
-    CHECK_ERROR(_readEraIndex_V3(c, &m->era))
+    CHECK_ERROR(_readEraIndex(c, &m->era))
     CHECK_ERROR(_readVecu32(c, &m->slash_indices))
     return parser_ok;
 }
@@ -1118,8 +1137,8 @@ __Z_INLINE parser_error_t _readMethod_staking_cancel_deferred_slash_V3(
 __Z_INLINE parser_error_t _readMethod_staking_payout_stakers_V3(
     parser_context_t* c, pd_staking_payout_stakers_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->validator_stash))
-    CHECK_ERROR(_readEraIndex_V3(c, &m->era))
+    CHECK_ERROR(_readAccountId(c, &m->validator_stash))
+    CHECK_ERROR(_readEraIndex(c, &m->era))
     return parser_ok;
 }
 
@@ -1134,7 +1153,7 @@ __Z_INLINE parser_error_t _readMethod_staking_set_history_depth_V3(
 __Z_INLINE parser_error_t _readMethod_staking_reap_stash_V3(
     parser_context_t* c, pd_staking_reap_stash_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->stash))
+    CHECK_ERROR(_readAccountId(c, &m->stash))
     CHECK_ERROR(_readu32(c, &m->num_slashing_spans))
     return parser_ok;
 }
@@ -1142,22 +1161,22 @@ __Z_INLINE parser_error_t _readMethod_staking_reap_stash_V3(
 __Z_INLINE parser_error_t _readMethod_staking_payout_stakers_by_system_V3(
     parser_context_t* c, pd_staking_payout_stakers_by_system_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->validator_stash))
-    CHECK_ERROR(_readEraIndex_V3(c, &m->era))
+    CHECK_ERROR(_readAccountId(c, &m->validator_stash))
+    CHECK_ERROR(_readEraIndex(c, &m->era))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_change_slashing_allowed_for_V3(
     parser_context_t* c, pd_staking_change_slashing_allowed_for_V3_t* m)
 {
-    CHECK_ERROR(_readSlashingSwitch_V3(c, &m->slashing_switch))
+    CHECK_ERROR(_readSlashingSwitch(c, &m->slashing_switch))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_staking_update_permissioned_validator_intended_count_V3(
     parser_context_t* c, pd_staking_update_permissioned_validator_intended_count_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->identity))
+    CHECK_ERROR(_readIdentityId(c, &m->identity))
     CHECK_ERROR(_readu32(c, &m->new_intended_count))
     return parser_ok;
 }
@@ -1165,7 +1184,7 @@ __Z_INLINE parser_error_t _readMethod_staking_update_permissioned_validator_inte
 __Z_INLINE parser_error_t _readMethod_session_set_keys_V3(
     parser_context_t* c, pd_session_set_keys_V3_t* m)
 {
-    CHECK_ERROR(_readKeys_V3(c, &m->keys))
+    CHECK_ERROR(_readKeys(c, &m->keys))
     CHECK_ERROR(_readBytes(c, &m->proof))
     return parser_ok;
 }
@@ -1176,18 +1195,10 @@ __Z_INLINE parser_error_t _readMethod_session_purge_keys_V3(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_grandpa_note_stalled_V3(
-    parser_context_t* c, pd_grandpa_note_stalled_V3_t* m)
-{
-    CHECK_ERROR(_readBlockNumber(c, &m->delay))
-    CHECK_ERROR(_readBlockNumber(c, &m->best_finalized_block_number))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_sudo_sudo_as_V3(
     parser_context_t* c, pd_sudo_sudo_as_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->who))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->who))
     CHECK_ERROR(_readCall(c, &m->call))
     return parser_ok;
 }
@@ -1195,7 +1206,7 @@ __Z_INLINE parser_error_t _readMethod_sudo_sudo_as_V3(
 __Z_INLINE parser_error_t _readMethod_asset_register_ticker_V3(
     parser_context_t* c, pd_asset_register_ticker_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
@@ -1216,12 +1227,12 @@ __Z_INLINE parser_error_t _readMethod_asset_accept_asset_ownership_transfer_V3(
 __Z_INLINE parser_error_t _readMethod_asset_create_asset_V3(
     parser_context_t* c, pd_asset_create_asset_V3_t* m)
 {
-    CHECK_ERROR(_readAssetName_V3(c, &m->name))
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readAssetName(c, &m->name))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readbool(c, &m->divisible))
-    CHECK_ERROR(_readAssetType_V3(c, &m->asset_type))
-    CHECK_ERROR(_readVecAssetIdentifier_V3(c, &m->identifiers))
-    CHECK_ERROR(_readOptionFundingRoundName_V3(c, &m->funding_round))
+    CHECK_ERROR(_readAssetType(c, &m->asset_type))
+    CHECK_ERROR(_readVecAssetIdentifier(c, &m->identifiers))
+    CHECK_ERROR(_readOptionFundingRoundName(c, &m->funding_round))
     CHECK_ERROR(_readbool(c, &m->disable_iu))
     return parser_ok;
 }
@@ -1229,29 +1240,29 @@ __Z_INLINE parser_error_t _readMethod_asset_create_asset_V3(
 __Z_INLINE parser_error_t _readMethod_asset_freeze_V3(
     parser_context_t* c, pd_asset_freeze_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_unfreeze_V3(
     parser_context_t* c, pd_asset_unfreeze_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_rename_asset_V3(
     parser_context_t* c, pd_asset_rename_asset_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readAssetName_V3(c, &m->name))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetName(c, &m->name))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_issue_V3(
     parser_context_t* c, pd_asset_issue_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
     return parser_ok;
 }
@@ -1259,7 +1270,7 @@ __Z_INLINE parser_error_t _readMethod_asset_issue_V3(
 __Z_INLINE parser_error_t _readMethod_asset_redeem_V3(
     parser_context_t* c, pd_asset_redeem_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
     return parser_ok;
 }
@@ -1267,65 +1278,65 @@ __Z_INLINE parser_error_t _readMethod_asset_redeem_V3(
 __Z_INLINE parser_error_t _readMethod_asset_make_divisible_V3(
     parser_context_t* c, pd_asset_make_divisible_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_add_documents_V3(
     parser_context_t* c, pd_asset_add_documents_V3_t* m)
 {
-    CHECK_ERROR(_readVecDocument_V3(c, &m->docs))
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readVecDocument(c, &m->docs))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_remove_documents_V3(
     parser_context_t* c, pd_asset_remove_documents_V3_t* m)
 {
-    CHECK_ERROR(_readVecDocumentId_V3(c, &m->ids))
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readVecDocumentId(c, &m->ids))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_set_funding_round_V3(
     parser_context_t* c, pd_asset_set_funding_round_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readFundingRoundName_V3(c, &m->name))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readFundingRoundName(c, &m->name))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_update_identifiers_V3(
     parser_context_t* c, pd_asset_update_identifiers_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readVecAssetIdentifier_V3(c, &m->identifiers))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readVecAssetIdentifier(c, &m->identifiers))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_claim_classic_ticker_V3(
     parser_context_t* c, pd_asset_claim_classic_ticker_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readEcdsaSignature_V3(c, &m->ethereum_signature))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readEcdsaSignature(c, &m->ethereum_signature))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_reserve_classic_ticker_V3(
     parser_context_t* c, pd_asset_reserve_classic_ticker_V3_t* m)
 {
-    CHECK_ERROR(_readClassicTickerImport_V3(c, &m->classic_ticker_import))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->contract_did))
-    CHECK_ERROR(_readTickerRegistrationConfigMoment_V3(c, &m->config))
+    CHECK_ERROR(_readClassicTickerImport(c, &m->classic_ticker_import))
+    CHECK_ERROR(_readIdentityId(c, &m->contract_did))
+    CHECK_ERROR(_readTickerRegistrationConfigMoment(c, &m->config))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_controller_transfer_V3(
     parser_context_t* c, pd_asset_controller_transfer_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->from_portfolio))
+    CHECK_ERROR(_readPortfolioId(c, &m->from_portfolio))
     return parser_ok;
 }
 
@@ -1339,12 +1350,12 @@ __Z_INLINE parser_error_t _readMethod_asset_register_custom_asset_type_V3(
 __Z_INLINE parser_error_t _readMethod_asset_create_asset_with_custom_type_V3(
     parser_context_t* c, pd_asset_create_asset_with_custom_type_V3_t* m)
 {
-    CHECK_ERROR(_readAssetName_V3(c, &m->name))
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readAssetName(c, &m->name))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readbool(c, &m->divisible))
     CHECK_ERROR(_readVecu8(c, &m->custom_asset_type))
-    CHECK_ERROR(_readVecAssetIdentifier_V3(c, &m->identifiers))
-    CHECK_ERROR(_readOptionFundingRoundName_V3(c, &m->funding_round))
+    CHECK_ERROR(_readVecAssetIdentifier(c, &m->identifiers))
+    CHECK_ERROR(_readOptionFundingRoundName(c, &m->funding_round))
     CHECK_ERROR(_readbool(c, &m->disable_iu))
     return parser_ok;
 }
@@ -1352,96 +1363,105 @@ __Z_INLINE parser_error_t _readMethod_asset_create_asset_with_custom_type_V3(
 __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_V3(
     parser_context_t* c, pd_asset_set_asset_metadata_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readAssetMetadataKey_V3(c, &m->key))
-    CHECK_ERROR(_readAssetMetadataValue_V3(c, &m->value))
-    CHECK_ERROR(_readOptionAssetMetadataValueDetailMoment_V3(c, &m->detail))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetMetadataKey(c, &m->key))
+    CHECK_ERROR(_readAssetMetadataValue(c, &m->value))
+    CHECK_ERROR(_readOptionAssetMetadataValueDetailMoment(c, &m->detail))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_details_V3(
     parser_context_t* c, pd_asset_set_asset_metadata_details_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readAssetMetadataKey_V3(c, &m->key))
-    CHECK_ERROR(_readAssetMetadataValueDetailMoment_V3(c, &m->detail))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetMetadataKey(c, &m->key))
+    CHECK_ERROR(_readAssetMetadataValueDetailMoment(c, &m->detail))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_register_and_set_local_asset_metadata_V3(
     parser_context_t* c, pd_asset_register_and_set_local_asset_metadata_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readAssetMetadataName_V3(c, &m->name))
-    CHECK_ERROR(_readAssetMetadataSpec_V3(c, &m->spec))
-    CHECK_ERROR(_readAssetMetadataValue_V3(c, &m->value))
-    CHECK_ERROR(_readOptionAssetMetadataValueDetailMoment_V3(c, &m->detail))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetMetadataName(c, &m->name))
+    CHECK_ERROR(_readAssetMetadataSpec(c, &m->spec))
+    CHECK_ERROR(_readAssetMetadataValue(c, &m->value))
+    CHECK_ERROR(_readOptionAssetMetadataValueDetailMoment(c, &m->detail))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_register_asset_metadata_local_type_V3(
     parser_context_t* c, pd_asset_register_asset_metadata_local_type_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readAssetMetadataName_V3(c, &m->name))
-    CHECK_ERROR(_readAssetMetadataSpec_V3(c, &m->spec))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetMetadataName(c, &m->name))
+    CHECK_ERROR(_readAssetMetadataSpec(c, &m->spec))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_register_asset_metadata_global_type_V3(
     parser_context_t* c, pd_asset_register_asset_metadata_global_type_V3_t* m)
 {
-    CHECK_ERROR(_readAssetMetadataName_V3(c, &m->name))
-    CHECK_ERROR(_readAssetMetadataSpec_V3(c, &m->spec))
+    CHECK_ERROR(_readAssetMetadataName(c, &m->name))
+    CHECK_ERROR(_readAssetMetadataSpec(c, &m->spec))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_asset_redeem_from_portfolio_V3(
+    parser_context_t* c, pd_asset_redeem_from_portfolio_V3_t* m)
+{
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
+    CHECK_ERROR(_readPortfolioKind(c, &m->portfolio))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_capitaldistribution_distribute_V3(
     parser_context_t* c, pd_capitaldistribution_distribute_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readOptionPortfolioNumber_V3(c, &m->portfolio))
-    CHECK_ERROR(_readTicker_V3(c, &m->currency))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readOptionPortfolioNumber(c, &m->portfolio))
+    CHECK_ERROR(_readTicker(c, &m->currency))
     CHECK_ERROR(_readBalance(c, &m->per_share))
     CHECK_ERROR(_readBalance(c, &m->amount))
-    CHECK_ERROR(_readMoment_V3(c, &m->payment_at))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expires_at))
+    CHECK_ERROR(_readMoment(c, &m->payment_at))
+    CHECK_ERROR(_readOptionMoment(c, &m->expires_at))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_capitaldistribution_claim_V3(
     parser_context_t* c, pd_capitaldistribution_claim_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_capitaldistribution_push_benefit_V3(
     parser_context_t* c, pd_capitaldistribution_push_benefit_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->holder))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readIdentityId(c, &m->holder))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_capitaldistribution_reclaim_V3(
     parser_context_t* c, pd_capitaldistribution_reclaim_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_capitaldistribution_remove_distribution_V3(
     parser_context_t* c, pd_capitaldistribution_remove_distribution_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_checkpoint_create_checkpoint_V3(
     parser_context_t* c, pd_checkpoint_create_checkpoint_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
@@ -1455,32 +1475,32 @@ __Z_INLINE parser_error_t _readMethod_checkpoint_set_schedules_max_complexity_V3
 __Z_INLINE parser_error_t _readMethod_checkpoint_create_schedule_V3(
     parser_context_t* c, pd_checkpoint_create_schedule_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readScheduleSpec_V3(c, &m->schedule))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readScheduleSpec(c, &m->schedule))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_checkpoint_remove_schedule_V3(
     parser_context_t* c, pd_checkpoint_remove_schedule_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readScheduleId_V3(c, &m->id))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readScheduleId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_add_compliance_requirement_V3(
     parser_context_t* c, pd_compliancemanager_add_compliance_requirement_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readVecCondition_V3(c, &m->sender_conditions))
-    CHECK_ERROR(_readVecCondition_V3(c, &m->receiver_conditions))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readVecCondition(c, &m->sender_conditions))
+    CHECK_ERROR(_readVecCondition(c, &m->receiver_conditions))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_compliance_requirement_V3(
     parser_context_t* c, pd_compliancemanager_remove_compliance_requirement_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readu32(c, &m->id))
     return parser_ok;
 }
@@ -1488,37 +1508,37 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_compliance_requir
 __Z_INLINE parser_error_t _readMethod_compliancemanager_reset_asset_compliance_V3(
     parser_context_t* c, pd_compliancemanager_reset_asset_compliance_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_pause_asset_compliance_V3(
     parser_context_t* c, pd_compliancemanager_pause_asset_compliance_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_resume_asset_compliance_V3(
     parser_context_t* c, pd_compliancemanager_resume_asset_compliance_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_add_default_trusted_claim_issuer_V3(
     parser_context_t* c, pd_compliancemanager_add_default_trusted_claim_issuer_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readTrustedIssuer_V3(c, &m->issuer))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readTrustedIssuer(c, &m->issuer))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_default_trusted_claim_issuer_V3(
     parser_context_t* c, pd_compliancemanager_remove_default_trusted_claim_issuer_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->issuer))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readIdentityId(c, &m->issuer))
     return parser_ok;
 }
 
@@ -1532,71 +1552,71 @@ __Z_INLINE parser_error_t _readMethod_corporateaction_set_max_details_length_V3(
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_default_targets_V3(
     parser_context_t* c, pd_corporateaction_set_default_targets_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readTargetIdentities_V3(c, &m->targets))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readTargetIdentities(c, &m->targets))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_default_withholding_tax_V3(
     parser_context_t* c, pd_corporateaction_set_default_withholding_tax_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readTax_V3(c, &m->tax))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readTax(c, &m->tax))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_did_withholding_tax_V3(
     parser_context_t* c, pd_corporateaction_set_did_withholding_tax_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->taxed_did))
-    CHECK_ERROR(_readOptionTax_V3(c, &m->tax))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readIdentityId(c, &m->taxed_did))
+    CHECK_ERROR(_readOptionTax(c, &m->tax))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_initiate_corporate_action_V3(
     parser_context_t* c, pd_corporateaction_initiate_corporate_action_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readCAKind_V3(c, &m->kind))
-    CHECK_ERROR(_readMoment_V3(c, &m->decl_date))
-    CHECK_ERROR(_readOptionRecordDateSpec_V3(c, &m->record_date))
-    CHECK_ERROR(_readCADetails_V3(c, &m->details))
-    CHECK_ERROR(_readOptionTargetIdentities_V3(c, &m->targets))
-    CHECK_ERROR(_readOptionTax_V3(c, &m->default_withholding_tax))
-    CHECK_ERROR(_readOptionVecTupleIdentityIdTax_V3(c, &m->withholding_tax))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readCAKind(c, &m->kind))
+    CHECK_ERROR(_readMoment(c, &m->decl_date))
+    CHECK_ERROR(_readOptionRecordDateSpec(c, &m->record_date))
+    CHECK_ERROR(_readCADetails(c, &m->details))
+    CHECK_ERROR(_readOptionTargetIdentities(c, &m->targets))
+    CHECK_ERROR(_readOptionTax(c, &m->default_withholding_tax))
+    CHECK_ERROR(_readOptionVecTupleIdentityIdTax(c, &m->withholding_tax))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_link_ca_doc_V3(
     parser_context_t* c, pd_corporateaction_link_ca_doc_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->id))
-    CHECK_ERROR(_readVecDocumentId_V3(c, &m->docs))
+    CHECK_ERROR(_readCAId(c, &m->id))
+    CHECK_ERROR(_readVecDocumentId(c, &m->docs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_remove_ca_V3(
     parser_context_t* c, pd_corporateaction_remove_ca_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateaction_change_record_date_V3(
     parser_context_t* c, pd_corporateaction_change_record_date_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readOptionRecordDateSpec_V3(c, &m->record_date))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readOptionRecordDateSpec(c, &m->record_date))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateballot_attach_ballot_V3(
     parser_context_t* c, pd_corporateballot_attach_ballot_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readBallotTimeRange_V3(c, &m->range))
-    CHECK_ERROR(_readBallotMeta_V3(c, &m->meta))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readBallotTimeRange(c, &m->range))
+    CHECK_ERROR(_readBallotMeta(c, &m->meta))
     CHECK_ERROR(_readbool(c, &m->rcv))
     return parser_ok;
 }
@@ -1604,31 +1624,31 @@ __Z_INLINE parser_error_t _readMethod_corporateballot_attach_ballot_V3(
 __Z_INLINE parser_error_t _readMethod_corporateballot_vote_V3(
     parser_context_t* c, pd_corporateballot_vote_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readVecBallotVote_V3(c, &m->votes))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readVecBallotVote(c, &m->votes))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateballot_change_end_V3(
     parser_context_t* c, pd_corporateballot_change_end_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readMoment_V3(c, &m->end))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readMoment(c, &m->end))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateballot_change_meta_V3(
     parser_context_t* c, pd_corporateballot_change_meta_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
-    CHECK_ERROR(_readBallotMeta_V3(c, &m->meta))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
+    CHECK_ERROR(_readBallotMeta(c, &m->meta))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_corporateballot_change_rcv_V3(
     parser_context_t* c, pd_corporateballot_change_rcv_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     CHECK_ERROR(_readbool(c, &m->rcv))
     return parser_ok;
 }
@@ -1636,7 +1656,7 @@ __Z_INLINE parser_error_t _readMethod_corporateballot_change_rcv_V3(
 __Z_INLINE parser_error_t _readMethod_corporateballot_remove_ballot_V3(
     parser_context_t* c, pd_corporateballot_remove_ballot_V3_t* m)
 {
-    CHECK_ERROR(_readCAId_V3(c, &m->ca_id))
+    CHECK_ERROR(_readCAId(c, &m->ca_id))
     return parser_ok;
 }
 
@@ -1664,14 +1684,14 @@ __Z_INLINE parser_error_t _readMethod_pips_set_default_enactment_period_V3(
 __Z_INLINE parser_error_t _readMethod_pips_set_pending_pip_expiry_V3(
     parser_context_t* c, pd_pips_set_pending_pip_expiry_V3_t* m)
 {
-    CHECK_ERROR(_readMaybeBlockBlockNumber_V3(c, &m->expiry))
+    CHECK_ERROR(_readMaybeBlockBlockNumber(c, &m->expiry))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_set_max_pip_skip_count_V3(
     parser_context_t* c, pd_pips_set_max_pip_skip_count_V3_t* m)
 {
-    CHECK_ERROR(_readSkippedCount_V3(c, &m->max))
+    CHECK_ERROR(_readSkippedCount(c, &m->max))
     return parser_ok;
 }
 
@@ -1685,28 +1705,28 @@ __Z_INLINE parser_error_t _readMethod_pips_set_active_pip_limit_V3(
 __Z_INLINE parser_error_t _readMethod_pips_approve_committee_proposal_V3(
     parser_context_t* c, pd_pips_approve_committee_proposal_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_reject_proposal_V3(
     parser_context_t* c, pd_pips_reject_proposal_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_prune_proposal_V3(
     parser_context_t* c, pd_pips_prune_proposal_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_reschedule_execution_V3(
     parser_context_t* c, pd_pips_reschedule_execution_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     CHECK_ERROR(_readOptionBlockNumber(c, &m->until))
     return parser_ok;
 }
@@ -1726,60 +1746,60 @@ __Z_INLINE parser_error_t _readMethod_pips_snapshot_V3(
 __Z_INLINE parser_error_t _readMethod_pips_enact_snapshot_results_V3(
     parser_context_t* c, pd_pips_enact_snapshot_results_V3_t* m)
 {
-    CHECK_ERROR(_readVecTuplePipIdSnapshotResult_V3(c, &m->results))
+    CHECK_ERROR(_readVecTuplePipIdSnapshotResult(c, &m->results))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_execute_scheduled_pip_V3(
     parser_context_t* c, pd_pips_execute_scheduled_pip_V3_t* m)
 {
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readPipId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_pips_expire_scheduled_pip_V3(
     parser_context_t* c, pd_pips_expire_scheduled_pip_V3_t* m)
 {
-    CHECK_ERROR(_readIdentityId_V3(c, &m->did))
-    CHECK_ERROR(_readPipId_V3(c, &m->id))
+    CHECK_ERROR(_readIdentityId(c, &m->did))
+    CHECK_ERROR(_readPipId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_portfolio_create_portfolio_V3(
     parser_context_t* c, pd_portfolio_create_portfolio_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioName_V3(c, &m->name))
+    CHECK_ERROR(_readPortfolioName(c, &m->name))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_portfolio_delete_portfolio_V3(
     parser_context_t* c, pd_portfolio_delete_portfolio_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioNumber_V3(c, &m->num))
+    CHECK_ERROR(_readPortfolioNumber(c, &m->num))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_portfolio_move_portfolio_funds_V3(
     parser_context_t* c, pd_portfolio_move_portfolio_funds_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->from))
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->to))
-    CHECK_ERROR(_readVecMovePortfolioItem_V3(c, &m->items))
+    CHECK_ERROR(_readPortfolioId(c, &m->from))
+    CHECK_ERROR(_readPortfolioId(c, &m->to))
+    CHECK_ERROR(_readVecMovePortfolioItem(c, &m->items))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_portfolio_rename_portfolio_V3(
     parser_context_t* c, pd_portfolio_rename_portfolio_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioNumber_V3(c, &m->num))
-    CHECK_ERROR(_readPortfolioName_V3(c, &m->to_name))
+    CHECK_ERROR(_readPortfolioNumber(c, &m->num))
+    CHECK_ERROR(_readPortfolioName(c, &m->to_name))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_portfolio_quit_portfolio_custody_V3(
     parser_context_t* c, pd_portfolio_quit_portfolio_custody_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->pid))
+    CHECK_ERROR(_readPortfolioId(c, &m->pid))
     return parser_ok;
 }
 
@@ -1793,63 +1813,63 @@ __Z_INLINE parser_error_t _readMethod_portfolio_accept_portfolio_custody_V3(
 __Z_INLINE parser_error_t _readMethod_protocolfee_change_coefficient_V3(
     parser_context_t* c, pd_protocolfee_change_coefficient_V3_t* m)
 {
-    CHECK_ERROR(_readPosRatio_V3(c, &m->coefficient))
+    CHECK_ERROR(_readPosRatio(c, &m->coefficient))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_create_venue_V3(
     parser_context_t* c, pd_settlement_create_venue_V3_t* m)
 {
-    CHECK_ERROR(_readVenueDetails_V3(c, &m->details))
-    CHECK_ERROR(_readVecAccountId_V3(c, &m->signers))
-    CHECK_ERROR(_readVenueType_V3(c, &m->typ))
+    CHECK_ERROR(_readVenueDetails(c, &m->details))
+    CHECK_ERROR(_readVecAccountId(c, &m->signers))
+    CHECK_ERROR(_readVenueType(c, &m->typ))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_update_venue_details_V3(
     parser_context_t* c, pd_settlement_update_venue_details_V3_t* m)
 {
-    CHECK_ERROR(_readVenueId_V3(c, &m->id))
-    CHECK_ERROR(_readVenueDetails_V3(c, &m->details))
+    CHECK_ERROR(_readVenueId(c, &m->id))
+    CHECK_ERROR(_readVenueDetails(c, &m->details))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_update_venue_type_V3(
     parser_context_t* c, pd_settlement_update_venue_type_V3_t* m)
 {
-    CHECK_ERROR(_readVenueId_V3(c, &m->id))
-    CHECK_ERROR(_readVenueType_V3(c, &m->typ))
+    CHECK_ERROR(_readVenueId(c, &m->id))
+    CHECK_ERROR(_readVenueType(c, &m->typ))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_add_instruction_V3(
     parser_context_t* c, pd_settlement_add_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readVenueId_V3(c, &m->venue_id))
-    CHECK_ERROR(_readSettlementTypeBlockNumber_V3(c, &m->settlement_type))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->trade_date))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->value_date))
-    CHECK_ERROR(_readVecLeg_V3(c, &m->legs))
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_add_and_affirm_instruction_V3(
     parser_context_t* c, pd_settlement_add_and_affirm_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readVenueId_V3(c, &m->venue_id))
-    CHECK_ERROR(_readSettlementTypeBlockNumber_V3(c, &m->settlement_type))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->trade_date))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->value_date))
-    CHECK_ERROR(_readVecLeg_V3(c, &m->legs))
-    CHECK_ERROR(_readVecPortfolioId_V3(c, &m->portfolios))
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_affirm_instruction_V3(
     parser_context_t* c, pd_settlement_affirm_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
-    CHECK_ERROR(_readVecPortfolioId_V3(c, &m->portfolios))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
     CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
@@ -1857,8 +1877,8 @@ __Z_INLINE parser_error_t _readMethod_settlement_affirm_instruction_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_withdraw_affirmation_V3(
     parser_context_t* c, pd_settlement_withdraw_affirmation_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
-    CHECK_ERROR(_readVecPortfolioId_V3(c, &m->portfolios))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
     CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
@@ -1866,8 +1886,8 @@ __Z_INLINE parser_error_t _readMethod_settlement_withdraw_affirmation_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_reject_instruction_V3(
     parser_context_t* c, pd_settlement_reject_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->portfolio))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readPortfolioId(c, &m->portfolio))
     CHECK_ERROR(_readu32(c, &m->num_of_legs))
     return parser_ok;
 }
@@ -1875,9 +1895,9 @@ __Z_INLINE parser_error_t _readMethod_settlement_reject_instruction_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_affirm_with_receipts_V3(
     parser_context_t* c, pd_settlement_affirm_with_receipts_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
-    CHECK_ERROR(_readVecReceiptDetails_V3(c, &m->receipt_details))
-    CHECK_ERROR(_readVecPortfolioId_V3(c, &m->portfolios))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecReceiptDetails(c, &m->receipt_details))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
     CHECK_ERROR(_readu32(c, &m->max_legs_count))
     return parser_ok;
 }
@@ -1885,23 +1905,23 @@ __Z_INLINE parser_error_t _readMethod_settlement_affirm_with_receipts_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_claim_receipt_V3(
     parser_context_t* c, pd_settlement_claim_receipt_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
-    CHECK_ERROR(_readReceiptDetails_V3(c, &m->receipt_details))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readReceiptDetails(c, &m->receipt_details))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_unclaim_receipt_V3(
     parser_context_t* c, pd_settlement_unclaim_receipt_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->instruction_id))
-    CHECK_ERROR(_readLegId_V3(c, &m->leg_id))
+    CHECK_ERROR(_readInstructionId(c, &m->instruction_id))
+    CHECK_ERROR(_readLegId(c, &m->leg_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_set_venue_filtering_V3(
     parser_context_t* c, pd_settlement_set_venue_filtering_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readbool(c, &m->enabled))
     return parser_ok;
 }
@@ -1909,16 +1929,16 @@ __Z_INLINE parser_error_t _readMethod_settlement_set_venue_filtering_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_allow_venues_V3(
     parser_context_t* c, pd_settlement_allow_venues_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readVecVenueId_V3(c, &m->venues))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readVecVenueId(c, &m->venues))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_settlement_disallow_venues_V3(
     parser_context_t* c, pd_settlement_disallow_venues_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readVecVenueId_V3(c, &m->venues))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readVecVenueId(c, &m->venues))
     return parser_ok;
 }
 
@@ -1933,7 +1953,7 @@ __Z_INLINE parser_error_t _readMethod_settlement_change_receipt_validity_V3(
 __Z_INLINE parser_error_t _readMethod_settlement_execute_scheduled_instruction_V3(
     parser_context_t* c, pd_settlement_execute_scheduled_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
     CHECK_ERROR(_readu32(c, &m->_legs_count))
     return parser_ok;
 }
@@ -1941,77 +1961,111 @@ __Z_INLINE parser_error_t _readMethod_settlement_execute_scheduled_instruction_V
 __Z_INLINE parser_error_t _readMethod_settlement_reschedule_instruction_V3(
     parser_context_t* c, pd_settlement_reschedule_instruction_V3_t* m)
 {
-    CHECK_ERROR(_readInstructionId_V3(c, &m->id))
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_update_venue_signers_V3(
+    parser_context_t* c, pd_settlement_update_venue_signers_V3_t* m)
+{
+    CHECK_ERROR(_readVenueId(c, &m->id))
+    CHECK_ERROR(_readVecAccountId(c, &m->signers))
+    CHECK_ERROR(_readbool(c, &m->add_signers))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_add_instruction_with_memo_V3(
+    parser_context_t* c, pd_settlement_add_instruction_with_memo_V3_t* m)
+{
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
+    CHECK_ERROR(_readOptionInstructionMemo(c, &m->instruction_memo))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_add_and_affirm_instruction_with_memo_V3(
+    parser_context_t* c, pd_settlement_add_and_affirm_instruction_with_memo_V3_t* m)
+{
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
+    CHECK_ERROR(_readOptionInstructionMemo(c, &m->instruction_memo))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_create_fundraiser_V3(
     parser_context_t* c, pd_sto_create_fundraiser_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->offering_portfolio))
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->raising_portfolio))
-    CHECK_ERROR(_readTicker_V3(c, &m->raising_asset))
-    CHECK_ERROR(_readVecPriceTier_V3(c, &m->tiers))
-    CHECK_ERROR(_readVenueId_V3(c, &m->venue_id))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->start))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->end))
+    CHECK_ERROR(_readPortfolioId(c, &m->offering_portfolio))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readPortfolioId(c, &m->raising_portfolio))
+    CHECK_ERROR(_readTicker(c, &m->raising_asset))
+    CHECK_ERROR(_readVecPriceTier(c, &m->tiers))
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readOptionMoment(c, &m->start))
+    CHECK_ERROR(_readOptionMoment(c, &m->end))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->minimum_investment))
-    CHECK_ERROR(_readFundraiserName_V3(c, &m->fundraiser_name))
+    CHECK_ERROR(_readFundraiserName(c, &m->fundraiser_name))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_invest_V3(
     parser_context_t* c, pd_sto_invest_V3_t* m)
 {
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->investment_portfolio))
-    CHECK_ERROR(_readPortfolioId_V3(c, &m->funding_portfolio))
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readFundraiserId_V3(c, &m->id))
+    CHECK_ERROR(_readPortfolioId(c, &m->investment_portfolio))
+    CHECK_ERROR(_readPortfolioId(c, &m->funding_portfolio))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readFundraiserId(c, &m->id))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->purchase_amount))
     CHECK_ERROR(_readOptionBalance(c, &m->max_price))
-    CHECK_ERROR(_readOptionReceiptDetails_V3(c, &m->receipt))
+    CHECK_ERROR(_readOptionReceiptDetails(c, &m->receipt))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_freeze_fundraiser_V3(
     parser_context_t* c, pd_sto_freeze_fundraiser_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readFundraiserId_V3(c, &m->id))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_unfreeze_fundraiser_V3(
     parser_context_t* c, pd_sto_unfreeze_fundraiser_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readFundraiserId_V3(c, &m->id))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_modify_fundraiser_window_V3(
     parser_context_t* c, pd_sto_modify_fundraiser_window_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readFundraiserId_V3(c, &m->id))
-    CHECK_ERROR(_readMoment_V3(c, &m->start))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->end))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readFundraiserId(c, &m->id))
+    CHECK_ERROR(_readMoment(c, &m->start))
+    CHECK_ERROR(_readOptionMoment(c, &m->end))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_sto_stop_V3(
     parser_context_t* c, pd_sto_stop_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->offering_asset))
-    CHECK_ERROR(_readFundraiserId_V3(c, &m->id))
+    CHECK_ERROR(_readTicker(c, &m->offering_asset))
+    CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_treasury_disbursement_V3(
     parser_context_t* c, pd_treasury_disbursement_V3_t* m)
 {
-    CHECK_ERROR(_readVecBeneficiary_V3(c, &m->beneficiaries))
+    CHECK_ERROR(_readVecBeneficiary(c, &m->beneficiaries))
     return parser_ok;
 }
 
@@ -2025,24 +2079,24 @@ __Z_INLINE parser_error_t _readMethod_treasury_reimbursement_V3(
 __Z_INLINE parser_error_t _readMethod_utility_relay_tx_V3(
     parser_context_t* c, pd_utility_relay_tx_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->target))
-    CHECK_ERROR(_readOffChainSignature_V3(c, &m->signature))
-    CHECK_ERROR(_readUniqueCall_V3(c, &m->call))
+    CHECK_ERROR(_readAccountId(c, &m->target))
+    CHECK_ERROR(_readOffChainSignature(c, &m->signature))
+    CHECK_ERROR(_readUniqueCall(c, &m->call))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_externalagents_remove_agent_V3(
     parser_context_t* c, pd_externalagents_remove_agent_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->agent))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readIdentityId(c, &m->agent))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_externalagents_abdicate_V3(
     parser_context_t* c, pd_externalagents_abdicate_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
     return parser_ok;
 }
 
@@ -2056,26 +2110,26 @@ __Z_INLINE parser_error_t _readMethod_externalagents_accept_become_agent_V3(
 __Z_INLINE parser_error_t _readMethod_externalagents_create_group_and_add_auth_V3(
     parser_context_t* c, pd_externalagents_create_group_and_add_auth_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readExtrinsicPermissions_V3(c, &m->perms))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->target))
-    CHECK_ERROR(_readOptionMoment_V3(c, &m->expiry))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
+    CHECK_ERROR(_readIdentityId(c, &m->target))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_externalagents_create_and_change_custom_group_V3(
     parser_context_t* c, pd_externalagents_create_and_change_custom_group_V3_t* m)
 {
-    CHECK_ERROR(_readTicker_V3(c, &m->ticker))
-    CHECK_ERROR(_readExtrinsicPermissions_V3(c, &m->perms))
-    CHECK_ERROR(_readIdentityId_V3(c, &m->agent))
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
+    CHECK_ERROR(_readIdentityId(c, &m->agent))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_relayer_set_paying_key_V3(
     parser_context_t* c, pd_relayer_set_paying_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->user_key))
+    CHECK_ERROR(_readAccountId(c, &m->user_key))
     CHECK_ERROR(_readBalance(c, &m->polyx_limit))
     return parser_ok;
 }
@@ -2090,15 +2144,15 @@ __Z_INLINE parser_error_t _readMethod_relayer_accept_paying_key_V3(
 __Z_INLINE parser_error_t _readMethod_relayer_remove_paying_key_V3(
     parser_context_t* c, pd_relayer_remove_paying_key_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->user_key))
-    CHECK_ERROR(_readAccountId_V3(c, &m->paying_key))
+    CHECK_ERROR(_readAccountId(c, &m->user_key))
+    CHECK_ERROR(_readAccountId(c, &m->paying_key))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_relayer_update_polyx_limit_V3(
     parser_context_t* c, pd_relayer_update_polyx_limit_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->user_key))
+    CHECK_ERROR(_readAccountId(c, &m->user_key))
     CHECK_ERROR(_readBalance(c, &m->polyx_limit))
     return parser_ok;
 }
@@ -2106,7 +2160,7 @@ __Z_INLINE parser_error_t _readMethod_relayer_update_polyx_limit_V3(
 __Z_INLINE parser_error_t _readMethod_relayer_increase_polyx_limit_V3(
     parser_context_t* c, pd_relayer_increase_polyx_limit_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->user_key))
+    CHECK_ERROR(_readAccountId(c, &m->user_key))
     CHECK_ERROR(_readBalance(c, &m->amount))
     return parser_ok;
 }
@@ -2114,7 +2168,7 @@ __Z_INLINE parser_error_t _readMethod_relayer_increase_polyx_limit_V3(
 __Z_INLINE parser_error_t _readMethod_relayer_decrease_polyx_limit_V3(
     parser_context_t* c, pd_relayer_decrease_polyx_limit_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->user_key))
+    CHECK_ERROR(_readAccountId(c, &m->user_key))
     CHECK_ERROR(_readBalance(c, &m->amount))
     return parser_ok;
 }
@@ -2122,16 +2176,16 @@ __Z_INLINE parser_error_t _readMethod_relayer_decrease_polyx_limit_V3(
 __Z_INLINE parser_error_t _readMethod_rewards_claim_itn_reward_V3(
     parser_context_t* c, pd_rewards_claim_itn_reward_V3_t* m)
 {
-    CHECK_ERROR(_readAccountId_V3(c, &m->reward_address))
-    CHECK_ERROR(_readAccountId_V3(c, &m->itn_address))
-    CHECK_ERROR(_readOffChainSignature_V3(c, &m->signature))
+    CHECK_ERROR(_readAccountId(c, &m->_reward_address))
+    CHECK_ERROR(_readAccountId(c, &m->_itn_address))
+    CHECK_ERROR(_readOffChainSignature(c, &m->_signature))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_contracts_call_V3(
     parser_context_t* c, pd_contracts_call_V3_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource_V3(c, &m->dest))
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->dest))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readCompactu64(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
@@ -2157,7 +2211,7 @@ __Z_INLINE parser_error_t _readMethod_contracts_instantiate_V3(
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readCompactu64(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readCodeHash_V3(c, &m->code_hash))
+    CHECK_ERROR(_readCodeHash(c, &m->code_hash))
     CHECK_ERROR(_readBytes(c, &m->data))
     CHECK_ERROR(_readBytes(c, &m->salt))
     return parser_ok;
@@ -2174,7 +2228,7 @@ __Z_INLINE parser_error_t _readMethod_contracts_upload_code_V3(
 __Z_INLINE parser_error_t _readMethod_contracts_remove_code_V3(
     parser_context_t* c, pd_contracts_remove_code_V3_t* m)
 {
-    CHECK_ERROR(_readCodeHash_V3(c, &m->code_hash))
+    CHECK_ERROR(_readCodeHash(c, &m->code_hash))
     return parser_ok;
 }
 
@@ -2182,12 +2236,12 @@ __Z_INLINE parser_error_t _readMethod_polymeshcontracts_instantiate_with_code_pe
     parser_context_t* c, pd_polymeshcontracts_instantiate_with_code_perms_V3_t* m)
 {
     CHECK_ERROR(_readBalance(c, &m->endowment))
-    CHECK_ERROR(_readWeight_V3(c, &m->gas_limit))
+    CHECK_ERROR(_readWeight(c, &m->gas_limit))
     CHECK_ERROR(_readOptionBalance(c, &m->storage_deposit_limit))
     CHECK_ERROR(_readVecu8(c, &m->code))
     CHECK_ERROR(_readVecu8(c, &m->data))
     CHECK_ERROR(_readVecu8(c, &m->salt))
-    CHECK_ERROR(_readPermissions_V3(c, &m->perms))
+    CHECK_ERROR(_readPermissions(c, &m->perms))
     return parser_ok;
 }
 
@@ -2195,12 +2249,12 @@ __Z_INLINE parser_error_t _readMethod_polymeshcontracts_instantiate_with_hash_pe
     parser_context_t* c, pd_polymeshcontracts_instantiate_with_hash_perms_V3_t* m)
 {
     CHECK_ERROR(_readBalance(c, &m->endowment))
-    CHECK_ERROR(_readWeight_V3(c, &m->gas_limit))
+    CHECK_ERROR(_readWeight(c, &m->gas_limit))
     CHECK_ERROR(_readOptionBalance(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readCodeHash_V3(c, &m->code_hash))
+    CHECK_ERROR(_readCodeHash(c, &m->code_hash))
     CHECK_ERROR(_readVecu8(c, &m->data))
     CHECK_ERROR(_readVecu8(c, &m->salt))
-    CHECK_ERROR(_readPermissions_V3(c, &m->perms))
+    CHECK_ERROR(_readPermissions(c, &m->perms))
     return parser_ok;
 }
 
@@ -2390,6 +2444,8 @@ parser_error_t _readMethod_V3(
         break;
 
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0: /* module 0 call 0 */
         CHECK_ERROR(_readMethod_system_fill_block_V3(c, &method->nested.system_fill_block_V3))
         break;
@@ -2461,6 +2517,9 @@ parser_error_t _readMethod_V3(
         break;
     case 1815: /* module 7 call 23 */
         CHECK_ERROR(_readMethod_identity_set_secondary_key_permissions_V3(c, &method->basic.identity_set_secondary_key_permissions_V3))
+        break;
+    case 1817: /* module 7 call 25 */
+        CHECK_ERROR(_readMethod_identity_register_custom_claim_type_V3(c, &method->basic.identity_register_custom_claim_type_V3))
         break;
     case 2048: /* module 8 call 0 */
         CHECK_ERROR(_readMethod_cddserviceproviders_set_active_members_limit_V3(c, &method->nested.cddserviceproviders_set_active_members_limit_V3))
@@ -2616,7 +2675,7 @@ parser_error_t _readMethod_V3(
         CHECK_ERROR(_readMethod_bridge_change_bridge_exempted_V3(c, &method->nested.bridge_change_bridge_exempted_V3))
         break;
     case 4103: /* module 16 call 7 */
-        CHECK_ERROR(_readMethod_bridge_force_handle_bridge_tx_V3(c, &method->basic.bridge_force_handle_bridge_tx_V3))
+        CHECK_ERROR(_readMethod_bridge_force_handle_bridge_tx_V3(c, &method->nested.bridge_force_handle_bridge_tx_V3))
         break;
     case 4104: /* module 16 call 8 */
         CHECK_ERROR(_readMethod_bridge_batch_propose_bridge_tx_V3(c, &method->basic.bridge_batch_propose_bridge_tx_V3))
@@ -2650,6 +2709,9 @@ parser_error_t _readMethod_V3(
         break;
     case 4362: /* module 17 call 10 */
         CHECK_ERROR(_readMethod_staking_increase_validator_count_V3(c, &method->nested.staking_increase_validator_count_V3))
+        break;
+    case 4363: /* module 17 call 11 */
+        CHECK_ERROR(_readMethod_staking_scale_validator_count_V3(c, &method->nested.staking_scale_validator_count_V3))
         break;
     case 4364: /* module 17 call 12 */
         CHECK_ERROR(_readMethod_staking_add_permissioned_validator_V3(c, &method->nested.staking_add_permissioned_validator_V3))
@@ -2707,9 +2769,6 @@ parser_error_t _readMethod_V3(
         break;
     case 4865: /* module 19 call 1 */
         CHECK_ERROR(_readMethod_session_purge_keys_V3(c, &method->nested.session_purge_keys_V3))
-        break;
-    case 5378: /* module 21 call 2 */
-        CHECK_ERROR(_readMethod_grandpa_note_stalled_V3(c, &method->nested.grandpa_note_stalled_V3))
         break;
     case 6403: /* module 25 call 3 */
         CHECK_ERROR(_readMethod_sudo_sudo_as_V3(c, &method->nested.sudo_sudo_as_V3))
@@ -2785,6 +2844,9 @@ parser_error_t _readMethod_V3(
         break;
     case 6679: /* module 26 call 23 */
         CHECK_ERROR(_readMethod_asset_register_asset_metadata_global_type_V3(c, &method->basic.asset_register_asset_metadata_global_type_V3))
+        break;
+    case 6680: /* module 26 call 24 */
+        CHECK_ERROR(_readMethod_asset_redeem_from_portfolio_V3(c, &method->basic.asset_redeem_from_portfolio_V3))
         break;
     case 6912: /* module 27 call 0 */
         CHECK_ERROR(_readMethod_capitaldistribution_distribute_V3(c, &method->nested.capitaldistribution_distribute_V3))
@@ -2993,6 +3055,15 @@ parser_error_t _readMethod_V3(
     case 9488: /* module 37 call 16 */
         CHECK_ERROR(_readMethod_settlement_reschedule_instruction_V3(c, &method->basic.settlement_reschedule_instruction_V3))
         break;
+    case 9489: /* module 37 call 17 */
+        CHECK_ERROR(_readMethod_settlement_update_venue_signers_V3(c, &method->basic.settlement_update_venue_signers_V3))
+        break;
+    case 9490: /* module 37 call 18 */
+        CHECK_ERROR(_readMethod_settlement_add_instruction_with_memo_V3(c, &method->basic.settlement_add_instruction_with_memo_V3))
+        break;
+    case 9491: /* module 37 call 19 */
+        CHECK_ERROR(_readMethod_settlement_add_and_affirm_instruction_with_memo_V3(c, &method->basic.settlement_add_and_affirm_instruction_with_memo_V3))
+        break;
     case 9984: /* module 39 call 0 */
         CHECK_ERROR(_readMethod_sto_create_fundraiser_V3(c, &method->basic.sto_create_fundraiser_V3))
         break;
@@ -3118,6 +3189,8 @@ const char* _getMethod_ModuleName_V3(uint8_t moduleIdx)
     case 41:
         return STR_MO_UTILITY;
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0:
         return STR_MO_SYSTEM;
     case 2:
@@ -3142,8 +3215,6 @@ const char* _getMethod_ModuleName_V3(uint8_t moduleIdx)
         return STR_MO_BRIDGE;
     case 19:
         return STR_MO_SESSION;
-    case 21:
-        return STR_MO_GRANDPA;
     case 25:
         return STR_MO_SUDO;
     case 26:
@@ -3300,6 +3371,8 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
 {
     switch (callPrivIdx) {
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0: /* module 0 call 0 */
         return STR_ME_FILL_BLOCK;
     case 1: /* module 0 call 1 */
@@ -3348,6 +3421,8 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
         return STR_ME_ROTATE_PRIMARY_KEY_TO_SECONDARY;
     case 1815: /* module 7 call 23 */
         return STR_ME_SET_SECONDARY_KEY_PERMISSIONS;
+    case 1817: /* module 7 call 25 */
+        return STR_ME_REGISTER_CUSTOM_CLAIM_TYPE;
     case 2048: /* module 8 call 0 */
         return STR_ME_SET_ACTIVE_MEMBERS_LIMIT;
     case 2049: /* module 8 call 1 */
@@ -3474,6 +3549,8 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
         return STR_ME_SET_VALIDATOR_COUNT;
     case 4362: /* module 17 call 10 */
         return STR_ME_INCREASE_VALIDATOR_COUNT;
+    case 4363: /* module 17 call 11 */
+        return STR_ME_SCALE_VALIDATOR_COUNT;
     case 4364: /* module 17 call 12 */
         return STR_ME_ADD_PERMISSIONED_VALIDATOR;
     case 4365: /* module 17 call 13 */
@@ -3512,8 +3589,6 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
         return STR_ME_SET_KEYS;
     case 4865: /* module 19 call 1 */
         return STR_ME_PURGE_KEYS;
-    case 5378: /* module 21 call 2 */
-        return STR_ME_NOTE_STALLED;
     case 6403: /* module 25 call 3 */
         return STR_ME_SUDO_AS;
     case 6656: /* module 26 call 0 */
@@ -3564,6 +3639,8 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
         return STR_ME_REGISTER_ASSET_METADATA_LOCAL_TYPE;
     case 6679: /* module 26 call 23 */
         return STR_ME_REGISTER_ASSET_METADATA_GLOBAL_TYPE;
+    case 6680: /* module 26 call 24 */
+        return STR_ME_REDEEM_FROM_PORTFOLIO;
     case 6912: /* module 27 call 0 */
         return STR_ME_DISTRIBUTE;
     case 6913: /* module 27 call 1 */
@@ -3702,6 +3779,12 @@ const char* _getMethod_Name_V3_ParserFull(uint16_t callPrivIdx)
         return STR_ME_EXECUTE_SCHEDULED_INSTRUCTION;
     case 9488: /* module 37 call 16 */
         return STR_ME_RESCHEDULE_INSTRUCTION;
+    case 9489: /* module 37 call 17 */
+        return STR_ME_UPDATE_VENUE_SIGNERS;
+    case 9490: /* module 37 call 18 */
+        return STR_ME_ADD_INSTRUCTION_WITH_MEMO;
+    case 9491: /* module 37 call 19 */
+        return STR_ME_ADD_AND_AFFIRM_INSTRUCTION_WITH_MEMO;
     case 9984: /* module 39 call 0 */
         return STR_ME_CREATE_FUNDRAISER;
     case 9985: /* module 39 call 1 */
@@ -3876,6 +3959,8 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
     case 10498: /* module 41 call 2 */
         return 1;
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0: /* module 0 call 0 */
         return 1;
     case 1: /* module 0 call 1 */
@@ -3924,6 +4009,8 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 1815: /* module 7 call 23 */
         return 2;
+    case 1817: /* module 7 call 25 */
+        return 1;
     case 2048: /* module 8 call 0 */
         return 1;
     case 2049: /* module 8 call 1 */
@@ -4050,6 +4137,8 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
         return 1;
     case 4362: /* module 17 call 10 */
         return 1;
+    case 4363: /* module 17 call 11 */
+        return 1;
     case 4364: /* module 17 call 12 */
         return 2;
     case 4365: /* module 17 call 13 */
@@ -4088,8 +4177,6 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 4865: /* module 19 call 1 */
         return 0;
-    case 5378: /* module 21 call 2 */
-        return 2;
     case 6403: /* module 25 call 3 */
         return 2;
     case 6656: /* module 26 call 0 */
@@ -4140,6 +4227,8 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
         return 3;
     case 6679: /* module 26 call 23 */
         return 2;
+    case 6680: /* module 26 call 24 */
+        return 3;
     case 6912: /* module 27 call 0 */
         return 7;
     case 6913: /* module 27 call 1 */
@@ -4278,6 +4367,12 @@ uint8_t _getMethod_NumItems_V3(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 9488: /* module 37 call 16 */
         return 1;
+    case 9489: /* module 37 call 17 */
+        return 3;
+    case 9490: /* module 37 call 18 */
+        return 6;
+    case 9491: /* module 37 call 19 */
+        return 7;
     case 9984: /* module 39 call 0 */
         return 10;
     case 9985: /* module 39 call 1 */
@@ -4776,6 +4871,8 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return NULL;
         }
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0: /* module 0 call 0 */
         switch (itemIdx) {
         case 0:
@@ -4965,6 +5062,13 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_key;
         case 1:
             return STR_IT_perms;
+        default:
+            return NULL;
+        }
+    case 1817: /* module 7 call 25 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ty;
         default:
             return NULL;
         }
@@ -5447,6 +5551,13 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 4363: /* module 17 call 11 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_factor;
+        default:
+            return NULL;
+        }
     case 4364: /* module 17 call 12 */
         switch (itemIdx) {
         case 0:
@@ -5587,15 +5698,6 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         }
     case 4865: /* module 19 call 1 */
         switch (itemIdx) {
-        default:
-            return NULL;
-        }
-    case 5378: /* module 21 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_delay;
-        case 1:
-            return STR_IT_best_finalized_block_number;
         default:
             return NULL;
         }
@@ -5845,6 +5947,17 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_name;
         case 1:
             return STR_IT_spec;
+        default:
+            return NULL;
+        }
+    case 6680: /* module 26 call 24 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ticker;
+        case 1:
+            return STR_IT_amount;
+        case 2:
+            return STR_IT_portfolio;
         default:
             return NULL;
         }
@@ -6463,6 +6576,53 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 9489: /* module 37 call 17 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_signers;
+        case 2:
+            return STR_IT_add_signers;
+        default:
+            return NULL;
+        }
+    case 9490: /* module 37 call 18 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_venue_id;
+        case 1:
+            return STR_IT_settlement_type;
+        case 2:
+            return STR_IT_trade_date;
+        case 3:
+            return STR_IT_value_date;
+        case 4:
+            return STR_IT_legs;
+        case 5:
+            return STR_IT_instruction_memo;
+        default:
+            return NULL;
+        }
+    case 9491: /* module 37 call 19 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_venue_id;
+        case 1:
+            return STR_IT_settlement_type;
+        case 2:
+            return STR_IT_trade_date;
+        case 3:
+            return STR_IT_value_date;
+        case 4:
+            return STR_IT_legs;
+        case 5:
+            return STR_IT_portfolios;
+        case 6:
+            return STR_IT_instruction_memo;
+        default:
+            return NULL;
+        }
     case 9984: /* module 39 call 0 */
         switch (itemIdx) {
         case 0:
@@ -6674,11 +6834,11 @@ const char* _getMethod_ItemName_V3(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 11520: /* module 45 call 0 */
         switch (itemIdx) {
         case 0:
-            return STR_IT_reward_address;
+            return STR_IT__reward_address;
         case 1:
-            return STR_IT_itn_address;
+            return STR_IT__itn_address;
         case 2:
-            return STR_IT_signature;
+            return STR_IT__signature;
         default:
             return NULL;
         }
@@ -6833,7 +6993,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1280: /* module 5 call 0 */
         switch (itemIdx) {
         case 0: /* balances_transfer_V3 - dest */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.balances_transfer_V3.dest,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6848,7 +7008,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1281: /* module 5 call 1 */
         switch (itemIdx) {
         case 0: /* balances_transfer_with_memo_V3 - dest */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.balances_transfer_with_memo_V3.dest,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6858,7 +7018,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* balances_transfer_with_memo_V3 - memo */;
-            return _toStringOptionMemo_V3(
+            return _toStringOptionMemo(
                 &m->nested.balances_transfer_with_memo_V3.memo,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6898,17 +7058,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1799: /* module 7 call 7 */
         switch (itemIdx) {
         case 0: /* identity_add_claim_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_add_claim_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_add_claim_V3 - claim */;
-            return _toStringClaim_V3(
+            return _toStringClaim(
                 &m->nested.identity_add_claim_V3.claim,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* identity_add_claim_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.identity_add_claim_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6918,12 +7078,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1800: /* module 7 call 8 */
         switch (itemIdx) {
         case 0: /* identity_revoke_claim_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_revoke_claim_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_revoke_claim_V3 - claim */;
-            return _toStringClaim_V3(
+            return _toStringClaim(
                 &m->nested.identity_revoke_claim_V3.claim,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6933,12 +7093,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1801: /* module 7 call 9 */
         switch (itemIdx) {
         case 0: /* identity_set_permission_to_signer_V3 - key */;
-            return _toStringSignatoryAccountId_V3(
+            return _toStringSignatoryAccountId(
                 &m->nested.identity_set_permission_to_signer_V3.key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_set_permission_to_signer_V3 - perms */;
-            return _toStringPermissions_V3(
+            return _toStringPermissions(
                 &m->nested.identity_set_permission_to_signer_V3.perms,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6958,17 +7118,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1805: /* module 7 call 13 */
         switch (itemIdx) {
         case 0: /* identity_add_authorization_V3 - target */;
-            return _toStringSignatoryAccountId_V3(
+            return _toStringSignatoryAccountId(
                 &m->nested.identity_add_authorization_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_add_authorization_V3 - data */;
-            return _toStringAuthorizationDataAccountId_V3(
+            return _toStringAuthorizationDataAccountId(
                 &m->nested.identity_add_authorization_V3.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* identity_add_authorization_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.identity_add_authorization_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6978,7 +7138,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1806: /* module 7 call 14 */
         switch (itemIdx) {
         case 0: /* identity_remove_authorization_V3 - target */;
-            return _toStringSignatoryAccountId_V3(
+            return _toStringSignatoryAccountId(
                 &m->nested.identity_remove_authorization_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -6998,22 +7158,22 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1808: /* module 7 call 16 */
         switch (itemIdx) {
         case 0: /* identity_add_investor_uniqueness_claim_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_add_investor_uniqueness_claim_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_add_investor_uniqueness_claim_V3 - claim */;
-            return _toStringClaim_V3(
+            return _toStringClaim(
                 &m->nested.identity_add_investor_uniqueness_claim_V3.claim,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* identity_add_investor_uniqueness_claim_V3 - proof */;
-            return _toStringInvestorZKProofData_V3(
+            return _toStringInvestorZKProofData(
                 &m->nested.identity_add_investor_uniqueness_claim_V3.proof,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* identity_add_investor_uniqueness_claim_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.identity_add_investor_uniqueness_claim_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7023,12 +7183,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1814: /* module 7 call 22 */
         switch (itemIdx) {
         case 0: /* identity_add_secondary_keys_with_authorization_V3 - additional_keys */;
-            return _toStringVecSecondaryKeyWithAuthAccountId_V3(
+            return _toStringVecSecondaryKeyWithAuthAccountId(
                 &m->nested.identity_add_secondary_keys_with_authorization_V3.additional_keys,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_add_secondary_keys_with_authorization_V3 - expires_at */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->nested.identity_add_secondary_keys_with_authorization_V3.expires_at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7038,7 +7198,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1816: /* module 7 call 24 */
         switch (itemIdx) {
         case 0: /* identity_remove_secondary_keys_V3 - keys_to_remove */;
-            return _toStringVecAccountId_V3(
+            return _toStringVecAccountId(
                 &m->nested.identity_remove_secondary_keys_V3.keys_to_remove,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7048,7 +7208,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3840: /* module 15 call 0 */
         switch (itemIdx) {
         case 0: /* multisig_create_multisig_V3 - signers */;
-            return _toStringVecSignatoryAccountId_V3(
+            return _toStringVecSignatoryAccountId(
                 &m->nested.multisig_create_multisig_V3.signers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7063,7 +7223,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3841: /* module 15 call 1 */
         switch (itemIdx) {
         case 0: /* multisig_create_or_approve_proposal_as_identity_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_create_or_approve_proposal_as_identity_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7073,7 +7233,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* multisig_create_or_approve_proposal_as_identity_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.multisig_create_or_approve_proposal_as_identity_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7088,7 +7248,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3842: /* module 15 call 2 */
         switch (itemIdx) {
         case 0: /* multisig_create_or_approve_proposal_as_key_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_create_or_approve_proposal_as_key_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7098,7 +7258,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* multisig_create_or_approve_proposal_as_key_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.multisig_create_or_approve_proposal_as_key_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7113,7 +7273,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3843: /* module 15 call 3 */
         switch (itemIdx) {
         case 0: /* multisig_create_proposal_as_identity_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_create_proposal_as_identity_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7123,7 +7283,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* multisig_create_proposal_as_identity_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.multisig_create_proposal_as_identity_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7138,7 +7298,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3844: /* module 15 call 4 */
         switch (itemIdx) {
         case 0: /* multisig_create_proposal_as_key_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_create_proposal_as_key_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7148,7 +7308,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* multisig_create_proposal_as_key_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.multisig_create_proposal_as_key_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7163,7 +7323,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3845: /* module 15 call 5 */
         switch (itemIdx) {
         case 0: /* multisig_approve_as_identity_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_approve_as_identity_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7178,7 +7338,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3846: /* module 15 call 6 */
         switch (itemIdx) {
         case 0: /* multisig_approve_as_key_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_approve_as_key_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7193,7 +7353,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3847: /* module 15 call 7 */
         switch (itemIdx) {
         case 0: /* multisig_reject_as_identity_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_reject_as_identity_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7208,7 +7368,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3848: /* module 15 call 8 */
         switch (itemIdx) {
         case 0: /* multisig_reject_as_key_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_reject_as_key_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7243,7 +7403,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3851: /* module 15 call 11 */
         switch (itemIdx) {
         case 0: /* multisig_add_multisig_signer_V3 - signer */;
-            return _toStringSignatoryAccountId_V3(
+            return _toStringSignatoryAccountId(
                 &m->nested.multisig_add_multisig_signer_V3.signer,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7253,7 +7413,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3852: /* module 15 call 12 */
         switch (itemIdx) {
         case 0: /* multisig_remove_multisig_signer_V3 - signer */;
-            return _toStringSignatoryAccountId_V3(
+            return _toStringSignatoryAccountId(
                 &m->nested.multisig_remove_multisig_signer_V3.signer,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7263,12 +7423,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3853: /* module 15 call 13 */
         switch (itemIdx) {
         case 0: /* multisig_add_multisig_signers_via_creator_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_add_multisig_signers_via_creator_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* multisig_add_multisig_signers_via_creator_V3 - signers */;
-            return _toStringVecSignatoryAccountId_V3(
+            return _toStringVecSignatoryAccountId(
                 &m->nested.multisig_add_multisig_signers_via_creator_V3.signers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7278,12 +7438,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3854: /* module 15 call 14 */
         switch (itemIdx) {
         case 0: /* multisig_remove_multisig_signers_via_creator_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_remove_multisig_signers_via_creator_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* multisig_remove_multisig_signers_via_creator_V3 - signers */;
-            return _toStringVecSignatoryAccountId_V3(
+            return _toStringVecSignatoryAccountId(
                 &m->nested.multisig_remove_multisig_signers_via_creator_V3.signers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7303,7 +7463,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3857: /* module 15 call 17 */
         switch (itemIdx) {
         case 0: /* multisig_make_multisig_primary_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_make_multisig_primary_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7318,7 +7478,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3858: /* module 15 call 18 */
         switch (itemIdx) {
         case 0: /* multisig_execute_scheduled_proposal_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.multisig_execute_scheduled_proposal_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7328,12 +7488,12 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* multisig_execute_scheduled_proposal_V3 - multisig_did */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.multisig_execute_scheduled_proposal_V3.multisig_did,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* multisig_execute_scheduled_proposal_V3 - _proposal_weight */;
-            return _toStringWeight_V3(
+            return _toStringWeight(
                 &m->nested.multisig_execute_scheduled_proposal_V3._proposal_weight,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7343,7 +7503,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4352: /* module 17 call 0 */
         switch (itemIdx) {
         case 0: /* staking_bond_V3 - controller */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.staking_bond_V3.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7353,7 +7513,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* staking_bond_V3 - payee */;
-            return _toStringRewardDestination_V3(
+            return _toStringRewardDestination(
                 &m->nested.staking_bond_V3.payee,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7393,7 +7553,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4356: /* module 17 call 4 */
         switch (itemIdx) {
         case 0: /* staking_validate_V3 - prefs */;
-            return _toStringValidatorPrefs_V3(
+            return _toStringValidatorPrefs(
                 &m->nested.staking_validate_V3.prefs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7403,7 +7563,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4357: /* module 17 call 5 */
         switch (itemIdx) {
         case 0: /* staking_nominate_V3 - targets */;
-            return _toStringVecLookupasStaticLookupSource_V3(
+            return _toStringVecLookupasStaticLookupSource(
                 &m->nested.staking_nominate_V3.targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7418,7 +7578,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4359: /* module 17 call 7 */
         switch (itemIdx) {
         case 0: /* staking_set_payee_V3 - payee */;
-            return _toStringRewardDestination_V3(
+            return _toStringRewardDestination(
                 &m->nested.staking_set_payee_V3.payee,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7428,7 +7588,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4360: /* module 17 call 8 */
         switch (itemIdx) {
         case 0: /* staking_set_controller_V3 - controller */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.staking_set_controller_V3.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7458,12 +7618,12 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* pips_propose_V3 - url */;
-            return _toStringOptionUrl_V3(
+            return _toStringOptionUrl(
                 &m->nested.pips_propose_V3.url,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* pips_propose_V3 - description */;
-            return _toStringOptionPipDescription_V3(
+            return _toStringOptionPipDescription(
                 &m->nested.pips_propose_V3.description,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7473,7 +7633,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8455: /* module 33 call 7 */
         switch (itemIdx) {
         case 0: /* pips_vote_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_vote_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7521,10 +7681,12 @@ parser_error_t _getMethod_ItemValue_V3(
             return parser_no_data;
         }
 #ifdef SUBSTRATE_PARSER_FULL
+#ifndef TARGET_NANOS
+#endif
     case 0: /* module 0 call 0 */
         switch (itemIdx) {
         case 0: /* system_fill_block_V3 - ratio */;
-            return _toStringPerbill_V3(
+            return _toStringPerbill(
                 &m->nested.system_fill_block_V3.ratio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7534,7 +7696,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1: /* module 0 call 1 */
         switch (itemIdx) {
         case 0: /* system_remark_V3 - remark */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->nested.system_remark_V3.remark,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7574,7 +7736,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8: /* module 0 call 8 */
         switch (itemIdx) {
         case 0: /* system_remark_with_event_V3 - remark */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->nested.system_remark_with_event_V3.remark,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7594,7 +7756,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 768: /* module 3 call 0 */
         switch (itemIdx) {
         case 0: /* indices_claim_V3 - index */;
-            return _toStringAccountIndex_V3(
+            return _toStringAccountIndex(
                 &m->nested.indices_claim_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7604,12 +7766,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 769: /* module 3 call 1 */
         switch (itemIdx) {
         case 0: /* indices_transfer_V3 - new_ */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.indices_transfer_V3.new_,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* indices_transfer_V3 - index */;
-            return _toStringAccountIndex_V3(
+            return _toStringAccountIndex(
                 &m->nested.indices_transfer_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7619,7 +7781,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 770: /* module 3 call 2 */
         switch (itemIdx) {
         case 0: /* indices_free_V3 - index */;
-            return _toStringAccountIndex_V3(
+            return _toStringAccountIndex(
                 &m->nested.indices_free_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7629,12 +7791,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 771: /* module 3 call 3 */
         switch (itemIdx) {
         case 0: /* indices_force_transfer_V3 - new_ */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.indices_force_transfer_V3.new_,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* indices_force_transfer_V3 - index */;
-            return _toStringAccountIndex_V3(
+            return _toStringAccountIndex(
                 &m->nested.indices_force_transfer_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7649,7 +7811,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 772: /* module 3 call 4 */
         switch (itemIdx) {
         case 0: /* indices_freeze_V3 - index */;
-            return _toStringAccountIndex_V3(
+            return _toStringAccountIndex(
                 &m->nested.indices_freeze_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7669,7 +7831,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1283: /* module 5 call 3 */
         switch (itemIdx) {
         case 0: /* balances_set_balance_V3 - who */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.balances_set_balance_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7689,12 +7851,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1284: /* module 5 call 4 */
         switch (itemIdx) {
         case 0: /* balances_force_transfer_V3 - source */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.balances_force_transfer_V3.source,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* balances_force_transfer_V3 - dest */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.balances_force_transfer_V3.dest,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7719,17 +7881,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1793: /* module 7 call 1 */
         switch (itemIdx) {
         case 0: /* identity_invalidate_cdd_claims_V3 - cdd */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_invalidate_cdd_claims_V3.cdd,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_invalidate_cdd_claims_V3 - disable_from */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->nested.identity_invalidate_cdd_claims_V3.disable_from,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* identity_invalidate_cdd_claims_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.identity_invalidate_cdd_claims_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7754,7 +7916,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1809: /* module 7 call 17 */
         switch (itemIdx) {
         case 0: /* identity_gc_add_cdd_claim_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_gc_add_cdd_claim_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7764,7 +7926,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1810: /* module 7 call 18 */
         switch (itemIdx) {
         case 0: /* identity_gc_revoke_cdd_claim_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.identity_gc_revoke_cdd_claim_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7774,17 +7936,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1812: /* module 7 call 20 */
         switch (itemIdx) {
         case 0: /* identity_revoke_claim_by_index_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->basic.identity_revoke_claim_by_index_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_revoke_claim_by_index_V3 - claim_type */;
-            return _toStringClaimType_V3(
+            return _toStringClaimType(
                 &m->basic.identity_revoke_claim_by_index_V3.claim_type,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* identity_revoke_claim_by_index_V3 - scope */;
-            return _toStringOptionScope_V3(
+            return _toStringOptionScope(
                 &m->basic.identity_revoke_claim_by_index_V3.scope,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7809,13 +7971,23 @@ parser_error_t _getMethod_ItemValue_V3(
     case 1815: /* module 7 call 23 */
         switch (itemIdx) {
         case 0: /* identity_set_secondary_key_permissions_V3 - key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.identity_set_secondary_key_permissions_V3.key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* identity_set_secondary_key_permissions_V3 - perms */;
-            return _toStringPermissions_V3(
+            return _toStringPermissions(
                 &m->basic.identity_set_secondary_key_permissions_V3.perms,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 1817: /* module 7 call 25 */
+        switch (itemIdx) {
+        case 0: /* identity_register_custom_claim_type_V3 - ty */;
+            return _toStringVecu8(
+                &m->basic.identity_register_custom_claim_type_V3.ty,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -7824,7 +7996,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2048: /* module 8 call 0 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_set_active_members_limit_V3 - limit */;
-            return _toStringMemberCount_V3(
+            return _toStringMemberCount(
                 &m->nested.cddserviceproviders_set_active_members_limit_V3.limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7834,17 +8006,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2049: /* module 8 call 1 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_disable_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.cddserviceproviders_disable_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* cddserviceproviders_disable_member_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.cddserviceproviders_disable_member_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* cddserviceproviders_disable_member_V3 - at */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.cddserviceproviders_disable_member_V3.at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7854,7 +8026,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2050: /* module 8 call 2 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_add_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.cddserviceproviders_add_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7864,7 +8036,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2051: /* module 8 call 3 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_remove_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.cddserviceproviders_remove_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7874,12 +8046,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2052: /* module 8 call 4 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_swap_member_V3 - remove */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.cddserviceproviders_swap_member_V3.remove,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* cddserviceproviders_swap_member_V3 - add */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.cddserviceproviders_swap_member_V3.add,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7889,7 +8061,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2053: /* module 8 call 5 */
         switch (itemIdx) {
         case 0: /* cddserviceproviders_reset_members_V3 - members */;
-            return _toStringVecIdentityId_V3(
+            return _toStringVecIdentityId(
                 &m->nested.cddserviceproviders_reset_members_V3.members,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7919,7 +8091,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2305: /* module 9 call 1 */
         switch (itemIdx) {
         case 0: /* polymeshcommittee_set_release_coordinator_V3 - id */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.polymeshcommittee_set_release_coordinator_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7929,7 +8101,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2306: /* module 9 call 2 */
         switch (itemIdx) {
         case 0: /* polymeshcommittee_set_expires_after_V3 - expiry */;
-            return _toStringMaybeBlockBlockNumber_V3(
+            return _toStringMaybeBlockBlockNumber(
                 &m->nested.polymeshcommittee_set_expires_after_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7944,7 +8116,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* polymeshcommittee_vote_or_propose_V3 - call */;
-            return _toStringCall(
+            return _toStringProposal(
                 &m->nested.polymeshcommittee_vote_or_propose_V3.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7959,7 +8131,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* polymeshcommittee_vote_V3 - index */;
-            return _toStringProposalIndex_V3(
+            return _toStringProposalIndex(
                 &m->nested.polymeshcommittee_vote_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7974,7 +8146,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2560: /* module 10 call 0 */
         switch (itemIdx) {
         case 0: /* committeemembership_set_active_members_limit_V3 - limit */;
-            return _toStringMemberCount_V3(
+            return _toStringMemberCount(
                 &m->nested.committeemembership_set_active_members_limit_V3.limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -7984,17 +8156,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2561: /* module 10 call 1 */
         switch (itemIdx) {
         case 0: /* committeemembership_disable_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.committeemembership_disable_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* committeemembership_disable_member_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.committeemembership_disable_member_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* committeemembership_disable_member_V3 - at */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.committeemembership_disable_member_V3.at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8004,7 +8176,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2562: /* module 10 call 2 */
         switch (itemIdx) {
         case 0: /* committeemembership_add_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.committeemembership_add_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8014,7 +8186,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2563: /* module 10 call 3 */
         switch (itemIdx) {
         case 0: /* committeemembership_remove_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.committeemembership_remove_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8024,12 +8196,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2564: /* module 10 call 4 */
         switch (itemIdx) {
         case 0: /* committeemembership_swap_member_V3 - remove */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.committeemembership_swap_member_V3.remove,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* committeemembership_swap_member_V3 - add */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.committeemembership_swap_member_V3.add,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8039,7 +8211,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2565: /* module 10 call 5 */
         switch (itemIdx) {
         case 0: /* committeemembership_reset_members_V3 - members */;
-            return _toStringVecIdentityId_V3(
+            return _toStringVecIdentityId(
                 &m->nested.committeemembership_reset_members_V3.members,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8069,7 +8241,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2817: /* module 11 call 1 */
         switch (itemIdx) {
         case 0: /* technicalcommittee_set_release_coordinator_V3 - id */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommittee_set_release_coordinator_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8079,7 +8251,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 2818: /* module 11 call 2 */
         switch (itemIdx) {
         case 0: /* technicalcommittee_set_expires_after_V3 - expiry */;
-            return _toStringMaybeBlockBlockNumber_V3(
+            return _toStringMaybeBlockBlockNumber(
                 &m->nested.technicalcommittee_set_expires_after_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8094,7 +8266,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* technicalcommittee_vote_or_propose_V3 - call */;
-            return _toStringCall(
+            return _toStringProposal(
                 &m->nested.technicalcommittee_vote_or_propose_V3.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8109,7 +8281,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* technicalcommittee_vote_V3 - index */;
-            return _toStringProposalIndex_V3(
+            return _toStringProposalIndex(
                 &m->nested.technicalcommittee_vote_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8124,7 +8296,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3072: /* module 12 call 0 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_set_active_members_limit_V3 - limit */;
-            return _toStringMemberCount_V3(
+            return _toStringMemberCount(
                 &m->nested.technicalcommitteemembership_set_active_members_limit_V3.limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8134,17 +8306,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3073: /* module 12 call 1 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_disable_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommitteemembership_disable_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* technicalcommitteemembership_disable_member_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.technicalcommitteemembership_disable_member_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* technicalcommitteemembership_disable_member_V3 - at */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.technicalcommitteemembership_disable_member_V3.at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8154,7 +8326,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3074: /* module 12 call 2 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_add_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommitteemembership_add_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8164,7 +8336,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3075: /* module 12 call 3 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_remove_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommitteemembership_remove_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8174,12 +8346,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3076: /* module 12 call 4 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_swap_member_V3 - remove */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommitteemembership_swap_member_V3.remove,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* technicalcommitteemembership_swap_member_V3 - add */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.technicalcommitteemembership_swap_member_V3.add,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8189,7 +8361,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3077: /* module 12 call 5 */
         switch (itemIdx) {
         case 0: /* technicalcommitteemembership_reset_members_V3 - members */;
-            return _toStringVecIdentityId_V3(
+            return _toStringVecIdentityId(
                 &m->nested.technicalcommitteemembership_reset_members_V3.members,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8219,7 +8391,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3329: /* module 13 call 1 */
         switch (itemIdx) {
         case 0: /* upgradecommittee_set_release_coordinator_V3 - id */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommittee_set_release_coordinator_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8229,7 +8401,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3330: /* module 13 call 2 */
         switch (itemIdx) {
         case 0: /* upgradecommittee_set_expires_after_V3 - expiry */;
-            return _toStringMaybeBlockBlockNumber_V3(
+            return _toStringMaybeBlockBlockNumber(
                 &m->nested.upgradecommittee_set_expires_after_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8244,7 +8416,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* upgradecommittee_vote_or_propose_V3 - call */;
-            return _toStringCall(
+            return _toStringProposal(
                 &m->nested.upgradecommittee_vote_or_propose_V3.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8259,7 +8431,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* upgradecommittee_vote_V3 - index */;
-            return _toStringProposalIndex_V3(
+            return _toStringProposalIndex(
                 &m->nested.upgradecommittee_vote_V3.index,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8274,7 +8446,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3584: /* module 14 call 0 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_set_active_members_limit_V3 - limit */;
-            return _toStringMemberCount_V3(
+            return _toStringMemberCount(
                 &m->nested.upgradecommitteemembership_set_active_members_limit_V3.limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8284,17 +8456,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3585: /* module 14 call 1 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_disable_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommitteemembership_disable_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* upgradecommitteemembership_disable_member_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.upgradecommitteemembership_disable_member_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* upgradecommitteemembership_disable_member_V3 - at */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.upgradecommitteemembership_disable_member_V3.at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8304,7 +8476,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3586: /* module 14 call 2 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_add_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommitteemembership_add_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8314,7 +8486,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3587: /* module 14 call 3 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_remove_member_V3 - who */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommitteemembership_remove_member_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8324,12 +8496,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3588: /* module 14 call 4 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_swap_member_V3 - remove */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommitteemembership_swap_member_V3.remove,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* upgradecommitteemembership_swap_member_V3 - add */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.upgradecommitteemembership_swap_member_V3.add,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8339,7 +8511,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3589: /* module 14 call 5 */
         switch (itemIdx) {
         case 0: /* upgradecommitteemembership_reset_members_V3 - members */;
-            return _toStringVecIdentityId_V3(
+            return _toStringVecIdentityId(
                 &m->nested.upgradecommitteemembership_reset_members_V3.members,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8354,7 +8526,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 3856: /* module 15 call 16 */
         switch (itemIdx) {
         case 0: /* multisig_make_multisig_secondary_V3 - multisig */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.multisig_make_multisig_secondary_V3.multisig,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8364,7 +8536,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4096: /* module 16 call 0 */
         switch (itemIdx) {
         case 0: /* bridge_change_controller_V3 - controller */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.bridge_change_controller_V3.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8374,7 +8546,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4097: /* module 16 call 1 */
         switch (itemIdx) {
         case 0: /* bridge_change_admin_V3 - admin */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.bridge_change_admin_V3.admin,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8419,7 +8591,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4102: /* module 16 call 6 */
         switch (itemIdx) {
         case 0: /* bridge_change_bridge_exempted_V3 - exempted */;
-            return _toStringVecTupleIdentityIdbool_V3(
+            return _toStringVecTupleIdentityIdbool(
                 &m->nested.bridge_change_bridge_exempted_V3.exempted,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8429,8 +8601,8 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4103: /* module 16 call 7 */
         switch (itemIdx) {
         case 0: /* bridge_force_handle_bridge_tx_V3 - bridge_tx */;
-            return _toStringBridgeTxAccountId_V3(
-                &m->basic.bridge_force_handle_bridge_tx_V3.bridge_tx,
+            return _toStringBridgeTxAccountId(
+                &m->nested.bridge_force_handle_bridge_tx_V3.bridge_tx,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -8439,7 +8611,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4104: /* module 16 call 8 */
         switch (itemIdx) {
         case 0: /* bridge_batch_propose_bridge_tx_V3 - bridge_txs */;
-            return _toStringVecBridgeTxAccountId_V3(
+            return _toStringVecBridgeTxAccountId(
                 &m->basic.bridge_batch_propose_bridge_tx_V3.bridge_txs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8449,7 +8621,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4105: /* module 16 call 9 */
         switch (itemIdx) {
         case 0: /* bridge_propose_bridge_tx_V3 - bridge_tx */;
-            return _toStringBridgeTxAccountId_V3(
+            return _toStringBridgeTxAccountId(
                 &m->basic.bridge_propose_bridge_tx_V3.bridge_tx,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8459,7 +8631,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4106: /* module 16 call 10 */
         switch (itemIdx) {
         case 0: /* bridge_handle_bridge_tx_V3 - bridge_tx */;
-            return _toStringBridgeTxAccountId_V3(
+            return _toStringBridgeTxAccountId(
                 &m->basic.bridge_handle_bridge_tx_V3.bridge_tx,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8469,7 +8641,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4107: /* module 16 call 11 */
         switch (itemIdx) {
         case 0: /* bridge_freeze_txs_V3 - bridge_txs */;
-            return _toStringVecBridgeTxAccountId_V3(
+            return _toStringVecBridgeTxAccountId(
                 &m->basic.bridge_freeze_txs_V3.bridge_txs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8479,7 +8651,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4108: /* module 16 call 12 */
         switch (itemIdx) {
         case 0: /* bridge_unfreeze_txs_V3 - bridge_txs */;
-            return _toStringVecBridgeTxAccountId_V3(
+            return _toStringVecBridgeTxAccountId(
                 &m->basic.bridge_unfreeze_txs_V3.bridge_txs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8489,7 +8661,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4109: /* module 16 call 13 */
         switch (itemIdx) {
         case 0: /* bridge_handle_scheduled_bridge_tx_V3 - bridge_tx */;
-            return _toStringBridgeTxAccountId_V3(
+            return _toStringBridgeTxAccountId(
                 &m->basic.bridge_handle_scheduled_bridge_tx_V3.bridge_tx,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8499,7 +8671,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4110: /* module 16 call 14 */
         switch (itemIdx) {
         case 0: /* bridge_add_freeze_admin_V3 - freeze_admin */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.bridge_add_freeze_admin_V3.freeze_admin,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8509,7 +8681,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4111: /* module 16 call 15 */
         switch (itemIdx) {
         case 0: /* bridge_remove_freeze_admin_V3 - freeze_admin */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.bridge_remove_freeze_admin_V3.freeze_admin,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8519,7 +8691,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4112: /* module 16 call 16 */
         switch (itemIdx) {
         case 0: /* bridge_remove_txs_V3 - bridge_txs */;
-            return _toStringVecBridgeTxAccountId_V3(
+            return _toStringVecBridgeTxAccountId(
                 &m->basic.bridge_remove_txs_V3.bridge_txs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8546,10 +8718,20 @@ parser_error_t _getMethod_ItemValue_V3(
         default:
             return parser_no_data;
         }
+    case 4363: /* module 17 call 11 */
+        switch (itemIdx) {
+        case 0: /* staking_scale_validator_count_V3 - factor */;
+            return _toStringPercent(
+                &m->nested.staking_scale_validator_count_V3.factor,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 4364: /* module 17 call 12 */
         switch (itemIdx) {
         case 0: /* staking_add_permissioned_validator_V3 - identity */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.staking_add_permissioned_validator_V3.identity,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8564,7 +8746,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4365: /* module 17 call 13 */
         switch (itemIdx) {
         case 0: /* staking_remove_permissioned_validator_V3 - identity */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.staking_remove_permissioned_validator_V3.identity,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8574,7 +8756,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4366: /* module 17 call 14 */
         switch (itemIdx) {
         case 0: /* staking_validate_cdd_expiry_nominators_V3 - targets */;
-            return _toStringVecAccountId_V3(
+            return _toStringVecAccountId(
                 &m->nested.staking_validate_cdd_expiry_nominators_V3.targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8584,7 +8766,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4367: /* module 17 call 15 */
         switch (itemIdx) {
         case 0: /* staking_set_commission_cap_V3 - new_cap */;
-            return _toStringPerbill_V3(
+            return _toStringPerbill(
                 &m->nested.staking_set_commission_cap_V3.new_cap,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8614,7 +8796,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4371: /* module 17 call 19 */
         switch (itemIdx) {
         case 0: /* staking_set_invulnerables_V3 - invulnerables */;
-            return _toStringVecAccountId_V3(
+            return _toStringVecAccountId(
                 &m->nested.staking_set_invulnerables_V3.invulnerables,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8624,7 +8806,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4372: /* module 17 call 20 */
         switch (itemIdx) {
         case 0: /* staking_force_unstake_V3 - stash */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.staking_force_unstake_V3.stash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8644,7 +8826,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4374: /* module 17 call 22 */
         switch (itemIdx) {
         case 0: /* staking_cancel_deferred_slash_V3 - era */;
-            return _toStringEraIndex_V3(
+            return _toStringEraIndex(
                 &m->nested.staking_cancel_deferred_slash_V3.era,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8659,12 +8841,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4375: /* module 17 call 23 */
         switch (itemIdx) {
         case 0: /* staking_payout_stakers_V3 - validator_stash */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.staking_payout_stakers_V3.validator_stash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* staking_payout_stakers_V3 - era */;
-            return _toStringEraIndex_V3(
+            return _toStringEraIndex(
                 &m->nested.staking_payout_stakers_V3.era,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8689,7 +8871,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4378: /* module 17 call 26 */
         switch (itemIdx) {
         case 0: /* staking_reap_stash_V3 - stash */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.staking_reap_stash_V3.stash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8704,12 +8886,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4381: /* module 17 call 29 */
         switch (itemIdx) {
         case 0: /* staking_payout_stakers_by_system_V3 - validator_stash */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.staking_payout_stakers_by_system_V3.validator_stash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* staking_payout_stakers_by_system_V3 - era */;
-            return _toStringEraIndex_V3(
+            return _toStringEraIndex(
                 &m->nested.staking_payout_stakers_by_system_V3.era,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8719,7 +8901,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4382: /* module 17 call 30 */
         switch (itemIdx) {
         case 0: /* staking_change_slashing_allowed_for_V3 - slashing_switch */;
-            return _toStringSlashingSwitch_V3(
+            return _toStringSlashingSwitch(
                 &m->nested.staking_change_slashing_allowed_for_V3.slashing_switch,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8729,7 +8911,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4383: /* module 17 call 31 */
         switch (itemIdx) {
         case 0: /* staking_update_permissioned_validator_intended_count_V3 - identity */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.staking_update_permissioned_validator_intended_count_V3.identity,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8744,7 +8926,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 4864: /* module 19 call 0 */
         switch (itemIdx) {
         case 0: /* session_set_keys_V3 - keys */;
-            return _toStringKeys_V3(
+            return _toStringKeys(
                 &m->nested.session_set_keys_V3.keys,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8761,25 +8943,10 @@ parser_error_t _getMethod_ItemValue_V3(
         default:
             return parser_no_data;
         }
-    case 5378: /* module 21 call 2 */
-        switch (itemIdx) {
-        case 0: /* grandpa_note_stalled_V3 - delay */;
-            return _toStringBlockNumber(
-                &m->nested.grandpa_note_stalled_V3.delay,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* grandpa_note_stalled_V3 - best_finalized_block_number */;
-            return _toStringBlockNumber(
-                &m->nested.grandpa_note_stalled_V3.best_finalized_block_number,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 6403: /* module 25 call 3 */
         switch (itemIdx) {
         case 0: /* sudo_sudo_as_V3 - who */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.sudo_sudo_as_V3.who,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8794,7 +8961,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6656: /* module 26 call 0 */
         switch (itemIdx) {
         case 0: /* asset_register_ticker_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_register_ticker_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8824,12 +8991,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6659: /* module 26 call 3 */
         switch (itemIdx) {
         case 0: /* asset_create_asset_V3 - name */;
-            return _toStringAssetName_V3(
+            return _toStringAssetName(
                 &m->nested.asset_create_asset_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_create_asset_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_create_asset_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8839,17 +9006,17 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* asset_create_asset_V3 - asset_type */;
-            return _toStringAssetType_V3(
+            return _toStringAssetType(
                 &m->nested.asset_create_asset_V3.asset_type,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* asset_create_asset_V3 - identifiers */;
-            return _toStringVecAssetIdentifier_V3(
+            return _toStringVecAssetIdentifier(
                 &m->nested.asset_create_asset_V3.identifiers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* asset_create_asset_V3 - funding_round */;
-            return _toStringOptionFundingRoundName_V3(
+            return _toStringOptionFundingRoundName(
                 &m->nested.asset_create_asset_V3.funding_round,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8864,7 +9031,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6660: /* module 26 call 4 */
         switch (itemIdx) {
         case 0: /* asset_freeze_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_freeze_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8874,7 +9041,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6661: /* module 26 call 5 */
         switch (itemIdx) {
         case 0: /* asset_unfreeze_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_unfreeze_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8884,12 +9051,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6662: /* module 26 call 6 */
         switch (itemIdx) {
         case 0: /* asset_rename_asset_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_rename_asset_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_rename_asset_V3 - name */;
-            return _toStringAssetName_V3(
+            return _toStringAssetName(
                 &m->nested.asset_rename_asset_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8899,7 +9066,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6663: /* module 26 call 7 */
         switch (itemIdx) {
         case 0: /* asset_issue_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_issue_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8914,7 +9081,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6664: /* module 26 call 8 */
         switch (itemIdx) {
         case 0: /* asset_redeem_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_redeem_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8929,7 +9096,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6665: /* module 26 call 9 */
         switch (itemIdx) {
         case 0: /* asset_make_divisible_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_make_divisible_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8939,12 +9106,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6666: /* module 26 call 10 */
         switch (itemIdx) {
         case 0: /* asset_add_documents_V3 - docs */;
-            return _toStringVecDocument_V3(
+            return _toStringVecDocument(
                 &m->nested.asset_add_documents_V3.docs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_add_documents_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_add_documents_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8954,12 +9121,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6667: /* module 26 call 11 */
         switch (itemIdx) {
         case 0: /* asset_remove_documents_V3 - ids */;
-            return _toStringVecDocumentId_V3(
+            return _toStringVecDocumentId(
                 &m->nested.asset_remove_documents_V3.ids,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_remove_documents_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_remove_documents_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8969,12 +9136,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6668: /* module 26 call 12 */
         switch (itemIdx) {
         case 0: /* asset_set_funding_round_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_set_funding_round_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_set_funding_round_V3 - name */;
-            return _toStringFundingRoundName_V3(
+            return _toStringFundingRoundName(
                 &m->nested.asset_set_funding_round_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8984,12 +9151,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6669: /* module 26 call 13 */
         switch (itemIdx) {
         case 0: /* asset_update_identifiers_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_update_identifiers_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_update_identifiers_V3 - identifiers */;
-            return _toStringVecAssetIdentifier_V3(
+            return _toStringVecAssetIdentifier(
                 &m->nested.asset_update_identifiers_V3.identifiers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8999,12 +9166,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6670: /* module 26 call 14 */
         switch (itemIdx) {
         case 0: /* asset_claim_classic_ticker_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.asset_claim_classic_ticker_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_claim_classic_ticker_V3 - ethereum_signature */;
-            return _toStringEcdsaSignature_V3(
+            return _toStringEcdsaSignature(
                 &m->nested.asset_claim_classic_ticker_V3.ethereum_signature,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9014,17 +9181,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6671: /* module 26 call 15 */
         switch (itemIdx) {
         case 0: /* asset_reserve_classic_ticker_V3 - classic_ticker_import */;
-            return _toStringClassicTickerImport_V3(
+            return _toStringClassicTickerImport(
                 &m->nested.asset_reserve_classic_ticker_V3.classic_ticker_import,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_reserve_classic_ticker_V3 - contract_did */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.asset_reserve_classic_ticker_V3.contract_did,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_reserve_classic_ticker_V3 - config */;
-            return _toStringTickerRegistrationConfigMoment_V3(
+            return _toStringTickerRegistrationConfigMoment(
                 &m->nested.asset_reserve_classic_ticker_V3.config,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9034,7 +9201,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6672: /* module 26 call 16 */
         switch (itemIdx) {
         case 0: /* asset_controller_transfer_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_controller_transfer_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9044,7 +9211,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_controller_transfer_V3 - from_portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.asset_controller_transfer_V3.from_portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9064,12 +9231,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6674: /* module 26 call 18 */
         switch (itemIdx) {
         case 0: /* asset_create_asset_with_custom_type_V3 - name */;
-            return _toStringAssetName_V3(
+            return _toStringAssetName(
                 &m->basic.asset_create_asset_with_custom_type_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_create_asset_with_custom_type_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_create_asset_with_custom_type_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9084,12 +9251,12 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* asset_create_asset_with_custom_type_V3 - identifiers */;
-            return _toStringVecAssetIdentifier_V3(
+            return _toStringVecAssetIdentifier(
                 &m->basic.asset_create_asset_with_custom_type_V3.identifiers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* asset_create_asset_with_custom_type_V3 - funding_round */;
-            return _toStringOptionFundingRoundName_V3(
+            return _toStringOptionFundingRoundName(
                 &m->basic.asset_create_asset_with_custom_type_V3.funding_round,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9104,22 +9271,22 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6675: /* module 26 call 19 */
         switch (itemIdx) {
         case 0: /* asset_set_asset_metadata_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_set_asset_metadata_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_set_asset_metadata_V3 - key */;
-            return _toStringAssetMetadataKey_V3(
+            return _toStringAssetMetadataKey(
                 &m->basic.asset_set_asset_metadata_V3.key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_set_asset_metadata_V3 - value */;
-            return _toStringAssetMetadataValue_V3(
+            return _toStringAssetMetadataValue(
                 &m->basic.asset_set_asset_metadata_V3.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* asset_set_asset_metadata_V3 - detail */;
-            return _toStringOptionAssetMetadataValueDetailMoment_V3(
+            return _toStringOptionAssetMetadataValueDetailMoment(
                 &m->basic.asset_set_asset_metadata_V3.detail,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9129,17 +9296,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6676: /* module 26 call 20 */
         switch (itemIdx) {
         case 0: /* asset_set_asset_metadata_details_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_set_asset_metadata_details_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_set_asset_metadata_details_V3 - key */;
-            return _toStringAssetMetadataKey_V3(
+            return _toStringAssetMetadataKey(
                 &m->basic.asset_set_asset_metadata_details_V3.key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_set_asset_metadata_details_V3 - detail */;
-            return _toStringAssetMetadataValueDetailMoment_V3(
+            return _toStringAssetMetadataValueDetailMoment(
                 &m->basic.asset_set_asset_metadata_details_V3.detail,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9149,27 +9316,27 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6677: /* module 26 call 21 */
         switch (itemIdx) {
         case 0: /* asset_register_and_set_local_asset_metadata_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_register_and_set_local_asset_metadata_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_register_and_set_local_asset_metadata_V3 - name */;
-            return _toStringAssetMetadataName_V3(
+            return _toStringAssetMetadataName(
                 &m->basic.asset_register_and_set_local_asset_metadata_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_register_and_set_local_asset_metadata_V3 - spec */;
-            return _toStringAssetMetadataSpec_V3(
+            return _toStringAssetMetadataSpec(
                 &m->basic.asset_register_and_set_local_asset_metadata_V3.spec,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* asset_register_and_set_local_asset_metadata_V3 - value */;
-            return _toStringAssetMetadataValue_V3(
+            return _toStringAssetMetadataValue(
                 &m->basic.asset_register_and_set_local_asset_metadata_V3.value,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* asset_register_and_set_local_asset_metadata_V3 - detail */;
-            return _toStringOptionAssetMetadataValueDetailMoment_V3(
+            return _toStringOptionAssetMetadataValueDetailMoment(
                 &m->basic.asset_register_and_set_local_asset_metadata_V3.detail,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9179,17 +9346,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6678: /* module 26 call 22 */
         switch (itemIdx) {
         case 0: /* asset_register_asset_metadata_local_type_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.asset_register_asset_metadata_local_type_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_register_asset_metadata_local_type_V3 - name */;
-            return _toStringAssetMetadataName_V3(
+            return _toStringAssetMetadataName(
                 &m->basic.asset_register_asset_metadata_local_type_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* asset_register_asset_metadata_local_type_V3 - spec */;
-            return _toStringAssetMetadataSpec_V3(
+            return _toStringAssetMetadataSpec(
                 &m->basic.asset_register_asset_metadata_local_type_V3.spec,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9199,13 +9366,33 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6679: /* module 26 call 23 */
         switch (itemIdx) {
         case 0: /* asset_register_asset_metadata_global_type_V3 - name */;
-            return _toStringAssetMetadataName_V3(
+            return _toStringAssetMetadataName(
                 &m->basic.asset_register_asset_metadata_global_type_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_register_asset_metadata_global_type_V3 - spec */;
-            return _toStringAssetMetadataSpec_V3(
+            return _toStringAssetMetadataSpec(
                 &m->basic.asset_register_asset_metadata_global_type_V3.spec,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6680: /* module 26 call 24 */
+        switch (itemIdx) {
+        case 0: /* asset_redeem_from_portfolio_V3 - ticker */;
+            return _toStringTicker(
+                &m->basic.asset_redeem_from_portfolio_V3.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* asset_redeem_from_portfolio_V3 - amount */;
+            return _toStringBalanceNoSymbol(
+                &m->basic.asset_redeem_from_portfolio_V3.amount,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* asset_redeem_from_portfolio_V3 - portfolio */;
+            return _toStringPortfolioKind(
+                &m->basic.asset_redeem_from_portfolio_V3.portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -9214,17 +9401,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6912: /* module 27 call 0 */
         switch (itemIdx) {
         case 0: /* capitaldistribution_distribute_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.capitaldistribution_distribute_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* capitaldistribution_distribute_V3 - portfolio */;
-            return _toStringOptionPortfolioNumber_V3(
+            return _toStringOptionPortfolioNumber(
                 &m->nested.capitaldistribution_distribute_V3.portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* capitaldistribution_distribute_V3 - currency */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.capitaldistribution_distribute_V3.currency,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9239,12 +9426,12 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* capitaldistribution_distribute_V3 - payment_at */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->nested.capitaldistribution_distribute_V3.payment_at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* capitaldistribution_distribute_V3 - expires_at */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.capitaldistribution_distribute_V3.expires_at,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9254,7 +9441,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6913: /* module 27 call 1 */
         switch (itemIdx) {
         case 0: /* capitaldistribution_claim_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.capitaldistribution_claim_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9264,12 +9451,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6914: /* module 27 call 2 */
         switch (itemIdx) {
         case 0: /* capitaldistribution_push_benefit_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.capitaldistribution_push_benefit_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* capitaldistribution_push_benefit_V3 - holder */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.capitaldistribution_push_benefit_V3.holder,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9279,7 +9466,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6915: /* module 27 call 3 */
         switch (itemIdx) {
         case 0: /* capitaldistribution_reclaim_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.capitaldistribution_reclaim_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9289,7 +9476,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 6916: /* module 27 call 4 */
         switch (itemIdx) {
         case 0: /* capitaldistribution_remove_distribution_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.capitaldistribution_remove_distribution_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9299,7 +9486,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7168: /* module 28 call 0 */
         switch (itemIdx) {
         case 0: /* checkpoint_create_checkpoint_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.checkpoint_create_checkpoint_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9319,12 +9506,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7170: /* module 28 call 2 */
         switch (itemIdx) {
         case 0: /* checkpoint_create_schedule_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.checkpoint_create_schedule_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* checkpoint_create_schedule_V3 - schedule */;
-            return _toStringScheduleSpec_V3(
+            return _toStringScheduleSpec(
                 &m->nested.checkpoint_create_schedule_V3.schedule,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9334,12 +9521,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7171: /* module 28 call 3 */
         switch (itemIdx) {
         case 0: /* checkpoint_remove_schedule_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.checkpoint_remove_schedule_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* checkpoint_remove_schedule_V3 - id */;
-            return _toStringScheduleId_V3(
+            return _toStringScheduleId(
                 &m->nested.checkpoint_remove_schedule_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9349,17 +9536,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7424: /* module 29 call 0 */
         switch (itemIdx) {
         case 0: /* compliancemanager_add_compliance_requirement_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_add_compliance_requirement_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* compliancemanager_add_compliance_requirement_V3 - sender_conditions */;
-            return _toStringVecCondition_V3(
+            return _toStringVecCondition(
                 &m->nested.compliancemanager_add_compliance_requirement_V3.sender_conditions,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* compliancemanager_add_compliance_requirement_V3 - receiver_conditions */;
-            return _toStringVecCondition_V3(
+            return _toStringVecCondition(
                 &m->nested.compliancemanager_add_compliance_requirement_V3.receiver_conditions,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9369,7 +9556,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7425: /* module 29 call 1 */
         switch (itemIdx) {
         case 0: /* compliancemanager_remove_compliance_requirement_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_remove_compliance_requirement_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9384,7 +9571,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7427: /* module 29 call 3 */
         switch (itemIdx) {
         case 0: /* compliancemanager_reset_asset_compliance_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_reset_asset_compliance_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9394,7 +9581,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7428: /* module 29 call 4 */
         switch (itemIdx) {
         case 0: /* compliancemanager_pause_asset_compliance_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_pause_asset_compliance_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9404,7 +9591,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7429: /* module 29 call 5 */
         switch (itemIdx) {
         case 0: /* compliancemanager_resume_asset_compliance_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_resume_asset_compliance_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9414,12 +9601,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7430: /* module 29 call 6 */
         switch (itemIdx) {
         case 0: /* compliancemanager_add_default_trusted_claim_issuer_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_add_default_trusted_claim_issuer_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* compliancemanager_add_default_trusted_claim_issuer_V3 - issuer */;
-            return _toStringTrustedIssuer_V3(
+            return _toStringTrustedIssuer(
                 &m->nested.compliancemanager_add_default_trusted_claim_issuer_V3.issuer,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9429,12 +9616,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7431: /* module 29 call 7 */
         switch (itemIdx) {
         case 0: /* compliancemanager_remove_default_trusted_claim_issuer_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.compliancemanager_remove_default_trusted_claim_issuer_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* compliancemanager_remove_default_trusted_claim_issuer_V3 - issuer */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.compliancemanager_remove_default_trusted_claim_issuer_V3.issuer,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9454,12 +9641,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7681: /* module 30 call 1 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_default_targets_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.corporateaction_set_default_targets_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_set_default_targets_V3 - targets */;
-            return _toStringTargetIdentities_V3(
+            return _toStringTargetIdentities(
                 &m->nested.corporateaction_set_default_targets_V3.targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9469,12 +9656,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7682: /* module 30 call 2 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_default_withholding_tax_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.corporateaction_set_default_withholding_tax_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_set_default_withholding_tax_V3 - tax */;
-            return _toStringTax_V3(
+            return _toStringTax(
                 &m->nested.corporateaction_set_default_withholding_tax_V3.tax,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9484,17 +9671,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7683: /* module 30 call 3 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_did_withholding_tax_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.corporateaction_set_did_withholding_tax_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_set_did_withholding_tax_V3 - taxed_did */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.corporateaction_set_did_withholding_tax_V3.taxed_did,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* corporateaction_set_did_withholding_tax_V3 - tax */;
-            return _toStringOptionTax_V3(
+            return _toStringOptionTax(
                 &m->nested.corporateaction_set_did_withholding_tax_V3.tax,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9504,42 +9691,42 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7684: /* module 30 call 4 */
         switch (itemIdx) {
         case 0: /* corporateaction_initiate_corporate_action_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.corporateaction_initiate_corporate_action_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_initiate_corporate_action_V3 - kind */;
-            return _toStringCAKind_V3(
+            return _toStringCAKind(
                 &m->nested.corporateaction_initiate_corporate_action_V3.kind,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* corporateaction_initiate_corporate_action_V3 - decl_date */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->nested.corporateaction_initiate_corporate_action_V3.decl_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* corporateaction_initiate_corporate_action_V3 - record_date */;
-            return _toStringOptionRecordDateSpec_V3(
+            return _toStringOptionRecordDateSpec(
                 &m->nested.corporateaction_initiate_corporate_action_V3.record_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* corporateaction_initiate_corporate_action_V3 - details */;
-            return _toStringCADetails_V3(
+            return _toStringCADetails(
                 &m->nested.corporateaction_initiate_corporate_action_V3.details,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* corporateaction_initiate_corporate_action_V3 - targets */;
-            return _toStringOptionTargetIdentities_V3(
+            return _toStringOptionTargetIdentities(
                 &m->nested.corporateaction_initiate_corporate_action_V3.targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* corporateaction_initiate_corporate_action_V3 - default_withholding_tax */;
-            return _toStringOptionTax_V3(
+            return _toStringOptionTax(
                 &m->nested.corporateaction_initiate_corporate_action_V3.default_withholding_tax,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 7: /* corporateaction_initiate_corporate_action_V3 - withholding_tax */;
-            return _toStringOptionVecTupleIdentityIdTax_V3(
+            return _toStringOptionVecTupleIdentityIdTax(
                 &m->nested.corporateaction_initiate_corporate_action_V3.withholding_tax,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9549,12 +9736,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7685: /* module 30 call 5 */
         switch (itemIdx) {
         case 0: /* corporateaction_link_ca_doc_V3 - id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateaction_link_ca_doc_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_link_ca_doc_V3 - docs */;
-            return _toStringVecDocumentId_V3(
+            return _toStringVecDocumentId(
                 &m->nested.corporateaction_link_ca_doc_V3.docs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9564,7 +9751,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7686: /* module 30 call 6 */
         switch (itemIdx) {
         case 0: /* corporateaction_remove_ca_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateaction_remove_ca_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9574,12 +9761,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7687: /* module 30 call 7 */
         switch (itemIdx) {
         case 0: /* corporateaction_change_record_date_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateaction_change_record_date_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateaction_change_record_date_V3 - record_date */;
-            return _toStringOptionRecordDateSpec_V3(
+            return _toStringOptionRecordDateSpec(
                 &m->nested.corporateaction_change_record_date_V3.record_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9589,17 +9776,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7936: /* module 31 call 0 */
         switch (itemIdx) {
         case 0: /* corporateballot_attach_ballot_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_attach_ballot_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateballot_attach_ballot_V3 - range */;
-            return _toStringBallotTimeRange_V3(
+            return _toStringBallotTimeRange(
                 &m->nested.corporateballot_attach_ballot_V3.range,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* corporateballot_attach_ballot_V3 - meta */;
-            return _toStringBallotMeta_V3(
+            return _toStringBallotMeta(
                 &m->nested.corporateballot_attach_ballot_V3.meta,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9614,12 +9801,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7937: /* module 31 call 1 */
         switch (itemIdx) {
         case 0: /* corporateballot_vote_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_vote_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateballot_vote_V3 - votes */;
-            return _toStringVecBallotVote_V3(
+            return _toStringVecBallotVote(
                 &m->nested.corporateballot_vote_V3.votes,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9629,12 +9816,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7938: /* module 31 call 2 */
         switch (itemIdx) {
         case 0: /* corporateballot_change_end_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_change_end_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateballot_change_end_V3 - end */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->nested.corporateballot_change_end_V3.end,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9644,12 +9831,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7939: /* module 31 call 3 */
         switch (itemIdx) {
         case 0: /* corporateballot_change_meta_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_change_meta_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* corporateballot_change_meta_V3 - meta */;
-            return _toStringBallotMeta_V3(
+            return _toStringBallotMeta(
                 &m->nested.corporateballot_change_meta_V3.meta,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9659,7 +9846,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7940: /* module 31 call 4 */
         switch (itemIdx) {
         case 0: /* corporateballot_change_rcv_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_change_rcv_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9674,7 +9861,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 7941: /* module 31 call 5 */
         switch (itemIdx) {
         case 0: /* corporateballot_remove_ballot_V3 - ca_id */;
-            return _toStringCAId_V3(
+            return _toStringCAId(
                 &m->nested.corporateballot_remove_ballot_V3.ca_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9714,7 +9901,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8451: /* module 33 call 3 */
         switch (itemIdx) {
         case 0: /* pips_set_pending_pip_expiry_V3 - expiry */;
-            return _toStringMaybeBlockBlockNumber_V3(
+            return _toStringMaybeBlockBlockNumber(
                 &m->nested.pips_set_pending_pip_expiry_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9724,7 +9911,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8452: /* module 33 call 4 */
         switch (itemIdx) {
         case 0: /* pips_set_max_pip_skip_count_V3 - max */;
-            return _toStringSkippedCount_V3(
+            return _toStringSkippedCount(
                 &m->nested.pips_set_max_pip_skip_count_V3.max,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9744,7 +9931,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8456: /* module 33 call 8 */
         switch (itemIdx) {
         case 0: /* pips_approve_committee_proposal_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_approve_committee_proposal_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9754,7 +9941,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8457: /* module 33 call 9 */
         switch (itemIdx) {
         case 0: /* pips_reject_proposal_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_reject_proposal_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9764,7 +9951,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8458: /* module 33 call 10 */
         switch (itemIdx) {
         case 0: /* pips_prune_proposal_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_prune_proposal_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9774,7 +9961,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8459: /* module 33 call 11 */
         switch (itemIdx) {
         case 0: /* pips_reschedule_execution_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_reschedule_execution_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9799,7 +9986,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8462: /* module 33 call 14 */
         switch (itemIdx) {
         case 0: /* pips_enact_snapshot_results_V3 - results */;
-            return _toStringVecTuplePipIdSnapshotResult_V3(
+            return _toStringVecTuplePipIdSnapshotResult(
                 &m->nested.pips_enact_snapshot_results_V3.results,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9809,7 +9996,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8463: /* module 33 call 15 */
         switch (itemIdx) {
         case 0: /* pips_execute_scheduled_pip_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_execute_scheduled_pip_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9819,12 +10006,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8464: /* module 33 call 16 */
         switch (itemIdx) {
         case 0: /* pips_expire_scheduled_pip_V3 - did */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->nested.pips_expire_scheduled_pip_V3.did,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* pips_expire_scheduled_pip_V3 - id */;
-            return _toStringPipId_V3(
+            return _toStringPipId(
                 &m->nested.pips_expire_scheduled_pip_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9834,7 +10021,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8704: /* module 34 call 0 */
         switch (itemIdx) {
         case 0: /* portfolio_create_portfolio_V3 - name */;
-            return _toStringPortfolioName_V3(
+            return _toStringPortfolioName(
                 &m->nested.portfolio_create_portfolio_V3.name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9844,7 +10031,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8705: /* module 34 call 1 */
         switch (itemIdx) {
         case 0: /* portfolio_delete_portfolio_V3 - num */;
-            return _toStringPortfolioNumber_V3(
+            return _toStringPortfolioNumber(
                 &m->nested.portfolio_delete_portfolio_V3.num,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9854,17 +10041,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8706: /* module 34 call 2 */
         switch (itemIdx) {
         case 0: /* portfolio_move_portfolio_funds_V3 - from */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->nested.portfolio_move_portfolio_funds_V3.from,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* portfolio_move_portfolio_funds_V3 - to */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->nested.portfolio_move_portfolio_funds_V3.to,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* portfolio_move_portfolio_funds_V3 - items */;
-            return _toStringVecMovePortfolioItem_V3(
+            return _toStringVecMovePortfolioItem(
                 &m->nested.portfolio_move_portfolio_funds_V3.items,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9874,12 +10061,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8707: /* module 34 call 3 */
         switch (itemIdx) {
         case 0: /* portfolio_rename_portfolio_V3 - num */;
-            return _toStringPortfolioNumber_V3(
+            return _toStringPortfolioNumber(
                 &m->nested.portfolio_rename_portfolio_V3.num,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* portfolio_rename_portfolio_V3 - to_name */;
-            return _toStringPortfolioName_V3(
+            return _toStringPortfolioName(
                 &m->nested.portfolio_rename_portfolio_V3.to_name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9889,7 +10076,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8708: /* module 34 call 4 */
         switch (itemIdx) {
         case 0: /* portfolio_quit_portfolio_custody_V3 - pid */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.portfolio_quit_portfolio_custody_V3.pid,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9909,7 +10096,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 8960: /* module 35 call 0 */
         switch (itemIdx) {
         case 0: /* protocolfee_change_coefficient_V3 - coefficient */;
-            return _toStringPosRatio_V3(
+            return _toStringPosRatio(
                 &m->nested.protocolfee_change_coefficient_V3.coefficient,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9919,17 +10106,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9472: /* module 37 call 0 */
         switch (itemIdx) {
         case 0: /* settlement_create_venue_V3 - details */;
-            return _toStringVenueDetails_V3(
+            return _toStringVenueDetails(
                 &m->nested.settlement_create_venue_V3.details,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_create_venue_V3 - signers */;
-            return _toStringVecAccountId_V3(
+            return _toStringVecAccountId(
                 &m->nested.settlement_create_venue_V3.signers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* settlement_create_venue_V3 - typ */;
-            return _toStringVenueType_V3(
+            return _toStringVenueType(
                 &m->nested.settlement_create_venue_V3.typ,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9939,12 +10126,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9473: /* module 37 call 1 */
         switch (itemIdx) {
         case 0: /* settlement_update_venue_details_V3 - id */;
-            return _toStringVenueId_V3(
+            return _toStringVenueId(
                 &m->basic.settlement_update_venue_details_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_update_venue_details_V3 - details */;
-            return _toStringVenueDetails_V3(
+            return _toStringVenueDetails(
                 &m->basic.settlement_update_venue_details_V3.details,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9954,12 +10141,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9474: /* module 37 call 2 */
         switch (itemIdx) {
         case 0: /* settlement_update_venue_type_V3 - id */;
-            return _toStringVenueId_V3(
+            return _toStringVenueId(
                 &m->basic.settlement_update_venue_type_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_update_venue_type_V3 - typ */;
-            return _toStringVenueType_V3(
+            return _toStringVenueType(
                 &m->basic.settlement_update_venue_type_V3.typ,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9969,27 +10156,27 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9475: /* module 37 call 3 */
         switch (itemIdx) {
         case 0: /* settlement_add_instruction_V3 - venue_id */;
-            return _toStringVenueId_V3(
+            return _toStringVenueId(
                 &m->nested.settlement_add_instruction_V3.venue_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_add_instruction_V3 - settlement_type */;
-            return _toStringSettlementTypeBlockNumber_V3(
+            return _toStringSettlementTypeBlockNumber(
                 &m->nested.settlement_add_instruction_V3.settlement_type,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* settlement_add_instruction_V3 - trade_date */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.settlement_add_instruction_V3.trade_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* settlement_add_instruction_V3 - value_date */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.settlement_add_instruction_V3.value_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* settlement_add_instruction_V3 - legs */;
-            return _toStringVecLeg_V3(
+            return _toStringVecLeg(
                 &m->nested.settlement_add_instruction_V3.legs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9999,32 +10186,32 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9476: /* module 37 call 4 */
         switch (itemIdx) {
         case 0: /* settlement_add_and_affirm_instruction_V3 - venue_id */;
-            return _toStringVenueId_V3(
+            return _toStringVenueId(
                 &m->nested.settlement_add_and_affirm_instruction_V3.venue_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_add_and_affirm_instruction_V3 - settlement_type */;
-            return _toStringSettlementTypeBlockNumber_V3(
+            return _toStringSettlementTypeBlockNumber(
                 &m->nested.settlement_add_and_affirm_instruction_V3.settlement_type,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* settlement_add_and_affirm_instruction_V3 - trade_date */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.settlement_add_and_affirm_instruction_V3.trade_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* settlement_add_and_affirm_instruction_V3 - value_date */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->nested.settlement_add_and_affirm_instruction_V3.value_date,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* settlement_add_and_affirm_instruction_V3 - legs */;
-            return _toStringVecLeg_V3(
+            return _toStringVecLeg(
                 &m->nested.settlement_add_and_affirm_instruction_V3.legs,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* settlement_add_and_affirm_instruction_V3 - portfolios */;
-            return _toStringVecPortfolioId_V3(
+            return _toStringVecPortfolioId(
                 &m->nested.settlement_add_and_affirm_instruction_V3.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10034,12 +10221,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9477: /* module 37 call 5 */
         switch (itemIdx) {
         case 0: /* settlement_affirm_instruction_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_affirm_instruction_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_affirm_instruction_V3 - portfolios */;
-            return _toStringVecPortfolioId_V3(
+            return _toStringVecPortfolioId(
                 &m->nested.settlement_affirm_instruction_V3.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10054,12 +10241,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9478: /* module 37 call 6 */
         switch (itemIdx) {
         case 0: /* settlement_withdraw_affirmation_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_withdraw_affirmation_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_withdraw_affirmation_V3 - portfolios */;
-            return _toStringVecPortfolioId_V3(
+            return _toStringVecPortfolioId(
                 &m->nested.settlement_withdraw_affirmation_V3.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10074,12 +10261,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9479: /* module 37 call 7 */
         switch (itemIdx) {
         case 0: /* settlement_reject_instruction_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_reject_instruction_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_reject_instruction_V3 - portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->nested.settlement_reject_instruction_V3.portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10094,17 +10281,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9480: /* module 37 call 8 */
         switch (itemIdx) {
         case 0: /* settlement_affirm_with_receipts_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_affirm_with_receipts_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_affirm_with_receipts_V3 - receipt_details */;
-            return _toStringVecReceiptDetails_V3(
+            return _toStringVecReceiptDetails(
                 &m->nested.settlement_affirm_with_receipts_V3.receipt_details,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* settlement_affirm_with_receipts_V3 - portfolios */;
-            return _toStringVecPortfolioId_V3(
+            return _toStringVecPortfolioId(
                 &m->nested.settlement_affirm_with_receipts_V3.portfolios,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10119,12 +10306,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9481: /* module 37 call 9 */
         switch (itemIdx) {
         case 0: /* settlement_claim_receipt_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_claim_receipt_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_claim_receipt_V3 - receipt_details */;
-            return _toStringReceiptDetails_V3(
+            return _toStringReceiptDetails(
                 &m->nested.settlement_claim_receipt_V3.receipt_details,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10134,12 +10321,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9482: /* module 37 call 10 */
         switch (itemIdx) {
         case 0: /* settlement_unclaim_receipt_V3 - instruction_id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_unclaim_receipt_V3.instruction_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_unclaim_receipt_V3 - leg_id */;
-            return _toStringLegId_V3(
+            return _toStringLegId(
                 &m->nested.settlement_unclaim_receipt_V3.leg_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10149,7 +10336,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9483: /* module 37 call 11 */
         switch (itemIdx) {
         case 0: /* settlement_set_venue_filtering_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.settlement_set_venue_filtering_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10164,12 +10351,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9484: /* module 37 call 12 */
         switch (itemIdx) {
         case 0: /* settlement_allow_venues_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.settlement_allow_venues_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_allow_venues_V3 - venues */;
-            return _toStringVecVenueId_V3(
+            return _toStringVecVenueId(
                 &m->nested.settlement_allow_venues_V3.venues,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10179,12 +10366,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9485: /* module 37 call 13 */
         switch (itemIdx) {
         case 0: /* settlement_disallow_venues_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->nested.settlement_disallow_venues_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* settlement_disallow_venues_V3 - venues */;
-            return _toStringVecVenueId_V3(
+            return _toStringVecVenueId(
                 &m->nested.settlement_disallow_venues_V3.venues,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10209,7 +10396,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9487: /* module 37 call 15 */
         switch (itemIdx) {
         case 0: /* settlement_execute_scheduled_instruction_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->nested.settlement_execute_scheduled_instruction_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10224,8 +10411,103 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9488: /* module 37 call 16 */
         switch (itemIdx) {
         case 0: /* settlement_reschedule_instruction_V3 - id */;
-            return _toStringInstructionId_V3(
+            return _toStringInstructionId(
                 &m->basic.settlement_reschedule_instruction_V3.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9489: /* module 37 call 17 */
+        switch (itemIdx) {
+        case 0: /* settlement_update_venue_signers_V3 - id */;
+            return _toStringVenueId(
+                &m->basic.settlement_update_venue_signers_V3.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_update_venue_signers_V3 - signers */;
+            return _toStringVecAccountId(
+                &m->basic.settlement_update_venue_signers_V3.signers,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_update_venue_signers_V3 - add_signers */;
+            return _toStringbool(
+                &m->basic.settlement_update_venue_signers_V3.add_signers,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9490: /* module 37 call 18 */
+        switch (itemIdx) {
+        case 0: /* settlement_add_instruction_with_memo_V3 - venue_id */;
+            return _toStringVenueId(
+                &m->basic.settlement_add_instruction_with_memo_V3.venue_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_add_instruction_with_memo_V3 - settlement_type */;
+            return _toStringSettlementTypeBlockNumber(
+                &m->basic.settlement_add_instruction_with_memo_V3.settlement_type,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_add_instruction_with_memo_V3 - trade_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_instruction_with_memo_V3.trade_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* settlement_add_instruction_with_memo_V3 - value_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_instruction_with_memo_V3.value_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* settlement_add_instruction_with_memo_V3 - legs */;
+            return _toStringVecLeg(
+                &m->basic.settlement_add_instruction_with_memo_V3.legs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* settlement_add_instruction_with_memo_V3 - instruction_memo */;
+            return _toStringOptionInstructionMemo(
+                &m->basic.settlement_add_instruction_with_memo_V3.instruction_memo,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9491: /* module 37 call 19 */
+        switch (itemIdx) {
+        case 0: /* settlement_add_and_affirm_instruction_with_memo_V3 - venue_id */;
+            return _toStringVenueId(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.venue_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_add_and_affirm_instruction_with_memo_V3 - settlement_type */;
+            return _toStringSettlementTypeBlockNumber(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.settlement_type,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_add_and_affirm_instruction_with_memo_V3 - trade_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.trade_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* settlement_add_and_affirm_instruction_with_memo_V3 - value_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.value_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* settlement_add_and_affirm_instruction_with_memo_V3 - legs */;
+            return _toStringVecLeg(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.legs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* settlement_add_and_affirm_instruction_with_memo_V3 - portfolios */;
+            return _toStringVecPortfolioId(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.portfolios,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 6: /* settlement_add_and_affirm_instruction_with_memo_V3 - instruction_memo */;
+            return _toStringOptionInstructionMemo(
+                &m->basic.settlement_add_and_affirm_instruction_with_memo_V3.instruction_memo,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10234,42 +10516,42 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9984: /* module 39 call 0 */
         switch (itemIdx) {
         case 0: /* sto_create_fundraiser_V3 - offering_portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.sto_create_fundraiser_V3.offering_portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_create_fundraiser_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_create_fundraiser_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* sto_create_fundraiser_V3 - raising_portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.sto_create_fundraiser_V3.raising_portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* sto_create_fundraiser_V3 - raising_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_create_fundraiser_V3.raising_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* sto_create_fundraiser_V3 - tiers */;
-            return _toStringVecPriceTier_V3(
+            return _toStringVecPriceTier(
                 &m->basic.sto_create_fundraiser_V3.tiers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* sto_create_fundraiser_V3 - venue_id */;
-            return _toStringVenueId_V3(
+            return _toStringVenueId(
                 &m->basic.sto_create_fundraiser_V3.venue_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* sto_create_fundraiser_V3 - start */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->basic.sto_create_fundraiser_V3.start,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 7: /* sto_create_fundraiser_V3 - end */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->basic.sto_create_fundraiser_V3.end,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10279,7 +10561,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 9: /* sto_create_fundraiser_V3 - fundraiser_name */;
-            return _toStringFundraiserName_V3(
+            return _toStringFundraiserName(
                 &m->basic.sto_create_fundraiser_V3.fundraiser_name,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10289,22 +10571,22 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9985: /* module 39 call 1 */
         switch (itemIdx) {
         case 0: /* sto_invest_V3 - investment_portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.sto_invest_V3.investment_portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_invest_V3 - funding_portfolio */;
-            return _toStringPortfolioId_V3(
+            return _toStringPortfolioId(
                 &m->basic.sto_invest_V3.funding_portfolio,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* sto_invest_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_invest_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* sto_invest_V3 - id */;
-            return _toStringFundraiserId_V3(
+            return _toStringFundraiserId(
                 &m->basic.sto_invest_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10319,7 +10601,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* sto_invest_V3 - receipt */;
-            return _toStringOptionReceiptDetails_V3(
+            return _toStringOptionReceiptDetails(
                 &m->basic.sto_invest_V3.receipt,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10329,12 +10611,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9986: /* module 39 call 2 */
         switch (itemIdx) {
         case 0: /* sto_freeze_fundraiser_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_freeze_fundraiser_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_freeze_fundraiser_V3 - id */;
-            return _toStringFundraiserId_V3(
+            return _toStringFundraiserId(
                 &m->basic.sto_freeze_fundraiser_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10344,12 +10626,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9987: /* module 39 call 3 */
         switch (itemIdx) {
         case 0: /* sto_unfreeze_fundraiser_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_unfreeze_fundraiser_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_unfreeze_fundraiser_V3 - id */;
-            return _toStringFundraiserId_V3(
+            return _toStringFundraiserId(
                 &m->basic.sto_unfreeze_fundraiser_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10359,22 +10641,22 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9988: /* module 39 call 4 */
         switch (itemIdx) {
         case 0: /* sto_modify_fundraiser_window_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_modify_fundraiser_window_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_modify_fundraiser_window_V3 - id */;
-            return _toStringFundraiserId_V3(
+            return _toStringFundraiserId(
                 &m->basic.sto_modify_fundraiser_window_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* sto_modify_fundraiser_window_V3 - start */;
-            return _toStringMoment_V3(
+            return _toStringMoment(
                 &m->basic.sto_modify_fundraiser_window_V3.start,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* sto_modify_fundraiser_window_V3 - end */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->basic.sto_modify_fundraiser_window_V3.end,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10384,12 +10666,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 9989: /* module 39 call 5 */
         switch (itemIdx) {
         case 0: /* sto_stop_V3 - offering_asset */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.sto_stop_V3.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_stop_V3 - id */;
-            return _toStringFundraiserId_V3(
+            return _toStringFundraiserId(
                 &m->basic.sto_stop_V3.id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10399,7 +10681,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 10240: /* module 40 call 0 */
         switch (itemIdx) {
         case 0: /* treasury_disbursement_V3 - beneficiaries */;
-            return _toStringVecBeneficiary_V3(
+            return _toStringVecBeneficiary(
                 &m->nested.treasury_disbursement_V3.beneficiaries,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10419,17 +10701,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 10499: /* module 41 call 3 */
         switch (itemIdx) {
         case 0: /* utility_relay_tx_V3 - target */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->nested.utility_relay_tx_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* utility_relay_tx_V3 - signature */;
-            return _toStringOffChainSignature_V3(
+            return _toStringOffChainSignature(
                 &m->nested.utility_relay_tx_V3.signature,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* utility_relay_tx_V3 - call */;
-            return _toStringUniqueCall_V3(
+            return _toStringUniqueCall(
                 &m->nested.utility_relay_tx_V3.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10439,12 +10721,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11010: /* module 43 call 2 */
         switch (itemIdx) {
         case 0: /* externalagents_remove_agent_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.externalagents_remove_agent_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* externalagents_remove_agent_V3 - agent */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->basic.externalagents_remove_agent_V3.agent,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10454,7 +10736,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11011: /* module 43 call 3 */
         switch (itemIdx) {
         case 0: /* externalagents_abdicate_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.externalagents_abdicate_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10474,22 +10756,22 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11014: /* module 43 call 6 */
         switch (itemIdx) {
         case 0: /* externalagents_create_group_and_add_auth_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.externalagents_create_group_and_add_auth_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* externalagents_create_group_and_add_auth_V3 - perms */;
-            return _toStringExtrinsicPermissions_V3(
+            return _toStringExtrinsicPermissions(
                 &m->basic.externalagents_create_group_and_add_auth_V3.perms,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* externalagents_create_group_and_add_auth_V3 - target */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->basic.externalagents_create_group_and_add_auth_V3.target,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* externalagents_create_group_and_add_auth_V3 - expiry */;
-            return _toStringOptionMoment_V3(
+            return _toStringOptionMoment(
                 &m->basic.externalagents_create_group_and_add_auth_V3.expiry,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10499,17 +10781,17 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11015: /* module 43 call 7 */
         switch (itemIdx) {
         case 0: /* externalagents_create_and_change_custom_group_V3 - ticker */;
-            return _toStringTicker_V3(
+            return _toStringTicker(
                 &m->basic.externalagents_create_and_change_custom_group_V3.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* externalagents_create_and_change_custom_group_V3 - perms */;
-            return _toStringExtrinsicPermissions_V3(
+            return _toStringExtrinsicPermissions(
                 &m->basic.externalagents_create_and_change_custom_group_V3.perms,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* externalagents_create_and_change_custom_group_V3 - agent */;
-            return _toStringIdentityId_V3(
+            return _toStringIdentityId(
                 &m->basic.externalagents_create_and_change_custom_group_V3.agent,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10519,7 +10801,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11264: /* module 44 call 0 */
         switch (itemIdx) {
         case 0: /* relayer_set_paying_key_V3 - user_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_set_paying_key_V3.user_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10544,12 +10826,12 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11266: /* module 44 call 2 */
         switch (itemIdx) {
         case 0: /* relayer_remove_paying_key_V3 - user_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_remove_paying_key_V3.user_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* relayer_remove_paying_key_V3 - paying_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_remove_paying_key_V3.paying_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10559,7 +10841,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11267: /* module 44 call 3 */
         switch (itemIdx) {
         case 0: /* relayer_update_polyx_limit_V3 - user_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_update_polyx_limit_V3.user_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10574,7 +10856,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11268: /* module 44 call 4 */
         switch (itemIdx) {
         case 0: /* relayer_increase_polyx_limit_V3 - user_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_increase_polyx_limit_V3.user_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10589,7 +10871,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11269: /* module 44 call 5 */
         switch (itemIdx) {
         case 0: /* relayer_decrease_polyx_limit_V3 - user_key */;
-            return _toStringAccountId_V3(
+            return _toStringAccountId(
                 &m->basic.relayer_decrease_polyx_limit_V3.user_key,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10603,19 +10885,19 @@ parser_error_t _getMethod_ItemValue_V3(
         }
     case 11520: /* module 45 call 0 */
         switch (itemIdx) {
-        case 0: /* rewards_claim_itn_reward_V3 - reward_address */;
-            return _toStringAccountId_V3(
-                &m->basic.rewards_claim_itn_reward_V3.reward_address,
+        case 0: /* rewards_claim_itn_reward_V3 - _reward_address */;
+            return _toStringAccountId(
+                &m->basic.rewards_claim_itn_reward_V3._reward_address,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 1: /* rewards_claim_itn_reward_V3 - itn_address */;
-            return _toStringAccountId_V3(
-                &m->basic.rewards_claim_itn_reward_V3.itn_address,
+        case 1: /* rewards_claim_itn_reward_V3 - _itn_address */;
+            return _toStringAccountId(
+                &m->basic.rewards_claim_itn_reward_V3._itn_address,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 2: /* rewards_claim_itn_reward_V3 - signature */;
-            return _toStringOffChainSignature_V3(
-                &m->basic.rewards_claim_itn_reward_V3.signature,
+        case 2: /* rewards_claim_itn_reward_V3 - _signature */;
+            return _toStringOffChainSignature(
+                &m->basic.rewards_claim_itn_reward_V3._signature,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10624,7 +10906,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11776: /* module 46 call 0 */
         switch (itemIdx) {
         case 0: /* contracts_call_V3 - dest */;
-            return _toStringLookupasStaticLookupSource_V3(
+            return _toStringLookupasStaticLookupSource(
                 &m->nested.contracts_call_V3.dest,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10704,7 +10986,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* contracts_instantiate_V3 - code_hash */;
-            return _toStringCodeHash_V3(
+            return _toStringCodeHash(
                 &m->nested.contracts_instantiate_V3.code_hash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10739,7 +11021,7 @@ parser_error_t _getMethod_ItemValue_V3(
     case 11780: /* module 46 call 4 */
         switch (itemIdx) {
         case 0: /* contracts_remove_code_V3 - code_hash */;
-            return _toStringCodeHash_V3(
+            return _toStringCodeHash(
                 &m->basic.contracts_remove_code_V3.code_hash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10754,7 +11036,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* polymeshcontracts_instantiate_with_code_perms_V3 - gas_limit */;
-            return _toStringWeight_V3(
+            return _toStringWeight(
                 &m->basic.polymeshcontracts_instantiate_with_code_perms_V3.gas_limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10779,7 +11061,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* polymeshcontracts_instantiate_with_code_perms_V3 - perms */;
-            return _toStringPermissions_V3(
+            return _toStringPermissions(
                 &m->basic.polymeshcontracts_instantiate_with_code_perms_V3.perms,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10794,7 +11076,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* polymeshcontracts_instantiate_with_hash_perms_V3 - gas_limit */;
-            return _toStringWeight_V3(
+            return _toStringWeight(
                 &m->basic.polymeshcontracts_instantiate_with_hash_perms_V3.gas_limit,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10804,7 +11086,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* polymeshcontracts_instantiate_with_hash_perms_V3 - code_hash */;
-            return _toStringCodeHash_V3(
+            return _toStringCodeHash(
                 &m->basic.polymeshcontracts_instantiate_with_hash_perms_V3.code_hash,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10819,7 +11101,7 @@ parser_error_t _getMethod_ItemValue_V3(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 6: /* polymeshcontracts_instantiate_with_hash_perms_V3 - perms */;
-            return _toStringPermissions_V3(
+            return _toStringPermissions(
                 &m->basic.polymeshcontracts_instantiate_with_hash_perms_V3.perms,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10915,8 +11197,8 @@ bool _getMethod_IsNestingSupported_V3(uint8_t moduleIdx, uint8_t callIdx)
     case 1812: // Identity:Revoke claim by index
     case 1813: // Identity:Rotate primary key to secondary
     case 1815: // Identity:Set secondary key permissions
+    case 1817: // Identity:Register custom claim type
     case 3856: // MultiSig:Make multisig secondary
-    case 4103: // Bridge:Force handle bridge tx
     case 4104: // Bridge:Batch propose bridge tx
     case 4105: // Bridge:Propose bridge tx
     case 4106: // Bridge:Handle bridge tx
@@ -10934,12 +11216,16 @@ bool _getMethod_IsNestingSupported_V3(uint8_t moduleIdx, uint8_t callIdx)
     case 6677: // Asset:Register and set local asset metadata
     case 6678: // Asset:Register asset metadata local type
     case 6679: // Asset:Register asset metadata global type
+    case 6680: // Asset:Redeem from portfolio
     case 8708: // Portfolio:Quit portfolio custody
     case 8709: // Portfolio:Accept portfolio custody
     case 9473: // Settlement:Update venue details
     case 9474: // Settlement:Update venue type
     case 9486: // Settlement:Change receipt validity
     case 9488: // Settlement:Reschedule instruction
+    case 9489: // Settlement:Update venue signers
+    case 9490: // Settlement:Add instruction with memo
+    case 9491: // Settlement:Add and affirm instruction with memo
     case 9984: // Sto:Create fundraiser
     case 9985: // Sto:Invest
     case 9986: // Sto:Freeze fundraiser

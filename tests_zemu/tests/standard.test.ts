@@ -18,9 +18,8 @@ import Zemu, { DEFAULT_START_OPTIONS } from '@zondax/zemu'
 import { newPolymeshApp } from '@zondax/ledger-substrate'
 import { APP_SEED, models } from './common'
 
-// @ts-ignore
+// @ts-expect-error
 import ed25519 from 'ed25519-supercop'
-// @ts-ignore
 import { blake2bFinal, blake2bInit, blake2bUpdate } from 'blakejs'
 import { txBalances_transfer, txIdentity_addClaim, txSession_setKeys, txStaking_nominate, txUtility_batch } from './zemu_blobs'
 
@@ -31,11 +30,7 @@ const defaultOptions = {
   X11: false,
 }
 
-jest.setTimeout(60000)
-
-beforeAll(async () => {
-  await Zemu.checkAndPullImage()
-})
+jest.setTimeout(180000)
 
 describe('Standard', function () {
   test.each(models)('can start and stop container', async function (m) {
