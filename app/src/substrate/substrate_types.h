@@ -23,9 +23,11 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wextern-c-compat"
 #pragma clang diagnostic pop
+#endif
 
 // https://github.com/paritytech/substrate/blob/effe489951d1edab9d34846b1eefdfaf9511dab9/frame/identity/src/lib.rs
 #define Data_e_NONE 0
@@ -117,17 +119,8 @@ typedef struct {
 } pd_CompactBalance_t;
 
 typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-} pd_DispatchableName_t;
-
-typedef struct {
     const uint8_t* _ptr;
 } pd_IdentityId_t;
-
-typedef struct {
-    uint64_t value;
-} pd_PortfolioNumber_t;
 
 typedef struct {
     uint64_t _len;
@@ -135,10 +128,14 @@ typedef struct {
 } pd_Ticker_t;
 
 typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecDispatchableName_t;
+    uint8_t value;
+    union {
+        pd_IdentityId_t identity;
+        pd_Ticker_t ticker;
+        uint64_t _len;
+        const uint8_t* _ptr;
+    };
+} pd_Scope_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -151,6 +148,63 @@ typedef struct {
 typedef struct {
     uint8_t value;
 } pd_CountryCode_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+} pd_DispatchableName_t;
+
+typedef struct {
+    uint8_t some;
+    pd_Scope_t contained;
+} pd_OptionScope_t;
+
+typedef struct {
+    const uint8_t* _ptr;
+} pd_ScopeId_t;
+
+typedef struct {
+    uint64_t value;
+} pd_PortfolioNumber_t;
+
+typedef struct {
+    pd_CountryCode_t country_code;
+    pd_Scope_t scope;
+} pd_TupleCountryCodeScope_t;
+
+typedef struct {
+    pd_Scope_t scope;
+    pd_ScopeId_t scopeId;
+    pd_CddId_t cddId;
+} pd_TupleScopeScopeIdCddId_t;
+
+typedef struct {
+    uint32_t u32;
+    pd_OptionScope_t scope;
+} pd_TupleU32Scope_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecClaimType_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecDispatchableName_t;
+
+typedef struct {
+    uint8_t value;
+    union {
+        pd_Scope_t scope;
+        pd_CddId_t cddId;
+        pd_TupleCountryCodeScope_t jurisdiction;
+        pd_TupleScopeScopeIdCddId_t investorUniqueness;
+        pd_TupleU32Scope_t custom;
+    };
+} pd_Claim_t;
 
 typedef struct {
     uint8_t value;
@@ -168,18 +222,9 @@ typedef struct {
 } pd_PortfolioKind_t;
 
 typedef struct {
-    const uint8_t* _ptr;
-} pd_ScopeId_t;
-
-typedef struct {
     uint8_t value;
-    union {
-        pd_IdentityId_t identity;
-        pd_Ticker_t ticker;
-        uint64_t _len;
-        const uint8_t* _ptr;
-    };
-} pd_Scope_t;
+    pd_VecClaimType_t claims;
+} pd_TrustedFor_t;
 
 typedef struct {
     pd_PalletName_t palletName;
@@ -187,26 +232,29 @@ typedef struct {
 } pd_PalletPermissions_t;
 
 typedef struct {
+    uint32_t value;
+} pd_Permill_t;
+
+typedef struct {
     pd_IdentityId_t did;
     pd_PortfolioKind_t kind;
 } pd_PortfolioId_t;
 
 typedef struct {
-    pd_CountryCode_t country_code;
-    pd_Scope_t scope;
-} pd_TupleCountryCodeScope_t;
+    uint8_t value;
+    pd_IdentityId_t specific;
+} pd_TargetIdentity_t;
 
 typedef struct {
-    pd_Scope_t scope;
-    pd_ScopeId_t scopeId;
-    pd_CddId_t cddId;
-} pd_TupleScopeScopeIdCddId_t;
+    pd_IdentityId_t issuer;
+    pd_TrustedFor_t trustedFor;
+} pd_TrustedIssuer_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecClaimType_t;
+} pd_VecClaim_t;
 
 typedef struct {
     uint64_t _len;
@@ -216,12 +264,11 @@ typedef struct {
 typedef struct {
     uint8_t value;
     union {
-        pd_Scope_t scope;
-        pd_CddId_t cddId;
-        pd_TupleCountryCodeScope_t jurisdiction;
-        pd_TupleScopeScopeIdCddId_t investorUniqueness;
+        pd_Claim_t claim;
+        pd_VecClaim_t vecClaim;
+        pd_TargetIdentity_t identity;
     };
-} pd_Claim_t;
+} pd_ConditionType_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -232,17 +279,17 @@ typedef struct {
 } pd_Ed25519Signature_t;
 
 typedef struct {
-    uint32_t value;
-} pd_Permill_t;
+    uint64_t _len;
+    const uint8_t* _ptr;
+} pd_Memo_t;
 
 typedef struct {
     const uint8_t* _ptr;
 } pd_Sr25519Signature_t;
 
 typedef struct {
-    uint8_t value;
-    pd_VecClaimType_t claims;
-} pd_TrustedFor_t;
+    pd_Permill_t value;
+} pd_Tax_t;
 
 typedef struct {
     uint64_t _len;
@@ -263,13 +310,28 @@ typedef struct {
 } pd_VecTicker_t;
 
 typedef struct {
-    uint32_t value;
-} pd_AGId_t;
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecTrustedIssuer_t;
 
 typedef struct {
     uint8_t value;
     pd_VecTicker_t contained;
 } pd_AssetPermissions_t;
+
+typedef struct {
+    const uint8_t* _ptr;
+} pd_BalanceNoSymbol_t;
+
+typedef struct {
+    uint64_t value;
+} pd_CheckpointId_t;
+
+typedef struct {
+    pd_ConditionType_t conditionType;
+    pd_VecTrustedIssuer_t issuers;
+} pd_Condition_t;
 
 typedef struct {
     uint64_t _len;
@@ -280,11 +342,6 @@ typedef struct {
     uint8_t value;
     pd_VecPalletPermissions_t contained;
 } pd_ExtrinsicPermissions_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-} pd_Memo_t;
 
 typedef struct {
     uint64_t value;
@@ -310,23 +367,31 @@ typedef struct {
 } pd_MultiSignature_t;
 
 typedef struct {
+    uint8_t some;
+    pd_Memo_t contained;
+} pd_OptionMemo_t;
+
+typedef struct {
     uint8_t value;
     pd_VecPortfolioId_t contained;
 } pd_PortfolioPermissions_t;
 
 typedef struct {
+    const uint8_t* _ptr;
+} pd_ReceiptMetadata_t;
+
+typedef struct {
+    uint64_t value;
+} pd_ScheduleId_t;
+
+typedef struct {
     uint8_t value;
-    pd_IdentityId_t specific;
-} pd_TargetIdentity_t;
+} pd_TargetTreatment_t;
 
 typedef struct {
-    pd_Permill_t value;
-} pd_Tax_t;
-
-typedef struct {
-    pd_IdentityId_t issuer;
-    pd_TrustedFor_t trustedFor;
-} pd_TrustedIssuer_t;
+    pd_IdentityId_t id;
+    pd_Tax_t tax;
+} pd_TupleIdentityIdTax_t;
 
 typedef struct {
     uint64_t _len;
@@ -338,7 +403,13 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecClaim_t;
+} pd_VecIdentityId_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_Vecu64_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -346,9 +417,13 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
-    pd_AGId_t agId;
-
+    uint32_t custom;
 } pd_AgentGroup_t;
+
+typedef struct {
+    uint8_t value;
+    uint64_t key;
+} pd_AssetMetadataKey_t;
 
 typedef struct {
     uint8_t value;
@@ -365,25 +440,8 @@ typedef struct {
 } pd_Bytes_t;
 
 typedef struct {
-    uint8_t value;
-} pd_CalendarUnit_t;
-
-typedef struct {
-    uint64_t value;
-} pd_CheckpointId_t;
-
-typedef struct {
     compactInt_t value;
 } pd_CompactAccountIndex_t;
-
-typedef struct {
-    uint8_t value;
-    union {
-        pd_Claim_t claim;
-        pd_VecClaim_t vecClaim;
-        pd_TargetIdentity_t identity;
-    };
-} pd_ConditionType_t;
 
 typedef struct {
     uint8_t value;
@@ -402,8 +460,41 @@ typedef struct {
 } pd_DocumentUri_t;
 
 typedef struct {
+    pd_Ticker_t ticker;
+    pd_BalanceNoSymbol_t amount;
+    pd_OptionMemo_t memo;
+} pd_FundFungible_t;
+
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_Vecu64_t ids;
+    pd_OptionMemo_t memo;
+} pd_FundNonFungible_t;
+
+typedef struct {
     const uint8_t* _ptr;
 } pd_Hash_t;
+
+typedef struct {
+    pd_PortfolioId_t sender;
+    pd_PortfolioId_t receiver;
+    pd_Ticker_t ticker;
+    pd_BalanceNoSymbol_t amount;
+} pd_LegFungible_t;
+
+typedef struct {
+    pd_PortfolioId_t sender;
+    pd_PortfolioId_t receiver;
+    pd_Ticker_t ticker;
+    pd_Vecu64_t ids;
+} pd_LegNonFungible_t;
+
+typedef struct {
+    pd_IdentityId_t sender;
+    pd_IdentityId_t receiver;
+    pd_Ticker_t ticker;
+    pd_BalanceNoSymbol_t amount;
+} pd_LegOffChain_t;
 
 typedef struct {
     pd_MotionTitle_t title;
@@ -422,13 +513,13 @@ typedef struct {
 
 typedef struct {
     uint8_t some;
-    pd_Memo_t contained;
-} pd_OptionMemo_t;
+    pd_Moment_t contained;
+} pd_OptionMoment_t;
 
 typedef struct {
     uint8_t some;
-    pd_Moment_t contained;
-} pd_OptionMoment_t;
+    pd_ReceiptMetadata_t contained;
+} pd_OptionReceiptMetadata_t;
 
 typedef struct {
     uint8_t some;
@@ -446,13 +537,13 @@ typedef struct {
 } pd_PipId_t;
 
 typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-} pd_ReceiptMetadata_t;
-
-typedef struct {
-    uint64_t value;
-} pd_ScheduleId_t;
+    uint8_t value;
+    union {
+        pd_Moment_t scheduled;
+        pd_ScheduleId_t existingSchedule;
+        pd_CheckpointId_t existing;
+    };
+} pd_RecordDateSpec_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -463,25 +554,21 @@ typedef struct {
 } pd_SnapshotResult_t;
 
 typedef struct {
-    uint8_t value;
-} pd_TargetTreatment_t;
-
-typedef struct {
-    pd_IdentityId_t id;
-    pd_Tax_t tax;
-} pd_TupleIdentityIdTax_t;
+    pd_VecIdentityId_t identities;
+    pd_TargetTreatment_t treatment;
+} pd_TargetIdentities_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecIdentityId_t;
+} pd_VecCondition_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecTrustedIssuer_t;
+} pd_VecTupleIdentityIdTax_t;
 
 typedef struct {
     pd_AccountId_t accountId_1;
@@ -528,9 +615,8 @@ typedef struct {
 } pd_BridgeTxAccountId_t;
 
 typedef struct {
-    pd_CalendarUnit_t unit;
-    uint64_t amount;
-} pd_CalendarPeriod_t;
+    uint8_t value;
+} pd_CAKind_t;
 
 typedef struct {
     pd_CallIndex_t callIndex;
@@ -547,9 +633,15 @@ typedef struct {
 } pd_CompactPerBill_t;
 
 typedef struct {
-    pd_ConditionType_t conditionType;
-    pd_VecTrustedIssuer_t issuers;
-} pd_Condition_t;
+    pd_VecCondition_t senderConditions;
+    pd_VecCondition_t receiverConditions;
+    uint32_t id;
+} pd_ComplianceRequirement_t;
+
+typedef struct {
+    pd_AccountId_t key;
+    pd_Signature_t authSignature;
+} pd_CreateChildIdentityWithAuthAccountId_t;
 
 typedef struct {
     uint32_t value;
@@ -568,8 +660,12 @@ typedef struct {
 } pd_Document_t;
 
 typedef struct {
-    const uint8_t* _ptr;
-} pd_EthereumAddress_t;
+    uint8_t value;
+    union {
+        pd_FundFungible_t fungible;
+        pd_FundNonFungible_t nonFungible;
+    };
+} pd_Fund_t;
 
 typedef struct {
     uint64_t _len;
@@ -577,14 +673,12 @@ typedef struct {
 } pd_FundingRoundName_t;
 
 typedef struct {
-    const uint8_t* _ptr;
-} pd_InstructionMemo_t;
-
-typedef struct {
-    pd_PortfolioId_t from;
-    pd_PortfolioId_t to;
-    pd_Ticker_t asset;
-    pd_Balance_t amount;
+    uint8_t value;
+    union {
+        pd_LegFungible_t fungible;
+        pd_LegNonFungible_t nonFungible;
+        pd_LegOffChain_t offChain;
+    };
 } pd_Leg_t;
 
 typedef struct {
@@ -602,15 +696,39 @@ typedef struct {
 } pd_LookupasStaticLookupSource_t;
 
 typedef struct {
-    pd_Ticker_t ticker;
-    pd_Balance_t balance;
-    pd_OptionMemo_t memo;
-} pd_MovePortfolioItem_t;
+    pd_AssetMetadataKey_t key;
+    pd_Bytes_t value;
+} pd_NFTMetadataAttribute_t;
+
+typedef struct {
+    uint8_t value;
+    uint32_t custom;
+} pd_NonFungibleType_t;
 
 typedef struct {
     uint8_t some;
     pd_Bytes_t contained;
 } pd_OptionBytes_t;
+
+typedef struct {
+    uint8_t some;
+    pd_Permill_t contained;
+} pd_OptionPermill_t;
+
+typedef struct {
+    uint8_t some;
+    pd_RecordDateSpec_t contained;
+} pd_OptionRecordDateSpec_t;
+
+typedef struct {
+    uint8_t some;
+    pd_TargetIdentities_t contained;
+} pd_OptionTargetIdentities_t;
+
+typedef struct {
+    uint8_t some;
+    pd_VecTupleIdentityIdTax_t contained;
+} pd_OptionVecTupleIdentityIdTax_t;
 
 typedef struct {
     uint64_t _len;
@@ -623,21 +741,18 @@ typedef struct {
 } pd_PriceTier_t;
 
 typedef struct {
-    uint64_t receipt_uid;
-    uint64_t leg_id;
+    uint64_t uid;
+    uint64_t instructionId;
+    uint64_t legId;
     pd_AccountId_t signer;
     pd_OffChainSignature_t signature;
-    pd_ReceiptMetadata_t metadata;
+    pd_OptionReceiptMetadata_t metadata;
 } pd_ReceiptDetails_t;
 
 typedef struct {
-    uint8_t value;
-    union {
-        pd_Moment_t scheduled;
-        pd_ScheduleId_t existingSchedule;
-        pd_CheckpointId_t existing;
-    };
-} pd_RecordDateSpec_t;
+    pd_AccountId_t key;
+    pd_Permissions_t permissions;
+} pd_SecondaryKeyAccountId_t;
 
 typedef struct {
     pd_AccountId_t key;
@@ -654,9 +769,15 @@ typedef struct {
 } pd_SignatoryAccountId_t;
 
 typedef struct {
-    pd_VecIdentityId_t identities;
-    pd_TargetTreatment_t treatment;
-} pd_TargetIdentities_t;
+    uint8_t value;
+    pd_AccountId_t _signed;
+} pd_SystemOrigin_t;
+
+typedef struct {
+    uint8_t extrinsicId1;
+    uint8_t extrinsicId2;
+    pd_bool_t _bool;
+} pd_TupleExtrinsicIdbool_t;
 
 typedef struct {
     pd_IdentityId_t identity;
@@ -680,14 +801,23 @@ typedef struct {
 } pd_VecMotion_t;
 
 typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecTupleIdentityIdTax_t;
-
-typedef struct {
     uint64_t value;
 } pd_VenueId_t;
+
+typedef struct {
+    pd_Compactu64_t refTime;
+    pd_Compactu64_t proofSize;
+} pd_Weight_t;
+
+typedef struct {
+    uint8_t value;
+    union {
+        pd_AccountId_t id;
+        pd_CompactAccountIndex_t index;
+        pd_Bytes_t raw;
+        const uint8_t* _ptr;
+    };
+} pd_AccountIdLookupOfT_t;
 
 typedef struct {
     pd_Bytes_t value;
@@ -736,20 +866,32 @@ typedef struct {
 } pd_BallotTimeRange_t;
 
 typedef struct {
+    uint8_t value;
+    union {
+        pd_SystemOrigin_t system;
+        uint8_t committee;
+    };
+} pd_BoxPalletsOrigin_t;
+
+typedef struct {
     pd_Ticker_t ticker;
     pd_LocalCAId_t local_id;
 } pd_CAId_t;
 
 typedef struct {
-    pd_EthereumAddress_t eth_owner;
-    pd_Ticker_t ticker;
-    pd_bool_t is_contract;
-    pd_bool_t is_created;
-} pd_ClassicTickerImport_t;
-
-typedef struct {
     pd_Hash_t hash;
 } pd_CodeHash_t;
+
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_CAKind_t kind;
+    uint64_t declDate;
+    pd_OptionRecordDateSpec_t recordDate;
+    pd_Bytes_t details;
+    pd_OptionTargetIdentities_t targets;
+    pd_OptionPermill_t defaultWithholdingTax;
+    pd_OptionVecTupleIdentityIdTax_t withholdingTax;
+} pd_InitiateCorporateActionArgs_t;
 
 typedef struct {
     uint8_t value;
@@ -763,28 +905,23 @@ typedef struct {
 
 typedef struct {
     uint8_t some;
+    pd_PortfolioId_t contained;
+} pd_OptionPortfolioId_t;
+
+typedef struct {
+    uint8_t some;
     pd_ReceiptDetails_t contained;
 } pd_OptionReceiptDetails_t;
 
 typedef struct {
     uint8_t some;
-    pd_RecordDateSpec_t contained;
-} pd_OptionRecordDateSpec_t;
-
-typedef struct {
-    uint8_t some;
-    pd_Scope_t contained;
-} pd_OptionScope_t;
-
-typedef struct {
-    uint8_t some;
-    pd_TargetIdentities_t contained;
-} pd_OptionTargetIdentities_t;
-
-typedef struct {
-    uint8_t some;
     pd_Tax_t contained;
 } pd_OptionTax_t;
+
+typedef struct {
+    uint8_t some;
+    pd_Weight_t contained;
+} pd_OptionWeight_t;
 
 typedef struct {
     pd_Call_t call;
@@ -796,20 +933,13 @@ typedef struct {
 } pd_RewardDestination_t;
 
 typedef struct {
-    pd_OptionMoment_t start;
-    pd_CalendarPeriod_t period;
-    uint32_t remaining;
-} pd_ScheduleSpec_t;
+    pd_Vecu64_t pending;
+} pd_ScheduleCheckpoints_t;
 
 typedef struct {
     uint8_t value;
     pd_BlockNumber_t blockNumber;
 } pd_SettlementTypeBlockNumber_t;
-
-typedef struct {
-    uint8_t max_ticker_length;
-    pd_OptionMoment_t registration_length;
-} pd_TickerRegistrationConfigMoment_t;
 
 typedef struct {
     uint64_t nonce;
@@ -850,13 +980,25 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecCondition_t;
+} pd_VecComplianceRequirement_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecCreateChildIdentityWithAuthAccountId_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecDocument_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecFund_t;
 
 typedef struct {
     uint64_t _len;
@@ -874,7 +1016,7 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecMovePortfolioItem_t;
+} pd_VecNFTMetadataAttribute_t;
 
 typedef struct {
     uint64_t _len;
@@ -892,6 +1034,12 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
+} pd_VecSecondaryKeyAccountId_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
 } pd_VecSecondaryKeyWithAuthAccountId_t;
 
 typedef struct {
@@ -899,6 +1047,12 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecSignatoryAccountId_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecTupleExtrinsicIdbool_t;
 
 typedef struct {
     uint64_t _len;
@@ -914,21 +1068,20 @@ typedef struct {
 
 typedef struct {
     uint32_t value;
+} pd_AGId_t;
+
+typedef struct {
+    uint32_t value;
 } pd_AccountIndex_t;
 
 typedef struct {
-    uint8_t value;
-    uint64_t key;
-} pd_AssetMetadataKey_t;
+    uint64_t value;
+} pd_AssetMetadataLocalKey_t;
 
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
 } pd_AssetName_t;
-
-typedef struct {
-    const uint8_t* _ptr;
-} pd_BalanceNoSymbol_t;
 
 typedef struct {
     uint64_t _len;
@@ -937,7 +1090,7 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
-} pd_CAKind_t;
+} pd_Determinism_t;
 
 typedef struct {
     uint32_t value;
@@ -958,19 +1111,15 @@ typedef struct {
 
 typedef struct {
     const uint8_t* _ptr;
-} pd_InvestorZKProofData_t;
-
-typedef struct {
-    const uint8_t* _ptr;
 } pd_Keys_t;
-
-typedef struct {
-    uint64_t value;
-} pd_LegId_t;
 
 typedef struct {
     uint32_t value;
 } pd_MemberCount_t;
+
+typedef struct {
+    uint64_t value;
+} pd_NFTId_t;
 
 typedef struct {
     uint8_t some;
@@ -994,8 +1143,8 @@ typedef struct {
 
 typedef struct {
     uint8_t some;
-    pd_InstructionMemo_t contained;
-} pd_OptionInstructionMemo_t;
+    pd_NonFungibleType_t contained;
+} pd_OptionNonFungibleType_t;
 
 typedef struct {
     uint8_t some;
@@ -1011,11 +1160,6 @@ typedef struct {
     uint8_t some;
     pd_Url_t contained;
 } pd_OptionUrl_t;
-
-typedef struct {
-    uint8_t some;
-    pd_VecTupleIdentityIdTax_t contained;
-} pd_OptionVecTupleIdentityIdTax_t;
 
 typedef struct {
     uint8_t some;
@@ -1073,6 +1217,12 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
+} pd_VecAssetMetadataKey_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
 } pd_VecDocumentId_t;
 
 typedef struct {
@@ -1101,10 +1251,6 @@ typedef struct {
 typedef struct {
     uint8_t value;
 } pd_VenueType_t;
-
-typedef struct {
-    uint64_t value;
-} pd_Weight_t;
 
 #ifdef __cplusplus
 }

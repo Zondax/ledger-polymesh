@@ -28,13 +28,12 @@ Please:
 - **Do not use in production**
 - **Do not use a Ledger device with funds for development purposes.**
 - **Have a separate and marked device that is used ONLY for development and testing**
-# Polymesh 3.5001030.x
+# Polymesh 4.6000000.x
 
 ## System
 
-| Name                    | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                         |
+| Name                    | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                         |
 | ----------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------- |
-| Fill block              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Perbill`ratio<br/>               |
 | Remark                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Bytes`remark<br/>                |
 | Set heap pages          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`pages<br/>                   |
 | Set code                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Vecu8`code<br/>                  |
@@ -46,37 +45,31 @@ Please:
 
 ## Babe
 
-| Name                         | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                                                                              |
-| ---------------------------- | ------ | --------- | --------- | ------- | -------------------------------------------------------------------------------------- |
-| Report equivocation          |        |           |           |         | `BoxEquivocationProofHeader`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
-| Report equivocation unsigned |        |           |           |         | `BoxEquivocationProofHeader`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
-| Plan config change           |        |           |           |         | `NextConfigDescriptor`config<br/>                                                      |
+| Name                         | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments                                                                              |
+| ---------------------------- | ------ | --------- | ---------------- | ------- | -------------------------------------------------------------------------------------- |
+| Report equivocation          |        |           |                  |         | `BoxEquivocationProofHeader`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
+| Report equivocation unsigned |        |           |                  |         | `BoxEquivocationProofHeader`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
+| Plan config change           |        |           |                  |         | `NextConfigDescriptor`config<br/>                                                      |
 
 ## Timestamp
 
-| Name | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments            |
+| Name | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments            |
 | ---- | ------ | ------------------ | ------------------ | ------------------ | -------------------- |
 | Set  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Compactu64`now<br/> |
 
 ## Indices
 
-| Name           | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                      |
-| -------------- | ------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------- |
-| Claim          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                       |
-| Transfer       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`new\_<br/>`AccountIndex`index<br/>                  |
-| Free           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                       |
-| Force transfer |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`new\_<br/>`AccountIndex`index<br/>`bool`freeze<br/> |
-| Freeze         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                       |
-
-## Authorship
-
-| Name       | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                  |
-| ---------- | ------ | --------- | --------- | ------- | -------------------------- |
-| Set uncles |        |           |           |         | `VecHeader`new_uncles<br/> |
+| Name           | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                               |
+| -------------- | ------ | ------------------ | ------------------ | ------------------ | ----------------------------------------------------------------------- |
+| Claim          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                                |
+| Transfer       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIdLookupOfT`new\_<br/>`AccountIndex`index<br/>                  |
+| Free           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                                |
+| Force transfer |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIdLookupOfT`new\_<br/>`AccountIndex`index<br/>`bool`freeze<br/> |
+| Freeze         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIndex`index<br/>                                                |
 
 ## Balances
 
-| Name                                 | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                               |
+| Name                                 | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                               |
 | ------------------------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------- |
 | Transfer                             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `LookupasStaticLookupSource`dest<br/>`CompactBalance`amount<br/>                                        |
 | Transfer with memo                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `LookupasStaticLookupSource`dest<br/>`CompactBalance`amount<br/>`OptionMemo`memo<br/>                   |
@@ -87,38 +80,36 @@ Please:
 
 ## Identity
 
-| Name                                        | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                     |
-| ------------------------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-| Cdd register did                            |                    |                    |                    |                    | `AccountId`target_account<br/>`VecSecondaryKeyAccountId`secondary_keys<br/>                                   |
-| Invalidate cdd claims                       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`cdd<br/>`Moment`disable_from<br/>`OptionMoment`expiry<br/>                                        |
-| Remove secondary keys old                   |                    |                    |                    |                    | `VecSignatoryAccountId`keys_to_remove<br/>                                                                    |
-| Accept primary key                          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`rotation_auth_id<br/>`Optionu64`optional_cdd_auth_id<br/>                                                |
-| Change cdd requirement for mk rotation      |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `bool`auth_required<br/>                                                                                      |
-| Join identity as key                        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                             |
-| Leave identity as key                       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                               |
-| Add claim                                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`Claim`claim<br/>`OptionMoment`expiry<br/>                                             |
-| Revoke claim                                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`Claim`claim<br/>                                                                      |
-| Set permission to signer                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SignatoryAccountId`key<br/>`Permissions`perms<br/>                                                           |
-| Placeholder legacy set permission to signer |                    | :heavy_check_mark: | :heavy_check_mark: |                    |                                                                                                               |
-| Freeze secondary keys                       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                               |
-| Unfreeze secondary keys                     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                               |
-| Add authorization                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SignatoryAccountId`target<br/>`AuthorizationDataAccountId`data<br/>`OptionMoment`expiry<br/>                 |
-| Remove authorization                        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SignatoryAccountId`target<br/>`u64`auth_id<br/>`bool`\_auth_issuer_pays<br/>                                 |
-| Add secondary keys with authorization old   |                    |                    |                    |                    | `VecSecondaryKeyWithAuthV1AccountId`additional_keys<br/>`Moment`expires_at<br/>                               |
-| Add investor uniqueness claim               | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`Claim`claim<br/>`InvestorZKProofData`proof<br/>`OptionMoment`expiry<br/>              |
-| Gc add cdd claim                            |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>                                                                                       |
-| Gc revoke cdd claim                         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>                                                                                       |
-| Add investor uniqueness claim v2            |                    |                    |                    |                    | `IdentityId`target<br/>`Scope`scope<br/>`Claim`claim<br/>`ScopeClaimProof`proof<br/>`OptionMoment`expiry<br/> |
-| Revoke claim by index                       |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `IdentityId`target<br/>`ClaimType`claim_type<br/>`OptionScope`scope<br/>                                      |
-| Rotate primary key to secondary             |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `u64`auth_id<br/>`Optionu64`optional_cdd_auth_id<br/>                                                         |
-| Add secondary keys with authorization       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecSecondaryKeyWithAuthAccountId`additional_keys<br/>`Moment`expires_at<br/>                                 |
-| Set secondary key permissions               |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `AccountId`key<br/>`Permissions`perms<br/>                                                                    |
-| Remove secondary keys                       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecAccountId`keys_to_remove<br/>                                                                             |
-| Register custom claim type                  |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`ty<br/>                                                                                                |
+| Name                                   | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                            |
+| -------------------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------------------------------- |
+| Cdd register did                       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target_account<br/>`VecSecondaryKeyAccountId`secondary_keys<br/>                          |
+| Invalidate cdd claims                  |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`cdd<br/>`Moment`disable_from<br/>`OptionMoment`expiry<br/>                               |
+| Accept primary key                     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`rotation_auth_id<br/>`Optionu64`optional_cdd_auth_id<br/>                                       |
+| Change cdd requirement for mk rotation |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `bool`auth_required<br/>                                                                             |
+| Join identity as key                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                    |
+| Leave identity as key                  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                      |
+| Add claim                              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`Claim`claim<br/>`OptionMoment`expiry<br/>                                    |
+| Revoke claim                           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`Claim`claim<br/>                                                             |
+| Freeze secondary keys                  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                      |
+| Unfreeze secondary keys                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                      |
+| Add authorization                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SignatoryAccountId`target<br/>`AuthorizationDataAccountId`data<br/>`OptionMoment`expiry<br/>        |
+| Remove authorization                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SignatoryAccountId`target<br/>`u64`auth_id<br/>`bool`\_auth_issuer_pays<br/>                        |
+| Gc add cdd claim                       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>                                                                              |
+| Gc revoke cdd claim                    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>                                                                              |
+| Revoke claim by index                  |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`target<br/>`ClaimType`claim_type<br/>`OptionScope`scope<br/>                             |
+| Rotate primary key to secondary        |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>`Optionu64`optional_cdd_auth_id<br/>                                                |
+| Add secondary keys with authorization  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecSecondaryKeyWithAuthAccountId`additional_keys<br/>`Moment`expires_at<br/>                        |
+| Set secondary key permissions          |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`key<br/>`Permissions`perms<br/>                                                           |
+| Remove secondary keys                  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecAccountId`keys_to_remove<br/>                                                                    |
+| Register custom claim type             |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Vecu8`ty<br/>                                                                                       |
+| Cdd register did with cdd              |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target_account<br/>`VecSecondaryKeyAccountId`secondary_keys<br/>`OptionMoment`expiry<br/> |
+| Create child identity                  |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`secondary_key<br/>                                                                        |
+| Create child identities                |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCreateChildIdentityWithAuthAccountId`child_keys<br/>`Moment`expires_at<br/>                      |
+| Unlink child identity                  |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`child_did<br/>                                                                           |
 
 ## CddServiceProviders
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                          |
+| Name                     | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                          |
 | ------------------------ | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------ |
 | Set active members limit |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `MemberCount`limit<br/>                                            |
 | Disable member           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`who<br/>`OptionMoment`expiry<br/>`OptionMoment`at<br/> |
@@ -130,7 +121,7 @@ Please:
 
 ## PolymeshCommittee
 
-| Name                    | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                      |
+| Name                    | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                      |
 | ----------------------- | ------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------- |
 | Set vote threshold      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u32`n<br/>`u32`d<br/>                                         |
 | Set release coordinator |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`id<br/>                                            |
@@ -140,7 +131,7 @@ Please:
 
 ## CommitteeMembership
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                          |
+| Name                     | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                          |
 | ------------------------ | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------ |
 | Set active members limit |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `MemberCount`limit<br/>                                            |
 | Disable member           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`who<br/>`OptionMoment`expiry<br/>`OptionMoment`at<br/> |
@@ -152,7 +143,7 @@ Please:
 
 ## TechnicalCommittee
 
-| Name                    | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                      |
+| Name                    | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                      |
 | ----------------------- | ------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------- |
 | Set vote threshold      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u32`n<br/>`u32`d<br/>                                         |
 | Set release coordinator |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`id<br/>                                            |
@@ -162,7 +153,7 @@ Please:
 
 ## TechnicalCommitteeMembership
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                          |
+| Name                     | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                          |
 | ------------------------ | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------ |
 | Set active members limit |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `MemberCount`limit<br/>                                            |
 | Disable member           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`who<br/>`OptionMoment`expiry<br/>`OptionMoment`at<br/> |
@@ -174,7 +165,7 @@ Please:
 
 ## UpgradeCommittee
 
-| Name                    | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                      |
+| Name                    | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                      |
 | ----------------------- | ------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------- |
 | Set vote threshold      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u32`n<br/>`u32`d<br/>                                         |
 | Set release coordinator |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`id<br/>                                            |
@@ -184,7 +175,7 @@ Please:
 
 ## UpgradeCommitteeMembership
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                          |
+| Name                     | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                          |
 | ------------------------ | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------ |
 | Set active members limit |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `MemberCount`limit<br/>                                            |
 | Disable member           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`who<br/>`OptionMoment`expiry<br/>`OptionMoment`at<br/> |
@@ -196,7 +187,7 @@ Please:
 
 ## MultiSig
 
-| Name                                   | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                |
+| Name                                   | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                |
 | -------------------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------------------------------------------------- |
 | Create multisig                        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecSignatoryAccountId`signers<br/>`u64`sigs_required<br/>                                               |
 | Create or approve proposal as identity | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`Proposal`proposal<br/>`OptionMoment`expiry<br/>`bool`auto_close<br/>            |
@@ -214,13 +205,15 @@ Please:
 | Add multisig signers via creator       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`VecSignatoryAccountId`signers<br/>                                              |
 | Remove multisig signers via creator    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`VecSignatoryAccountId`signers<br/>                                              |
 | Change sigs required                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`sigs_required<br/>                                                                                  |
-| Make multisig secondary                |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `AccountId`multisig<br/>                                                                                 |
+| Make multisig secondary                |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>                                                                                 |
 | Make multisig primary                  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`Optionu64`optional_cdd_auth_id<br/>                                             |
 | Execute scheduled proposal             | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`u64`proposal_id<br/>`IdentityId`multisig_did<br/>`Weight`\_proposal_weight<br/> |
+| Change sigs required via creator       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig_account<br/>`u64`signatures_required<br/>                                            |
+| Remove creator controls                |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig_account<br/>                                                                         |
 
 ## Bridge
 
-| Name                       | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                      |
+| Name                       | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                      |
 | -------------------------- | ------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------- |
 | Change controller          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`controller<br/>                     |
 | Change admin               |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`admin<br/>                          |
@@ -242,7 +235,7 @@ Please:
 
 ## Staking
 
-| Name                                         | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                         |
+| Name                                         | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                         |
 | -------------------------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | Bond                                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `LookupasStaticLookupSource`controller<br/>`CompactBalance`amount<br/>`RewardDestination`payee<br/>                               |
 | Bond extra                                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CompactBalance`amount<br/>                                                                                                       |
@@ -276,70 +269,67 @@ Please:
 | Payout stakers by system                     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`validator_stash<br/>`EraIndex`era<br/>                                                                                 |
 | Change slashing allowed for                  |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SlashingSwitch`slashing_switch<br/>                                                                                              |
 | Update permissioned validator intended count |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`identity<br/>`u32`new_intended_count<br/>                                                                             |
+| Chill from governance                        |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`identity<br/>`VecAccountId`stash_keys<br/>                                                                            |
 
 ## Session
 
-| Name       | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                        |
+| Name       | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                        |
 | ---------- | ------ | ------------------ | ------------------ | ------------------ | -------------------------------- |
 | Set keys   |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Keys`keys<br/>`Bytes`proof<br/> |
 | Purge keys |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                  |
 
 ## Grandpa
 
-| Name                         | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                                                                                       |
-| ---------------------------- | ------ | --------- | --------- | ------- | ----------------------------------------------------------------------------------------------- |
-| Report equivocation          |        |           |           |         | `BoxEquivocationProofHashBlockNumber`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
-| Report equivocation unsigned |        |           |           |         | `BoxEquivocationProofHashBlockNumber`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
-| Note stalled                 |        |           |           |         | `BlockNumber`delay<br/>`BlockNumber`best_finalized_block_number<br/>                            |
+| Name                         | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments                                                                                       |
+| ---------------------------- | ------ | --------- | ---------------- | ------- | ----------------------------------------------------------------------------------------------- |
+| Report equivocation          |        |           |                  |         | `BoxEquivocationProofHashBlockNumber`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
+| Report equivocation unsigned |        |           |                  |         | `BoxEquivocationProofHashBlockNumber`equivocation_proof<br/>`KeyOwnerProof`key_owner_proof<br/> |
+| Note stalled                 |        |           |                  |         | `BlockNumber`delay<br/>`BlockNumber`best_finalized_block_number<br/>                            |
 
 ## ImOnline
 
-| Name      | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                                                                                  |
-| --------- | ------ | --------- | --------- | ------- | ------------------------------------------------------------------------------------------ |
-| Heartbeat |        |           |           |         | `HeartbeatBlockNumber`heartbeat<br/>`AuthorityIdasRuntimeAppPublicSignature`signature<br/> |
-
-## Sudo
-
-| Name                  | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                           |
-| --------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------- |
-| Sudo                  |        |                    |                    |                    | `Call`call<br/>                                     |
-| Sudo unchecked weight |        |                    |                    |                    | `Call`call<br/>`Weight`\_weight<br/>                |
-| Set key               |        |                    |                    |                    | `LookupasStaticLookupSource`new\_<br/>              |
-| Sudo as               |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `LookupasStaticLookupSource`who<br/>`Call`call<br/> |
+| Name      | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments                                                                                  |
+| --------- | ------ | --------- | ---------------- | ------- | ------------------------------------------------------------------------------------------ |
+| Heartbeat |        |           |                  |         | `HeartbeatBlockNumber`heartbeat<br/>`AuthorityIdasRuntimeAppPublicSignature`signature<br/> |
 
 ## Asset
 
-| Name                                  | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                                                                                   |
-| ------------------------------------- | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Register ticker                       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                                         |
-| Accept ticker transfer                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                                                                                                           |
-| Accept asset ownership transfer       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                                                                                                           |
-| Create asset                          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AssetName`name<br/>`Ticker`ticker<br/>`bool`divisible<br/>`AssetType`asset_type<br/>`VecAssetIdentifier`identifiers<br/>`OptionFundingRoundName`funding_round<br/>`bool`disable_iu<br/>    |
-| Freeze                                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                                         |
-| Unfreeze                              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                                         |
-| Rename asset                          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`AssetName`name<br/>                                                                                                                                                     |
-| Issue                                 |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>                                                                                                                                             |
-| Redeem                                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>                                                                                                                                             |
-| Make divisible                        |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                                         |
-| Add documents                         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecDocument`docs<br/>`Ticker`ticker<br/>                                                                                                                                                   |
-| Remove documents                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecDocumentId`ids<br/>`Ticker`ticker<br/>                                                                                                                                                  |
-| Set funding round                     |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`FundingRoundName`name<br/>                                                                                                                                              |
-| Update identifiers                    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecAssetIdentifier`identifiers<br/>                                                                                                                                     |
-| Claim classic ticker                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`EcdsaSignature`ethereum_signature<br/>                                                                                                                                  |
-| Reserve classic ticker                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `ClassicTickerImport`classic_ticker_import<br/>`IdentityId`contract_did<br/>`TickerRegistrationConfigMoment`config<br/>                                                                     |
-| Controller transfer                   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>`PortfolioId`from_portfolio<br/>                                                                                                             |
-| Register custom asset type            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`ty<br/>                                                                                                                                                                              |
-| Create asset with custom type         |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetName`name<br/>`Ticker`ticker<br/>`bool`divisible<br/>`Vecu8`custom_asset_type<br/>`VecAssetIdentifier`identifiers<br/>`OptionFundingRoundName`funding_round<br/>`bool`disable_iu<br/> |
-| Set asset metadata                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataKey`key<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>                                                                |
-| Set asset metadata details            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataKey`key<br/>`AssetMetadataValueDetailMoment`detail<br/>                                                                                                    |
-| Register and set local asset metadata |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>                                  |
-| Register asset metadata local type    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                                                 |
-| Register asset metadata global type   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                                                                    |
-| Redeem from portfolio                 |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>`PortfolioKind`portfolio<br/>                                                                                                                |
+| Name                                  | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                                                              |
+| ------------------------------------- | ------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Register ticker                       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                    |
+| Accept ticker transfer                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                                                                                      |
+| Accept asset ownership transfer       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                                                                                      |
+| Create asset                          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AssetName`name<br/>`Ticker`ticker<br/>`bool`divisible<br/>`AssetType`asset_type<br/>`VecAssetIdentifier`identifiers<br/>`OptionFundingRoundName`funding_round<br/>    |
+| Freeze                                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                    |
+| Unfreeze                              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                    |
+| Rename asset                          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`AssetName`name<br/>                                                                                                                                |
+| Issue                                 |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>`PortfolioKind`portfolio_kind<br/>                                                                                      |
+| Redeem                                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>                                                                                                                        |
+| Make divisible                        |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                                                                                                    |
+| Add documents                         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecDocument`docs<br/>`Ticker`ticker<br/>                                                                                                                              |
+| Remove documents                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecDocumentId`ids<br/>`Ticker`ticker<br/>                                                                                                                             |
+| Set funding round                     |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`FundingRoundName`name<br/>                                                                                                                         |
+| Update identifiers                    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecAssetIdentifier`identifiers<br/>                                                                                                                |
+| Controller transfer                   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>`PortfolioId`from_portfolio<br/>                                                                                        |
+| Register custom asset type            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`ty<br/>                                                                                                                                                         |
+| Create asset with custom type         |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetName`name<br/>`Ticker`ticker<br/>`bool`divisible<br/>`Vecu8`custom_asset_type<br/>`VecAssetIdentifier`identifiers<br/>`OptionFundingRoundName`funding_round<br/> |
+| Set asset metadata                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataKey`key<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>                                           |
+| Set asset metadata details            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataKey`key<br/>`AssetMetadataValueDetailMoment`detail<br/>                                                                               |
+| Register and set local asset metadata |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>             |
+| Register asset metadata local type    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                            |
+| Register asset metadata global type   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                                               |
+| Redeem from portfolio                 |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`BalanceNoSymbol`amount<br/>`PortfolioKind`portfolio<br/>                                                                                           |
+| Update asset type                     |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetType`asset_type<br/>                                                                                                                          |
+| Remove local metadata key             |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataLocalKey`local_key<br/>                                                                                                               |
+| Remove metadata value                 |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`AssetMetadataKey`metadata_key<br/>                                                                                                                 |
+| Exempt ticker affirmation             |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>                                                                                                                                                    |
+| Remove ticker affirmation exemption   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>                                                                                                                                                    |
+| Pre approve ticker                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>                                                                                                                                                    |
+| Remove ticker pre approval            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>                                                                                                                                                    |
 
 ## CapitalDistribution
 
-| Name                | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                                                                 |
+| Name                | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                                                                 |
 | ------------------- | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Distribute          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`OptionPortfolioNumber`portfolio<br/>`Ticker`currency<br/>`Balance`per_share<br/>`Balance`amount<br/>`Moment`payment_at<br/>`OptionMoment`expires_at<br/> |
 | Claim               |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>                                                                                                                                                          |
@@ -349,55 +339,55 @@ Please:
 
 ## Checkpoint
 
-| Name                         | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                      |
-| ---------------------------- | ------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------- |
-| Create checkpoint            |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                            |
-| Set schedules max complexity |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`max_complexity<br/>                       |
-| Create schedule              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`ScheduleSpec`schedule<br/> |
-| Remove schedule              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`ScheduleId`id<br/>         |
+| Name                         | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                             |
+| ---------------------------- | ------ | ------------------ | ------------------ | ------------------ | ----------------------------------------------------- |
+| Create checkpoint            |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                   |
+| Set schedules max complexity |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`max_complexity<br/>                              |
+| Create schedule              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`ScheduleCheckpoints`schedule<br/> |
+| Remove schedule              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`ScheduleId`id<br/>                |
 
 ## ComplianceManager
 
-| Name                                | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                     |
+| Name                                | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                     |
 | ----------------------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------- |
 | Add compliance requirement          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecCondition`sender_conditions<br/>`VecCondition`receiver_conditions<br/> |
 | Remove compliance requirement       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`u32`id<br/>                                                               |
-| Replace asset compliance            |        |                    |                    |                    | `Ticker`ticker<br/>`VecComplianceRequirement`asset_compliance<br/>                            |
+| Replace asset compliance            |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecComplianceRequirement`asset_compliance<br/>                            |
 | Reset asset compliance              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                           |
 | Pause asset compliance              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                           |
 | Resume asset compliance             |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>                                                                           |
 | Add default trusted claim issuer    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`TrustedIssuer`issuer<br/>                                                 |
 | Remove default trusted claim issuer |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`IdentityId`issuer<br/>                                                    |
-| Change compliance requirement       |        |                    |                    |                    | `Ticker`ticker<br/>`ComplianceRequirement`new_req<br/>                                        |
+| Change compliance requirement       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`ComplianceRequirement`new_req<br/>                                        |
 
 ## CorporateAction
 
-| Name                                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                                                                                                                                           |
-| ---------------------------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Set max details length                   |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u32`length<br/>                                                                                                                                                                                                                                    |
-| Set default targets                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`TargetIdentities`targets<br/>                                                                                                                                                                                                   |
-| Set default withholding tax              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`Tax`tax<br/>                                                                                                                                                                                                                    |
-| Set did withholding tax                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`IdentityId`taxed_did<br/>`OptionTax`tax<br/>                                                                                                                                                                                    |
-| Initiate corporate action                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`CAKind`kind<br/>`Moment`decl_date<br/>`OptionRecordDateSpec`record_date<br/>`CADetails`details<br/>`OptionTargetIdentities`targets<br/>`OptionTax`default_withholding_tax<br/>`OptionVecTupleIdentityIdTax`withholding_tax<br/> |
-| Link ca doc                              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`id<br/>`VecDocumentId`docs<br/>                                                                                                                                                                                                               |
-| Remove ca                                |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>                                                                                                                                                                                                                                    |
-| Change record date                       |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`OptionRecordDateSpec`record_date<br/>                                                                                                                                                                                              |
-| Initiate corporate action and distribute |        |                    |                    |                    | `InitiateCorporateActionArgs`ca_args<br/>`OptionPortfolioNumber`portfolio<br/>`Ticker`currency<br/>`Balance`per_share<br/>`Balance`amount<br/>`Moment`payment_at<br/>`OptionMoment`expires_at<br/>                                                  |
+| Name                                     | Nano S | Nano S XL | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                                                                                                                                           |
+| ---------------------------------------- | ------ | --------- | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Set max details length                   |        |           | :heavy_check_mark: | :heavy_check_mark: | `u32`length<br/>                                                                                                                                                                                                                                    |
+| Set default targets                      |        |           | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`TargetIdentities`targets<br/>                                                                                                                                                                                                   |
+| Set default withholding tax              |        |           | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`Tax`tax<br/>                                                                                                                                                                                                                    |
+| Set did withholding tax                  |        |           | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`IdentityId`taxed_did<br/>`OptionTax`tax<br/>                                                                                                                                                                                    |
+| Initiate corporate action                |        |           | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`CAKind`kind<br/>`Moment`decl_date<br/>`OptionRecordDateSpec`record_date<br/>`CADetails`details<br/>`OptionTargetIdentities`targets<br/>`OptionTax`default_withholding_tax<br/>`OptionVecTupleIdentityIdTax`withholding_tax<br/> |
+| Link ca doc                              |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`id<br/>`VecDocumentId`docs<br/>                                                                                                                                                                                                               |
+| Remove ca                                |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>                                                                                                                                                                                                                                    |
+| Change record date                       |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`OptionRecordDateSpec`record_date<br/>                                                                                                                                                                                              |
+| Initiate corporate action and distribute |        |           | :heavy_check_mark: | :heavy_check_mark: | `InitiateCorporateActionArgs`ca_args<br/>`OptionPortfolioNumber`portfolio<br/>`Ticker`currency<br/>`Balance`per_share<br/>`Balance`amount<br/>`Moment`payment_at<br/>`OptionMoment`expires_at<br/>                                                  |
 
 ## CorporateBallot
 
-| Name          | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                      |
-| ------------- | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------------------------ |
-| Attach ballot |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`BallotTimeRange`range<br/>`BallotMeta`meta<br/>`bool`rcv<br/> |
-| Vote          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`VecBallotVote`votes<br/>                                      |
-| Change end    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`Moment`end<br/>                                               |
-| Change meta   |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`BallotMeta`meta<br/>                                          |
-| Change rcv    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`bool`rcv<br/>                                                 |
-| Remove ballot |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>                                                               |
+| Name          | Nano S | Nano S XL | Nano SP/X - Stax   | Nesting            | Arguments                                                                      |
+| ------------- | ------ | --------- | ------------------ | ------------------ | ------------------------------------------------------------------------------ |
+| Attach ballot |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`BallotTimeRange`range<br/>`BallotMeta`meta<br/>`bool`rcv<br/> |
+| Vote          |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`VecBallotVote`votes<br/>                                      |
+| Change end    |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`Moment`end<br/>                                               |
+| Change meta   |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`BallotMeta`meta<br/>                                          |
+| Change rcv    |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>`bool`rcv<br/>                                                 |
+| Remove ballot |        |           | :heavy_check_mark: | :heavy_check_mark: | `CAId`ca_id<br/>                                                               |
 
 ## Pips
 
-| Name                         | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                             |
+| Name                         | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                             |
 | ---------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | ----------------------------------------------------------------------------------------------------- |
 | Set prune historical pips    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `bool`prune<br/>                                                                                      |
 | Set min proposal deposit     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Balance`deposit<br/>                                                                                 |
@@ -419,70 +409,67 @@ Please:
 
 ## Portfolio
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                  |
-| ------------------------ | ------ | ------------------ | ------------------ | ------------------ | -------------------------------------------------------------------------- |
-| Create portfolio         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioName`name<br/>                                                   |
-| Delete portfolio         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber`num<br/>                                                  |
-| Move portfolio funds     |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioId`from<br/>`PortfolioId`to<br/>`VecMovePortfolioItem`items<br/> |
-| Rename portfolio         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber`num<br/>`PortfolioName`to_name<br/>                       |
-| Quit portfolio custody   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `PortfolioId`pid<br/>                                                      |
-| Accept portfolio custody |        | :heavy_check_mark: | :heavy_check_mark: |                    | `u64`auth_id<br/>                                                          |
+| Name                          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                     |
+| ----------------------------- | ------ | ------------------ | ------------------ | ------------------ | ------------------------------------------------------------- |
+| Create portfolio              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioName`name<br/>                                      |
+| Delete portfolio              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber`num<br/>                                     |
+| Rename portfolio              |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioNumber`num<br/>`PortfolioName`to_name<br/>          |
+| Quit portfolio custody        |        | :heavy_check_mark: | :heavy_check_mark: |                    | `PortfolioId`pid<br/>                                         |
+| Accept portfolio custody      |        | :heavy_check_mark: | :heavy_check_mark: |                    | `u64`auth_id<br/>                                             |
+| Move portfolio funds          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PortfolioId`from<br/>`PortfolioId`to<br/>`VecFund`funds<br/> |
+| Pre approve portfolio         |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`PortfolioId`portfolio_id<br/>             |
+| Remove portfolio pre approval |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Ticker`ticker<br/>`PortfolioId`portfolio_id<br/>             |
 
 ## ProtocolFee
 
-| Name               | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                 |
+| Name               | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                 |
 | ------------------ | ------ | ------------------ | ------------------ | ------------------ | ----------------------------------------- |
 | Change coefficient |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PosRatio`coefficient<br/>                |
 | Change base fee    |        |                    |                    |                    | `ProtocolOp`op<br/>`Balance`base_fee<br/> |
 
 ## Scheduler
 
-| Name                 | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                                                                                                                                           |
-| -------------------- | ------ | --------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Schedule             |        |           |           |         | `BlockNumber`when<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`BoxCallOrHashOfT`call<br/>                |
-| Cancel               |        |           |           |         | `BlockNumber`when<br/>`u32`index<br/>                                                                                                               |
-| Schedule named       |        |           |           |         | `Vecu8`id<br/>`BlockNumber`when<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`BoxCallOrHashOfT`call<br/>  |
-| Cancel named         |        |           |           |         | `Vecu8`id<br/>                                                                                                                                      |
-| Schedule after       |        |           |           |         | `BlockNumber`after<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`BoxCallOrHashOfT`call<br/>               |
-| Schedule named after |        |           |           |         | `Vecu8`id<br/>`BlockNumber`after<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`BoxCallOrHashOfT`call<br/> |
+| Name                 | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments                                                                                                                                  |
+| -------------------- | ------ | --------- | ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Schedule             |        |           |                  |         | `BlockNumber`when<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`Call`call<br/>                   |
+| Cancel               |        |           |                  |         | `BlockNumber`when<br/>`u32`index<br/>                                                                                                      |
+| Schedule named       |        |           |                  |         | `TaskName`id<br/>`BlockNumber`when<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`Call`call<br/>  |
+| Cancel named         |        |           |                  |         | `TaskName`id<br/>                                                                                                                          |
+| Schedule after       |        |           |                  |         | `BlockNumber`after<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`Call`call<br/>                  |
+| Schedule named after |        |           |                  |         | `TaskName`id<br/>`BlockNumber`after<br/>`OptionschedulePeriodBlockNumber`maybe_periodic<br/>`schedulePriority`priority<br/>`Call`call<br/> |
 
 ## Settlement
 
-| Name                                 | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                                                                                                                   |
-| ------------------------------------ | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Create venue                         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueDetails`details<br/>`VecAccountId`signers<br/>`VenueType`typ<br/>                                                                                                                                                     |
-| Update venue details                 |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VenueDetails`details<br/>                                                                                                                                                                                  |
-| Update venue type                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VenueType`typ<br/>                                                                                                                                                                                         |
-| Add instruction                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>                                                                            |
-| Add and affirm instruction           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>`VecPortfolioId`portfolios<br/>                                             |
-| Affirm instruction                   |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecPortfolioId`portfolios<br/>`u32`max_legs_count<br/>                                                                                                                                               |
-| Withdraw affirmation                 |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecPortfolioId`portfolios<br/>`u32`max_legs_count<br/>                                                                                                                                               |
-| Reject instruction                   |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`PortfolioId`portfolio<br/>`u32`num_of_legs<br/>                                                                                                                                                      |
-| Affirm with receipts                 |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecReceiptDetails`receipt_details<br/>`VecPortfolioId`portfolios<br/>`u32`max_legs_count<br/>                                                                                                        |
-| Claim receipt                        |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`ReceiptDetails`receipt_details<br/>                                                                                                                                                                  |
-| Unclaim receipt                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`instruction_id<br/>`LegId`leg_id<br/>                                                                                                                                                                        |
-| Set venue filtering                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`bool`enabled<br/>                                                                                                                                                                                       |
-| Allow venues                         |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecVenueId`venues<br/>                                                                                                                                                                                  |
-| Disallow venues                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecVenueId`venues<br/>                                                                                                                                                                                  |
-| Change receipt validity              |        | :heavy_check_mark: | :heavy_check_mark: |                    | `u64`receipt_uid<br/>`bool`validity<br/>                                                                                                                                                                                    |
-| Execute scheduled instruction        |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`u32`\_legs_count<br/>                                                                                                                                                                                |
-| Reschedule instruction               |        | :heavy_check_mark: | :heavy_check_mark: |                    | `InstructionId`id<br/>                                                                                                                                                                                                      |
-| Update venue signers                 |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VecAccountId`signers<br/>`bool`add_signers<br/>                                                                                                                                                            |
-| Add instruction with memo            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>`OptionInstructionMemo`instruction_memo<br/>                                |
-| Add and affirm instruction with memo |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>`VecPortfolioId`portfolios<br/>`OptionInstructionMemo`instruction_memo<br/> |
+| Name                          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                                                                                                        |
+| ----------------------------- | ------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Create venue                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueDetails`details<br/>`VecAccountId`signers<br/>`VenueType`typ<br/>                                                                                                                                          |
+| Update venue details          |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VenueDetails`details<br/>                                                                                                                                                                       |
+| Update venue type             |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VenueType`typ<br/>                                                                                                                                                                              |
+| Affirm with receipts          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecReceiptDetails`receipt_details<br/>`VecPortfolioId`portfolios<br/>                                                                                                                     |
+| Set venue filtering           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`bool`enabled<br/>                                                                                                                                                                            |
+| Allow venues                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecVenueId`venues<br/>                                                                                                                                                                       |
+| Disallow venues               |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Ticker`ticker<br/>`VecVenueId`venues<br/>                                                                                                                                                                       |
+| Update venue signers          |        | :heavy_check_mark: | :heavy_check_mark: |                    | `VenueId`id<br/>`VecAccountId`signers<br/>`bool`add_signers<br/>                                                                                                                                                 |
+| Execute manual instruction    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `InstructionId`id<br/>`OptionPortfolioId`portfolio<br/>`u32`fungible_transfers<br/>`u32`nfts_transfers<br/>`u32`offchain_transfers<br/>`OptionWeight`weight_limit<br/>                                           |
+| Add instruction               |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>`OptionMemo`instruction_memo<br/>                                |
+| Add and affirm instruction    |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VenueId`venue_id<br/>`SettlementTypeBlockNumber`settlement_type<br/>`OptionMoment`trade_date<br/>`OptionMoment`value_date<br/>`VecLeg`legs<br/>`VecPortfolioId`portfolios<br/>`OptionMemo`instruction_memo<br/> |
+| Affirm instruction            |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecPortfolioId`portfolios<br/>                                                                                                                                                            |
+| Withdraw affirmation          |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`VecPortfolioId`portfolios<br/>                                                                                                                                                            |
+| Reject instruction            |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`PortfolioId`portfolio<br/>                                                                                                                                                                |
+| Execute scheduled instruction |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `InstructionId`id<br/>`Weight`weight_limit<br/>                                                                                                                                                                  |
 
 ## Statistics
 
-| Name                          | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments                                                                                     |
-| ----------------------------- | ------ | --------- | --------- | ------- | --------------------------------------------------------------------------------------------- |
-| Set active asset stats        |        |           |           |         | `AssetScope`asset<br/>`BTreeSetStatType`stat_types<br/>                                       |
-| Batch update asset stats      |        |           |           |         | `AssetScope`asset<br/>`StatType`stat_type<br/>`BTreeSetStatUpdate`values<br/>                 |
-| Set asset transfer compliance |        |           |           |         | `AssetScope`asset<br/>`BTreeSetTransferCondition`transfer_conditions<br/>                     |
-| Set entities exempt           |        |           |           |         | `bool`is_exempt<br/>`TransferConditionExemptKey`exempt_key<br/>`BTreeSetScopeId`entities<br/> |
+| Name                          | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments                                                                                        |
+| ----------------------------- | ------ | --------- | ---------------- | ------- | ------------------------------------------------------------------------------------------------ |
+| Set active asset stats        |        |           |                  |         | `AssetScope`asset<br/>`BTreeSetStatType`stat_types<br/>                                          |
+| Batch update asset stats      |        |           |                  |         | `AssetScope`asset<br/>`StatType`stat_type<br/>`BTreeSetStatUpdate`values<br/>                    |
+| Set asset transfer compliance |        |           |                  |         | `AssetScope`asset<br/>`BTreeSetTransferCondition`transfer_conditions<br/>                        |
+| Set entities exempt           |        |           |                  |         | `bool`is_exempt<br/>`TransferConditionExemptKey`exempt_key<br/>`BTreeSetIdentityId`entities<br/> |
 
 ## Sto
 
-| Name                     | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments                                                                                                                                                                                                                                                                                            |
+| Name                     | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                                                                                                                                                                                                                            |
 | ------------------------ | ------ | ------------------ | ------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Create fundraiser        |        | :heavy_check_mark: | :heavy_check_mark: |         | `PortfolioId`offering_portfolio<br/>`Ticker`offering_asset<br/>`PortfolioId`raising_portfolio<br/>`Ticker`raising_asset<br/>`VecPriceTier`tiers<br/>`VenueId`venue_id<br/>`OptionMoment`start<br/>`OptionMoment`end<br/>`BalanceNoSymbol`minimum_investment<br/>`FundraiserName`fundraiser_name<br/> |
 | Invest                   |        | :heavy_check_mark: | :heavy_check_mark: |         | `PortfolioId`investment_portfolio<br/>`PortfolioId`funding_portfolio<br/>`Ticker`offering_asset<br/>`FundraiserId`id<br/>`BalanceNoSymbol`purchase_amount<br/>`OptionBalance`max_price<br/>`OptionReceiptDetails`receipt<br/>                                                                        |
@@ -493,41 +480,46 @@ Please:
 
 ## Treasury
 
-| Name          | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                          |
+| Name          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                          |
 | ------------- | ------ | ------------------ | ------------------ | ------------------ | ---------------------------------- |
 | Disbursement  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecBeneficiary`beneficiaries<br/> |
 | Reimbursement |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Balance`amount<br/>               |
 
 ## Utility
 
-| Name             | Nano S             | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                    |
+| Name             | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                    |
 | ---------------- | ------------------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------- |
 | Batch            | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
+| Relay tx         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target<br/>`OffChainSignature`signature<br/>`UniqueCall`call<br/> |
+| Batch all        |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `VecCall`calls<br/>                                                          |
+| Dispatch as      |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `BoxPalletsOrigin`as_origin<br/>`Call`call<br/>                              |
+| Force batch      |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `VecCall`calls<br/>                                                          |
+| With weight      |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `Call`call<br/>`Weight`weight<br/>                                           |
+| Batch old        |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `VecCall`calls<br/>                                                          |
 | Batch atomic     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
 | Batch optimistic | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
-| Relay tx         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target<br/>`OffChainSignature`signature<br/>`UniqueCall`call<br/> |
 
 ## Base
 
-| Name | Nano S | Nano S XL | Nano SP/X | Nesting | Arguments |
-| ---- | ------ | --------- | --------- | ------- | --------- |
+| Name | Nano S | Nano S XL | Nano SP/X - Stax | Nesting | Arguments |
+| ---- | ------ | --------- | ---------------- | ------- | --------- |
 
 ## ExternalAgents
 
-| Name                           | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments                                                                                           |
+| Name                           | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                           |
 | ------------------------------ | ------ | ------------------ | ------------------ | ------- | --------------------------------------------------------------------------------------------------- |
-| Create group                   |        |                    |                    |         | `Ticker`ticker<br/>`ExtrinsicPermissions`perms<br/>                                                 |
-| Set group permissions          |        |                    |                    |         | `Ticker`ticker<br/>`AGId`id<br/>`ExtrinsicPermissions`perms<br/>                                    |
+| Create group                   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`ExtrinsicPermissions`perms<br/>                                                 |
+| Set group permissions          |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`AGId`id<br/>`ExtrinsicPermissions`perms<br/>                                    |
 | Remove agent                   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`IdentityId`agent<br/>                                                           |
 | Abdicate                       |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>                                                                                 |
-| Change group                   |        |                    |                    |         | `Ticker`ticker<br/>`IdentityId`agent<br/>`AgentGroup`group<br/>                                     |
+| Change group                   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`IdentityId`agent<br/>`AgentGroup`group<br/>                                     |
 | Accept become agent            |        | :heavy_check_mark: | :heavy_check_mark: |         | `u64`auth_id<br/>                                                                                   |
 | Create group and add auth      |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`ExtrinsicPermissions`perms<br/>`IdentityId`target<br/>`OptionMoment`expiry<br/> |
 | Create and change custom group |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`ExtrinsicPermissions`perms<br/>`IdentityId`agent<br/>                           |
 
 ## Relayer
 
-| Name                 | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments                                          |
+| Name                 | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                          |
 | -------------------- | ------ | ------------------ | ------------------ | ------- | -------------------------------------------------- |
 | Set paying key       |        | :heavy_check_mark: | :heavy_check_mark: |         | `AccountId`user_key<br/>`Balance`polyx_limit<br/>  |
 | Accept paying key    |        | :heavy_check_mark: | :heavy_check_mark: |         | `u64`auth_id<br/>                                  |
@@ -538,33 +530,46 @@ Please:
 
 ## Rewards
 
-| Name                  | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments                                                                                        |
+| Name                  | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                        |
 | --------------------- | ------ | ------------------ | ------------------ | ------- | ------------------------------------------------------------------------------------------------ |
 | Claim itn reward      |        | :heavy_check_mark: | :heavy_check_mark: |         | `AccountId`\_reward_address<br/>`AccountId`\_itn_address<br/>`OffChainSignature`\_signature<br/> |
 | Set itn reward status |        |                    |                    |         | `AccountId`\_itn_address<br/>`ItnRewardStatus`\_status<br/>                                      |
 
 ## Contracts
 
-| Name                  | Nano S | Nano S XL          | Nano SP/X          | Nesting            | Arguments                                                                                                                                                       |
-| --------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Call                  |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `LookupasStaticLookupSource`dest<br/>`CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`data<br/>    |
-| Instantiate with code |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`code<br/>`Vecu8`data<br/>`Vecu8`salt<br/>         |
-| Instantiate           |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`CodeHash`code_hash<br/>`Bytes`data<br/>`Bytes`salt<br/> |
-| Upload code           |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`code<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>                                                                                              |
-| Remove code           |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CodeHash`code_hash<br/>                                                                                                                                        |
+| Name                             | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                                                                                       |
+| -------------------------------- | ------ | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Call old weight                  |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AccountIdLookupOfT`dest<br/>`CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`data<br/>            |
+| Instantiate with code old weight |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`code<br/>`Vecu8`data<br/>`Vecu8`salt<br/>         |
+| Instantiate old weight           |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CompactBalance`amount<br/>`Compactu64`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`CodeHash`code_hash<br/>`Vecu8`data<br/>`Vecu8`salt<br/> |
+| Upload code                      |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`code<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Determinism`determinism<br/>                                                                 |
+| Remove code                      |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CodeHash`code_hash<br/>                                                                                                                                        |
+| Set code                         |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AccountIdLookupOfT`dest<br/>`CodeHash`code_hash<br/>                                                                                                           |
+| Call                             |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountIdLookupOfT`dest<br/>`CompactBalance`amount<br/>`Weight`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`data<br/>                |
+| Instantiate with code            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `CompactBalance`amount<br/>`Weight`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`Vecu8`code<br/>`Vecu8`data<br/>`Vecu8`salt<br/>             |
+| Instantiate                      |        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `CompactBalance`amount<br/>`Weight`gas_limit<br/>`OptionCompactBalanceOf`storage_deposit_limit<br/>`CodeHash`code_hash<br/>`Bytes`data<br/>`Bytes`salt<br/>     |
 
 ## PolymeshContracts
 
-| Name                        | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments                                                                                                                                                             |
-| --------------------------- | ------ | ------------------ | ------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Instantiate with code perms |        | :heavy_check_mark: | :heavy_check_mark: |         | `Balance`endowment<br/>`Weight`gas_limit<br/>`OptionBalance`storage_deposit_limit<br/>`Vecu8`code<br/>`Vecu8`data<br/>`Vecu8`salt<br/>`Permissions`perms<br/>         |
-| Instantiate with hash perms |        | :heavy_check_mark: | :heavy_check_mark: |         | `Balance`endowment<br/>`Weight`gas_limit<br/>`OptionBalance`storage_deposit_limit<br/>`CodeHash`code_hash<br/>`Vecu8`data<br/>`Vecu8`salt<br/>`Permissions`perms<br/> |
+| Name                          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                                                                                             |
+| ----------------------------- | ------ | ------------------ | ------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instantiate with code perms   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Balance`endowment<br/>`Weight`gas_limit<br/>`OptionBalance`storage_deposit_limit<br/>`Vecu8`code<br/>`Vecu8`data<br/>`Vecu8`salt<br/>`Permissions`perms<br/>         |
+| Instantiate with hash perms   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Balance`endowment<br/>`Weight`gas_limit<br/>`OptionBalance`storage_deposit_limit<br/>`CodeHash`code_hash<br/>`Vecu8`data<br/>`Vecu8`salt<br/>`Permissions`perms<br/> |
+| Update call runtime whitelist |        | :heavy_check_mark: | :heavy_check_mark: |         | `VecTupleExtrinsicIdbool`updates<br/>                                                                                                                                 |
 
 ## Preimage
 
-| Name               | Nano S | Nano S XL          | Nano SP/X          | Nesting | Arguments         |
+| Name               | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments         |
 | ------------------ | ------ | ------------------ | ------------------ | ------- | ----------------- |
 | Note preimage      |        | :heavy_check_mark: | :heavy_check_mark: |         | `Vecu8`bytes<br/> |
 | Unnote preimage    |        | :heavy_check_mark: | :heavy_check_mark: |         | `Hash`hash<br/>   |
 | Request preimage   |        | :heavy_check_mark: | :heavy_check_mark: |         | `Hash`hash<br/>   |
 | Unrequest preimage |        | :heavy_check_mark: | :heavy_check_mark: |         | `Hash`hash<br/>   |
+
+## Nft
+
+| Name                  | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                                  |
+| --------------------- | ------ | ------------------ | ------------------ | ------- | ---------------------------------------------------------------------------------------------------------- |
+| Create nft collection |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`OptionNonFungibleType`nft_type<br/>`VecAssetMetadataKey`collection_keys<br/>           |
+| Issue nft             |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`VecNFTMetadataAttribute`nft_metadata_attributes<br/>`PortfolioKind`portfolio_kind<br/> |
+| Redeem nft            |        | :heavy_check_mark: | :heavy_check_mark: |         | `Ticker`ticker<br/>`NFTId`nft_id<br/>`PortfolioKind`portfolio_kind<br/>                                    |

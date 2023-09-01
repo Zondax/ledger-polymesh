@@ -75,7 +75,7 @@ endif
 
 APP_LOAD_PARAMS = --curve ed25519 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
 
-NANOS_STACK_SIZE := 3160
+NANOS_STACK_SIZE := 3112
 
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
 
@@ -88,15 +88,16 @@ endif
 
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
 LDFLAGS += -z muldefs
+
+ifeq ($(SUPPORT_SR25519),1)
+APP_CUSTOM_LINK_DEPENDENCIES = rust
 LDLIBS += -Lrust/target/thumbv6m-none-eabi/release -lrslib
 APP_SOURCE_PATH += $(CURDIR)/rust/include
+endif
 
 .PHONY: rust
 rust:
 	cd rust && CARGO_HOME="$(CURDIR)/rust/.cargo" cargo build --target thumbv6m-none-eabi --release
-
-# Before linking, we need to be sure rust lib is there
-bin/app.elf: rust
 
 .PHONY: rust_clean
 rust_clean:
