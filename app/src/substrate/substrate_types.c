@@ -244,6 +244,7 @@ parser_error_t _readClaim(parser_context_t* c, pd_Claim_t* v)
 
 parser_error_t _readDispatchableNames(parser_context_t* c, pd_DispatchableNames_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Whole
@@ -427,6 +428,7 @@ parser_error_t _readTax(parser_context_t* c, pd_Tax_t* v)
 
 parser_error_t _readAssetPermissions(parser_context_t* c, pd_AssetPermissions_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Whole
@@ -475,6 +477,7 @@ parser_error_t _readDocumentType(parser_context_t* c, pd_DocumentType_t* v)
 
 parser_error_t _readExtrinsicPermissions(parser_context_t* c, pd_ExtrinsicPermissions_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Whole
@@ -547,6 +550,7 @@ parser_error_t _readMultiSignature(parser_context_t* c, pd_MultiSignature_t* v)
 
 parser_error_t _readPortfolioPermissions(parser_context_t* c, pd_PortfolioPermissions_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     switch (v->value) {
     case 0: // Whole
@@ -801,6 +805,7 @@ parser_error_t _readPermissions(parser_context_t* c, pd_Permissions_t* v)
 
 parser_error_t _readPipId(parser_context_t* c, pd_PipId_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -916,6 +921,7 @@ parser_error_t _readBecomeAgent(parser_context_t* c, pd_BecomeAgent_t* v)
 
 parser_error_t _readBeneficiary(parser_context_t* c, pd_Beneficiary_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readIdentityId(c, &v->identity))
     CHECK_ERROR(_readBalance(c, &v->balance))
     return parser_ok;
@@ -992,12 +998,14 @@ parser_error_t _readCreateChildIdentityWithAuthAccountId(parser_context_t* c, pd
 
 parser_error_t _readCustomAssetTypeId(parser_context_t* c, pd_CustomAssetTypeId_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readDocumentId(parser_context_t* c, pd_DocumentId_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -1066,6 +1074,7 @@ parser_error_t _readLeg(parser_context_t* c, pd_Leg_t* v)
 
 parser_error_t _readLocalCAId(parser_context_t* c, pd_LocalCAId_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -1219,6 +1228,7 @@ parser_error_t _readTupleExtrinsicIdbool(parser_context_t* c, pd_TupleExtrinsicI
 
 parser_error_t _readTupleIdentityIdbool(parser_context_t* c, pd_TupleIdentityIdbool_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readIdentityId(c, &v->identity))
     CHECK_ERROR(_readBool(c, &v->val))
     return parser_ok;
@@ -1424,6 +1434,7 @@ parser_error_t _readCAId(parser_context_t* c, pd_CAId_t* v)
 
 parser_error_t _readCodeHash(parser_context_t* c, pd_CodeHash_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readHash(c, &v->hash))
     return parser_ok;
 }
@@ -1558,6 +1569,7 @@ parser_error_t _readVecCall(parser_context_t* c, pd_VecCall_t* v)
 
 parser_error_t _readAGId(parser_context_t* c, pd_AGId_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
@@ -1695,6 +1707,7 @@ parser_error_t _readPortfolioName(parser_context_t* c, pd_PortfolioName_t* v)
 
 parser_error_t _readPosRatio(parser_context_t* c, pd_PosRatio_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->numerator))
     CHECK_ERROR(_readUInt32(c, &v->denominator))
     return parser_ok;
@@ -1702,12 +1715,14 @@ parser_error_t _readPosRatio(parser_context_t* c, pd_PosRatio_t* v)
 
 parser_error_t _readProposalIndex(parser_context_t* c, pd_ProposalIndex_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt32(c, &v->value))
     return parser_ok;
 }
 
 parser_error_t _readSkippedCount(parser_context_t* c, pd_SkippedCount_t* v)
 {
+    CHECK_INPUT()
     CHECK_ERROR(_readUInt8(c, &v->value))
     return parser_ok;
 }
@@ -2986,6 +3001,7 @@ parser_error_t _toStringMemo(
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
+    CLEAN_AND_CHECK()
     if (formatBufferData(v->_ptr, v->_len, outValue, outValueLen, pageIdx, pageCount) != zxerr_ok) {
         return parser_print_not_supported;
     }
@@ -3111,7 +3127,7 @@ parser_error_t _toStringCondition(
         *pageCount += pages[i];
     }
 
-    if (pageIdx > *pageCount) {
+    if (pageIdx >= *pageCount) {
         return parser_display_idx_out_of_range;
     }
 
@@ -4419,7 +4435,7 @@ parser_error_t _toStringCall(
 
     pageIdx--;
 
-    if (pageIdx > *pageCount) {
+    if (pageIdx >= *pageCount) {
         return parser_display_idx_out_of_range;
     }
 
