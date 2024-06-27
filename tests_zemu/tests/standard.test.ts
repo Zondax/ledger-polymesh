@@ -15,7 +15,7 @@
  ******************************************************************************* */
 
 import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation } from '@zondax/zemu'
-import { newPolymeshApp } from '@zondax/ledger-substrate'
+import { newSubstrateApp } from '@zondax/ledger-substrate'
 import { APP_SEED, models } from './common'
 
 const defaultOptions = {
@@ -55,7 +55,7 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
       const resp = await app.getVersion()
 
       console.log(resp)
@@ -75,7 +75,7 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000)
 
@@ -100,7 +100,7 @@ describe('Standard', function () {
         approveKeyword: m.name === 'stax' ? 'QR' : '',
         approveAction: ButtonKind.ApproveTapButton,
       })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
       // Wait until we are not in the main menu
@@ -129,7 +129,7 @@ describe('Standard', function () {
         model: m.name,
         rejectKeyword: m.name === 'stax' ? 'QR' : '',
       })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
       // Wait until we are not in the main menu
