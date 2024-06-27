@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2023 Zondax AG
+ *  (c) 2019 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,7 +61,6 @@ extern "C" {
 #define PD_CALL_UTILITY_V4 41
 #define PD_CALL_EXTERNALAGENTS_V4 43
 #define PD_CALL_RELAYER_V4 44
-#define PD_CALL_REWARDS_V4 45
 #define PD_CALL_CONTRACTS_V4 46
 #define PD_CALL_POLYMESHCONTRACTS_V4 47
 #define PD_CALL_PREIMAGE_V4 48
@@ -220,6 +219,18 @@ typedef struct {
     pd_Ticker_t ticker;
 } pd_asset_remove_ticker_pre_approval_V4_t;
 
+#define PD_CALL_ASSET_ADD_MANDATORY_MEDIATORS_V4 30
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t mediators;
+} pd_asset_add_mandatory_mediators_V4_t;
+
+#define PD_CALL_ASSET_REMOVE_MANDATORY_MEDIATORS_V4 31
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t mediators;
+} pd_asset_remove_mandatory_mediators_V4_t;
+
 #define PD_CALL_PORTFOLIO_QUIT_PORTFOLIO_CUSTODY_V4 3
 typedef struct {
     pd_PortfolioId_t pid;
@@ -241,6 +252,22 @@ typedef struct {
     pd_Ticker_t ticker;
     pd_PortfolioId_t portfolio_id;
 } pd_portfolio_remove_portfolio_pre_approval_V4_t;
+
+#define PD_CALL_PORTFOLIO_ALLOW_IDENTITY_TO_CREATE_PORTFOLIOS_V4 8
+typedef struct {
+    pd_IdentityId_t trusted_identity;
+} pd_portfolio_allow_identity_to_create_portfolios_V4_t;
+
+#define PD_CALL_PORTFOLIO_REVOKE_CREATE_PORTFOLIOS_PERMISSION_V4 9
+typedef struct {
+    pd_IdentityId_t identity;
+} pd_portfolio_revoke_create_portfolios_permission_V4_t;
+
+#define PD_CALL_PORTFOLIO_CREATE_CUSTODY_PORTFOLIO_V4 10
+typedef struct {
+    pd_IdentityId_t portfolio_owner_id;
+    pd_PortfolioName_t portfolio_name;
+} pd_portfolio_create_custody_portfolio_V4_t;
 
 #define PD_CALL_SETTLEMENT_UPDATE_VENUE_DETAILS_V4 1
 typedef struct {
@@ -270,6 +297,75 @@ typedef struct {
     pd_u32_t offchain_transfers;
     pd_OptionWeight_t weight_limit;
 } pd_settlement_execute_manual_instruction_V4_t;
+
+#define PD_CALL_SETTLEMENT_AFFIRM_WITH_RECEIPTS_WITH_COUNT_V4 15
+typedef struct {
+    pd_InstructionId_t id;
+    pd_VecReceiptDetails_t receipt_details;
+    pd_VecPortfolioId_t portfolios;
+    pd_OptionAffirmationCount_t number_of_assets;
+} pd_settlement_affirm_with_receipts_with_count_V4_t;
+
+#define PD_CALL_SETTLEMENT_AFFIRM_INSTRUCTION_WITH_COUNT_V4 16
+typedef struct {
+    pd_InstructionId_t id;
+    pd_VecPortfolioId_t portfolios;
+    pd_OptionAffirmationCount_t number_of_assets;
+} pd_settlement_affirm_instruction_with_count_V4_t;
+
+#define PD_CALL_SETTLEMENT_REJECT_INSTRUCTION_WITH_COUNT_V4 17
+typedef struct {
+    pd_InstructionId_t id;
+    pd_PortfolioId_t portfolio;
+    pd_OptionAssetCount_t number_of_assets;
+} pd_settlement_reject_instruction_with_count_V4_t;
+
+#define PD_CALL_SETTLEMENT_WITHDRAW_AFFIRMATION_WITH_COUNT_V4 18
+typedef struct {
+    pd_InstructionId_t id;
+    pd_VecPortfolioId_t portfolios;
+    pd_OptionAffirmationCount_t number_of_assets;
+} pd_settlement_withdraw_affirmation_with_count_V4_t;
+
+#define PD_CALL_SETTLEMENT_ADD_INSTRUCTION_WITH_MEDIATORS_V4 19
+typedef struct {
+    pd_VenueId_t venue_id;
+    pd_SettlementTypeBlockNumber_t settlement_type;
+    pd_OptionMoment_t trade_date;
+    pd_OptionMoment_t value_date;
+    pd_VecLeg_t legs;
+    pd_OptionMemo_t instruction_memo;
+    pd_BoundedBTreeSetIdentityIdMaxInstructionMediators_t mediators;
+} pd_settlement_add_instruction_with_mediators_V4_t;
+
+#define PD_CALL_SETTLEMENT_ADD_AND_AFFIRM_WITH_MEDIATORS_V4 20
+typedef struct {
+    pd_VenueId_t venue_id;
+    pd_SettlementTypeBlockNumber_t settlement_type;
+    pd_OptionMoment_t trade_date;
+    pd_OptionMoment_t value_date;
+    pd_VecLeg_t legs;
+    pd_VecPortfolioId_t portfolios;
+    pd_OptionMemo_t instruction_memo;
+    pd_BoundedBTreeSetIdentityIdMaxInstructionMediators_t mediators;
+} pd_settlement_add_and_affirm_with_mediators_V4_t;
+
+#define PD_CALL_SETTLEMENT_AFFIRM_INSTRUCTION_AS_MEDIATOR_V4 21
+typedef struct {
+    pd_InstructionId_t instruction_id;
+    pd_OptionMoment_t expiry;
+} pd_settlement_affirm_instruction_as_mediator_V4_t;
+
+#define PD_CALL_SETTLEMENT_WITHDRAW_AFFIRMATION_AS_MEDIATOR_V4 22
+typedef struct {
+    pd_InstructionId_t instruction_id;
+} pd_settlement_withdraw_affirmation_as_mediator_V4_t;
+
+#define PD_CALL_SETTLEMENT_REJECT_INSTRUCTION_AS_MEDIATOR_V4 23
+typedef struct {
+    pd_InstructionId_t instruction_id;
+    pd_OptionAssetCount_t number_of_assets;
+} pd_settlement_reject_instruction_as_mediator_V4_t;
 
 #define PD_CALL_STO_CREATE_FUNDRAISER_V4 0
 typedef struct {
@@ -348,6 +444,12 @@ typedef struct {
 typedef struct {
     pd_VecCall_t calls;
 } pd_utility_batch_old_V4_t;
+
+#define PD_CALL_UTILITY_AS_DERIVATIVE_V4 9
+typedef struct {
+    pd_u16_t index;
+    pd_Call_t call;
+} pd_utility_as_derivative_V4_t;
 
 #define PD_CALL_EXTERNALAGENTS_CREATE_GROUP_V4 0
 typedef struct {
@@ -435,20 +537,13 @@ typedef struct {
     pd_Balance_t amount;
 } pd_relayer_decrease_polyx_limit_V4_t;
 
-#define PD_CALL_REWARDS_CLAIM_ITN_REWARD_V4 0
-typedef struct {
-    pd_AccountId_t _reward_address;
-    pd_AccountId_t _itn_address;
-    pd_OffChainSignature_t _signature;
-} pd_rewards_claim_itn_reward_V4_t;
-
 #define PD_CALL_CONTRACTS_CALL_OLD_WEIGHT_V4 0
 typedef struct {
     pd_AccountIdLookupOfT_t dest;
     pd_CompactBalance_t amount;
     pd_Compactu64_t gas_limit;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
-    pd_Vecu8_t data;
+    pd_Bytes_t data;
 } pd_contracts_call_old_weight_V4_t;
 
 #define PD_CALL_CONTRACTS_INSTANTIATE_WITH_CODE_OLD_WEIGHT_V4 1
@@ -456,9 +551,9 @@ typedef struct {
     pd_CompactBalance_t amount;
     pd_Compactu64_t gas_limit;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
-    pd_Vecu8_t code;
-    pd_Vecu8_t data;
-    pd_Vecu8_t salt;
+    pd_Bytes_t code;
+    pd_Bytes_t data;
+    pd_Bytes_t salt;
 } pd_contracts_instantiate_with_code_old_weight_V4_t;
 
 #define PD_CALL_CONTRACTS_INSTANTIATE_OLD_WEIGHT_V4 2
@@ -467,13 +562,13 @@ typedef struct {
     pd_Compactu64_t gas_limit;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
     pd_CodeHash_t code_hash;
-    pd_Vecu8_t data;
-    pd_Vecu8_t salt;
+    pd_Bytes_t data;
+    pd_Bytes_t salt;
 } pd_contracts_instantiate_old_weight_V4_t;
 
 #define PD_CALL_CONTRACTS_UPLOAD_CODE_V4 3
 typedef struct {
-    pd_Vecu8_t code;
+    pd_Bytes_t code;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
     pd_Determinism_t determinism;
 } pd_contracts_upload_code_V4_t;
@@ -494,9 +589,9 @@ typedef struct {
     pd_CompactBalance_t amount;
     pd_Weight_t gas_limit;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
-    pd_Vecu8_t code;
-    pd_Vecu8_t data;
-    pd_Vecu8_t salt;
+    pd_Bytes_t code;
+    pd_Bytes_t data;
+    pd_Bytes_t salt;
 } pd_contracts_instantiate_with_code_V4_t;
 
 #define PD_CALL_POLYMESHCONTRACTS_INSTANTIATE_WITH_CODE_PERMS_V4 0
@@ -525,6 +620,32 @@ typedef struct {
 typedef struct {
     pd_VecTupleExtrinsicIdbool_t updates;
 } pd_polymeshcontracts_update_call_runtime_whitelist_V4_t;
+
+#define PD_CALL_POLYMESHCONTRACTS_INSTANTIATE_WITH_CODE_AS_PRIMARY_KEY_V4 3
+typedef struct {
+    pd_Balance_t endowment;
+    pd_Weight_t gas_limit;
+    pd_OptionBalance_t storage_deposit_limit;
+    pd_Vecu8_t code;
+    pd_Vecu8_t data;
+    pd_Vecu8_t salt;
+} pd_polymeshcontracts_instantiate_with_code_as_primary_key_V4_t;
+
+#define PD_CALL_POLYMESHCONTRACTS_INSTANTIATE_WITH_HASH_AS_PRIMARY_KEY_V4 4
+typedef struct {
+    pd_Balance_t endowment;
+    pd_Weight_t gas_limit;
+    pd_OptionBalance_t storage_deposit_limit;
+    pd_CodeHash_t code_hash;
+    pd_Vecu8_t data;
+    pd_Vecu8_t salt;
+} pd_polymeshcontracts_instantiate_with_hash_as_primary_key_V4_t;
+
+#define PD_CALL_POLYMESHCONTRACTS_UPGRADE_API_V4 5
+typedef struct {
+    pd_Api_t api;
+    pd_NextUpgradeT_t next_upgrade;
+} pd_polymeshcontracts_upgrade_api_V4_t;
 
 #define PD_CALL_PREIMAGE_NOTE_PREIMAGE_V4 0
 typedef struct {
@@ -567,6 +688,14 @@ typedef struct {
     pd_PortfolioKind_t portfolio_kind;
 } pd_nft_redeem_nft_V4_t;
 
+#define PD_CALL_NFT_CONTROLLER_TRANSFER_V4 3
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_NFTs_t nfts;
+    pd_PortfolioId_t source_portfolio;
+    pd_PortfolioKind_t callers_portfolio_kind;
+} pd_nft_controller_transfer_V4_t;
+
 #endif
 
 typedef union {
@@ -598,14 +727,28 @@ typedef union {
     pd_asset_remove_ticker_affirmation_exemption_V4_t asset_remove_ticker_affirmation_exemption_V4;
     pd_asset_pre_approve_ticker_V4_t asset_pre_approve_ticker_V4;
     pd_asset_remove_ticker_pre_approval_V4_t asset_remove_ticker_pre_approval_V4;
+    pd_asset_add_mandatory_mediators_V4_t asset_add_mandatory_mediators_V4;
+    pd_asset_remove_mandatory_mediators_V4_t asset_remove_mandatory_mediators_V4;
     pd_portfolio_quit_portfolio_custody_V4_t portfolio_quit_portfolio_custody_V4;
     pd_portfolio_accept_portfolio_custody_V4_t portfolio_accept_portfolio_custody_V4;
     pd_portfolio_pre_approve_portfolio_V4_t portfolio_pre_approve_portfolio_V4;
     pd_portfolio_remove_portfolio_pre_approval_V4_t portfolio_remove_portfolio_pre_approval_V4;
+    pd_portfolio_allow_identity_to_create_portfolios_V4_t portfolio_allow_identity_to_create_portfolios_V4;
+    pd_portfolio_revoke_create_portfolios_permission_V4_t portfolio_revoke_create_portfolios_permission_V4;
+    pd_portfolio_create_custody_portfolio_V4_t portfolio_create_custody_portfolio_V4;
     pd_settlement_update_venue_details_V4_t settlement_update_venue_details_V4;
     pd_settlement_update_venue_type_V4_t settlement_update_venue_type_V4;
     pd_settlement_update_venue_signers_V4_t settlement_update_venue_signers_V4;
     pd_settlement_execute_manual_instruction_V4_t settlement_execute_manual_instruction_V4;
+    pd_settlement_affirm_with_receipts_with_count_V4_t settlement_affirm_with_receipts_with_count_V4;
+    pd_settlement_affirm_instruction_with_count_V4_t settlement_affirm_instruction_with_count_V4;
+    pd_settlement_reject_instruction_with_count_V4_t settlement_reject_instruction_with_count_V4;
+    pd_settlement_withdraw_affirmation_with_count_V4_t settlement_withdraw_affirmation_with_count_V4;
+    pd_settlement_add_instruction_with_mediators_V4_t settlement_add_instruction_with_mediators_V4;
+    pd_settlement_add_and_affirm_with_mediators_V4_t settlement_add_and_affirm_with_mediators_V4;
+    pd_settlement_affirm_instruction_as_mediator_V4_t settlement_affirm_instruction_as_mediator_V4;
+    pd_settlement_withdraw_affirmation_as_mediator_V4_t settlement_withdraw_affirmation_as_mediator_V4;
+    pd_settlement_reject_instruction_as_mediator_V4_t settlement_reject_instruction_as_mediator_V4;
     pd_sto_create_fundraiser_V4_t sto_create_fundraiser_V4;
     pd_sto_invest_V4_t sto_invest_V4;
     pd_sto_freeze_fundraiser_V4_t sto_freeze_fundraiser_V4;
@@ -617,6 +760,7 @@ typedef union {
     pd_utility_force_batch_V4_t utility_force_batch_V4;
     pd_utility_with_weight_V4_t utility_with_weight_V4;
     pd_utility_batch_old_V4_t utility_batch_old_V4;
+    pd_utility_as_derivative_V4_t utility_as_derivative_V4;
     pd_externalagents_create_group_V4_t externalagents_create_group_V4;
     pd_externalagents_set_group_permissions_V4_t externalagents_set_group_permissions_V4;
     pd_externalagents_remove_agent_V4_t externalagents_remove_agent_V4;
@@ -631,7 +775,6 @@ typedef union {
     pd_relayer_update_polyx_limit_V4_t relayer_update_polyx_limit_V4;
     pd_relayer_increase_polyx_limit_V4_t relayer_increase_polyx_limit_V4;
     pd_relayer_decrease_polyx_limit_V4_t relayer_decrease_polyx_limit_V4;
-    pd_rewards_claim_itn_reward_V4_t rewards_claim_itn_reward_V4;
     pd_contracts_call_old_weight_V4_t contracts_call_old_weight_V4;
     pd_contracts_instantiate_with_code_old_weight_V4_t contracts_instantiate_with_code_old_weight_V4;
     pd_contracts_instantiate_old_weight_V4_t contracts_instantiate_old_weight_V4;
@@ -642,6 +785,9 @@ typedef union {
     pd_polymeshcontracts_instantiate_with_code_perms_V4_t polymeshcontracts_instantiate_with_code_perms_V4;
     pd_polymeshcontracts_instantiate_with_hash_perms_V4_t polymeshcontracts_instantiate_with_hash_perms_V4;
     pd_polymeshcontracts_update_call_runtime_whitelist_V4_t polymeshcontracts_update_call_runtime_whitelist_V4;
+    pd_polymeshcontracts_instantiate_with_code_as_primary_key_V4_t polymeshcontracts_instantiate_with_code_as_primary_key_V4;
+    pd_polymeshcontracts_instantiate_with_hash_as_primary_key_V4_t polymeshcontracts_instantiate_with_hash_as_primary_key_V4;
+    pd_polymeshcontracts_upgrade_api_V4_t polymeshcontracts_upgrade_api_V4;
     pd_preimage_note_preimage_V4_t preimage_note_preimage_V4;
     pd_preimage_unnote_preimage_V4_t preimage_unnote_preimage_V4;
     pd_preimage_request_preimage_V4_t preimage_request_preimage_V4;
@@ -649,6 +795,7 @@ typedef union {
     pd_nft_create_nft_collection_V4_t nft_create_nft_collection_V4;
     pd_nft_issue_nft_V4_t nft_issue_nft_V4;
     pd_nft_redeem_nft_V4_t nft_redeem_nft_V4;
+    pd_nft_controller_transfer_V4_t nft_controller_transfer_V4;
 #endif
 } pd_MethodBasic_V4_t;
 
@@ -790,7 +937,7 @@ typedef struct {
 
 #define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_IDENTITY_V4 9
 typedef struct {
-    pd_u64_t auth_id;
+    pd_u64_t _auth_id;
 } pd_multisig_accept_multisig_signer_as_identity_V4_t;
 
 #define PD_CALL_MULTISIG_ACCEPT_MULTISIG_SIGNER_AS_KEY_V4 10
@@ -841,7 +988,7 @@ typedef struct {
 
 #define PD_CALL_STAKING_BOND_V4 0
 typedef struct {
-    pd_LookupasStaticLookupSource_t controller;
+    pd_AccountIdLookupOfT_t controller;
     pd_CompactBalance_t amount;
     pd_RewardDestination_t payee;
 } pd_staking_bond_V4_t;
@@ -868,7 +1015,7 @@ typedef struct {
 
 #define PD_CALL_STAKING_NOMINATE_V4 5
 typedef struct {
-    pd_VecLookupasStaticLookupSource_t targets;
+    pd_VecAccountIdLookupOfT_t targets;
 } pd_staking_nominate_V4_t;
 
 #define PD_CALL_STAKING_CHILL_V4 6
@@ -882,7 +1029,7 @@ typedef struct {
 
 #define PD_CALL_STAKING_SET_CONTROLLER_V4 8
 typedef struct {
-    pd_LookupasStaticLookupSource_t controller;
+    pd_AccountIdLookupOfT_t controller;
 } pd_staking_set_controller_V4_t;
 
 #define PD_CALL_STAKING_REBOND_V4 24
@@ -1021,7 +1168,7 @@ typedef struct {
 
 #define PD_CALL_SYSTEM_SET_CODE_V4 2
 typedef struct {
-    pd_Vecu8_t code;
+    pd_Bytes_t code;
 } pd_system_set_code_V4_t;
 
 #define PD_CALL_SYSTEM_SET_CODE_WITHOUT_CHECKS_V4 3
@@ -1535,7 +1682,7 @@ typedef struct {
 #define PD_CALL_STAKING_SET_HISTORY_DEPTH_V4 25
 typedef struct {
     pd_Compactu32_t new_history_depth;
-    pd_Compactu32_t _era_items_deleted;
+    pd_Compactu32_t era_items_deleted;
 } pd_staking_set_history_depth_V4_t;
 
 #define PD_CALL_STAKING_REAP_STASH_V4 26
@@ -1657,7 +1804,7 @@ typedef struct {
 #define PD_CALL_ASSET_UPDATE_IDENTIFIERS_V4 13
 typedef struct {
     pd_Ticker_t ticker;
-    pd_VecAssetIdentifier_t identifiers;
+    pd_VecAssetIdentifier_t asset_identifiers;
 } pd_asset_update_identifiers_V4_t;
 
 #define PD_CALL_CAPITALDISTRIBUTION_DISTRIBUTE_V4 0
@@ -1969,7 +2116,7 @@ typedef struct {
     pd_CompactBalance_t amount;
     pd_Weight_t gas_limit;
     pd_OptionCompactBalanceOf_t storage_deposit_limit;
-    pd_Vecu8_t data;
+    pd_Bytes_t data;
 } pd_contracts_call_V4_t;
 
 #define PD_CALL_CONTRACTS_INSTANTIATE_V4 8

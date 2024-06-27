@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2023 Zondax AG
+ *  (c) 2019 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -421,6 +421,12 @@ typedef struct {
 } pd_AgentGroup_t;
 
 typedef struct {
+    uint32_t fungible;
+    uint32_t nonFungible;
+    uint32_t offChain;
+} pd_AssetCount_t;
+
+typedef struct {
     uint8_t value;
     uint64_t key;
 } pd_AssetMetadataKey_t;
@@ -503,6 +509,10 @@ typedef struct {
 } pd_Motion_t;
 
 typedef struct {
+    uint64_t value;
+} pd_NFTId_t;
+
+typedef struct {
     pd_MultiSignature_t value;
 } pd_OffChainSignature_t;
 
@@ -571,10 +581,34 @@ typedef struct {
 } pd_VecTupleIdentityIdTax_t;
 
 typedef struct {
+    const uint8_t* _ptr;
+} pd_u8_array_32_t;
+
+typedef struct {
+    uint8_t value;
+    union {
+        pd_AccountId_t id;
+        pd_CompactAccountIndex_t index;
+        pd_Bytes_t raw;
+        const uint8_t* _ptr;
+    };
+} pd_AccountIdLookupOfT_t;
+
+typedef struct {
     pd_AccountId_t accountId_1;
     pd_AccountId_t accountId_2;
     pd_Balance_t balance;
 } pd_AddRelayerPayingKey_t;
+
+typedef struct {
+    pd_AssetCount_t senderAssetCount;
+    pd_AssetCount_t receiverAssetCount;
+    uint32_t offChainCount;
+} pd_AffirmationCount_t;
+
+typedef struct {
+    pd_u8_array_32_t hash;
+} pd_ApiCodeHash_t;
 
 typedef struct {
     uint8_t value;
@@ -623,6 +657,11 @@ typedef struct {
     const uint32_t* _txVerPtr;
     pd_NestCallIdx_t nestCallIdx;
 } pd_Call_t;
+
+typedef struct {
+    uint32_t specVersion;
+    uint32_t txVersion;
+} pd_ChainVersion_t;
 
 typedef struct {
     compactInt_t value;
@@ -684,16 +723,6 @@ typedef struct {
 typedef struct {
     uint32_t value;
 } pd_LocalCAId_t;
-
-typedef struct {
-    uint8_t value;
-    union {
-        pd_AccountId_t id;
-        pd_CompactAccountIndex_t index;
-        pd_Bytes_t raw;
-        const uint8_t* _ptr;
-    };
-} pd_LookupasStaticLookupSource_t;
 
 typedef struct {
     pd_AssetMetadataKey_t key;
@@ -801,6 +830,12 @@ typedef struct {
 } pd_VecMotion_t;
 
 typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecNFTId_t;
+
+typedef struct {
     uint64_t value;
 } pd_VenueId_t;
 
@@ -810,14 +845,14 @@ typedef struct {
 } pd_Weight_t;
 
 typedef struct {
-    uint8_t value;
-    union {
-        pd_AccountId_t id;
-        pd_CompactAccountIndex_t index;
-        pd_Bytes_t raw;
-        const uint8_t* _ptr;
-    };
-} pd_AccountIdLookupOfT_t;
+    const uint8_t* _ptr;
+} pd_u8_array_4_t;
+
+typedef struct {
+    // desc
+    pd_u8_array_4_t desc;
+    uint32_t major;
+} pd_Api_t;
 
 typedef struct {
     pd_Bytes_t value;
@@ -866,6 +901,14 @@ typedef struct {
 } pd_BallotTimeRange_t;
 
 typedef struct {
+    pd_VecIdentityId_t identities;
+} pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t;
+
+typedef struct {
+    pd_VecIdentityId_t identities;
+} pd_BoundedBTreeSetIdentityIdMaxInstructionMediators_t;
+
+typedef struct {
     uint8_t value;
     union {
         pd_SystemOrigin_t system;
@@ -895,8 +938,33 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
+    union {
+        pd_AccountId_t id;
+        pd_CompactAccountIndex_t index;
+        pd_Bytes_t raw;
+        const uint8_t* _ptr;
+    };
+} pd_LookupasStaticLookupSource_t;
+
+typedef struct {
+    uint8_t value;
     pd_BlockNumber_t blockNumber;
 } pd_MaybeBlockBlockNumber_t;
+
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_VecNFTId_t ids;
+} pd_NFTs_t;
+
+typedef struct {
+    pd_ChainVersion_t chainVersion;
+    pd_ApiCodeHash_t apiHash;
+} pd_NextUpgradeT_t;
+
+typedef struct {
+    uint8_t some;
+    pd_AffirmationCount_t contained;
+} pd_OptionAffirmationCount_t;
 
 typedef struct {
     uint8_t some;
@@ -955,6 +1023,12 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
+} pd_VecAccountIdLookupOfT_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
 } pd_VecBallotVote_t;
 
 typedef struct {
@@ -1005,12 +1079,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecLeg_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecLookupasStaticLookupSource_t;
 
 typedef struct {
     uint64_t _len;
@@ -1118,8 +1186,9 @@ typedef struct {
 } pd_MemberCount_t;
 
 typedef struct {
-    uint64_t value;
-} pd_NFTId_t;
+    uint8_t some;
+    pd_AssetCount_t contained;
+} pd_OptionAssetCount_t;
 
 typedef struct {
     uint8_t some;

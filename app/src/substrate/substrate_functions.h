@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2023 Zondax AG
+ *  (c) 2019 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -92,6 +92,7 @@ parser_error_t _readVecIdentityId(parser_context_t* c, pd_VecIdentityId_t* v);
 parser_error_t _readVecu64(parser_context_t* c, pd_Vecu64_t* v);
 parser_error_t _readAccountId(parser_context_t* c, pd_AccountId_t* v);
 parser_error_t _readAgentGroup(parser_context_t* c, pd_AgentGroup_t* v);
+parser_error_t _readAssetCount(parser_context_t* c, pd_AssetCount_t* v);
 parser_error_t _readAssetMetadataKey(parser_context_t* c, pd_AssetMetadataKey_t* v);
 parser_error_t _readAssetMetadataLockStatusMoment(parser_context_t* c, pd_AssetMetadataLockStatusMoment_t* v);
 parser_error_t _readBalance(parser_context_t* c, pd_Balance_t* v);
@@ -107,6 +108,7 @@ parser_error_t _readLegFungible(parser_context_t* c, pd_LegFungible_t* v);
 parser_error_t _readLegNonFungible(parser_context_t* c, pd_LegNonFungible_t* v);
 parser_error_t _readLegOffChain(parser_context_t* c, pd_LegOffChain_t* v);
 parser_error_t _readMotion(parser_context_t* c, pd_Motion_t* v);
+parser_error_t _readNFTId(parser_context_t* c, pd_NFTId_t* v);
 parser_error_t _readOffChainSignature(parser_context_t* c, pd_OffChainSignature_t* v);
 parser_error_t _readOptionDocumentType(parser_context_t* c, pd_OptionDocumentType_t* v);
 parser_error_t _readOptionMoment(parser_context_t* c, pd_OptionMoment_t* v);
@@ -120,7 +122,11 @@ parser_error_t _readSnapshotResult(parser_context_t* c, pd_SnapshotResult_t* v);
 parser_error_t _readTargetIdentities(parser_context_t* c, pd_TargetIdentities_t* v);
 parser_error_t _readVecCondition(parser_context_t* c, pd_VecCondition_t* v);
 parser_error_t _readVecTupleIdentityIdTax(parser_context_t* c, pd_VecTupleIdentityIdTax_t* v);
+parser_error_t _readu8_array_32(parser_context_t* c, pd_u8_array_32_t* v);
+parser_error_t _readAccountIdLookupOfT(parser_context_t* c, pd_AccountIdLookupOfT_t* v);
 parser_error_t _readAddRelayerPayingKey(parser_context_t* c, pd_AddRelayerPayingKey_t* v);
+parser_error_t _readAffirmationCount(parser_context_t* c, pd_AffirmationCount_t* v);
+parser_error_t _readApiCodeHash(parser_context_t* c, pd_ApiCodeHash_t* v);
 parser_error_t _readAssetIdentifier(parser_context_t* c, pd_AssetIdentifier_t* v);
 parser_error_t _readAssetMetadataValueDetailMoment(parser_context_t* c, pd_AssetMetadataValueDetailMoment_t* v);
 parser_error_t _readBallotTitle(parser_context_t* c, pd_BallotTitle_t* v);
@@ -130,6 +136,7 @@ parser_error_t _readBeneficiary(parser_context_t* c, pd_Beneficiary_t* v);
 parser_error_t _readBridgeTxAccountId(parser_context_t* c, pd_BridgeTxAccountId_t* v);
 parser_error_t _readCAKind(parser_context_t* c, pd_CAKind_t* v);
 parser_error_t _readCall(parser_context_t* c, pd_Call_t* v);
+parser_error_t _readChainVersion(parser_context_t* c, pd_ChainVersion_t* v);
 parser_error_t _readCompactBalanceOf(parser_context_t* c, pd_CompactBalanceOf_t* v);
 parser_error_t _readCompactPerBill(parser_context_t* c, pd_CompactPerBill_t* v);
 parser_error_t _readComplianceRequirement(parser_context_t* c, pd_ComplianceRequirement_t* v);
@@ -141,7 +148,6 @@ parser_error_t _readFund(parser_context_t* c, pd_Fund_t* v);
 parser_error_t _readFundingRoundName(parser_context_t* c, pd_FundingRoundName_t* v);
 parser_error_t _readLeg(parser_context_t* c, pd_Leg_t* v);
 parser_error_t _readLocalCAId(parser_context_t* c, pd_LocalCAId_t* v);
-parser_error_t _readLookupasStaticLookupSource(parser_context_t* c, pd_LookupasStaticLookupSource_t* v);
 parser_error_t _readNFTMetadataAttribute(parser_context_t* c, pd_NFTMetadataAttribute_t* v);
 parser_error_t _readNonFungibleType(parser_context_t* c, pd_NonFungibleType_t* v);
 parser_error_t _readOptionBytes(parser_context_t* c, pd_OptionBytes_t* v);
@@ -161,9 +167,11 @@ parser_error_t _readTupleIdentityIdbool(parser_context_t* c, pd_TupleIdentityIdb
 parser_error_t _readTuplePipIdSnapshotResult(parser_context_t* c, pd_TuplePipIdSnapshotResult_t* v);
 parser_error_t _readUrl(parser_context_t* c, pd_Url_t* v);
 parser_error_t _readVecMotion(parser_context_t* c, pd_VecMotion_t* v);
+parser_error_t _readVecNFTId(parser_context_t* c, pd_VecNFTId_t* v);
 parser_error_t _readVenueId(parser_context_t* c, pd_VenueId_t* v);
 parser_error_t _readWeight(parser_context_t* c, pd_Weight_t* v);
-parser_error_t _readAccountIdLookupOfT(parser_context_t* c, pd_AccountIdLookupOfT_t* v);
+parser_error_t _readu8_array_4(parser_context_t* c, pd_u8_array_4_t* v);
+parser_error_t _readApi(parser_context_t* c, pd_Api_t* v);
 parser_error_t _readAssetMetadataName(parser_context_t* c, pd_AssetMetadataName_t* v);
 parser_error_t _readAssetMetadataSpec(parser_context_t* c, pd_AssetMetadataSpec_t* v);
 parser_error_t _readAssetMetadataValue(parser_context_t* c, pd_AssetMetadataValue_t* v);
@@ -172,11 +180,17 @@ parser_error_t _readAuthorizationDataAccountId(parser_context_t* c, pd_Authoriza
 parser_error_t _readBalanceOf(parser_context_t* c, pd_BalanceOf_t* v);
 parser_error_t _readBallotMeta(parser_context_t* c, pd_BallotMeta_t* v);
 parser_error_t _readBallotTimeRange(parser_context_t* c, pd_BallotTimeRange_t* v);
+parser_error_t _readBoundedBTreeSetIdentityIdMaxAssetMediators(parser_context_t* c, pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t* v);
+parser_error_t _readBoundedBTreeSetIdentityIdMaxInstructionMediators(parser_context_t* c, pd_BoundedBTreeSetIdentityIdMaxInstructionMediators_t* v);
 parser_error_t _readBoxPalletsOrigin(parser_context_t* c, pd_BoxPalletsOrigin_t* v);
 parser_error_t _readCAId(parser_context_t* c, pd_CAId_t* v);
 parser_error_t _readCodeHash(parser_context_t* c, pd_CodeHash_t* v);
 parser_error_t _readInitiateCorporateActionArgs(parser_context_t* c, pd_InitiateCorporateActionArgs_t* v);
+parser_error_t _readLookupasStaticLookupSource(parser_context_t* c, pd_LookupasStaticLookupSource_t* v);
 parser_error_t _readMaybeBlockBlockNumber(parser_context_t* c, pd_MaybeBlockBlockNumber_t* v);
+parser_error_t _readNFTs(parser_context_t* c, pd_NFTs_t* v);
+parser_error_t _readNextUpgradeT(parser_context_t* c, pd_NextUpgradeT_t* v);
+parser_error_t _readOptionAffirmationCount(parser_context_t* c, pd_OptionAffirmationCount_t* v);
 parser_error_t _readOptionAssetMetadataValueDetailMoment(parser_context_t* c, pd_OptionAssetMetadataValueDetailMoment_t* v);
 parser_error_t _readOptionPortfolioId(parser_context_t* c, pd_OptionPortfolioId_t* v);
 parser_error_t _readOptionReceiptDetails(parser_context_t* c, pd_OptionReceiptDetails_t* v);
@@ -188,6 +202,7 @@ parser_error_t _readScheduleCheckpoints(parser_context_t* c, pd_ScheduleCheckpoi
 parser_error_t _readSettlementTypeBlockNumber(parser_context_t* c, pd_SettlementTypeBlockNumber_t* v);
 parser_error_t _readUniqueCall(parser_context_t* c, pd_UniqueCall_t* v);
 parser_error_t _readValidatorPrefs(parser_context_t* c, pd_ValidatorPrefs_t* v);
+parser_error_t _readVecAccountIdLookupOfT(parser_context_t* c, pd_VecAccountIdLookupOfT_t* v);
 parser_error_t _readVecBallotVote(parser_context_t* c, pd_VecBallotVote_t* v);
 parser_error_t _readVecBeneficiary(parser_context_t* c, pd_VecBeneficiary_t* v);
 parser_error_t _readVecBridgeTxAccountId(parser_context_t* c, pd_VecBridgeTxAccountId_t* v);
@@ -197,7 +212,6 @@ parser_error_t _readVecCreateChildIdentityWithAuthAccountId(parser_context_t* c,
 parser_error_t _readVecDocument(parser_context_t* c, pd_VecDocument_t* v);
 parser_error_t _readVecFund(parser_context_t* c, pd_VecFund_t* v);
 parser_error_t _readVecLeg(parser_context_t* c, pd_VecLeg_t* v);
-parser_error_t _readVecLookupasStaticLookupSource(parser_context_t* c, pd_VecLookupasStaticLookupSource_t* v);
 parser_error_t _readVecNFTMetadataAttribute(parser_context_t* c, pd_VecNFTMetadataAttribute_t* v);
 parser_error_t _readVecPriceTier(parser_context_t* c, pd_VecPriceTier_t* v);
 parser_error_t _readVecReceiptDetails(parser_context_t* c, pd_VecReceiptDetails_t* v);
@@ -219,7 +233,7 @@ parser_error_t _readFundraiserName(parser_context_t* c, pd_FundraiserName_t* v);
 parser_error_t _readInstructionId(parser_context_t* c, pd_InstructionId_t* v);
 parser_error_t _readKeys(parser_context_t* c, pd_Keys_t* v);
 parser_error_t _readMemberCount(parser_context_t* c, pd_MemberCount_t* v);
-parser_error_t _readNFTId(parser_context_t* c, pd_NFTId_t* v);
+parser_error_t _readOptionAssetCount(parser_context_t* c, pd_OptionAssetCount_t* v);
 parser_error_t _readOptionBalance(parser_context_t* c, pd_OptionBalance_t* v);
 parser_error_t _readOptionBlockNumber(parser_context_t* c, pd_OptionBlockNumber_t* v);
 parser_error_t _readOptionCompactBalanceOf(parser_context_t* c, pd_OptionCompactBalanceOf_t* v);
@@ -711,6 +725,13 @@ parser_error_t _toStringAgentGroup(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringAssetCount(
+    const pd_AssetCount_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringAssetMetadataKey(
     const pd_AssetMetadataKey_t* v,
     char* outValue,
@@ -816,6 +837,13 @@ parser_error_t _toStringMotion(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringNFTId(
+    const pd_NFTId_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringOffChainSignature(
     const pd_OffChainSignature_t* v,
     char* outValue,
@@ -907,8 +935,36 @@ parser_error_t _toStringVecTupleIdentityIdTax(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringu8_array_32(
+    const pd_u8_array_32_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringAccountIdLookupOfT(
+    const pd_AccountIdLookupOfT_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringAddRelayerPayingKey(
     const pd_AddRelayerPayingKey_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringAffirmationCount(
+    const pd_AffirmationCount_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringApiCodeHash(
+    const pd_ApiCodeHash_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -972,6 +1028,13 @@ parser_error_t _toStringCAKind(
 
 parser_error_t _toStringCall(
     const pd_Call_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringChainVersion(
+    const pd_ChainVersion_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1049,13 +1112,6 @@ parser_error_t _toStringLeg(
 
 parser_error_t _toStringLocalCAId(
     const pd_LocalCAId_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringLookupasStaticLookupSource(
-    const pd_LookupasStaticLookupSource_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1194,6 +1250,13 @@ parser_error_t _toStringVecMotion(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringVecNFTId(
+    const pd_VecNFTId_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringVenueId(
     const pd_VenueId_t* v,
     char* outValue,
@@ -1208,8 +1271,15 @@ parser_error_t _toStringWeight(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringAccountIdLookupOfT(
-    const pd_AccountIdLookupOfT_t* v,
+parser_error_t _toStringu8_array_4(
+    const pd_u8_array_4_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringApi(
+    const pd_Api_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1271,6 +1341,20 @@ parser_error_t _toStringBallotTimeRange(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringBoundedBTreeSetIdentityIdMaxAssetMediators(
+    const pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringBoundedBTreeSetIdentityIdMaxInstructionMediators(
+    const pd_BoundedBTreeSetIdentityIdMaxInstructionMediators_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringBoxPalletsOrigin(
     const pd_BoxPalletsOrigin_t* v,
     char* outValue,
@@ -1299,8 +1383,36 @@ parser_error_t _toStringInitiateCorporateActionArgs(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringLookupasStaticLookupSource(
+    const pd_LookupasStaticLookupSource_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringMaybeBlockBlockNumber(
     const pd_MaybeBlockBlockNumber_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringNFTs(
+    const pd_NFTs_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringNextUpgradeT(
+    const pd_NextUpgradeT_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
+parser_error_t _toStringOptionAffirmationCount(
+    const pd_OptionAffirmationCount_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1383,6 +1495,13 @@ parser_error_t _toStringValidatorPrefs(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
+parser_error_t _toStringVecAccountIdLookupOfT(
+    const pd_VecAccountIdLookupOfT_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount);
+
 parser_error_t _toStringVecBallotVote(
     const pd_VecBallotVote_t* v,
     char* outValue,
@@ -1441,13 +1560,6 @@ parser_error_t _toStringVecFund(
 
 parser_error_t _toStringVecLeg(
     const pd_VecLeg_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount);
-
-parser_error_t _toStringVecLookupasStaticLookupSource(
-    const pd_VecLookupasStaticLookupSource_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -1600,8 +1712,8 @@ parser_error_t _toStringMemberCount(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringNFTId(
-    const pd_NFTId_t* v,
+parser_error_t _toStringOptionAssetCount(
+    const pd_OptionAssetCount_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

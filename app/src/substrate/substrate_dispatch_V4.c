@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2023 Zondax AG
+ *  (c) 2019 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -211,7 +211,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_reject_as_key_V4(
 __Z_INLINE parser_error_t _readMethod_multisig_accept_multisig_signer_as_identity_V4(
     parser_context_t* c, pd_multisig_accept_multisig_signer_as_identity_V4_t* m)
 {
-    CHECK_ERROR(_readu64(c, &m->auth_id))
+    CHECK_ERROR(_readu64(c, &m->_auth_id))
     return parser_ok;
 }
 
@@ -280,7 +280,7 @@ __Z_INLINE parser_error_t _readMethod_multisig_execute_scheduled_proposal_V4(
 __Z_INLINE parser_error_t _readMethod_staking_bond_V4(
     parser_context_t* c, pd_staking_bond_V4_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->controller))
+    CHECK_ERROR(_readAccountIdLookupOfT(c, &m->controller))
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readRewardDestination(c, &m->payee))
     return parser_ok;
@@ -317,7 +317,7 @@ __Z_INLINE parser_error_t _readMethod_staking_validate_V4(
 __Z_INLINE parser_error_t _readMethod_staking_nominate_V4(
     parser_context_t* c, pd_staking_nominate_V4_t* m)
 {
-    CHECK_ERROR(_readVecLookupasStaticLookupSource(c, &m->targets))
+    CHECK_ERROR(_readVecAccountIdLookupOfT(c, &m->targets))
     return parser_ok;
 }
 
@@ -339,7 +339,7 @@ __Z_INLINE parser_error_t _readMethod_staking_set_payee_V4(
 __Z_INLINE parser_error_t _readMethod_staking_set_controller_V4(
     parser_context_t* c, pd_staking_set_controller_V4_t* m)
 {
-    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->controller))
+    CHECK_ERROR(_readAccountIdLookupOfT(c, &m->controller))
     return parser_ok;
 }
 
@@ -526,7 +526,7 @@ __Z_INLINE parser_error_t _readMethod_system_set_heap_pages_V4(
 __Z_INLINE parser_error_t _readMethod_system_set_code_V4(
     parser_context_t* c, pd_system_set_code_V4_t* m)
 {
-    CHECK_ERROR(_readVecu8(c, &m->code))
+    CHECK_ERROR(_readBytes(c, &m->code))
     return parser_ok;
 }
 
@@ -1311,7 +1311,7 @@ __Z_INLINE parser_error_t _readMethod_staking_set_history_depth_V4(
     parser_context_t* c, pd_staking_set_history_depth_V4_t* m)
 {
     CHECK_ERROR(_readCompactu32(c, &m->new_history_depth))
-    CHECK_ERROR(_readCompactu32(c, &m->_era_items_deleted))
+    CHECK_ERROR(_readCompactu32(c, &m->era_items_deleted))
     return parser_ok;
 }
 
@@ -1477,7 +1477,7 @@ __Z_INLINE parser_error_t _readMethod_asset_update_identifiers_V4(
     parser_context_t* c, pd_asset_update_identifiers_V4_t* m)
 {
     CHECK_ERROR(_readTicker(c, &m->ticker))
-    CHECK_ERROR(_readVecAssetIdentifier(c, &m->identifiers))
+    CHECK_ERROR(_readVecAssetIdentifier(c, &m->asset_identifiers))
     return parser_ok;
 }
 
@@ -1614,6 +1614,22 @@ __Z_INLINE parser_error_t _readMethod_asset_remove_ticker_pre_approval_V4(
     parser_context_t* c, pd_asset_remove_ticker_pre_approval_V4_t* m)
 {
     CHECK_ERROR(_readTicker(c, &m->ticker))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_asset_add_mandatory_mediators_V4(
+    parser_context_t* c, pd_asset_add_mandatory_mediators_V4_t* m)
+{
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxAssetMediators(c, &m->mediators))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_asset_remove_mandatory_mediators_V4(
+    parser_context_t* c, pd_asset_remove_mandatory_mediators_V4_t* m)
+{
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxAssetMediators(c, &m->mediators))
     return parser_ok;
 }
 
@@ -1929,6 +1945,28 @@ __Z_INLINE parser_error_t _readMethod_portfolio_remove_portfolio_pre_approval_V4
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_portfolio_allow_identity_to_create_portfolios_V4(
+    parser_context_t* c, pd_portfolio_allow_identity_to_create_portfolios_V4_t* m)
+{
+    CHECK_ERROR(_readIdentityId(c, &m->trusted_identity))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_portfolio_revoke_create_portfolios_permission_V4(
+    parser_context_t* c, pd_portfolio_revoke_create_portfolios_permission_V4_t* m)
+{
+    CHECK_ERROR(_readIdentityId(c, &m->identity))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_portfolio_create_custody_portfolio_V4(
+    parser_context_t* c, pd_portfolio_create_custody_portfolio_V4_t* m)
+{
+    CHECK_ERROR(_readIdentityId(c, &m->portfolio_owner_id))
+    CHECK_ERROR(_readPortfolioName(c, &m->portfolio_name))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_protocolfee_change_coefficient_V4(
     parser_context_t* c, pd_protocolfee_change_coefficient_V4_t* m)
 {
@@ -2072,6 +2110,93 @@ __Z_INLINE parser_error_t _readMethod_settlement_execute_scheduled_instruction_V
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_settlement_affirm_with_receipts_with_count_V4(
+    parser_context_t* c, pd_settlement_affirm_with_receipts_with_count_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecReceiptDetails(c, &m->receipt_details))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
+    CHECK_ERROR(_readOptionAffirmationCount(c, &m->number_of_assets))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_affirm_instruction_with_count_V4(
+    parser_context_t* c, pd_settlement_affirm_instruction_with_count_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
+    CHECK_ERROR(_readOptionAffirmationCount(c, &m->number_of_assets))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_reject_instruction_with_count_V4(
+    parser_context_t* c, pd_settlement_reject_instruction_with_count_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readPortfolioId(c, &m->portfolio))
+    CHECK_ERROR(_readOptionAssetCount(c, &m->number_of_assets))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_withdraw_affirmation_with_count_V4(
+    parser_context_t* c, pd_settlement_withdraw_affirmation_with_count_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->id))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
+    CHECK_ERROR(_readOptionAffirmationCount(c, &m->number_of_assets))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_add_instruction_with_mediators_V4(
+    parser_context_t* c, pd_settlement_add_instruction_with_mediators_V4_t* m)
+{
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
+    CHECK_ERROR(_readOptionMemo(c, &m->instruction_memo))
+    CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxInstructionMediators(c, &m->mediators))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_add_and_affirm_with_mediators_V4(
+    parser_context_t* c, pd_settlement_add_and_affirm_with_mediators_V4_t* m)
+{
+    CHECK_ERROR(_readVenueId(c, &m->venue_id))
+    CHECK_ERROR(_readSettlementTypeBlockNumber(c, &m->settlement_type))
+    CHECK_ERROR(_readOptionMoment(c, &m->trade_date))
+    CHECK_ERROR(_readOptionMoment(c, &m->value_date))
+    CHECK_ERROR(_readVecLeg(c, &m->legs))
+    CHECK_ERROR(_readVecPortfolioId(c, &m->portfolios))
+    CHECK_ERROR(_readOptionMemo(c, &m->instruction_memo))
+    CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxInstructionMediators(c, &m->mediators))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_affirm_instruction_as_mediator_V4(
+    parser_context_t* c, pd_settlement_affirm_instruction_as_mediator_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->instruction_id))
+    CHECK_ERROR(_readOptionMoment(c, &m->expiry))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_withdraw_affirmation_as_mediator_V4(
+    parser_context_t* c, pd_settlement_withdraw_affirmation_as_mediator_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->instruction_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_settlement_reject_instruction_as_mediator_V4(
+    parser_context_t* c, pd_settlement_reject_instruction_as_mediator_V4_t* m)
+{
+    CHECK_ERROR(_readInstructionId(c, &m->instruction_id))
+    CHECK_ERROR(_readOptionAssetCount(c, &m->number_of_assets))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_sto_create_fundraiser_V4(
     parser_context_t* c, pd_sto_create_fundraiser_V4_t* m)
 {
@@ -2195,6 +2320,14 @@ __Z_INLINE parser_error_t _readMethod_utility_batch_old_V4(
     return parser_ok;
 }
 
+__Z_INLINE parser_error_t _readMethod_utility_as_derivative_V4(
+    parser_context_t* c, pd_utility_as_derivative_V4_t* m)
+{
+    CHECK_ERROR(_readu16(c, &m->index))
+    CHECK_ERROR(_readCall(c, &m->call))
+    return parser_ok;
+}
+
 __Z_INLINE parser_error_t _readMethod_externalagents_create_group_V4(
     parser_context_t* c, pd_externalagents_create_group_V4_t* m)
 {
@@ -2309,15 +2442,6 @@ __Z_INLINE parser_error_t _readMethod_relayer_decrease_polyx_limit_V4(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_rewards_claim_itn_reward_V4(
-    parser_context_t* c, pd_rewards_claim_itn_reward_V4_t* m)
-{
-    CHECK_ERROR(_readAccountId(c, &m->_reward_address))
-    CHECK_ERROR(_readAccountId(c, &m->_itn_address))
-    CHECK_ERROR(_readOffChainSignature(c, &m->_signature))
-    return parser_ok;
-}
-
 __Z_INLINE parser_error_t _readMethod_contracts_call_old_weight_V4(
     parser_context_t* c, pd_contracts_call_old_weight_V4_t* m)
 {
@@ -2325,7 +2449,7 @@ __Z_INLINE parser_error_t _readMethod_contracts_call_old_weight_V4(
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readCompactu64(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readVecu8(c, &m->data))
+    CHECK_ERROR(_readBytes(c, &m->data))
     return parser_ok;
 }
 
@@ -2335,9 +2459,9 @@ __Z_INLINE parser_error_t _readMethod_contracts_instantiate_with_code_old_weight
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readCompactu64(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readVecu8(c, &m->code))
-    CHECK_ERROR(_readVecu8(c, &m->data))
-    CHECK_ERROR(_readVecu8(c, &m->salt))
+    CHECK_ERROR(_readBytes(c, &m->code))
+    CHECK_ERROR(_readBytes(c, &m->data))
+    CHECK_ERROR(_readBytes(c, &m->salt))
     return parser_ok;
 }
 
@@ -2348,15 +2472,15 @@ __Z_INLINE parser_error_t _readMethod_contracts_instantiate_old_weight_V4(
     CHECK_ERROR(_readCompactu64(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
     CHECK_ERROR(_readCodeHash(c, &m->code_hash))
-    CHECK_ERROR(_readVecu8(c, &m->data))
-    CHECK_ERROR(_readVecu8(c, &m->salt))
+    CHECK_ERROR(_readBytes(c, &m->data))
+    CHECK_ERROR(_readBytes(c, &m->salt))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_contracts_upload_code_V4(
     parser_context_t* c, pd_contracts_upload_code_V4_t* m)
 {
-    CHECK_ERROR(_readVecu8(c, &m->code))
+    CHECK_ERROR(_readBytes(c, &m->code))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
     CHECK_ERROR(_readDeterminism(c, &m->determinism))
     return parser_ok;
@@ -2384,7 +2508,7 @@ __Z_INLINE parser_error_t _readMethod_contracts_call_V4(
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readWeight(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readVecu8(c, &m->data))
+    CHECK_ERROR(_readBytes(c, &m->data))
     return parser_ok;
 }
 
@@ -2394,9 +2518,9 @@ __Z_INLINE parser_error_t _readMethod_contracts_instantiate_with_code_V4(
     CHECK_ERROR(_readCompactBalance(c, &m->amount))
     CHECK_ERROR(_readWeight(c, &m->gas_limit))
     CHECK_ERROR(_readOptionCompactBalanceOf(c, &m->storage_deposit_limit))
-    CHECK_ERROR(_readVecu8(c, &m->code))
-    CHECK_ERROR(_readVecu8(c, &m->data))
-    CHECK_ERROR(_readVecu8(c, &m->salt))
+    CHECK_ERROR(_readBytes(c, &m->code))
+    CHECK_ERROR(_readBytes(c, &m->data))
+    CHECK_ERROR(_readBytes(c, &m->salt))
     return parser_ok;
 }
 
@@ -2442,6 +2566,38 @@ __Z_INLINE parser_error_t _readMethod_polymeshcontracts_update_call_runtime_whit
     parser_context_t* c, pd_polymeshcontracts_update_call_runtime_whitelist_V4_t* m)
 {
     CHECK_ERROR(_readVecTupleExtrinsicIdbool(c, &m->updates))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_polymeshcontracts_instantiate_with_code_as_primary_key_V4(
+    parser_context_t* c, pd_polymeshcontracts_instantiate_with_code_as_primary_key_V4_t* m)
+{
+    CHECK_ERROR(_readBalance(c, &m->endowment))
+    CHECK_ERROR(_readWeight(c, &m->gas_limit))
+    CHECK_ERROR(_readOptionBalance(c, &m->storage_deposit_limit))
+    CHECK_ERROR(_readVecu8(c, &m->code))
+    CHECK_ERROR(_readVecu8(c, &m->data))
+    CHECK_ERROR(_readVecu8(c, &m->salt))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_polymeshcontracts_instantiate_with_hash_as_primary_key_V4(
+    parser_context_t* c, pd_polymeshcontracts_instantiate_with_hash_as_primary_key_V4_t* m)
+{
+    CHECK_ERROR(_readBalance(c, &m->endowment))
+    CHECK_ERROR(_readWeight(c, &m->gas_limit))
+    CHECK_ERROR(_readOptionBalance(c, &m->storage_deposit_limit))
+    CHECK_ERROR(_readCodeHash(c, &m->code_hash))
+    CHECK_ERROR(_readVecu8(c, &m->data))
+    CHECK_ERROR(_readVecu8(c, &m->salt))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_polymeshcontracts_upgrade_api_V4(
+    parser_context_t* c, pd_polymeshcontracts_upgrade_api_V4_t* m)
+{
+    CHECK_ERROR(_readApi(c, &m->api))
+    CHECK_ERROR(_readNextUpgradeT(c, &m->next_upgrade))
     return parser_ok;
 }
 
@@ -2497,6 +2653,16 @@ __Z_INLINE parser_error_t _readMethod_nft_redeem_nft_V4(
     CHECK_ERROR(_readTicker(c, &m->ticker))
     CHECK_ERROR(_readNFTId(c, &m->nft_id))
     CHECK_ERROR(_readPortfolioKind(c, &m->portfolio_kind))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_nft_controller_transfer_V4(
+    parser_context_t* c, pd_nft_controller_transfer_V4_t* m)
+{
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readNFTs(c, &m->nfts))
+    CHECK_ERROR(_readPortfolioId(c, &m->source_portfolio))
+    CHECK_ERROR(_readPortfolioKind(c, &m->callers_portfolio_kind))
     return parser_ok;
 }
 
@@ -3131,6 +3297,12 @@ parser_error_t _readMethod_V4(
     case 6685: /* module 26 call 29 */
         CHECK_ERROR(_readMethod_asset_remove_ticker_pre_approval_V4(c, &method->basic.asset_remove_ticker_pre_approval_V4))
         break;
+    case 6686: /* module 26 call 30 */
+        CHECK_ERROR(_readMethod_asset_add_mandatory_mediators_V4(c, &method->basic.asset_add_mandatory_mediators_V4))
+        break;
+    case 6687: /* module 26 call 31 */
+        CHECK_ERROR(_readMethod_asset_remove_mandatory_mediators_V4(c, &method->basic.asset_remove_mandatory_mediators_V4))
+        break;
     case 6912: /* module 27 call 0 */
         CHECK_ERROR(_readMethod_capitaldistribution_distribute_V4(c, &method->nested.capitaldistribution_distribute_V4))
         break;
@@ -3254,6 +3426,15 @@ parser_error_t _readMethod_V4(
     case 8711: /* module 34 call 7 */
         CHECK_ERROR(_readMethod_portfolio_remove_portfolio_pre_approval_V4(c, &method->basic.portfolio_remove_portfolio_pre_approval_V4))
         break;
+    case 8712: /* module 34 call 8 */
+        CHECK_ERROR(_readMethod_portfolio_allow_identity_to_create_portfolios_V4(c, &method->basic.portfolio_allow_identity_to_create_portfolios_V4))
+        break;
+    case 8713: /* module 34 call 9 */
+        CHECK_ERROR(_readMethod_portfolio_revoke_create_portfolios_permission_V4(c, &method->basic.portfolio_revoke_create_portfolios_permission_V4))
+        break;
+    case 8714: /* module 34 call 10 */
+        CHECK_ERROR(_readMethod_portfolio_create_custody_portfolio_V4(c, &method->basic.portfolio_create_custody_portfolio_V4))
+        break;
     case 8960: /* module 35 call 0 */
         CHECK_ERROR(_readMethod_protocolfee_change_coefficient_V4(c, &method->nested.protocolfee_change_coefficient_V4))
         break;
@@ -3302,6 +3483,33 @@ parser_error_t _readMethod_V4(
     case 9486: /* module 37 call 14 */
         CHECK_ERROR(_readMethod_settlement_execute_scheduled_instruction_V4(c, &method->nested.settlement_execute_scheduled_instruction_V4))
         break;
+    case 9487: /* module 37 call 15 */
+        CHECK_ERROR(_readMethod_settlement_affirm_with_receipts_with_count_V4(c, &method->basic.settlement_affirm_with_receipts_with_count_V4))
+        break;
+    case 9488: /* module 37 call 16 */
+        CHECK_ERROR(_readMethod_settlement_affirm_instruction_with_count_V4(c, &method->basic.settlement_affirm_instruction_with_count_V4))
+        break;
+    case 9489: /* module 37 call 17 */
+        CHECK_ERROR(_readMethod_settlement_reject_instruction_with_count_V4(c, &method->basic.settlement_reject_instruction_with_count_V4))
+        break;
+    case 9490: /* module 37 call 18 */
+        CHECK_ERROR(_readMethod_settlement_withdraw_affirmation_with_count_V4(c, &method->basic.settlement_withdraw_affirmation_with_count_V4))
+        break;
+    case 9491: /* module 37 call 19 */
+        CHECK_ERROR(_readMethod_settlement_add_instruction_with_mediators_V4(c, &method->basic.settlement_add_instruction_with_mediators_V4))
+        break;
+    case 9492: /* module 37 call 20 */
+        CHECK_ERROR(_readMethod_settlement_add_and_affirm_with_mediators_V4(c, &method->basic.settlement_add_and_affirm_with_mediators_V4))
+        break;
+    case 9493: /* module 37 call 21 */
+        CHECK_ERROR(_readMethod_settlement_affirm_instruction_as_mediator_V4(c, &method->basic.settlement_affirm_instruction_as_mediator_V4))
+        break;
+    case 9494: /* module 37 call 22 */
+        CHECK_ERROR(_readMethod_settlement_withdraw_affirmation_as_mediator_V4(c, &method->basic.settlement_withdraw_affirmation_as_mediator_V4))
+        break;
+    case 9495: /* module 37 call 23 */
+        CHECK_ERROR(_readMethod_settlement_reject_instruction_as_mediator_V4(c, &method->basic.settlement_reject_instruction_as_mediator_V4))
+        break;
     case 9984: /* module 39 call 0 */
         CHECK_ERROR(_readMethod_sto_create_fundraiser_V4(c, &method->basic.sto_create_fundraiser_V4))
         break;
@@ -3343,6 +3551,9 @@ parser_error_t _readMethod_V4(
         break;
     case 10502: /* module 41 call 6 */
         CHECK_ERROR(_readMethod_utility_batch_old_V4(c, &method->basic.utility_batch_old_V4))
+        break;
+    case 10505: /* module 41 call 9 */
+        CHECK_ERROR(_readMethod_utility_as_derivative_V4(c, &method->basic.utility_as_derivative_V4))
         break;
     case 11008: /* module 43 call 0 */
         CHECK_ERROR(_readMethod_externalagents_create_group_V4(c, &method->basic.externalagents_create_group_V4))
@@ -3386,9 +3597,6 @@ parser_error_t _readMethod_V4(
     case 11269: /* module 44 call 5 */
         CHECK_ERROR(_readMethod_relayer_decrease_polyx_limit_V4(c, &method->basic.relayer_decrease_polyx_limit_V4))
         break;
-    case 11520: /* module 45 call 0 */
-        CHECK_ERROR(_readMethod_rewards_claim_itn_reward_V4(c, &method->basic.rewards_claim_itn_reward_V4))
-        break;
     case 11776: /* module 46 call 0 */
         CHECK_ERROR(_readMethod_contracts_call_old_weight_V4(c, &method->basic.contracts_call_old_weight_V4))
         break;
@@ -3425,6 +3633,15 @@ parser_error_t _readMethod_V4(
     case 12034: /* module 47 call 2 */
         CHECK_ERROR(_readMethod_polymeshcontracts_update_call_runtime_whitelist_V4(c, &method->basic.polymeshcontracts_update_call_runtime_whitelist_V4))
         break;
+    case 12035: /* module 47 call 3 */
+        CHECK_ERROR(_readMethod_polymeshcontracts_instantiate_with_code_as_primary_key_V4(c, &method->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4))
+        break;
+    case 12036: /* module 47 call 4 */
+        CHECK_ERROR(_readMethod_polymeshcontracts_instantiate_with_hash_as_primary_key_V4(c, &method->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4))
+        break;
+    case 12037: /* module 47 call 5 */
+        CHECK_ERROR(_readMethod_polymeshcontracts_upgrade_api_V4(c, &method->basic.polymeshcontracts_upgrade_api_V4))
+        break;
     case 12288: /* module 48 call 0 */
         CHECK_ERROR(_readMethod_preimage_note_preimage_V4(c, &method->basic.preimage_note_preimage_V4))
         break;
@@ -3445,6 +3662,9 @@ parser_error_t _readMethod_V4(
         break;
     case 12546: /* module 49 call 2 */
         CHECK_ERROR(_readMethod_nft_redeem_nft_V4(c, &method->basic.nft_redeem_nft_V4))
+        break;
+    case 12547: /* module 49 call 3 */
+        CHECK_ERROR(_readMethod_nft_controller_transfer_V4(c, &method->basic.nft_controller_transfer_V4))
         break;
 #endif
     default:
@@ -3527,8 +3747,6 @@ const char* _getMethod_ModuleName_V4(uint8_t moduleIdx)
         return STR_MO_EXTERNALAGENTS;
     case 44:
         return STR_MO_RELAYER;
-    case 45:
-        return STR_MO_REWARDS;
     case 46:
         return STR_MO_CONTRACTS;
     case 47:
@@ -3973,6 +4191,10 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_PRE_APPROVE_TICKER;
     case 6685: /* module 26 call 29 */
         return STR_ME_REMOVE_TICKER_PRE_APPROVAL;
+    case 6686: /* module 26 call 30 */
+        return STR_ME_ADD_MANDATORY_MEDIATORS;
+    case 6687: /* module 26 call 31 */
+        return STR_ME_REMOVE_MANDATORY_MEDIATORS;
     case 6912: /* module 27 call 0 */
         return STR_ME_DISTRIBUTE;
     case 6913: /* module 27 call 1 */
@@ -4055,6 +4277,12 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_PRE_APPROVE_PORTFOLIO;
     case 8711: /* module 34 call 7 */
         return STR_ME_REMOVE_PORTFOLIO_PRE_APPROVAL;
+    case 8712: /* module 34 call 8 */
+        return STR_ME_ALLOW_IDENTITY_TO_CREATE_PORTFOLIOS;
+    case 8713: /* module 34 call 9 */
+        return STR_ME_REVOKE_CREATE_PORTFOLIOS_PERMISSION;
+    case 8714: /* module 34 call 10 */
+        return STR_ME_CREATE_CUSTODY_PORTFOLIO;
     case 8960: /* module 35 call 0 */
         return STR_ME_CHANGE_COEFFICIENT;
     case 9472: /* module 37 call 0 */
@@ -4087,6 +4315,24 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_REJECT_INSTRUCTION;
     case 9486: /* module 37 call 14 */
         return STR_ME_EXECUTE_SCHEDULED_INSTRUCTION;
+    case 9487: /* module 37 call 15 */
+        return STR_ME_AFFIRM_WITH_RECEIPTS_WITH_COUNT;
+    case 9488: /* module 37 call 16 */
+        return STR_ME_AFFIRM_INSTRUCTION_WITH_COUNT;
+    case 9489: /* module 37 call 17 */
+        return STR_ME_REJECT_INSTRUCTION_WITH_COUNT;
+    case 9490: /* module 37 call 18 */
+        return STR_ME_WITHDRAW_AFFIRMATION_WITH_COUNT;
+    case 9491: /* module 37 call 19 */
+        return STR_ME_ADD_INSTRUCTION_WITH_MEDIATORS;
+    case 9492: /* module 37 call 20 */
+        return STR_ME_ADD_AND_AFFIRM_WITH_MEDIATORS;
+    case 9493: /* module 37 call 21 */
+        return STR_ME_AFFIRM_INSTRUCTION_AS_MEDIATOR;
+    case 9494: /* module 37 call 22 */
+        return STR_ME_WITHDRAW_AFFIRMATION_AS_MEDIATOR;
+    case 9495: /* module 37 call 23 */
+        return STR_ME_REJECT_INSTRUCTION_AS_MEDIATOR;
     case 9984: /* module 39 call 0 */
         return STR_ME_CREATE_FUNDRAISER;
     case 9985: /* module 39 call 1 */
@@ -4115,6 +4361,8 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_WITH_WEIGHT;
     case 10502: /* module 41 call 6 */
         return STR_ME_BATCH_OLD;
+    case 10505: /* module 41 call 9 */
+        return STR_ME_AS_DERIVATIVE;
     case 11008: /* module 43 call 0 */
         return STR_ME_CREATE_GROUP;
     case 11009: /* module 43 call 1 */
@@ -4143,8 +4391,6 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_INCREASE_POLYX_LIMIT;
     case 11269: /* module 44 call 5 */
         return STR_ME_DECREASE_POLYX_LIMIT;
-    case 11520: /* module 45 call 0 */
-        return STR_ME_CLAIM_ITN_REWARD;
     case 11776: /* module 46 call 0 */
         return STR_ME_CALL_OLD_WEIGHT;
     case 11777: /* module 46 call 1 */
@@ -4169,6 +4415,12 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_INSTANTIATE_WITH_HASH_PERMS;
     case 12034: /* module 47 call 2 */
         return STR_ME_UPDATE_CALL_RUNTIME_WHITELIST;
+    case 12035: /* module 47 call 3 */
+        return STR_ME_INSTANTIATE_WITH_CODE_AS_PRIMARY_KEY;
+    case 12036: /* module 47 call 4 */
+        return STR_ME_INSTANTIATE_WITH_HASH_AS_PRIMARY_KEY;
+    case 12037: /* module 47 call 5 */
+        return STR_ME_UPGRADE_API;
     case 12288: /* module 48 call 0 */
         return STR_ME_NOTE_PREIMAGE;
     case 12289: /* module 48 call 1 */
@@ -4183,6 +4435,8 @@ const char* _getMethod_Name_V4_ParserFull(uint16_t callPrivIdx)
         return STR_ME_ISSUE_NFT;
     case 12546: /* module 49 call 2 */
         return STR_ME_REDEEM_NFT;
+    case 12547: /* module 49 call 3 */
+        return STR_ME_CONTROLLER_TRANSFER;
 #endif
     default:
         return NULL;
@@ -4609,6 +4863,10 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 1;
     case 6685: /* module 26 call 29 */
         return 1;
+    case 6686: /* module 26 call 30 */
+        return 2;
+    case 6687: /* module 26 call 31 */
+        return 2;
     case 6912: /* module 27 call 0 */
         return 7;
     case 6913: /* module 27 call 1 */
@@ -4691,6 +4949,12 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 8711: /* module 34 call 7 */
         return 2;
+    case 8712: /* module 34 call 8 */
+        return 1;
+    case 8713: /* module 34 call 9 */
+        return 1;
+    case 8714: /* module 34 call 10 */
+        return 2;
     case 8960: /* module 35 call 0 */
         return 1;
     case 9472: /* module 37 call 0 */
@@ -4723,6 +4987,24 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 9486: /* module 37 call 14 */
         return 2;
+    case 9487: /* module 37 call 15 */
+        return 4;
+    case 9488: /* module 37 call 16 */
+        return 3;
+    case 9489: /* module 37 call 17 */
+        return 3;
+    case 9490: /* module 37 call 18 */
+        return 3;
+    case 9491: /* module 37 call 19 */
+        return 7;
+    case 9492: /* module 37 call 20 */
+        return 8;
+    case 9493: /* module 37 call 21 */
+        return 2;
+    case 9494: /* module 37 call 22 */
+        return 1;
+    case 9495: /* module 37 call 23 */
+        return 2;
     case 9984: /* module 39 call 0 */
         return 10;
     case 9985: /* module 39 call 1 */
@@ -4751,6 +5033,8 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 10502: /* module 41 call 6 */
         return 1;
+    case 10505: /* module 41 call 9 */
+        return 2;
     case 11008: /* module 43 call 0 */
         return 2;
     case 11009: /* module 43 call 1 */
@@ -4779,8 +5063,6 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 11269: /* module 44 call 5 */
         return 2;
-    case 11520: /* module 45 call 0 */
-        return 3;
     case 11776: /* module 46 call 0 */
         return 5;
     case 11777: /* module 46 call 1 */
@@ -4805,6 +5087,12 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 7;
     case 12034: /* module 47 call 2 */
         return 1;
+    case 12035: /* module 47 call 3 */
+        return 6;
+    case 12036: /* module 47 call 4 */
+        return 6;
+    case 12037: /* module 47 call 5 */
+        return 2;
     case 12288: /* module 48 call 0 */
         return 1;
     case 12289: /* module 48 call 1 */
@@ -4819,6 +5107,8 @@ uint8_t _getMethod_NumItems_V4(uint8_t moduleIdx, uint8_t callIdx)
         return 3;
     case 12546: /* module 49 call 2 */
         return 3;
+    case 12547: /* module 49 call 3 */
+        return 4;
 #endif
     default:
         return 0;
@@ -5041,7 +5331,7 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
     case 3849: /* module 15 call 9 */
         switch (itemIdx) {
         case 0:
-            return STR_IT_auth_id;
+            return STR_IT__auth_id;
         default:
             return NULL;
         }
@@ -6213,7 +6503,7 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         case 0:
             return STR_IT_new_history_depth;
         case 1:
-            return STR_IT__era_items_deleted;
+            return STR_IT_era_items_deleted;
         default:
             return NULL;
         }
@@ -6394,7 +6684,7 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         case 0:
             return STR_IT_ticker;
         case 1:
-            return STR_IT_identifiers;
+            return STR_IT_asset_identifiers;
         default:
             return NULL;
         }
@@ -6555,6 +6845,24 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         switch (itemIdx) {
         case 0:
             return STR_IT_ticker;
+        default:
+            return NULL;
+        }
+    case 6686: /* module 26 call 30 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ticker;
+        case 1:
+            return STR_IT_mediators;
+        default:
+            return NULL;
+        }
+    case 6687: /* module 26 call 31 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ticker;
+        case 1:
+            return STR_IT_mediators;
         default:
             return NULL;
         }
@@ -6887,6 +7195,29 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 8712: /* module 34 call 8 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_trusted_identity;
+        default:
+            return NULL;
+        }
+    case 8713: /* module 34 call 9 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_identity;
+        default:
+            return NULL;
+        }
+    case 8714: /* module 34 call 10 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_portfolio_owner_id;
+        case 1:
+            return STR_IT_portfolio_name;
+        default:
+            return NULL;
+        }
     case 8960: /* module 35 call 0 */
         switch (itemIdx) {
         case 0:
@@ -7061,6 +7392,117 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 9487: /* module 37 call 15 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_receipt_details;
+        case 2:
+            return STR_IT_portfolios;
+        case 3:
+            return STR_IT_number_of_assets;
+        default:
+            return NULL;
+        }
+    case 9488: /* module 37 call 16 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_portfolios;
+        case 2:
+            return STR_IT_number_of_assets;
+        default:
+            return NULL;
+        }
+    case 9489: /* module 37 call 17 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_portfolio;
+        case 2:
+            return STR_IT_number_of_assets;
+        default:
+            return NULL;
+        }
+    case 9490: /* module 37 call 18 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_id;
+        case 1:
+            return STR_IT_portfolios;
+        case 2:
+            return STR_IT_number_of_assets;
+        default:
+            return NULL;
+        }
+    case 9491: /* module 37 call 19 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_venue_id;
+        case 1:
+            return STR_IT_settlement_type;
+        case 2:
+            return STR_IT_trade_date;
+        case 3:
+            return STR_IT_value_date;
+        case 4:
+            return STR_IT_legs;
+        case 5:
+            return STR_IT_instruction_memo;
+        case 6:
+            return STR_IT_mediators;
+        default:
+            return NULL;
+        }
+    case 9492: /* module 37 call 20 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_venue_id;
+        case 1:
+            return STR_IT_settlement_type;
+        case 2:
+            return STR_IT_trade_date;
+        case 3:
+            return STR_IT_value_date;
+        case 4:
+            return STR_IT_legs;
+        case 5:
+            return STR_IT_portfolios;
+        case 6:
+            return STR_IT_instruction_memo;
+        case 7:
+            return STR_IT_mediators;
+        default:
+            return NULL;
+        }
+    case 9493: /* module 37 call 21 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_instruction_id;
+        case 1:
+            return STR_IT_expiry;
+        default:
+            return NULL;
+        }
+    case 9494: /* module 37 call 22 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_instruction_id;
+        default:
+            return NULL;
+        }
+    case 9495: /* module 37 call 23 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_instruction_id;
+        case 1:
+            return STR_IT_number_of_assets;
+        default:
+            return NULL;
+        }
     case 9984: /* module 39 call 0 */
         switch (itemIdx) {
         case 0:
@@ -7209,6 +7651,15 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 10505: /* module 41 call 9 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_index;
+        case 1:
+            return STR_IT_call;
+        default:
+            return NULL;
+        }
     case 11008: /* module 43 call 0 */
         switch (itemIdx) {
         case 0:
@@ -7336,17 +7787,6 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_user_key;
         case 1:
             return STR_IT_amount;
-        default:
-            return NULL;
-        }
-    case 11520: /* module 45 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT__reward_address;
-        case 1:
-            return STR_IT__itn_address;
-        case 2:
-            return STR_IT__signature;
         default:
             return NULL;
         }
@@ -7520,6 +7960,49 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 12035: /* module 47 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_endowment;
+        case 1:
+            return STR_IT_gas_limit;
+        case 2:
+            return STR_IT_storage_deposit_limit;
+        case 3:
+            return STR_IT_code;
+        case 4:
+            return STR_IT_data;
+        case 5:
+            return STR_IT_salt;
+        default:
+            return NULL;
+        }
+    case 12036: /* module 47 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_endowment;
+        case 1:
+            return STR_IT_gas_limit;
+        case 2:
+            return STR_IT_storage_deposit_limit;
+        case 3:
+            return STR_IT_code_hash;
+        case 4:
+            return STR_IT_data;
+        case 5:
+            return STR_IT_salt;
+        default:
+            return NULL;
+        }
+    case 12037: /* module 47 call 5 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_api;
+        case 1:
+            return STR_IT_next_upgrade;
+        default:
+            return NULL;
+        }
     case 12288: /* module 48 call 0 */
         switch (itemIdx) {
         case 0:
@@ -7578,6 +8061,19 @@ const char* _getMethod_ItemName_V4(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_nft_id;
         case 2:
             return STR_IT_portfolio_kind;
+        default:
+            return NULL;
+        }
+    case 12547: /* module 49 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ticker;
+        case 1:
+            return STR_IT_nfts;
+        case 2:
+            return STR_IT_source_portfolio;
+        case 3:
+            return STR_IT_callers_portfolio_kind;
         default:
             return NULL;
         }
@@ -7950,9 +8446,9 @@ parser_error_t _getMethod_ItemValue_V4(
         }
     case 3849: /* module 15 call 9 */
         switch (itemIdx) {
-        case 0: /* multisig_accept_multisig_signer_as_identity_V4 - auth_id */;
+        case 0: /* multisig_accept_multisig_signer_as_identity_V4 - _auth_id */;
             return _toStringu64(
-                &m->nested.multisig_accept_multisig_signer_as_identity_V4.auth_id,
+                &m->nested.multisig_accept_multisig_signer_as_identity_V4._auth_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -8071,7 +8567,7 @@ parser_error_t _getMethod_ItemValue_V4(
     case 4352: /* module 17 call 0 */
         switch (itemIdx) {
         case 0: /* staking_bond_V4 - controller */;
-            return _toStringLookupasStaticLookupSource(
+            return _toStringAccountIdLookupOfT(
                 &m->nested.staking_bond_V4.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8131,7 +8627,7 @@ parser_error_t _getMethod_ItemValue_V4(
     case 4357: /* module 17 call 5 */
         switch (itemIdx) {
         case 0: /* staking_nominate_V4 - targets */;
-            return _toStringVecLookupasStaticLookupSource(
+            return _toStringVecAccountIdLookupOfT(
                 &m->nested.staking_nominate_V4.targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8156,7 +8652,7 @@ parser_error_t _getMethod_ItemValue_V4(
     case 4360: /* module 17 call 8 */
         switch (itemIdx) {
         case 0: /* staking_set_controller_V4 - controller */;
-            return _toStringLookupasStaticLookupSource(
+            return _toStringAccountIdLookupOfT(
                 &m->nested.staking_set_controller_V4.controller,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8554,7 +9050,7 @@ parser_error_t _getMethod_ItemValue_V4(
     case 2: /* module 0 call 2 */
         switch (itemIdx) {
         case 0: /* system_set_code_V4 - code */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->nested.system_set_code_V4.code,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9788,9 +10284,9 @@ parser_error_t _getMethod_ItemValue_V4(
                 &m->nested.staking_set_history_depth_V4.new_history_depth,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 1: /* staking_set_history_depth_V4 - _era_items_deleted */;
+        case 1: /* staking_set_history_depth_V4 - era_items_deleted */;
             return _toStringCompactu32(
-                &m->nested.staking_set_history_depth_V4._era_items_deleted,
+                &m->nested.staking_set_history_depth_V4.era_items_deleted,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10083,9 +10579,9 @@ parser_error_t _getMethod_ItemValue_V4(
                 &m->nested.asset_update_identifiers_V4.ticker,
                 outValue, outValueLen,
                 pageIdx, pageCount);
-        case 1: /* asset_update_identifiers_V4 - identifiers */;
+        case 1: /* asset_update_identifiers_V4 - asset_identifiers */;
             return _toStringVecAssetIdentifier(
-                &m->nested.asset_update_identifiers_V4.identifiers,
+                &m->nested.asset_update_identifiers_V4.asset_identifiers,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10366,6 +10862,36 @@ parser_error_t _getMethod_ItemValue_V4(
         case 0: /* asset_remove_ticker_pre_approval_V4 - ticker */;
             return _toStringTicker(
                 &m->basic.asset_remove_ticker_pre_approval_V4.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6686: /* module 26 call 30 */
+        switch (itemIdx) {
+        case 0: /* asset_add_mandatory_mediators_V4 - ticker */;
+            return _toStringTicker(
+                &m->basic.asset_add_mandatory_mediators_V4.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* asset_add_mandatory_mediators_V4 - mediators */;
+            return _toStringBoundedBTreeSetIdentityIdMaxAssetMediators(
+                &m->basic.asset_add_mandatory_mediators_V4.mediators,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6687: /* module 26 call 31 */
+        switch (itemIdx) {
+        case 0: /* asset_remove_mandatory_mediators_V4 - ticker */;
+            return _toStringTicker(
+                &m->basic.asset_remove_mandatory_mediators_V4.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* asset_remove_mandatory_mediators_V4 - mediators */;
+            return _toStringBoundedBTreeSetIdentityIdMaxAssetMediators(
+                &m->basic.asset_remove_mandatory_mediators_V4.mediators,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10886,6 +11412,41 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
+    case 8712: /* module 34 call 8 */
+        switch (itemIdx) {
+        case 0: /* portfolio_allow_identity_to_create_portfolios_V4 - trusted_identity */;
+            return _toStringIdentityId(
+                &m->basic.portfolio_allow_identity_to_create_portfolios_V4.trusted_identity,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 8713: /* module 34 call 9 */
+        switch (itemIdx) {
+        case 0: /* portfolio_revoke_create_portfolios_permission_V4 - identity */;
+            return _toStringIdentityId(
+                &m->basic.portfolio_revoke_create_portfolios_permission_V4.identity,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 8714: /* module 34 call 10 */
+        switch (itemIdx) {
+        case 0: /* portfolio_create_custody_portfolio_V4 - portfolio_owner_id */;
+            return _toStringIdentityId(
+                &m->basic.portfolio_create_custody_portfolio_V4.portfolio_owner_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* portfolio_create_custody_portfolio_V4 - portfolio_name */;
+            return _toStringPortfolioName(
+                &m->basic.portfolio_create_custody_portfolio_V4.portfolio_name,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 8960: /* module 35 call 0 */
         switch (itemIdx) {
         case 0: /* protocolfee_change_coefficient_V4 - coefficient */;
@@ -11201,6 +11762,216 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
+    case 9487: /* module 37 call 15 */
+        switch (itemIdx) {
+        case 0: /* settlement_affirm_with_receipts_with_count_V4 - id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_affirm_with_receipts_with_count_V4.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_affirm_with_receipts_with_count_V4 - receipt_details */;
+            return _toStringVecReceiptDetails(
+                &m->basic.settlement_affirm_with_receipts_with_count_V4.receipt_details,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_affirm_with_receipts_with_count_V4 - portfolios */;
+            return _toStringVecPortfolioId(
+                &m->basic.settlement_affirm_with_receipts_with_count_V4.portfolios,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* settlement_affirm_with_receipts_with_count_V4 - number_of_assets */;
+            return _toStringOptionAffirmationCount(
+                &m->basic.settlement_affirm_with_receipts_with_count_V4.number_of_assets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9488: /* module 37 call 16 */
+        switch (itemIdx) {
+        case 0: /* settlement_affirm_instruction_with_count_V4 - id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_affirm_instruction_with_count_V4.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_affirm_instruction_with_count_V4 - portfolios */;
+            return _toStringVecPortfolioId(
+                &m->basic.settlement_affirm_instruction_with_count_V4.portfolios,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_affirm_instruction_with_count_V4 - number_of_assets */;
+            return _toStringOptionAffirmationCount(
+                &m->basic.settlement_affirm_instruction_with_count_V4.number_of_assets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9489: /* module 37 call 17 */
+        switch (itemIdx) {
+        case 0: /* settlement_reject_instruction_with_count_V4 - id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_reject_instruction_with_count_V4.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_reject_instruction_with_count_V4 - portfolio */;
+            return _toStringPortfolioId(
+                &m->basic.settlement_reject_instruction_with_count_V4.portfolio,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_reject_instruction_with_count_V4 - number_of_assets */;
+            return _toStringOptionAssetCount(
+                &m->basic.settlement_reject_instruction_with_count_V4.number_of_assets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9490: /* module 37 call 18 */
+        switch (itemIdx) {
+        case 0: /* settlement_withdraw_affirmation_with_count_V4 - id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_withdraw_affirmation_with_count_V4.id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_withdraw_affirmation_with_count_V4 - portfolios */;
+            return _toStringVecPortfolioId(
+                &m->basic.settlement_withdraw_affirmation_with_count_V4.portfolios,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_withdraw_affirmation_with_count_V4 - number_of_assets */;
+            return _toStringOptionAffirmationCount(
+                &m->basic.settlement_withdraw_affirmation_with_count_V4.number_of_assets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9491: /* module 37 call 19 */
+        switch (itemIdx) {
+        case 0: /* settlement_add_instruction_with_mediators_V4 - venue_id */;
+            return _toStringVenueId(
+                &m->basic.settlement_add_instruction_with_mediators_V4.venue_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_add_instruction_with_mediators_V4 - settlement_type */;
+            return _toStringSettlementTypeBlockNumber(
+                &m->basic.settlement_add_instruction_with_mediators_V4.settlement_type,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_add_instruction_with_mediators_V4 - trade_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_instruction_with_mediators_V4.trade_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* settlement_add_instruction_with_mediators_V4 - value_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_instruction_with_mediators_V4.value_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* settlement_add_instruction_with_mediators_V4 - legs */;
+            return _toStringVecLeg(
+                &m->basic.settlement_add_instruction_with_mediators_V4.legs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* settlement_add_instruction_with_mediators_V4 - instruction_memo */;
+            return _toStringOptionMemo(
+                &m->basic.settlement_add_instruction_with_mediators_V4.instruction_memo,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 6: /* settlement_add_instruction_with_mediators_V4 - mediators */;
+            return _toStringBoundedBTreeSetIdentityIdMaxInstructionMediators(
+                &m->basic.settlement_add_instruction_with_mediators_V4.mediators,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9492: /* module 37 call 20 */
+        switch (itemIdx) {
+        case 0: /* settlement_add_and_affirm_with_mediators_V4 - venue_id */;
+            return _toStringVenueId(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.venue_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_add_and_affirm_with_mediators_V4 - settlement_type */;
+            return _toStringSettlementTypeBlockNumber(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.settlement_type,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* settlement_add_and_affirm_with_mediators_V4 - trade_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.trade_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* settlement_add_and_affirm_with_mediators_V4 - value_date */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.value_date,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* settlement_add_and_affirm_with_mediators_V4 - legs */;
+            return _toStringVecLeg(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.legs,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* settlement_add_and_affirm_with_mediators_V4 - portfolios */;
+            return _toStringVecPortfolioId(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.portfolios,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 6: /* settlement_add_and_affirm_with_mediators_V4 - instruction_memo */;
+            return _toStringOptionMemo(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.instruction_memo,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 7: /* settlement_add_and_affirm_with_mediators_V4 - mediators */;
+            return _toStringBoundedBTreeSetIdentityIdMaxInstructionMediators(
+                &m->basic.settlement_add_and_affirm_with_mediators_V4.mediators,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9493: /* module 37 call 21 */
+        switch (itemIdx) {
+        case 0: /* settlement_affirm_instruction_as_mediator_V4 - instruction_id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_affirm_instruction_as_mediator_V4.instruction_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_affirm_instruction_as_mediator_V4 - expiry */;
+            return _toStringOptionMoment(
+                &m->basic.settlement_affirm_instruction_as_mediator_V4.expiry,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9494: /* module 37 call 22 */
+        switch (itemIdx) {
+        case 0: /* settlement_withdraw_affirmation_as_mediator_V4 - instruction_id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_withdraw_affirmation_as_mediator_V4.instruction_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 9495: /* module 37 call 23 */
+        switch (itemIdx) {
+        case 0: /* settlement_reject_instruction_as_mediator_V4 - instruction_id */;
+            return _toStringInstructionId(
+                &m->basic.settlement_reject_instruction_as_mediator_V4.instruction_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* settlement_reject_instruction_as_mediator_V4 - number_of_assets */;
+            return _toStringOptionAssetCount(
+                &m->basic.settlement_reject_instruction_as_mediator_V4.number_of_assets,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 9984: /* module 39 call 0 */
         switch (itemIdx) {
         case 0: /* sto_create_fundraiser_V4 - offering_portfolio */;
@@ -11466,6 +12237,21 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
+    case 10505: /* module 41 call 9 */
+        switch (itemIdx) {
+        case 0: /* utility_as_derivative_V4 - index */;
+            return _toStringu16(
+                &m->basic.utility_as_derivative_V4.index,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* utility_as_derivative_V4 - call */;
+            return _toStringCall(
+                &m->basic.utility_as_derivative_V4.call,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 11008: /* module 43 call 0 */
         switch (itemIdx) {
         case 0: /* externalagents_create_group_V4 - ticker */;
@@ -11686,26 +12472,6 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
-    case 11520: /* module 45 call 0 */
-        switch (itemIdx) {
-        case 0: /* rewards_claim_itn_reward_V4 - _reward_address */;
-            return _toStringAccountId(
-                &m->basic.rewards_claim_itn_reward_V4._reward_address,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* rewards_claim_itn_reward_V4 - _itn_address */;
-            return _toStringAccountId(
-                &m->basic.rewards_claim_itn_reward_V4._itn_address,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 2: /* rewards_claim_itn_reward_V4 - _signature */;
-            return _toStringOffChainSignature(
-                &m->basic.rewards_claim_itn_reward_V4._signature,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
     case 11776: /* module 46 call 0 */
         switch (itemIdx) {
         case 0: /* contracts_call_old_weight_V4 - dest */;
@@ -11729,7 +12495,7 @@ parser_error_t _getMethod_ItemValue_V4(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* contracts_call_old_weight_V4 - data */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_call_old_weight_V4.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11754,17 +12520,17 @@ parser_error_t _getMethod_ItemValue_V4(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* contracts_instantiate_with_code_old_weight_V4 - code */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_old_weight_V4.code,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* contracts_instantiate_with_code_old_weight_V4 - data */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_old_weight_V4.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* contracts_instantiate_with_code_old_weight_V4 - salt */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_old_weight_V4.salt,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11794,12 +12560,12 @@ parser_error_t _getMethod_ItemValue_V4(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* contracts_instantiate_old_weight_V4 - data */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_old_weight_V4.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* contracts_instantiate_old_weight_V4 - salt */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_old_weight_V4.salt,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11809,7 +12575,7 @@ parser_error_t _getMethod_ItemValue_V4(
     case 11779: /* module 46 call 3 */
         switch (itemIdx) {
         case 0: /* contracts_upload_code_V4 - code */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_upload_code_V4.code,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11874,7 +12640,7 @@ parser_error_t _getMethod_ItemValue_V4(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* contracts_call_V4 - data */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->nested.contracts_call_V4.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11899,17 +12665,17 @@ parser_error_t _getMethod_ItemValue_V4(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* contracts_instantiate_with_code_V4 - code */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_V4.code,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 4: /* contracts_instantiate_with_code_V4 - data */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_V4.data,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 5: /* contracts_instantiate_with_code_V4 - salt */;
-            return _toStringVecu8(
+            return _toStringBytes(
                 &m->basic.contracts_instantiate_with_code_V4.salt,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -12041,6 +12807,91 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
+    case 12035: /* module 47 call 3 */
+        switch (itemIdx) {
+        case 0: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - endowment */;
+            return _toStringBalance(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.endowment,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - gas_limit */;
+            return _toStringWeight(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.gas_limit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - storage_deposit_limit */;
+            return _toStringOptionBalance(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.storage_deposit_limit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - code */;
+            return _toStringVecu8(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.code,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - data */;
+            return _toStringVecu8(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.data,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* polymeshcontracts_instantiate_with_code_as_primary_key_V4 - salt */;
+            return _toStringVecu8(
+                &m->basic.polymeshcontracts_instantiate_with_code_as_primary_key_V4.salt,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12036: /* module 47 call 4 */
+        switch (itemIdx) {
+        case 0: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - endowment */;
+            return _toStringBalance(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.endowment,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - gas_limit */;
+            return _toStringWeight(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.gas_limit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - storage_deposit_limit */;
+            return _toStringOptionBalance(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.storage_deposit_limit,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - code_hash */;
+            return _toStringCodeHash(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.code_hash,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 4: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - data */;
+            return _toStringVecu8(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.data,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 5: /* polymeshcontracts_instantiate_with_hash_as_primary_key_V4 - salt */;
+            return _toStringVecu8(
+                &m->basic.polymeshcontracts_instantiate_with_hash_as_primary_key_V4.salt,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12037: /* module 47 call 5 */
+        switch (itemIdx) {
+        case 0: /* polymeshcontracts_upgrade_api_V4 - api */;
+            return _toStringApi(
+                &m->basic.polymeshcontracts_upgrade_api_V4.api,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* polymeshcontracts_upgrade_api_V4 - next_upgrade */;
+            return _toStringNextUpgradeT(
+                &m->basic.polymeshcontracts_upgrade_api_V4.next_upgrade,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 12288: /* module 48 call 0 */
         switch (itemIdx) {
         case 0: /* preimage_note_preimage_V4 - bytes */;
@@ -12141,6 +12992,31 @@ parser_error_t _getMethod_ItemValue_V4(
         default:
             return parser_no_data;
         }
+    case 12547: /* module 49 call 3 */
+        switch (itemIdx) {
+        case 0: /* nft_controller_transfer_V4 - ticker */;
+            return _toStringTicker(
+                &m->basic.nft_controller_transfer_V4.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* nft_controller_transfer_V4 - nfts */;
+            return _toStringNFTs(
+                &m->basic.nft_controller_transfer_V4.nfts,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 2: /* nft_controller_transfer_V4 - source_portfolio */;
+            return _toStringPortfolioId(
+                &m->basic.nft_controller_transfer_V4.source_portfolio,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 3: /* nft_controller_transfer_V4 - callers_portfolio_kind */;
+            return _toStringPortfolioKind(
+                &m->basic.nft_controller_transfer_V4.callers_portfolio_kind,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
 #endif
     default:
         return parser_ok;
@@ -12211,14 +13087,28 @@ bool _getMethod_IsNestingSupported_V4(uint8_t moduleIdx, uint8_t callIdx)
     case 6683: // Asset:Remove ticker affirmation exemption
     case 6684: // Asset:Pre approve ticker
     case 6685: // Asset:Remove ticker pre approval
+    case 6686: // Asset:Add mandatory mediators
+    case 6687: // Asset:Remove mandatory mediators
     case 8707: // Portfolio:Quit portfolio custody
     case 8708: // Portfolio:Accept portfolio custody
     case 8710: // Portfolio:Pre approve portfolio
     case 8711: // Portfolio:Remove portfolio pre approval
+    case 8712: // Portfolio:Allow identity to create portfolios
+    case 8713: // Portfolio:Revoke create portfolios permission
+    case 8714: // Portfolio:Create custody portfolio
     case 9473: // Settlement:Update venue details
     case 9474: // Settlement:Update venue type
     case 9479: // Settlement:Update venue signers
     case 9480: // Settlement:Execute manual instruction
+    case 9487: // Settlement:Affirm with receipts with count
+    case 9488: // Settlement:Affirm instruction with count
+    case 9489: // Settlement:Reject instruction with count
+    case 9490: // Settlement:Withdraw affirmation with count
+    case 9491: // Settlement:Add instruction with mediators
+    case 9492: // Settlement:Add and affirm with mediators
+    case 9493: // Settlement:Affirm instruction as mediator
+    case 9494: // Settlement:Withdraw affirmation as mediator
+    case 9495: // Settlement:Reject instruction as mediator
     case 9984: // Sto:Create fundraiser
     case 9985: // Sto:Invest
     case 9986: // Sto:Freeze fundraiser
@@ -12230,6 +13120,7 @@ bool _getMethod_IsNestingSupported_V4(uint8_t moduleIdx, uint8_t callIdx)
     case 10500: // Utility:Force batch
     case 10501: // Utility:With weight
     case 10502: // Utility:Batch old
+    case 10505: // Utility:As derivative
     case 11008: // ExternalAgents:Create group
     case 11009: // ExternalAgents:Set group permissions
     case 11010: // ExternalAgents:Remove agent
@@ -12244,7 +13135,6 @@ bool _getMethod_IsNestingSupported_V4(uint8_t moduleIdx, uint8_t callIdx)
     case 11267: // Relayer:Update polyx limit
     case 11268: // Relayer:Increase polyx limit
     case 11269: // Relayer:Decrease polyx limit
-    case 11520: // Rewards:Claim itn reward
     case 11776: // Contracts:Call old weight
     case 11777: // Contracts:Instantiate with code old weight
     case 11778: // Contracts:Instantiate old weight
@@ -12255,6 +13145,9 @@ bool _getMethod_IsNestingSupported_V4(uint8_t moduleIdx, uint8_t callIdx)
     case 12032: // PolymeshContracts:Instantiate with code perms
     case 12033: // PolymeshContracts:Instantiate with hash perms
     case 12034: // PolymeshContracts:Update call runtime whitelist
+    case 12035: // PolymeshContracts:Instantiate with code as primary key
+    case 12036: // PolymeshContracts:Instantiate with hash as primary key
+    case 12037: // PolymeshContracts:Upgrade api
     case 12288: // Preimage:Note preimage
     case 12289: // Preimage:Unnote preimage
     case 12290: // Preimage:Request preimage
@@ -12262,6 +13155,7 @@ bool _getMethod_IsNestingSupported_V4(uint8_t moduleIdx, uint8_t callIdx)
     case 12544: // Nft:Create nft collection
     case 12545: // Nft:Issue nft
     case 12546: // Nft:Redeem nft
+    case 12547: // Nft:Controller transfer
         return false;
     default:
         return true;
