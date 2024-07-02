@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2023 Zondax AG
+ *  (c) 2019 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,7 +51,6 @@ static const char* STR_MO_TREASURY = "Treasury";
 static const char* STR_MO_UTILITY = "Utility";
 static const char* STR_MO_EXTERNALAGENTS = "Externalagents";
 static const char* STR_MO_RELAYER = "Relayer";
-static const char* STR_MO_REWARDS = "Rewards";
 static const char* STR_MO_CONTRACTS = "Contracts";
 static const char* STR_MO_POLYMESHCONTRACTS = "Polymeshcontracts";
 static const char* STR_MO_PREIMAGE = "Preimage";
@@ -207,6 +206,8 @@ static const char* STR_ME_EXEMPT_TICKER_AFFIRMATION = "Exempt ticker affirmation
 static const char* STR_ME_REMOVE_TICKER_AFFIRMATION_EXEMPTION = "Remove ticker affirmation exemption";
 static const char* STR_ME_PRE_APPROVE_TICKER = "Pre approve ticker";
 static const char* STR_ME_REMOVE_TICKER_PRE_APPROVAL = "Remove ticker pre approval";
+static const char* STR_ME_ADD_MANDATORY_MEDIATORS = "Add mandatory mediators";
+static const char* STR_ME_REMOVE_MANDATORY_MEDIATORS = "Remove mandatory mediators";
 static const char* STR_ME_DISTRIBUTE = "Distribute";
 static const char* STR_ME_PUSH_BENEFIT = "Push benefit";
 static const char* STR_ME_RECLAIM = "Reclaim";
@@ -262,6 +263,9 @@ static const char* STR_ME_ACCEPT_PORTFOLIO_CUSTODY = "Accept portfolio custody";
 static const char* STR_ME_MOVE_PORTFOLIO_FUNDS = "Move portfolio funds";
 static const char* STR_ME_PRE_APPROVE_PORTFOLIO = "Pre approve portfolio";
 static const char* STR_ME_REMOVE_PORTFOLIO_PRE_APPROVAL = "Remove portfolio pre approval";
+static const char* STR_ME_ALLOW_IDENTITY_TO_CREATE_PORTFOLIOS = "Allow identity to create portfolios";
+static const char* STR_ME_REVOKE_CREATE_PORTFOLIOS_PERMISSION = "Revoke create portfolios permission";
+static const char* STR_ME_CREATE_CUSTODY_PORTFOLIO = "Create custody portfolio";
 static const char* STR_ME_CHANGE_COEFFICIENT = "Change coefficient";
 static const char* STR_ME_CREATE_VENUE = "Create venue";
 static const char* STR_ME_UPDATE_VENUE_DETAILS = "Update venue details";
@@ -278,6 +282,15 @@ static const char* STR_ME_AFFIRM_INSTRUCTION = "Affirm instruction";
 static const char* STR_ME_WITHDRAW_AFFIRMATION = "Withdraw affirmation";
 static const char* STR_ME_REJECT_INSTRUCTION = "Reject instruction";
 static const char* STR_ME_EXECUTE_SCHEDULED_INSTRUCTION = "Execute scheduled instruction";
+static const char* STR_ME_AFFIRM_WITH_RECEIPTS_WITH_COUNT = "Affirm with receipts with count";
+static const char* STR_ME_AFFIRM_INSTRUCTION_WITH_COUNT = "Affirm instruction with count";
+static const char* STR_ME_REJECT_INSTRUCTION_WITH_COUNT = "Reject instruction with count";
+static const char* STR_ME_WITHDRAW_AFFIRMATION_WITH_COUNT = "Withdraw affirmation with count";
+static const char* STR_ME_ADD_INSTRUCTION_WITH_MEDIATORS = "Add instruction with mediators";
+static const char* STR_ME_ADD_AND_AFFIRM_WITH_MEDIATORS = "Add and affirm with mediators";
+static const char* STR_ME_AFFIRM_INSTRUCTION_AS_MEDIATOR = "Affirm instruction as mediator";
+static const char* STR_ME_WITHDRAW_AFFIRMATION_AS_MEDIATOR = "Withdraw affirmation as mediator";
+static const char* STR_ME_REJECT_INSTRUCTION_AS_MEDIATOR = "Reject instruction as mediator";
 static const char* STR_ME_CREATE_FUNDRAISER = "Create fundraiser";
 static const char* STR_ME_INVEST = "Invest";
 static const char* STR_ME_FREEZE_FUNDRAISER = "Freeze fundraiser";
@@ -295,6 +308,7 @@ static const char* STR_ME_WITH_WEIGHT = "With weight";
 static const char* STR_ME_BATCH_OLD = "Batch old";
 static const char* STR_ME_BATCH_ATOMIC = "Batch atomic";
 static const char* STR_ME_BATCH_OPTIMISTIC = "Batch optimistic";
+static const char* STR_ME_AS_DERIVATIVE = "As derivative";
 static const char* STR_ME_CREATE_GROUP = "Create group";
 static const char* STR_ME_SET_GROUP_PERMISSIONS = "Set group permissions";
 static const char* STR_ME_REMOVE_AGENT = "Remove agent";
@@ -309,7 +323,6 @@ static const char* STR_ME_REMOVE_PAYING_KEY = "Remove paying key";
 static const char* STR_ME_UPDATE_POLYX_LIMIT = "Update polyx limit";
 static const char* STR_ME_INCREASE_POLYX_LIMIT = "Increase polyx limit";
 static const char* STR_ME_DECREASE_POLYX_LIMIT = "Decrease polyx limit";
-static const char* STR_ME_CLAIM_ITN_REWARD = "Claim itn reward";
 static const char* STR_ME_CALL_OLD_WEIGHT = "Call old weight";
 static const char* STR_ME_INSTANTIATE_WITH_CODE_OLD_WEIGHT = "Instantiate with code old weight";
 static const char* STR_ME_INSTANTIATE_OLD_WEIGHT = "Instantiate old weight";
@@ -321,6 +334,9 @@ static const char* STR_ME_INSTANTIATE = "Instantiate";
 static const char* STR_ME_INSTANTIATE_WITH_CODE_PERMS = "Instantiate with code perms";
 static const char* STR_ME_INSTANTIATE_WITH_HASH_PERMS = "Instantiate with hash perms";
 static const char* STR_ME_UPDATE_CALL_RUNTIME_WHITELIST = "Update call runtime whitelist";
+static const char* STR_ME_INSTANTIATE_WITH_CODE_AS_PRIMARY_KEY = "Instantiate with code as primary key";
+static const char* STR_ME_INSTANTIATE_WITH_HASH_AS_PRIMARY_KEY = "Instantiate with hash as primary key";
+static const char* STR_ME_UPGRADE_API = "Upgrade api";
 static const char* STR_ME_NOTE_PREIMAGE = "Note preimage";
 static const char* STR_ME_UNNOTE_PREIMAGE = "Unnote preimage";
 static const char* STR_ME_REQUEST_PREIMAGE = "Request preimage";
@@ -388,6 +404,7 @@ static const char* STR_IT_sigs_required = "Sigs required";
 static const char* STR_IT_multisig = "Multisig";
 static const char* STR_IT_auto_close = "Auto close";
 static const char* STR_IT_proposal_id = "Proposal id";
+static const char* STR_IT__auth_id = "Auth id";
 static const char* STR_IT_signer = "Signer";
 static const char* STR_IT_multisig_did = "Multisig did";
 static const char* STR_IT__proposal_weight = "Proposal weight";
@@ -417,7 +434,7 @@ static const char* STR_IT_era = "Era";
 static const char* STR_IT_slash_indices = "Slash indices";
 static const char* STR_IT_validator_stash = "Validator stash";
 static const char* STR_IT_new_history_depth = "New history depth";
-static const char* STR_IT__era_items_deleted = "Era items deleted";
+static const char* STR_IT_era_items_deleted = "Era items deleted";
 static const char* STR_IT_winners = "Winners";
 static const char* STR_IT_compact = "Compact";
 static const char* STR_IT_score = "Score";
@@ -435,6 +452,7 @@ static const char* STR_IT_funding_round = "Funding round";
 static const char* STR_IT_portfolio_kind = "Portfolio kind";
 static const char* STR_IT_docs = "Docs";
 static const char* STR_IT_ids = "Ids";
+static const char* STR_IT_asset_identifiers = "Asset identifiers";
 static const char* STR_IT_from_portfolio = "From portfolio";
 static const char* STR_IT_custom_asset_type = "Custom asset type";
 static const char* STR_IT_value = "Value";
@@ -443,6 +461,7 @@ static const char* STR_IT_spec = "Spec";
 static const char* STR_IT_portfolio = "Portfolio";
 static const char* STR_IT_local_key = "Local key";
 static const char* STR_IT_metadata_key = "Metadata key";
+static const char* STR_IT_mediators = "Mediators";
 static const char* STR_IT_ca_id = "Ca id";
 static const char* STR_IT_currency = "Currency";
 static const char* STR_IT_per_share = "Per share";
@@ -486,6 +505,9 @@ static const char* STR_IT_from = "From";
 static const char* STR_IT_to = "To";
 static const char* STR_IT_funds = "Funds";
 static const char* STR_IT_portfolio_id = "Portfolio id";
+static const char* STR_IT_trusted_identity = "Trusted identity";
+static const char* STR_IT_portfolio_owner_id = "Portfolio owner id";
+static const char* STR_IT_portfolio_name = "Portfolio name";
 static const char* STR_IT_coefficient = "Coefficient";
 static const char* STR_IT_op = "Op";
 static const char* STR_IT_base_fee = "Base fee";
@@ -505,6 +527,8 @@ static const char* STR_IT_trade_date = "Trade date";
 static const char* STR_IT_value_date = "Value date";
 static const char* STR_IT_legs = "Legs";
 static const char* STR_IT_instruction_memo = "Instruction memo";
+static const char* STR_IT_number_of_assets = "Number of assets";
+static const char* STR_IT_instruction_id = "Instruction id";
 static const char* STR_IT_offering_portfolio = "Offering portfolio";
 static const char* STR_IT_offering_asset = "Offering asset";
 static const char* STR_IT_raising_portfolio = "Raising portfolio";
@@ -528,10 +552,6 @@ static const char* STR_IT_group = "Group";
 static const char* STR_IT_user_key = "User key";
 static const char* STR_IT_polyx_limit = "Polyx limit";
 static const char* STR_IT_paying_key = "Paying key";
-static const char* STR_IT__reward_address = "Reward address";
-static const char* STR_IT__itn_address = "Itn address";
-static const char* STR_IT__signature = "Signature";
-static const char* STR_IT__status = "Status";
 static const char* STR_IT_gas_limit = "Gas limit";
 static const char* STR_IT_storage_deposit_limit = "Storage deposit limit";
 static const char* STR_IT_salt = "Salt";
@@ -539,12 +559,17 @@ static const char* STR_IT_code_hash = "Code hash";
 static const char* STR_IT_determinism = "Determinism";
 static const char* STR_IT_endowment = "Endowment";
 static const char* STR_IT_updates = "Updates";
+static const char* STR_IT_api = "Api";
+static const char* STR_IT_next_upgrade = "Next upgrade";
 static const char* STR_IT_bytes = "Bytes";
 static const char* STR_IT_hash = "Hash";
 static const char* STR_IT_nft_type = "Nft type";
 static const char* STR_IT_collection_keys = "Collection keys";
 static const char* STR_IT_nft_metadata_attributes = "Nft metadata attributes";
 static const char* STR_IT_nft_id = "Nft id";
+static const char* STR_IT_nfts = "Nfts";
+static const char* STR_IT_source_portfolio = "Source portfolio";
+static const char* STR_IT_callers_portfolio_kind = "Callers portfolio kind";
 
 // Country Codes
 static const uint8_t COUNTRY_CODES_SIZE = 250;
@@ -800,7 +825,6 @@ static const char* const STR_COUNTRY_CODES[] = {
     "CW",
     "SX",
 };
-
 #ifdef __cplusplus
 }
 #endif
