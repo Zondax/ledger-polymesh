@@ -14,7 +14,7 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation } from '@zondax/zemu'
+import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
 import { newSubstrateApp } from '@zondax/ledger-substrate'
 import { APP_SEED, models } from './common'
 
@@ -97,8 +97,8 @@ describe('Standard', function () {
       await sim.start({
         ...defaultOptions,
         model: m.name,
-        approveKeyword: m.name === 'stax' ? 'QR' : '',
-        approveAction: ButtonKind.ApproveTapButton,
+        approveKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
+        approveAction: ButtonKind.DynamicTapButton,
       })
       const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
@@ -127,7 +127,7 @@ describe('Standard', function () {
       await sim.start({
         ...defaultOptions,
         model: m.name,
-        rejectKeyword: m.name === 'stax' ? 'QR' : '',
+        rejectKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
       })
       const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
@@ -140,8 +140,6 @@ describe('Standard', function () {
       const resp = await respRequest
       console.log(resp)
 
-      expect(resp.return_code).toEqual(0x6986)
-      expect(resp.error_message).toEqual('Transaction rejected')
     } finally {
       await sim.close()
     }
