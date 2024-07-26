@@ -1,5 +1,5 @@
 /*******************************************************************************
-*  (c) 2019 - 2023  Zondax AG
+*  (c) 2019 - 2024  Zondax AG
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 #include "bignum.h"
 #include "substrate_types.h"
 #include "substrate_dispatch.h"
+
+#define SUPPORTED_SPEC_VERSION_V4 6003001
 
 parser_error_t parser_init_context(parser_context_t *ctx,
                                    const uint8_t *buffer,
@@ -352,7 +354,7 @@ parser_error_t _checkVersions(parser_context_t *c) {
     transactionVersion += (uint32_t) p[3] << 24u;
 
     if (transactionVersion != (SUPPORTED_TX_VERSION_CURRENT) &&
-        transactionVersion != (SUPPORTED_TX_VERSION_PREVIOUS)) {
+        transactionVersion != (SUPPORTED_SPEC_VERSION_V4)) {
         return parser_tx_version_not_supported;
     }
 

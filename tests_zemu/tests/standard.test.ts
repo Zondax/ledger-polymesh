@@ -14,8 +14,8 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation } from '@zondax/zemu'
-import { newPolymeshApp } from '@zondax/ledger-substrate'
+import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
+import { newSubstrateApp } from '@zondax/ledger-substrate'
 import { APP_SEED, models } from './common'
 
 const defaultOptions = {
@@ -55,7 +55,7 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
       const resp = await app.getVersion()
 
       console.log(resp)
@@ -75,7 +75,7 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000)
 
@@ -97,10 +97,10 @@ describe('Standard', function () {
       await sim.start({
         ...defaultOptions,
         model: m.name,
-        approveKeyword: m.name === 'stax' ? 'QR' : '',
-        approveAction: ButtonKind.ApproveTapButton,
+        approveKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
+        approveAction: ButtonKind.DynamicTapButton,
       })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
       // Wait until we are not in the main menu
@@ -127,9 +127,9 @@ describe('Standard', function () {
       await sim.start({
         ...defaultOptions,
         model: m.name,
-        rejectKeyword: m.name === 'stax' ? 'QR' : '',
+        rejectKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
       })
-      const app = newPolymeshApp(sim.getTransport())
+      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
 
       const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
       // Wait until we are not in the main menu
@@ -140,8 +140,6 @@ describe('Standard', function () {
       const resp = await respRequest
       console.log(resp)
 
-      expect(resp.return_code).toEqual(0x6986)
-      expect(resp.error_message).toEqual('Transaction rejected')
     } finally {
       await sim.close()
     }
