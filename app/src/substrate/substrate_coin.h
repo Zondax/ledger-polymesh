@@ -50,7 +50,10 @@ typedef enum {
 
 } key_kind_e;
 
-#define ZX_MAJOR_VERSION_SHIFT 1000
+// Zondax major delta to fit chain tx version into the major value.
+// Major - this delta -> results on the chain tx version
+#define ZX_MAJOR_VERSION_DELTA 100
+
 // Coin Specific
 #define PK_ADDRESS_TYPE COIN_ADDR_TYPE
 #define SUPPORTED_TX_VERSION_CURRENT LEDGER_MAJOR_VERSION - ZX_MAJOR_VERSION_SHIFT
