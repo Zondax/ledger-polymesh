@@ -62,10 +62,16 @@ describe('Standard', function () {
 
       expect(resp.return_code).toEqual(0x9000)
       expect(resp.error_message).toEqual('No errors')
+      
       expect(resp).toHaveProperty('test_mode')
+
       expect(resp).toHaveProperty('major')
       expect(resp).toHaveProperty('minor')
       expect(resp).toHaveProperty('patch')
+
+      expect(resp.major).toEqual(104)
+      expect(resp.minor).toEqual(63001)
+      expect(resp.patch).toEqual(0)
     } finally {
       await sim.close()
     }
