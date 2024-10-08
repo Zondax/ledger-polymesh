@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#define COIN_ADDR_TYPE 12
+#define COIN_ADDR_TYPE 42
 #define CLA 0x91
 
 #define INS_SIGN_RAW 0x03
@@ -50,20 +50,16 @@ typedef enum {
 
 } key_kind_e;
 
-// Zondax major delta to fit chain tx version into the major value.
-// Major - this delta -> results on the chain tx version
-#define ZX_MAJOR_VERSION_DELTA 100
-
 // Coin Specific
 #define PK_ADDRESS_TYPE COIN_ADDR_TYPE
-#define SUPPORTED_TX_VERSION_CURRENT LEDGER_MAJOR_VERSION - ZX_MAJOR_VERSION_DELTA
+#define SUPPORTED_TX_VERSION_CURRENT 7
 #define SUPPORTED_TX_VERSION_PREVIOUS (LEDGER_MAJOR_VERSION - 1)
 #define SUPPORTED_SPEC_VERSION (LEDGER_MINOR_VERSION + 0)
-#define SUPPORTED_MINIMUM_SPEC_VERSION 6003001
+#define SUPPORTED_MINIMUM_SPEC_VERSION 6003040
 
 #define COIN_AMOUNT_DECIMAL_PLACES 6
 
-#define COIN_GENESIS_HASH "6fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063"
+#define COIN_GENESIS_HASH "885d727362e25873fb2c5fcda890a91018f52425b41ba30e0c1aaf1ab411dd0a"
 #define COIN_NAME "Polymesh"
 #define COIN_TICKER "POLYX "
 
