@@ -234,6 +234,8 @@ typedef struct {
     pd_VecClaimType_t claims;
 } pd_TrustedFor_t;
 
+typedef compactInt_t pd_Compactu16_t;
+
 typedef struct {
     pd_PalletName_t palletName;
     pd_DispatchableNames_t dispatchableNames;
@@ -304,6 +306,12 @@ typedef struct {
 typedef struct {
     pd_Permill_t value;
 } pd_Tax_t;
+
+typedef struct {
+    pd_Compactu16_t firstElemInTuple;
+    pd_Compactu16_t secondElemInTuple;
+
+} pd_TupleCompactu16Compactu16_t;
 
 typedef struct {
     uint64_t _len;
@@ -437,6 +445,222 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_Vecu64_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_Compactu16_t ninthElem;
+
+} pd_VoteEight_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_Compactu16_t twelfthElem;
+
+} pd_VoteEleven_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_TupleCompactu16Compactu16_t twelfthElem;
+    pd_TupleCompactu16Compactu16_t thirteenthElem;
+    pd_TupleCompactu16Compactu16_t fourteenthElem;
+    pd_TupleCompactu16Compactu16_t fifteenthElem;
+    pd_Compactu16_t sixteenthElem;
+
+} pd_VoteFifteen_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_Compactu16_t sixthElem;
+
+} pd_VoteFive_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_Compactu16_t fifthElem;
+
+} pd_VoteFour_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_TupleCompactu16Compactu16_t twelfthElem;
+    pd_TupleCompactu16Compactu16_t thirteenthElem;
+    pd_TupleCompactu16Compactu16_t fourteenthElem;
+    pd_Compactu16_t fifteenthElem;
+
+} pd_VoteFourteen_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_Compactu16_t tenthElem;
+
+} pd_VoteNine_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_Compactu16_t secondElem;
+
+} pd_VoteOne_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_Compactu16_t eighthElem;
+
+} pd_VoteSeven_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_Compactu16_t seventhElem;
+
+} pd_VoteSix_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_TupleCompactu16Compactu16_t twelfthElem;
+    pd_TupleCompactu16Compactu16_t thirteenthElem;
+    pd_TupleCompactu16Compactu16_t fourteenthElem;
+    pd_TupleCompactu16Compactu16_t fifteenthElem;
+    pd_TupleCompactu16Compactu16_t sixteenthElem;
+    pd_Compactu16_t seventeenthElem;
+
+} pd_VoteSixteen_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_Compactu16_t eleventhElem;
+
+} pd_VoteTen_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_TupleCompactu16Compactu16_t twelfthElem;
+    pd_TupleCompactu16Compactu16_t thirteenthElem;
+    pd_Compactu16_t fourteenthElem;
+
+} pd_VoteThirteen_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_Compactu16_t fourthElem;
+
+} pd_VoteThree_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_TupleCompactu16Compactu16_t thirdElem;
+    pd_TupleCompactu16Compactu16_t fourthElem;
+    pd_TupleCompactu16Compactu16_t fifthElem;
+    pd_TupleCompactu16Compactu16_t sixthElem;
+    pd_TupleCompactu16Compactu16_t seventhElem;
+    pd_TupleCompactu16Compactu16_t eighthElem;
+    pd_TupleCompactu16Compactu16_t ninthElem;
+    pd_TupleCompactu16Compactu16_t tenthElem;
+    pd_TupleCompactu16Compactu16_t eleventhElem;
+    pd_TupleCompactu16Compactu16_t twelfthElem;
+    pd_Compactu16_t thirteenthElem;
+
+} pd_VoteTwelve_t;
+
+typedef struct {
+    pd_Compactu32_t firstElem;
+    pd_TupleCompactu16Compactu16_t secondElem;
+    pd_Compactu16_t thirdElem;
+
+} pd_VoteTwo_t;
 
 typedef struct {
     uint8_t value;
@@ -604,6 +828,102 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecTupleIdentityIdTax_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteEight_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteEleven_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteFifteen_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteFive_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteFour_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteFourteen_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteNine_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteOne_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteSeven_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteSix_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteSixteen_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteTen_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteThirteen_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteThree_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteTwelve_t;
+
+typedef struct {
+    uint64_t _len;
+    const uint8_t* _ptr;
+    uint64_t _lenBuffer;
+} pd_VecVoteTwo_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -826,6 +1146,26 @@ typedef struct {
 } pd_SecondaryKeyWithAuthAccountId_t;
 
 typedef struct {
+    pd_VecVoteOne_t voteOne;
+    pd_VecVoteTwo_t voteTwo;
+    pd_VecVoteThree_t voteThree;
+    pd_VecVoteFour_t voteFour;
+    pd_VecVoteFive_t voteFive;
+    pd_VecVoteSix_t voteSix;
+    pd_VecVoteSeven_t voteSeven;
+    pd_VecVoteEight_t voteEight;
+    pd_VecVoteNine_t voteNine;
+    pd_VecVoteTen_t voteTen;
+    pd_VecVoteEleven_t voteEleven;
+    pd_VecVoteTwelve_t voteTwelve;
+    pd_VecVoteThirteen_t voteThirteen;
+    pd_VecVoteFourteen_t voteFourteen;
+    pd_VecVoteFifteen_t voteFifteen;
+    pd_VecVoteSixteen_t voteSixteen;
+
+} pd_Solution_t;
+
+typedef struct {
     uint8_t value;
     pd_AccountId_t _signed;
 } pd_SystemOrigin_t;
@@ -851,12 +1191,6 @@ typedef struct {
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
 } pd_VecAccountId_t;
-
-typedef struct {
-    uint64_t _len;
-    const uint8_t* _ptr;
-    uint64_t _lenBuffer;
-} pd_VecCompactu32_t;
 
 typedef struct {
     uint64_t _len;
@@ -963,8 +1297,7 @@ typedef struct {
 } pd_BoxPalletsOrigin_t;
 
 typedef struct {
-    // TODO: find what type is correct for "solution"
-    pd_VecCompactu32_t solution;
+    pd_Solution_t solution;
     pd_ElectionScore_t score;
     uint32_t round;
 
@@ -1099,6 +1432,12 @@ typedef struct {
         pd_AccountId_t account;
     };
 } pd_SignatoryAccountId_t;
+
+typedef struct {
+    pd_Compactu32_t voters;
+    pd_Compactu32_t targets;
+
+} pd_SolutionOrSnapshotSize_t;
 
 typedef struct {
     pd_VecTupleAccountId32SpNposElectionsSupport_t tupleAccSupport;
@@ -1359,12 +1698,6 @@ typedef struct {
 typedef struct {
     uint8_t value;
 } pd_SlashingSwitch_t;
-
-typedef struct {
-    uint32_t voters;
-    uint32_t targets;
-
-} pd_SolutionOrSnapshotSize_t;
 
 typedef struct {
     uint64_t _len;

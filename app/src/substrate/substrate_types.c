@@ -108,6 +108,10 @@ parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_
 ///////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////
+parser_error_t _readCompactu16(parser_context_t* c, pd_Compactu16_t* v)
+{
+    return _readCompactInt(c, v);
+}
 
 parser_error_t _readAssetID(parser_context_t* c, pd_AssetID_t* v)
 {
@@ -442,6 +446,14 @@ parser_error_t _readTax(parser_context_t* c, pd_Tax_t* v)
     return parser_ok;
 }
 
+parser_error_t _readTupleCompactu16Compactu16(parser_context_t* c, pd_TupleCompactu16Compactu16_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu16(c, &v->firstElemInTuple))
+    CHECK_ERROR(_readCompactu16(c, &v->secondElemInTuple))
+    return parser_ok;
+}
+
 parser_error_t _readAssetPermissions(parser_context_t* c, pd_AssetPermissions_t* v)
 {
     CHECK_INPUT()
@@ -612,6 +624,254 @@ parser_error_t _readTupleIdentityIdTax(parser_context_t* c, pd_TupleIdentityIdTa
     CHECK_INPUT()
     CHECK_ERROR(_readIdentityId(c, &v->id))
     CHECK_ERROR(_readTax(c, &v->tax))
+    return parser_ok;
+}
+
+parser_error_t _readVoteEight(parser_context_t* c, pd_VoteEight_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->ninthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteEleven(parser_context_t* c, pd_VoteEleven_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readCompactu16(c, &v->twelfthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteFifteen(parser_context_t* c, pd_VoteFifteen_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->twelfthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifteenthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->sixteenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteFive(parser_context_t* c, pd_VoteFive_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->sixthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteFour(parser_context_t* c, pd_VoteFour_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->fifthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteFourteen(parser_context_t* c, pd_VoteFourteen_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->twelfthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourteenthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->fifteenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteNine(parser_context_t* c, pd_VoteNine_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->tenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteOne(parser_context_t* c, pd_VoteOne_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readCompactu16(c, &v->secondElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteSeven(parser_context_t* c, pd_VoteSeven_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readCompactu16(c, &v->eighthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteSix(parser_context_t* c, pd_VoteSix_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->seventhElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteSixteen(parser_context_t* c, pd_VoteSixteen_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->twelfthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifteenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixteenthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->seventeenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteTen(parser_context_t* c, pd_VoteTen_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->eleventhElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteThirteen(parser_context_t* c, pd_VoteThirteen_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->twelfthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirteenthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->fourteenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteThree(parser_context_t* c, pd_VoteThree_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readCompactu16(c, &v->fourthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteTwelve(parser_context_t* c, pd_VoteTwelve_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->thirdElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fourthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->fifthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->sixthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->seventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eighthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->ninthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->tenthElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->eleventhElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->twelfthElem))
+    CHECK_ERROR(_readCompactu16(c, &v->thirteenthElem))
+    return parser_ok;
+}
+
+parser_error_t _readVoteTwo(parser_context_t* c, pd_VoteTwo_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->firstElem))
+    CHECK_ERROR(_readTupleCompactu16Compactu16(c, &v->secondElem))
+    CHECK_ERROR(_readCompactu16(c, &v->thirdElem))
     return parser_ok;
 }
 
@@ -1266,6 +1526,28 @@ parser_error_t _readSecondaryKeyWithAuthAccountId(parser_context_t* c, pd_Second
     return parser_ok;
 }
 
+parser_error_t _readSolution(parser_context_t* c, pd_Solution_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readVecVoteOne(c, &v->voteOne))
+    CHECK_ERROR(_readVecVoteTwo(c, &v->voteTwo))
+    CHECK_ERROR(_readVecVoteThree(c, &v->voteThree))
+    CHECK_ERROR(_readVecVoteFour(c, &v->voteFour))
+    CHECK_ERROR(_readVecVoteFive(c, &v->voteFive))
+    CHECK_ERROR(_readVecVoteSix(c, &v->voteSix))
+    CHECK_ERROR(_readVecVoteSeven(c, &v->voteSeven))
+    CHECK_ERROR(_readVecVoteEight(c, &v->voteEight))
+    CHECK_ERROR(_readVecVoteNine(c, &v->voteNine))
+    CHECK_ERROR(_readVecVoteTen(c, &v->voteTen))
+    CHECK_ERROR(_readVecVoteEleven(c, &v->voteEleven))
+    CHECK_ERROR(_readVecVoteTwelve(c, &v->voteTwelve))
+    CHECK_ERROR(_readVecVoteThirteen(c, &v->voteThirteen))
+    CHECK_ERROR(_readVecVoteFourteen(c, &v->voteFourteen))
+    CHECK_ERROR(_readVecVoteFifteen(c, &v->voteFifteen))
+    CHECK_ERROR(_readVecVoteSixteen(c, &v->voteSixteen))
+    return parser_ok;
+}
+
 parser_error_t _readSystemOrigin(parser_context_t* c, pd_SystemOrigin_t* v)
 {
     CHECK_INPUT()
@@ -1491,7 +1773,7 @@ parser_error_t _readBoxPalletsOrigin(parser_context_t* c, pd_BoxPalletsOrigin_t*
 parser_error_t _readBoxRawSolutionSolutionOfMinerConfig(parser_context_t* c, pd_BoxRawSolutionSolutionOfMinerConfig_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readVecCompactu32(c, &v->solution))
+    CHECK_ERROR(_readSolution(c, &v->solution))
     CHECK_ERROR(_readElectionScore(c, &v->score))
     CHECK_ERROR(_readUInt32(c, &v->round))
     return parser_ok;
@@ -1715,6 +1997,14 @@ parser_error_t _readSignatoryAccountId(parser_context_t* c, pd_SignatoryAccountI
     return parser_ok;
 }
 
+parser_error_t _readSolutionOrSnapshotSize(parser_context_t* c, pd_SolutionOrSnapshotSize_t* v)
+{
+    CHECK_INPUT()
+    CHECK_ERROR(_readCompactu32(c, &v->voters))
+    CHECK_ERROR(_readCompactu32(c, &v->targets))
+    return parser_ok;
+}
+
 parser_error_t _readSupportsAccountId(parser_context_t* c, pd_SupportsAccountId_t* v)
 {
     CHECK_INPUT()
@@ -1929,14 +2219,6 @@ parser_error_t _readSlashingSwitch(parser_context_t* c, pd_SlashingSwitch_t* v)
     return parser_ok;
 }
 
-parser_error_t _readSolutionOrSnapshotSize(parser_context_t* c, pd_SolutionOrSnapshotSize_t* v)
-{
-    CHECK_INPUT()
-    CHECK_ERROR(_readUInt32(c, &v->voters))
-    CHECK_ERROR(_readUInt32(c, &v->targets))
-    return parser_ok;
-}
-
 parser_error_t _readVenueDetails(parser_context_t* c, pd_VenueDetails_t* v)
 {
     CHECK_INPUT()
@@ -2015,12 +2297,72 @@ parser_error_t _readVecTupleIdentityIdTax(parser_context_t* c, pd_VecTupleIdenti
     GEN_DEF_READVECTOR(TupleIdentityIdTax)
 }
 
-parser_error_t _readVecAccountId(parser_context_t* c, pd_VecAccountId_t* v) {
-    GEN_DEF_READVECTOR(AccountId)
+parser_error_t _readVecVoteEight(parser_context_t* c, pd_VecVoteEight_t* v) {
+    GEN_DEF_READVECTOR(VoteEight)
 }
 
-parser_error_t _readVecCompactu32(parser_context_t* c, pd_VecCompactu32_t* v) {
-    GEN_DEF_READVECTOR(Compactu32)
+parser_error_t _readVecVoteEleven(parser_context_t* c, pd_VecVoteEleven_t* v) {
+    GEN_DEF_READVECTOR(VoteEleven)
+}
+
+parser_error_t _readVecVoteFifteen(parser_context_t* c, pd_VecVoteFifteen_t* v) {
+    GEN_DEF_READVECTOR(VoteFifteen)
+}
+
+parser_error_t _readVecVoteFive(parser_context_t* c, pd_VecVoteFive_t* v) {
+    GEN_DEF_READVECTOR(VoteFive)
+}
+
+parser_error_t _readVecVoteFour(parser_context_t* c, pd_VecVoteFour_t* v) {
+    GEN_DEF_READVECTOR(VoteFour)
+}
+
+parser_error_t _readVecVoteFourteen(parser_context_t* c, pd_VecVoteFourteen_t* v) {
+    GEN_DEF_READVECTOR(VoteFourteen)
+}
+
+parser_error_t _readVecVoteNine(parser_context_t* c, pd_VecVoteNine_t* v) {
+    GEN_DEF_READVECTOR(VoteNine)
+}
+
+parser_error_t _readVecVoteOne(parser_context_t* c, pd_VecVoteOne_t* v) {
+    GEN_DEF_READVECTOR(VoteOne)
+}
+
+parser_error_t _readVecVoteSeven(parser_context_t* c, pd_VecVoteSeven_t* v) {
+    GEN_DEF_READVECTOR(VoteSeven)
+}
+
+parser_error_t _readVecVoteSix(parser_context_t* c, pd_VecVoteSix_t* v) {
+    GEN_DEF_READVECTOR(VoteSix)
+}
+
+parser_error_t _readVecVoteSixteen(parser_context_t* c, pd_VecVoteSixteen_t* v) {
+    GEN_DEF_READVECTOR(VoteSixteen)
+}
+
+parser_error_t _readVecVoteTen(parser_context_t* c, pd_VecVoteTen_t* v) {
+    GEN_DEF_READVECTOR(VoteTen)
+}
+
+parser_error_t _readVecVoteThirteen(parser_context_t* c, pd_VecVoteThirteen_t* v) {
+    GEN_DEF_READVECTOR(VoteThirteen)
+}
+
+parser_error_t _readVecVoteThree(parser_context_t* c, pd_VecVoteThree_t* v) {
+    GEN_DEF_READVECTOR(VoteThree)
+}
+
+parser_error_t _readVecVoteTwelve(parser_context_t* c, pd_VecVoteTwelve_t* v) {
+    GEN_DEF_READVECTOR(VoteTwelve)
+}
+
+parser_error_t _readVecVoteTwo(parser_context_t* c, pd_VecVoteTwo_t* v) {
+    GEN_DEF_READVECTOR(VoteTwo)
+}
+
+parser_error_t _readVecAccountId(parser_context_t* c, pd_VecAccountId_t* v) {
+    GEN_DEF_READVECTOR(AccountId)
 }
 
 parser_error_t _readVecMotion(parser_context_t* c, pd_VecMotion_t* v) {
@@ -2569,6 +2911,16 @@ parser_error_t _toStringCompactu64(
 ///////////////////////////////////
 ///////////////////////////////////
 ///////////////////////////////////
+
+parser_error_t _toStringCompactu16(
+    const pd_Compactu16_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
+}
 
 parser_error_t _toStringAssetID(
     const pd_AssetID_t* v,
@@ -3386,6 +3738,43 @@ parser_error_t _toStringTax(
     return parser_ok;
 }
 
+parser_error_t _toStringTupleCompactu16Compactu16(
+    const pd_TupleCompactu16Compactu16_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[2] = { 0 };
+    CHECK_ERROR(_toStringCompactu16(&v->firstElemInTuple, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringCompactu16(&v->secondElemInTuple, outValue, outValueLen, 0, &pages[1]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu16(&v->firstElemInTuple, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringCompactu16(&v->secondElemInTuple, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringAssetPermissions(
     const pd_AssetPermissions_t* v,
     char* outValue,
@@ -3774,6 +4163,1438 @@ parser_error_t _toStringTupleIdentityIdTax(
 
     if (pageIdx < pages[1]) {
         CHECK_ERROR(_toStringTax(&v->tax, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteEight(
+    const pd_VoteEight_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[9] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringCompactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringCompactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteEleven(
+    const pd_VoteEleven_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[12] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringCompactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringCompactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteFifteen(
+    const pd_VoteFifteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[16] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, 0, &pages[12]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, 0, &pages[13]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifteenthElem, outValue, outValueLen, 0, &pages[14]))
+    CHECK_ERROR(_toStringCompactu16(&v->sixteenthElem, outValue, outValueLen, 0, &pages[15]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+    pageIdx -= pages[12];
+
+    if (pageIdx < pages[13]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, pageIdx, &pages[13]))
+        return parser_ok;
+    }
+    pageIdx -= pages[13];
+
+    if (pageIdx < pages[14]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifteenthElem, outValue, outValueLen, pageIdx, &pages[14]))
+        return parser_ok;
+    }
+    pageIdx -= pages[14];
+
+    if (pageIdx < pages[15]) {
+        CHECK_ERROR(_toStringCompactu16(&v->sixteenthElem, outValue, outValueLen, pageIdx, &pages[15]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteFive(
+    const pd_VoteFive_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[6] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringCompactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringCompactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteFour(
+    const pd_VoteFour_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[5] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringCompactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringCompactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteFourteen(
+    const pd_VoteFourteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[15] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, 0, &pages[12]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, 0, &pages[13]))
+    CHECK_ERROR(_toStringCompactu16(&v->fifteenthElem, outValue, outValueLen, 0, &pages[14]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+    pageIdx -= pages[12];
+
+    if (pageIdx < pages[13]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, pageIdx, &pages[13]))
+        return parser_ok;
+    }
+    pageIdx -= pages[13];
+
+    if (pageIdx < pages[14]) {
+        CHECK_ERROR(_toStringCompactu16(&v->fifteenthElem, outValue, outValueLen, pageIdx, &pages[14]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteNine(
+    const pd_VoteNine_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[10] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringCompactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringCompactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteOne(
+    const pd_VoteOne_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[2] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringCompactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringCompactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteSeven(
+    const pd_VoteSeven_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[8] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringCompactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringCompactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteSix(
+    const pd_VoteSix_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[7] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringCompactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringCompactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteSixteen(
+    const pd_VoteSixteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[17] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, 0, &pages[12]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, 0, &pages[13]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifteenthElem, outValue, outValueLen, 0, &pages[14]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixteenthElem, outValue, outValueLen, 0, &pages[15]))
+    CHECK_ERROR(_toStringCompactu16(&v->seventeenthElem, outValue, outValueLen, 0, &pages[16]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+    pageIdx -= pages[12];
+
+    if (pageIdx < pages[13]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourteenthElem, outValue, outValueLen, pageIdx, &pages[13]))
+        return parser_ok;
+    }
+    pageIdx -= pages[13];
+
+    if (pageIdx < pages[14]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifteenthElem, outValue, outValueLen, pageIdx, &pages[14]))
+        return parser_ok;
+    }
+    pageIdx -= pages[14];
+
+    if (pageIdx < pages[15]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixteenthElem, outValue, outValueLen, pageIdx, &pages[15]))
+        return parser_ok;
+    }
+    pageIdx -= pages[15];
+
+    if (pageIdx < pages[16]) {
+        CHECK_ERROR(_toStringCompactu16(&v->seventeenthElem, outValue, outValueLen, pageIdx, &pages[16]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteTen(
+    const pd_VoteTen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[11] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringCompactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringCompactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteThirteen(
+    const pd_VoteThirteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[14] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, 0, &pages[12]))
+    CHECK_ERROR(_toStringCompactu16(&v->fourteenthElem, outValue, outValueLen, 0, &pages[13]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirteenthElem, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+    pageIdx -= pages[12];
+
+    if (pageIdx < pages[13]) {
+        CHECK_ERROR(_toStringCompactu16(&v->fourteenthElem, outValue, outValueLen, pageIdx, &pages[13]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteThree(
+    const pd_VoteThree_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[4] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringCompactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringCompactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteTwelve(
+    const pd_VoteTwelve_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[13] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringCompactu16(&v->thirteenthElem, outValue, outValueLen, 0, &pages[12]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fourthElem, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->fifthElem, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->sixthElem, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->seventhElem, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eighthElem, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->ninthElem, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->tenthElem, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->eleventhElem, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->twelfthElem, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringCompactu16(&v->thirteenthElem, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
+parser_error_t _toStringVoteTwo(
+    const pd_VoteTwo_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[3] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringCompactu16(&v->thirdElem, outValue, outValueLen, 0, &pages[2]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->firstElem, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringTupleCompactu16Compactu16(&v->secondElem, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringCompactu16(&v->thirdElem, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
 
@@ -5643,6 +7464,141 @@ parser_error_t _toStringSecondaryKeyWithAuthAccountId(
     return parser_display_idx_out_of_range;
 }
 
+parser_error_t _toStringSolution(
+    const pd_Solution_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[16] = { 0 };
+    CHECK_ERROR(_toStringVecVoteOne(&v->voteOne, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringVecVoteTwo(&v->voteTwo, outValue, outValueLen, 0, &pages[1]))
+    CHECK_ERROR(_toStringVecVoteThree(&v->voteThree, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringVecVoteFour(&v->voteFour, outValue, outValueLen, 0, &pages[3]))
+    CHECK_ERROR(_toStringVecVoteFive(&v->voteFive, outValue, outValueLen, 0, &pages[4]))
+    CHECK_ERROR(_toStringVecVoteSix(&v->voteSix, outValue, outValueLen, 0, &pages[5]))
+    CHECK_ERROR(_toStringVecVoteSeven(&v->voteSeven, outValue, outValueLen, 0, &pages[6]))
+    CHECK_ERROR(_toStringVecVoteEight(&v->voteEight, outValue, outValueLen, 0, &pages[7]))
+    CHECK_ERROR(_toStringVecVoteNine(&v->voteNine, outValue, outValueLen, 0, &pages[8]))
+    CHECK_ERROR(_toStringVecVoteTen(&v->voteTen, outValue, outValueLen, 0, &pages[9]))
+    CHECK_ERROR(_toStringVecVoteEleven(&v->voteEleven, outValue, outValueLen, 0, &pages[10]))
+    CHECK_ERROR(_toStringVecVoteTwelve(&v->voteTwelve, outValue, outValueLen, 0, &pages[11]))
+    CHECK_ERROR(_toStringVecVoteThirteen(&v->voteThirteen, outValue, outValueLen, 0, &pages[12]))
+    CHECK_ERROR(_toStringVecVoteFourteen(&v->voteFourteen, outValue, outValueLen, 0, &pages[13]))
+    CHECK_ERROR(_toStringVecVoteFifteen(&v->voteFifteen, outValue, outValueLen, 0, &pages[14]))
+    CHECK_ERROR(_toStringVecVoteSixteen(&v->voteSixteen, outValue, outValueLen, 0, &pages[15]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringVecVoteOne(&v->voteOne, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringVecVoteTwo(&v->voteTwo, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+    pageIdx -= pages[1];
+
+    if (pageIdx < pages[2]) {
+        CHECK_ERROR(_toStringVecVoteThree(&v->voteThree, outValue, outValueLen, pageIdx, &pages[2]))
+        return parser_ok;
+    }
+    pageIdx -= pages[2];
+
+    if (pageIdx < pages[3]) {
+        CHECK_ERROR(_toStringVecVoteFour(&v->voteFour, outValue, outValueLen, pageIdx, &pages[3]))
+        return parser_ok;
+    }
+    pageIdx -= pages[3];
+
+    if (pageIdx < pages[4]) {
+        CHECK_ERROR(_toStringVecVoteFive(&v->voteFive, outValue, outValueLen, pageIdx, &pages[4]))
+        return parser_ok;
+    }
+    pageIdx -= pages[4];
+
+    if (pageIdx < pages[5]) {
+        CHECK_ERROR(_toStringVecVoteSix(&v->voteSix, outValue, outValueLen, pageIdx, &pages[5]))
+        return parser_ok;
+    }
+    pageIdx -= pages[5];
+
+    if (pageIdx < pages[6]) {
+        CHECK_ERROR(_toStringVecVoteSeven(&v->voteSeven, outValue, outValueLen, pageIdx, &pages[6]))
+        return parser_ok;
+    }
+    pageIdx -= pages[6];
+
+    if (pageIdx < pages[7]) {
+        CHECK_ERROR(_toStringVecVoteEight(&v->voteEight, outValue, outValueLen, pageIdx, &pages[7]))
+        return parser_ok;
+    }
+    pageIdx -= pages[7];
+
+    if (pageIdx < pages[8]) {
+        CHECK_ERROR(_toStringVecVoteNine(&v->voteNine, outValue, outValueLen, pageIdx, &pages[8]))
+        return parser_ok;
+    }
+    pageIdx -= pages[8];
+
+    if (pageIdx < pages[9]) {
+        CHECK_ERROR(_toStringVecVoteTen(&v->voteTen, outValue, outValueLen, pageIdx, &pages[9]))
+        return parser_ok;
+    }
+    pageIdx -= pages[9];
+
+    if (pageIdx < pages[10]) {
+        CHECK_ERROR(_toStringVecVoteEleven(&v->voteEleven, outValue, outValueLen, pageIdx, &pages[10]))
+        return parser_ok;
+    }
+    pageIdx -= pages[10];
+
+    if (pageIdx < pages[11]) {
+        CHECK_ERROR(_toStringVecVoteTwelve(&v->voteTwelve, outValue, outValueLen, pageIdx, &pages[11]))
+        return parser_ok;
+    }
+    pageIdx -= pages[11];
+
+    if (pageIdx < pages[12]) {
+        CHECK_ERROR(_toStringVecVoteThirteen(&v->voteThirteen, outValue, outValueLen, pageIdx, &pages[12]))
+        return parser_ok;
+    }
+    pageIdx -= pages[12];
+
+    if (pageIdx < pages[13]) {
+        CHECK_ERROR(_toStringVecVoteFourteen(&v->voteFourteen, outValue, outValueLen, pageIdx, &pages[13]))
+        return parser_ok;
+    }
+    pageIdx -= pages[13];
+
+    if (pageIdx < pages[14]) {
+        CHECK_ERROR(_toStringVecVoteFifteen(&v->voteFifteen, outValue, outValueLen, pageIdx, &pages[14]))
+        return parser_ok;
+    }
+    pageIdx -= pages[14];
+
+    if (pageIdx < pages[15]) {
+        CHECK_ERROR(_toStringVecVoteSixteen(&v->voteSixteen, outValue, outValueLen, pageIdx, &pages[15]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringSystemOrigin(
     const pd_SystemOrigin_t* v,
     char* outValue,
@@ -6280,7 +8236,7 @@ parser_error_t _toStringBoxRawSolutionSolutionOfMinerConfig(
 
     // First measure number of pages
     uint8_t pages[3] = { 0 };
-    CHECK_ERROR(_toStringVecCompactu32(&v->solution, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringSolution(&v->solution, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringElectionScore(&v->score, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringu32(&v->round, outValue, outValueLen, 0, &pages[2]))
 
@@ -6294,7 +8250,7 @@ parser_error_t _toStringBoxRawSolutionSolutionOfMinerConfig(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringVecCompactu32(&v->solution, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringSolution(&v->solution, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -6750,6 +8706,43 @@ parser_error_t _toStringSignatoryAccountId(
     return parser_ok;
 }
 
+parser_error_t _toStringSolutionOrSnapshotSize(
+    const pd_SolutionOrSnapshotSize_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    // First measure number of pages
+    uint8_t pages[2] = { 0 };
+    CHECK_ERROR(_toStringCompactu32(&v->voters, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringCompactu32(&v->targets, outValue, outValueLen, 0, &pages[1]))
+
+    *pageCount = 0;
+    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
+        *pageCount += pages[i];
+    }
+
+    if (pageIdx >= *pageCount) {
+        return parser_display_idx_out_of_range;
+    }
+
+    if (pageIdx < pages[0]) {
+        CHECK_ERROR(_toStringCompactu32(&v->voters, outValue, outValueLen, pageIdx, &pages[0]))
+        return parser_ok;
+    }
+    pageIdx -= pages[0];
+
+    if (pageIdx < pages[1]) {
+        CHECK_ERROR(_toStringCompactu32(&v->targets, outValue, outValueLen, pageIdx, &pages[1]))
+        return parser_ok;
+    }
+
+    return parser_display_idx_out_of_range;
+}
+
 parser_error_t _toStringSupportsAccountId(
     const pd_SupportsAccountId_t* v,
     char* outValue,
@@ -7194,43 +9187,6 @@ parser_error_t _toStringSlashingSwitch(
     return parser_ok;
 }
 
-parser_error_t _toStringSolutionOrSnapshotSize(
-    const pd_SolutionOrSnapshotSize_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-
-    // First measure number of pages
-    uint8_t pages[2] = { 0 };
-    CHECK_ERROR(_toStringu32(&v->voters, outValue, outValueLen, 0, &pages[0]))
-    CHECK_ERROR(_toStringu32(&v->targets, outValue, outValueLen, 0, &pages[1]))
-
-    *pageCount = 0;
-    for (uint8_t i = 0; i < (uint8_t)sizeof(pages); i++) {
-        *pageCount += pages[i];
-    }
-
-    if (pageIdx >= *pageCount) {
-        return parser_display_idx_out_of_range;
-    }
-
-    if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringu32(&v->voters, outValue, outValueLen, pageIdx, &pages[0]))
-        return parser_ok;
-    }
-    pageIdx -= pages[0];
-
-    if (pageIdx < pages[1]) {
-        CHECK_ERROR(_toStringu32(&v->targets, outValue, outValueLen, pageIdx, &pages[1]))
-        return parser_ok;
-    }
-
-    return parser_display_idx_out_of_range;
-}
-
 parser_error_t _toStringVenueDetails(
     const pd_VenueDetails_t* v,
     char* outValue,
@@ -7412,6 +9368,166 @@ parser_error_t _toStringVecTupleIdentityIdTax(
     GEN_DEF_TOSTRING_VECTOR(TupleIdentityIdTax);
 }
 
+parser_error_t _toStringVecVoteEight(
+    const pd_VecVoteEight_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteEight);
+}
+
+parser_error_t _toStringVecVoteEleven(
+    const pd_VecVoteEleven_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteEleven);
+}
+
+parser_error_t _toStringVecVoteFifteen(
+    const pd_VecVoteFifteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteFifteen);
+}
+
+parser_error_t _toStringVecVoteFive(
+    const pd_VecVoteFive_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteFive);
+}
+
+parser_error_t _toStringVecVoteFour(
+    const pd_VecVoteFour_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteFour);
+}
+
+parser_error_t _toStringVecVoteFourteen(
+    const pd_VecVoteFourteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteFourteen);
+}
+
+parser_error_t _toStringVecVoteNine(
+    const pd_VecVoteNine_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteNine);
+}
+
+parser_error_t _toStringVecVoteOne(
+    const pd_VecVoteOne_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteOne);
+}
+
+parser_error_t _toStringVecVoteSeven(
+    const pd_VecVoteSeven_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteSeven);
+}
+
+parser_error_t _toStringVecVoteSix(
+    const pd_VecVoteSix_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteSix);
+}
+
+parser_error_t _toStringVecVoteSixteen(
+    const pd_VecVoteSixteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteSixteen);
+}
+
+parser_error_t _toStringVecVoteTen(
+    const pd_VecVoteTen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteTen);
+}
+
+parser_error_t _toStringVecVoteThirteen(
+    const pd_VecVoteThirteen_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteThirteen);
+}
+
+parser_error_t _toStringVecVoteThree(
+    const pd_VecVoteThree_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteThree);
+}
+
+parser_error_t _toStringVecVoteTwelve(
+    const pd_VecVoteTwelve_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteTwelve);
+}
+
+parser_error_t _toStringVecVoteTwo(
+    const pd_VecVoteTwo_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    GEN_DEF_TOSTRING_VECTOR(VoteTwo);
+}
+
 parser_error_t _toStringVecAccountId(
     const pd_VecAccountId_t* v,
     char* outValue,
@@ -7420,16 +9536,6 @@ parser_error_t _toStringVecAccountId(
     uint8_t* pageCount)
 {
     GEN_DEF_TOSTRING_VECTOR(AccountId);
-}
-
-parser_error_t _toStringVecCompactu32(
-    const pd_VecCompactu32_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    GEN_DEF_TOSTRING_VECTOR(Compactu32);
 }
 
 parser_error_t _toStringVecMotion(
