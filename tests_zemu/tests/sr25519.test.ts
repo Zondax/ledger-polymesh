@@ -34,7 +34,7 @@ const defaultOptions = {
   X11: false,
 }
 
-const expected_address = '2HM5HBpdm3nuMze95qGWPYNypPvhtTbxDwCdLCBXx5zadMSS'
+const expected_address = '5Gxs2x4jHn2i3kn4FofDiaMjCxDXXxVZt9pZnhUZqjqD4ze9'
 const expected_pk = 'd8b89698f0deb2b2023ec1dd1a2ca06f01c4db6114648adb02e18dfd12dae77c'
 
 jest.setTimeout(180000)
