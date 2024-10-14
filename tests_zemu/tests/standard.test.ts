@@ -69,9 +69,9 @@ describe('Standard', function () {
       expect(resp).toHaveProperty('minor')
       expect(resp).toHaveProperty('patch')
 
-      expect(resp.major).toEqual(104)
-      expect(resp.minor).toEqual(63001)
-      expect(resp.patch).toEqual(0)
+      expect(resp.major).toEqual(107)
+      expect(resp.minor).toEqual(7000)
+      expect(resp.patch).toEqual(1)
     } finally {
       await sim.close()
     }

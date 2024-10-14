@@ -351,8 +351,7 @@ parser_error_t _checkVersions(parser_context_t *c) {
     transactionVersion += (uint32_t) p[2] << 16u;
     transactionVersion += (uint32_t) p[3] << 24u;
 
-    if (transactionVersion != (SUPPORTED_TX_VERSION_CURRENT) &&
-        transactionVersion != (SUPPORTED_TX_VERSION_PREVIOUS)) {
+    if (transactionVersion != SUPPORTED_TX_VERSION_CURRENT) {
         return parser_tx_version_not_supported;
     }
 
