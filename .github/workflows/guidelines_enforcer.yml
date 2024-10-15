@@ -19,6 +19,27 @@ on:
   pull_request:
 
 jobs:
+  setup_and_install:
+    name: Setup Python and Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          make deps
+
   guidelines_enforcer:
     name: Call Ledger guidelines_enforcer
+    needs: setup_and_install
     uses: LedgerHQ/ledger-app-workflows/.github/workflows/reusable_guidelines_enforcer.yml@v1
+    with:
+      python-version: '3.10'
