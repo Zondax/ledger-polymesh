@@ -24,8 +24,6 @@
 #include "substrate_types.h"
 #include "substrate_dispatch.h"
 
-#define SUPPORTED_SPEC_VERSION_V4 6003001
-
 parser_error_t parser_init_context(parser_context_t *ctx,
                                    const uint8_t *buffer,
                                    uint16_t bufferSize) {
@@ -353,8 +351,7 @@ parser_error_t _checkVersions(parser_context_t *c) {
     transactionVersion += (uint32_t) p[2] << 16u;
     transactionVersion += (uint32_t) p[3] << 24u;
 
-    if (transactionVersion != (SUPPORTED_TX_VERSION_CURRENT) &&
-        transactionVersion != (SUPPORTED_SPEC_VERSION_V4)) {
+    if (transactionVersion != SUPPORTED_TX_VERSION_CURRENT) {
         return parser_tx_version_not_supported;
     }
 

@@ -27,7 +27,8 @@ jobs:
           submodules: true
       - name: Install deps
         run: |
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+          python -m venv venv
+          source venv/bin/activate
           make deps
       - run: make cpp_test
 
