@@ -71,12 +71,12 @@ extern "C" {
 #ifndef TARGET_NANOS
 #define PD_CALL_ASSET_ADD_MANDATORY_MEDIATORS_V7 29
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t mediators;
 } pd_asset_add_mandatory_mediators_V7_t;
 #define PD_CALL_ASSET_REMOVE_MANDATORY_MEDIATORS_V7 30
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_BoundedBTreeSetIdentityIdMaxAssetMediators_t mediators;
 } pd_asset_remove_mandatory_mediators_V7_t;
 #define PD_CALL_PORTFOLIO_ALLOW_IDENTITY_TO_CREATE_PORTFOLIOS_V7 8
@@ -189,7 +189,7 @@ typedef struct {
 
 #define PD_CALL_ASSET_CONTROLLER_TRANSFER_V7 14
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_BalanceNoSymbol_t amount;
     pd_PortfolioId_t from_portfolio;
 } pd_asset_controller_transfer_V7_t;
@@ -210,7 +210,7 @@ typedef struct {
 
 #define PD_CALL_ASSET_SET_ASSET_METADATA_V7 17
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataKey_t key;
     pd_AssetMetadataValue_t value;
     pd_OptionAssetMetadataValueDetailMoment_t detail;
@@ -218,14 +218,14 @@ typedef struct {
 
 #define PD_CALL_ASSET_SET_ASSET_METADATA_DETAILS_V7 18
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataKey_t key;
     pd_AssetMetadataValueDetailMoment_t detail;
 } pd_asset_set_asset_metadata_details_V7_t;
 
 #define PD_CALL_ASSET_REGISTER_AND_SET_LOCAL_ASSET_METADATA_V7 19
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataName_t name;
     pd_AssetMetadataSpec_t spec;
     pd_AssetMetadataValue_t value;
@@ -234,7 +234,7 @@ typedef struct {
 
 #define PD_CALL_ASSET_REGISTER_ASSET_METADATA_LOCAL_TYPE_V7 20
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataName_t name;
     pd_AssetMetadataSpec_t spec;
 } pd_asset_register_asset_metadata_local_type_V7_t;
@@ -247,47 +247,53 @@ typedef struct {
 
 #define PD_CALL_ASSET_UPDATE_ASSET_TYPE_V7 22
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetType_t asset_type;
 } pd_asset_update_asset_type_V7_t;
 
 #define PD_CALL_ASSET_REMOVE_LOCAL_METADATA_KEY_V7 23
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataLocalKey_t local_key;
 } pd_asset_remove_local_metadata_key_V7_t;
 
 #define PD_CALL_ASSET_REMOVE_METADATA_VALUE_V7 24
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetMetadataKey_t metadata_key;
 } pd_asset_remove_metadata_value_V7_t;
 
 #define PD_CALL_ASSET_EXEMPT_ASSET_AFFIRMATION_V7 25
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_exempt_asset_affirmation_V7_t;
 
 #define PD_CALL_ASSET_REMOVE_ASSET_AFFIRMATION_EXEMPTION_V7 26
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_remove_asset_affirmation_exemption_V7_t;
 
 #define PD_CALL_ASSET_PRE_APPROVE_ASSET_V7 27
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_pre_approve_asset_V7_t;
 
 #define PD_CALL_ASSET_REMOVE_ASSET_PRE_APPROVAL_V7 28
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_remove_asset_pre_approval_V7_t;
 
 #define PD_CALL_ASSET_LINK_TICKER_TO_ASSET_ID_V7 31
 typedef struct {
     pd_Ticker_t ticker;
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_link_ticker_to_asset_id_V7_t;
+
+#define PD_CALL_ASSET_UNLINK_TICKER_FROM_ASSET_ID_V7 32
+typedef struct {
+    pd_Ticker_t ticker;
+    pd_AssetId_t asset_id;
+} pd_asset_unlink_ticker_from_asset_id_V7_t;
 
 #define PD_CALL_PORTFOLIO_QUIT_PORTFOLIO_CUSTODY_V7 3
 typedef struct {
@@ -301,13 +307,13 @@ typedef struct {
 
 #define PD_CALL_PORTFOLIO_PRE_APPROVE_PORTFOLIO_V7 6
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_PortfolioId_t portfolio_id;
 } pd_portfolio_pre_approve_portfolio_V7_t;
 
 #define PD_CALL_PORTFOLIO_REMOVE_PORTFOLIO_PRE_APPROVAL_V7 7
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_PortfolioId_t portfolio_id;
 } pd_portfolio_remove_portfolio_pre_approval_V7_t;
 
@@ -343,9 +349,9 @@ typedef struct {
 #define PD_CALL_STO_CREATE_FUNDRAISER_V7 0
 typedef struct {
     pd_PortfolioId_t offering_portfolio;
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_PortfolioId_t raising_portfolio;
-    pd_AssetID_t raising_asset;
+    pd_AssetId_t raising_asset;
     pd_VecPriceTier_t tiers;
     pd_VenueId_t venue_id;
     pd_OptionMoment_t start;
@@ -358,7 +364,7 @@ typedef struct {
 typedef struct {
     pd_PortfolioId_t investment_portfolio;
     pd_PortfolioId_t funding_portfolio;
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_FundraiserId_t id;
     pd_BalanceNoSymbol_t purchase_amount;
     pd_OptionBalance_t max_price;
@@ -367,19 +373,19 @@ typedef struct {
 
 #define PD_CALL_STO_FREEZE_FUNDRAISER_V7 2
 typedef struct {
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_FundraiserId_t id;
 } pd_sto_freeze_fundraiser_V7_t;
 
 #define PD_CALL_STO_UNFREEZE_FUNDRAISER_V7 3
 typedef struct {
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_FundraiserId_t id;
 } pd_sto_unfreeze_fundraiser_V7_t;
 
 #define PD_CALL_STO_MODIFY_FUNDRAISER_WINDOW_V7 4
 typedef struct {
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_FundraiserId_t id;
     pd_Moment_t start;
     pd_OptionMoment_t end;
@@ -387,25 +393,9 @@ typedef struct {
 
 #define PD_CALL_STO_STOP_V7 5
 typedef struct {
-    pd_AssetID_t offering_asset;
+    pd_AssetId_t offering_asset;
     pd_FundraiserId_t id;
 } pd_sto_stop_V7_t;
-
-#define PD_CALL_UTILITY_BATCH_ALL_V7 2
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_all_V7_t;
-
-#define PD_CALL_UTILITY_DISPATCH_AS_V7 3
-typedef struct {
-    pd_BoxPalletsOrigin_t as_origin;
-    pd_Call_t call;
-} pd_utility_dispatch_as_V7_t;
-
-#define PD_CALL_UTILITY_FORCE_BATCH_V7 4
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_force_batch_V7_t;
 
 #define PD_CALL_UTILITY_WITH_WEIGHT_V7 5
 typedef struct {
@@ -413,38 +403,33 @@ typedef struct {
     pd_Weight_t weight;
 } pd_utility_with_weight_V7_t;
 
-#define PD_CALL_UTILITY_BATCH_OLD_V7 6
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_old_V7_t;
-
 #define PD_CALL_EXTERNALAGENTS_CREATE_GROUP_V7 0
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ExtrinsicPermissions_t perms;
 } pd_externalagents_create_group_V7_t;
 
 #define PD_CALL_EXTERNALAGENTS_SET_GROUP_PERMISSIONS_V7 1
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AGId_t id;
     pd_ExtrinsicPermissions_t perms;
 } pd_externalagents_set_group_permissions_V7_t;
 
 #define PD_CALL_EXTERNALAGENTS_REMOVE_AGENT_V7 2
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_IdentityId_t agent;
 } pd_externalagents_remove_agent_V7_t;
 
 #define PD_CALL_EXTERNALAGENTS_ABDICATE_V7 3
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_externalagents_abdicate_V7_t;
 
 #define PD_CALL_EXTERNALAGENTS_CHANGE_GROUP_V7 4
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_IdentityId_t agent;
     pd_AgentGroup_t group;
 } pd_externalagents_change_group_V7_t;
@@ -456,7 +441,7 @@ typedef struct {
 
 #define PD_CALL_EXTERNALAGENTS_CREATE_GROUP_AND_ADD_AUTH_V7 6
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ExtrinsicPermissions_t perms;
     pd_IdentityId_t target;
     pd_OptionMoment_t expiry;
@@ -464,7 +449,7 @@ typedef struct {
 
 #define PD_CALL_EXTERNALAGENTS_CREATE_AND_CHANGE_CUSTOM_GROUP_V7 7
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ExtrinsicPermissions_t perms;
     pd_IdentityId_t agent;
 } pd_externalagents_create_and_change_custom_group_V7_t;
@@ -636,21 +621,21 @@ typedef struct {
 
 #define PD_CALL_NFT_CREATE_NFT_COLLECTION_V7 0
 typedef struct {
-    pd_OptionAssetID_t asset_id;
+    pd_OptionAssetId_t asset_id;
     pd_OptionNonFungibleType_t nft_type;
     pd_VecAssetMetadataKey_t collection_keys;
 } pd_nft_create_nft_collection_V7_t;
 
 #define PD_CALL_NFT_ISSUE_NFT_V7 1
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecNFTMetadataAttribute_t nft_metadata_attributes;
     pd_PortfolioKind_t portfolio_kind;
 } pd_nft_issue_nft_V7_t;
 
 #define PD_CALL_NFT_REDEEM_NFT_V7 2
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_NFTId_t nft_id;
     pd_PortfolioKind_t portfolio_kind;
     pd_Optionu8_t number_of_keys;
@@ -725,6 +710,7 @@ typedef union {
     pd_asset_pre_approve_asset_V7_t asset_pre_approve_asset_V7;
     pd_asset_remove_asset_pre_approval_V7_t asset_remove_asset_pre_approval_V7;
     pd_asset_link_ticker_to_asset_id_V7_t asset_link_ticker_to_asset_id_V7;
+    pd_asset_unlink_ticker_from_asset_id_V7_t asset_unlink_ticker_from_asset_id_V7;
     pd_portfolio_quit_portfolio_custody_V7_t portfolio_quit_portfolio_custody_V7;
     pd_portfolio_accept_portfolio_custody_V7_t portfolio_accept_portfolio_custody_V7;
     pd_portfolio_pre_approve_portfolio_V7_t portfolio_pre_approve_portfolio_V7;
@@ -739,11 +725,7 @@ typedef union {
     pd_sto_unfreeze_fundraiser_V7_t sto_unfreeze_fundraiser_V7;
     pd_sto_modify_fundraiser_window_V7_t sto_modify_fundraiser_window_V7;
     pd_sto_stop_V7_t sto_stop_V7;
-    pd_utility_batch_all_V7_t utility_batch_all_V7;
-    pd_utility_dispatch_as_V7_t utility_dispatch_as_V7;
-    pd_utility_force_batch_V7_t utility_force_batch_V7;
     pd_utility_with_weight_V7_t utility_with_weight_V7;
-    pd_utility_batch_old_V7_t utility_batch_old_V7;
     pd_externalagents_create_group_V7_t externalagents_create_group_V7;
     pd_externalagents_set_group_permissions_V7_t externalagents_set_group_permissions_V7;
     pd_externalagents_remove_agent_V7_t externalagents_remove_agent_V7;
@@ -943,16 +925,6 @@ typedef struct {
     pd_VecCall_t calls;
 } pd_utility_batch_V7_t;
 
-#define PD_CALL_UTILITY_BATCH_ATOMIC_V7 7
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_atomic_V7_t;
-
-#define PD_CALL_UTILITY_BATCH_OPTIMISTIC_V7 8
-typedef struct {
-    pd_VecCall_t calls;
-} pd_utility_batch_optimistic_V7_t;
-
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
 #define PD_CALL_CORPORATEACTION_SET_MAX_DETAILS_LENGTH_V7 0
@@ -961,23 +933,23 @@ typedef struct {
 } pd_corporateaction_set_max_details_length_V7_t;
 #define PD_CALL_CORPORATEACTION_SET_DEFAULT_TARGETS_V7 1
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_TargetIdentities_t targets;
 } pd_corporateaction_set_default_targets_V7_t;
 #define PD_CALL_CORPORATEACTION_SET_DEFAULT_WITHHOLDING_TAX_V7 2
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_Tax_t tax;
 } pd_corporateaction_set_default_withholding_tax_V7_t;
 #define PD_CALL_CORPORATEACTION_SET_DID_WITHHOLDING_TAX_V7 3
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_IdentityId_t taxed_did;
     pd_OptionTax_t tax;
 } pd_corporateaction_set_did_withholding_tax_V7_t;
 #define PD_CALL_CORPORATEACTION_INITIATE_CORPORATE_ACTION_V7 4
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_CAKind_t kind;
     pd_Moment_t decl_date;
     pd_OptionRecordDateSpec_t record_date;
@@ -1004,7 +976,7 @@ typedef struct {
 typedef struct {
     pd_InitiateCorporateActionArgs_t ca_args;
     pd_OptionPortfolioNumber_t portfolio;
-    pd_AssetID_t currency;
+    pd_AssetId_t currency;
     pd_Balance_t per_share;
     pd_Balance_t amount;
     pd_Moment_t payment_at;
@@ -1682,60 +1654,60 @@ typedef struct {
 
 #define PD_CALL_ASSET_FREEZE_V7 4
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_freeze_V7_t;
 
 #define PD_CALL_ASSET_UNFREEZE_V7 5
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_unfreeze_V7_t;
 
 #define PD_CALL_ASSET_RENAME_ASSET_V7 6
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_AssetName_t asset_name;
 } pd_asset_rename_asset_V7_t;
 
 #define PD_CALL_ASSET_ISSUE_V7 7
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_BalanceNoSymbol_t amount;
     pd_PortfolioKind_t portfolio_kind;
 } pd_asset_issue_V7_t;
 
 #define PD_CALL_ASSET_REDEEM_V7 8
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_BalanceNoSymbol_t amount;
     pd_PortfolioKind_t portfolio_kind;
 } pd_asset_redeem_V7_t;
 
 #define PD_CALL_ASSET_MAKE_DIVISIBLE_V7 9
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_make_divisible_V7_t;
 
 #define PD_CALL_ASSET_ADD_DOCUMENTS_V7 10
 typedef struct {
     pd_VecDocument_t docs;
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_add_documents_V7_t;
 
 #define PD_CALL_ASSET_REMOVE_DOCUMENTS_V7 11
 typedef struct {
     pd_VecDocumentId_t docs_id;
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_asset_remove_documents_V7_t;
 
 #define PD_CALL_ASSET_SET_FUNDING_ROUND_V7 12
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_FundingRoundName_t founding_round_name;
 } pd_asset_set_funding_round_V7_t;
 
 #define PD_CALL_ASSET_UPDATE_IDENTIFIERS_V7 13
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecAssetIdentifier_t asset_identifiers;
 } pd_asset_update_identifiers_V7_t;
 
@@ -1743,7 +1715,7 @@ typedef struct {
 typedef struct {
     pd_CAId_t ca_id;
     pd_OptionPortfolioNumber_t portfolio;
-    pd_AssetID_t currency;
+    pd_AssetId_t currency;
     pd_Balance_t per_share;
     pd_Balance_t amount;
     pd_Moment_t payment_at;
@@ -1773,7 +1745,7 @@ typedef struct {
 
 #define PD_CALL_CHECKPOINT_CREATE_CHECKPOINT_V7 0
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_checkpoint_create_checkpoint_V7_t;
 
 #define PD_CALL_CHECKPOINT_SET_SCHEDULES_MAX_COMPLEXITY_V7 1
@@ -1783,65 +1755,65 @@ typedef struct {
 
 #define PD_CALL_CHECKPOINT_CREATE_SCHEDULE_V7 2
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ScheduleCheckpoints_t schedule;
 } pd_checkpoint_create_schedule_V7_t;
 
 #define PD_CALL_CHECKPOINT_REMOVE_SCHEDULE_V7 3
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ScheduleId_t id;
 } pd_checkpoint_remove_schedule_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_ADD_COMPLIANCE_REQUIREMENT_V7 0
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecCondition_t sender_conditions;
     pd_VecCondition_t receiver_conditions;
 } pd_compliancemanager_add_compliance_requirement_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_REMOVE_COMPLIANCE_REQUIREMENT_V7 1
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_u32_t id;
 } pd_compliancemanager_remove_compliance_requirement_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_REPLACE_ASSET_COMPLIANCE_V7 2
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecComplianceRequirement_t asset_compliance;
 } pd_compliancemanager_replace_asset_compliance_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_RESET_ASSET_COMPLIANCE_V7 3
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_compliancemanager_reset_asset_compliance_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_PAUSE_ASSET_COMPLIANCE_V7 4
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_compliancemanager_pause_asset_compliance_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_RESUME_ASSET_COMPLIANCE_V7 5
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
 } pd_compliancemanager_resume_asset_compliance_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_ADD_DEFAULT_TRUSTED_CLAIM_ISSUER_V7 6
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_TrustedIssuer_t issuer;
 } pd_compliancemanager_add_default_trusted_claim_issuer_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_REMOVE_DEFAULT_TRUSTED_CLAIM_ISSUER_V7 7
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_IdentityId_t issuer;
 } pd_compliancemanager_remove_default_trusted_claim_issuer_V7_t;
 
 #define PD_CALL_COMPLIANCEMANAGER_CHANGE_COMPLIANCE_REQUIREMENT_V7 8
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_ComplianceRequirement_t new_req;
 } pd_compliancemanager_change_compliance_requirement_V7_t;
 
@@ -1959,19 +1931,19 @@ typedef struct {
 
 #define PD_CALL_SETTLEMENT_SET_VENUE_FILTERING_V7 4
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_bool_t enabled;
 } pd_settlement_set_venue_filtering_V7_t;
 
 #define PD_CALL_SETTLEMENT_ALLOW_VENUES_V7 5
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecVenueId_t venues;
 } pd_settlement_allow_venues_V7_t;
 
 #define PD_CALL_SETTLEMENT_DISALLOW_VENUES_V7 6
 typedef struct {
-    pd_AssetID_t asset_id;
+    pd_AssetId_t asset_id;
     pd_VecVenueId_t venues;
 } pd_settlement_disallow_venues_V7_t;
 
@@ -2037,6 +2009,28 @@ typedef struct {
     pd_UniqueCall_t call;
 } pd_utility_relay_tx_V7_t;
 
+#define PD_CALL_UTILITY_BATCH_ALL_V7 2
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_batch_all_V7_t;
+
+#define PD_CALL_UTILITY_DISPATCH_AS_V7 3
+typedef struct {
+    pd_BoxPalletsOrigin_t as_origin;
+    pd_Call_t call;
+} pd_utility_dispatch_as_V7_t;
+
+#define PD_CALL_UTILITY_FORCE_BATCH_V7 4
+typedef struct {
+    pd_VecCall_t calls;
+} pd_utility_force_batch_V7_t;
+
+#define PD_CALL_UTILITY_AS_DERIVATIVE_V7 9
+typedef struct {
+    pd_u16_t index;
+    pd_Call_t call;
+} pd_utility_as_derivative_V7_t;
+
 #define PD_CALL_CONTRACTS_CALL_V7 6
 typedef struct {
     pd_AccountIdLookupOfT_t dest;
@@ -2087,8 +2081,6 @@ typedef union {
     pd_pips_propose_V7_t pips_propose_V7;
     pd_pips_vote_V7_t pips_vote_V7;
     pd_utility_batch_V7_t utility_batch_V7;
-    pd_utility_batch_atomic_V7_t utility_batch_atomic_V7;
-    pd_utility_batch_optimistic_V7_t utility_batch_optimistic_V7;
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
     pd_corporateaction_set_max_details_length_V7_t corporateaction_set_max_details_length_V7;
@@ -2284,6 +2276,10 @@ typedef union {
     pd_treasury_disbursement_V7_t treasury_disbursement_V7;
     pd_treasury_reimbursement_V7_t treasury_reimbursement_V7;
     pd_utility_relay_tx_V7_t utility_relay_tx_V7;
+    pd_utility_batch_all_V7_t utility_batch_all_V7;
+    pd_utility_dispatch_as_V7_t utility_dispatch_as_V7;
+    pd_utility_force_batch_V7_t utility_force_batch_V7;
+    pd_utility_as_derivative_V7_t utility_as_derivative_V7;
     pd_contracts_call_V7_t contracts_call_V7;
     pd_contracts_instantiate_V7_t contracts_instantiate_V7;
 #endif

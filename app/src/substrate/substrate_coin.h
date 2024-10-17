@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#define COIN_ADDR_TYPE 42
+#define COIN_ADDR_TYPE 12
 #define CLA 0x91
 
 #define INS_SIGN_RAW 0x03
@@ -63,7 +63,7 @@ typedef enum {
 
 #define COIN_AMOUNT_DECIMAL_PLACES 6
 
-#define COIN_GENESIS_HASH "885d727362e25873fb2c5fcda890a91018f52425b41ba30e0c1aaf1ab411dd0a"
+#define COIN_GENESIS_HASH "6fbd74e5e1d0a61d52ccfe9d4adaed16dd3a7caa37c6bc4d0c2fa12e8b2f4063"
 #define COIN_NAME "Polymesh"
 #define COIN_TICKER "POLYX "
 

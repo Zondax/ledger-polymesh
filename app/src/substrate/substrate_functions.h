@@ -34,7 +34,7 @@ parser_error_t _readCompactu32(parser_context_t* c, pd_Compactu32_t* v);
 parser_error_t _readCompactu64(parser_context_t* c, pd_Compactu64_t* v);
 parser_error_t _readCallImpl(parser_context_t* c, pd_Call_t* v, pd_MethodNested_t* m);
 
-parser_error_t _readAssetID(parser_context_t* c, pd_AssetID_t* v);
+parser_error_t _readAssetId(parser_context_t* c, pd_AssetId_t* v);
 parser_error_t _readIdentityId(parser_context_t* c, pd_IdentityId_t* v);
 parser_error_t _readScope(parser_context_t* c, pd_Scope_t* v);
 parser_error_t _readCddId(parser_context_t* c, pd_CddId_t* v);
@@ -72,7 +72,7 @@ parser_error_t _readMemo(parser_context_t* c, pd_Memo_t* v);
 parser_error_t _readSr25519Signature(parser_context_t* c, pd_Sr25519Signature_t* v);
 parser_error_t _readTax(parser_context_t* c, pd_Tax_t* v);
 parser_error_t _readTupleCompactu16Compactu16(parser_context_t* c, pd_TupleCompactu16Compactu16_t* v);
-parser_error_t _readVecAssetID(parser_context_t* c, pd_VecAssetID_t* v);
+parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetID_t* v);
 parser_error_t _readVecPalletPermissions(parser_context_t* c, pd_VecPalletPermissions_t* v);
 parser_error_t _readVecPortfolioId(parser_context_t* c, pd_VecPortfolioId_t* v);
 parser_error_t _readVecTrustedIssuer(parser_context_t* c, pd_VecTrustedIssuer_t* v);
@@ -285,7 +285,7 @@ parser_error_t _readInstructionId(parser_context_t* c, pd_InstructionId_t* v);
 parser_error_t _readKeys(parser_context_t* c, pd_Keys_t* v);
 parser_error_t _readMemberCount(parser_context_t* c, pd_MemberCount_t* v);
 parser_error_t _readOptionAssetCount(parser_context_t* c, pd_OptionAssetCount_t* v);
-parser_error_t _readOptionAssetID(parser_context_t* c, pd_OptionAssetID_t* v);
+parser_error_t _readOptionAssetId(parser_context_t* c, pd_OptionAssetId_t* v);
 parser_error_t _readOptionBalance(parser_context_t* c, pd_OptionBalance_t* v);
 parser_error_t _readOptionBlockNumber(parser_context_t* c, pd_OptionBlockNumber_t* v);
 parser_error_t _readOptionCompactBalanceOf(parser_context_t* c, pd_OptionCompactBalanceOf_t* v);
@@ -370,8 +370,8 @@ parser_error_t _toStringCompactu64(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringAssetID(
-    const pd_AssetID_t* v,
+parser_error_t _toStringAssetId(
+    const pd_AssetId_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -636,7 +636,7 @@ parser_error_t _toStringTupleCompactu16Compactu16(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringVecAssetID(
+parser_error_t _toStringVecAssetId(
     const pd_VecAssetID_t* v,
     char* outValue,
     uint16_t outValueLen,
@@ -2127,8 +2127,8 @@ parser_error_t _toStringOptionAssetCount(
     uint8_t pageIdx,
     uint8_t* pageCount);
 
-parser_error_t _toStringOptionAssetID(
-    const pd_OptionAssetID_t* v,
+parser_error_t _toStringOptionAssetId(
+    const pd_OptionAssetId_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

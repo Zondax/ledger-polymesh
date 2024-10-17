@@ -380,6 +380,8 @@ static const char* STR_ME_EXEMPT_TICKER_AFFIRMATION = "Exempt ticker affirmation
 static const char* STR_ME_REMOVE_TICKER_AFFIRMATION_EXEMPTION = "Remove ticker affirmation exemption";
 static const char* STR_ME_PRE_APPROVE_TICKER = "Pre approve ticker";
 static const char* STR_ME_REMOVE_TICKER_PRE_APPROVAL = "Remove ticker pre approval";
+static const char* STR_ME_AS_DERIVATIVE = "As derivative";
+static const char* STR_ME_UNLINK_TICKER_FROM_ASSET_ID = "Unlink ticker from asset id";
 
 // Items names
 static const char* STR_IT_remark = "Remark";
@@ -887,4 +889,3 @@ static const char* const STR_COUNTRY_CODES[] = {
 #ifdef __cplusplus
 }
 #endif
-
