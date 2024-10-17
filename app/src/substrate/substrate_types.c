@@ -113,7 +113,7 @@ parser_error_t _readCompactu16(parser_context_t* c, pd_Compactu16_t* v)
     return _readCompactInt(c, v);
 }
 
-parser_error_t _readAssetID(parser_context_t* c, pd_AssetID_t* v)
+parser_error_t _readAssetId(parser_context_t* c, pd_AssetId_t* v)
 {
     v->_len = 16;
     GEN_DEF_READARRAY(v->_len)
@@ -132,7 +132,7 @@ parser_error_t _readScope(parser_context_t* c, pd_Scope_t* v)
         CHECK_ERROR(_readIdentityId(c, &v->identity))
         break;
     case 1:
-        CHECK_ERROR(_readAssetID(c, &v->assetId))
+        CHECK_ERROR(_readAssetId(c, &v->assetId))
         break;
     case 2: {
         compactInt_t clen;
@@ -463,7 +463,7 @@ parser_error_t _readAssetPermissions(parser_context_t* c, pd_AssetPermissions_t*
         break;
     case 1: // These
     case 2: // Except
-        CHECK_ERROR(_readVecAssetID(c, &v->contained))
+        CHECK_ERROR(_readVecAssetId(c, &v->contained))
         break;
     default:
         return parser_unexpected_value;
@@ -1020,7 +1020,7 @@ parser_error_t _readDocumentUri(parser_context_t* c, pd_DocumentUri_t* v)
 parser_error_t _readFundFungible(parser_context_t* c, pd_FundFungible_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readBalanceNoSymbol(c, &v->amount))
     CHECK_ERROR(_readOptionMemo(c, &v->memo))
     return parser_ok;
@@ -1029,7 +1029,7 @@ parser_error_t _readFundFungible(parser_context_t* c, pd_FundFungible_t* v)
 parser_error_t _readFundNonFungible(parser_context_t* c, pd_FundNonFungible_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readVecu64(c, &v->ids))
     CHECK_ERROR(_readOptionMemo(c, &v->memo))
     return parser_ok;
@@ -1040,7 +1040,7 @@ parser_error_t _readLegFungible(parser_context_t* c, pd_LegFungible_t* v)
     CHECK_INPUT()
     CHECK_ERROR(_readPortfolioId(c, &v->sender))
     CHECK_ERROR(_readPortfolioId(c, &v->receiver))
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readBalanceNoSymbol(c, &v->amount))
     return parser_ok;
 }
@@ -1050,7 +1050,7 @@ parser_error_t _readLegNonFungible(parser_context_t* c, pd_LegNonFungible_t* v)
     CHECK_INPUT()
     CHECK_ERROR(_readPortfolioId(c, &v->sender))
     CHECK_ERROR(_readPortfolioId(c, &v->receiver))
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readVecu64(c, &v->ids))
     return parser_ok;
 }
@@ -1263,7 +1263,7 @@ parser_error_t _readBallotVote(parser_context_t* c, pd_BallotVote_t* v)
 parser_error_t _readBecomeAgent(parser_context_t* c, pd_BecomeAgent_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId));
+    CHECK_ERROR(_readAssetId(c, &v->assetId));
     CHECK_ERROR(_readAgentGroup(c, &v->agentGroup));
     return parser_ok;
 }
@@ -1680,7 +1680,7 @@ parser_error_t _readAuthorizationDataAccountId(parser_context_t* c, pd_Authoriza
         CHECK_ERROR(_readAccountId(c, &v->accountId))
         break;
     case 4: // TransferAssetOwnership
-        CHECK_ERROR(_readAssetID(c, &v->assetId))
+        CHECK_ERROR(_readAssetId(c, &v->assetId))
         break;
     case 5: // JoinIdentity
         CHECK_ERROR(_readPermissions(c, &v->permissions))
@@ -1787,7 +1787,7 @@ parser_error_t _readBoxTasConfigProposal(parser_context_t* c, pd_BoxTasConfigPro
 parser_error_t _readCAId(parser_context_t* c, pd_CAId_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readLocalCAId(c, &v->local_id))
     return parser_ok;
 }
@@ -1853,7 +1853,7 @@ parser_error_t _readConfigOpPercent(parser_context_t* c, pd_ConfigOpPercent_t* v
 parser_error_t _readInitiateCorporateActionArgs(parser_context_t* c, pd_InitiateCorporateActionArgs_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readCAKind(c, &v->kind))
     CHECK_ERROR(_readUInt64(c, &v->declDate))
     CHECK_ERROR(_readOptionRecordDateSpec(c, &v->recordDate))
@@ -1912,7 +1912,7 @@ parser_error_t _readMaybeBlockBlockNumber(parser_context_t* c, pd_MaybeBlockBloc
 parser_error_t _readNFTs(parser_context_t* c, pd_NFTs_t* v)
 {
     CHECK_INPUT()
-    CHECK_ERROR(_readAssetID(c, &v->assetId))
+    CHECK_ERROR(_readAssetId(c, &v->assetId))
     CHECK_ERROR(_readVecNFTId(c, &v->ids))
     return parser_ok;
 }
@@ -2175,6 +2175,15 @@ parser_error_t _readMemberCount(parser_context_t* c, pd_MemberCount_t* v)
     return parser_ok;
 }
 
+parser_error_t _readOptionAssetId(parser_context_t* c, pd_OptionAssetId_t* v)
+{
+    CHECK_ERROR(_readUInt8(c, &v->some))
+    if (v->some > 0) {
+        CHECK_ERROR(_readAssetId(c, &v->assetId))
+    }
+    return parser_ok;
+}
+
 parser_error_t _readPortfolioName(parser_context_t* c, pd_PortfolioName_t* v)
 {
     CHECK_INPUT()
@@ -2257,8 +2266,8 @@ parser_error_t _readVecClaim(parser_context_t* c, pd_VecClaim_t* v) {
     GEN_DEF_READVECTOR(Claim)
 }
 
-parser_error_t _readVecAssetID(parser_context_t* c, pd_VecAssetID_t* v) {
-    GEN_DEF_READVECTOR(AssetID)
+parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetID_t* v) {
+    GEN_DEF_READVECTOR(AssetId)
 }
 
 parser_error_t _readVecPalletPermissions(parser_context_t* c, pd_VecPalletPermissions_t* v) {
@@ -2661,16 +2670,6 @@ parser_error_t _readOptionAssetCount(parser_context_t* c, pd_OptionAssetCount_t*
     return parser_ok;
 }
 
-parser_error_t _readOptionAssetID(parser_context_t* c, pd_OptionAssetID_t* v)
-{
-    CHECK_INPUT()
-    CHECK_ERROR(_readUInt8(c, &v->some))
-    if (v->some > 0) {
-        CHECK_ERROR(_readAssetID(c, &v->contained))
-    }
-    return parser_ok;
-}
-
 parser_error_t _readOptionBalance(parser_context_t* c, pd_OptionBalance_t* v)
 {
     CHECK_INPUT()
@@ -2922,8 +2921,8 @@ parser_error_t _toStringCompactu16(
     return _toStringCompactInt(v, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
-parser_error_t _toStringAssetID(
-    const pd_AssetID_t* v,
+parser_error_t _toStringAssetId(
+    const pd_AssetId_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
@@ -2969,7 +2968,7 @@ parser_error_t _toStringScope(
         _toStringIdentityId(&v->identity, outValue, outValueLen, pageIdx, pageCount);
         break;
     case 1:
-        _toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, pageCount);
+        _toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, pageCount);
         break;
     case 2:
         GEN_DEF_TOSTRING_ARRAY(v->_len)
@@ -3791,14 +3790,14 @@ parser_error_t _toStringAssetPermissions(
         GEN_DEF_TOSTRING_ENUM("Whole")
         break;
     case 1: // These
-        CHECK_ERROR(_toStringVecAssetID(&v->contained, outValue, outValueLen, 0, pageCount);)
+        CHECK_ERROR(_toStringVecAssetId(&v->contained, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("These")
-        CHECK_ERROR(_toStringVecAssetID(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        CHECK_ERROR(_toStringVecAssetId(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     case 2: // Except
-        CHECK_ERROR(_toStringVecAssetID(&v->contained, outValue, outValueLen, 0, pageCount);)
+        CHECK_ERROR(_toStringVecAssetId(&v->contained, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("Except")
-        CHECK_ERROR(_toStringVecAssetID(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
+        CHECK_ERROR(_toStringVecAssetId(&v->contained, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     default:
         return parser_unexpected_value;
@@ -5848,7 +5847,7 @@ parser_error_t _toStringFundFungible(
 
     // First measure number of pages
     uint8_t pages[3] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringBalanceNoSymbol(&v->amount, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringOptionMemo(&v->memo, outValue, outValueLen, 0, &pages[2]))
 
@@ -5862,7 +5861,7 @@ parser_error_t _toStringFundFungible(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -5892,7 +5891,7 @@ parser_error_t _toStringFundNonFungible(
 
     // First measure number of pages
     uint8_t pages[3] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecu64(&v->ids, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringOptionMemo(&v->memo, outValue, outValueLen, 0, &pages[2]))
 
@@ -5906,7 +5905,7 @@ parser_error_t _toStringFundNonFungible(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -5938,7 +5937,7 @@ parser_error_t _toStringLegFungible(
     uint8_t pages[4] = { 0 };
     CHECK_ERROR(_toStringPortfolioId(&v->sender, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringPortfolioId(&v->receiver, outValue, outValueLen, 0, &pages[1]))
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringBalanceNoSymbol(&v->amount, outValue, outValueLen, 0, &pages[3]))
 
     *pageCount = 0;
@@ -5963,7 +5962,7 @@ parser_error_t _toStringLegFungible(
     pageIdx -= pages[1];
 
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[2]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
     pageIdx -= pages[2];
@@ -5989,7 +5988,7 @@ parser_error_t _toStringLegNonFungible(
     uint8_t pages[4] = { 0 };
     CHECK_ERROR(_toStringPortfolioId(&v->sender, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringPortfolioId(&v->receiver, outValue, outValueLen, 0, &pages[1]))
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[2]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringVecu64(&v->ids, outValue, outValueLen, 0, &pages[3]))
 
     *pageCount = 0;
@@ -6014,7 +6013,7 @@ parser_error_t _toStringLegNonFungible(
     pageIdx -= pages[1];
 
     if (pageIdx < pages[2]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[2]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[2]))
         return parser_ok;
     }
     pageIdx -= pages[2];
@@ -6625,7 +6624,7 @@ parser_error_t _toStringBecomeAgent(
 
     // First measure number of pages
     uint8_t pages[2] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringAgentGroup(&v->agentGroup, outValue, outValueLen, 0, &pages[1]))
 
     *pageCount = 0;
@@ -6638,7 +6637,7 @@ parser_error_t _toStringBecomeAgent(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -7975,9 +7974,9 @@ parser_error_t _toStringAuthorizationDataAccountId(
         CHECK_ERROR(_toStringAccountId(&v->accountId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     case 4: // TransferAssetOwnership
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, pageCount);)
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, pageCount);)
         GEN_DEF_TOSTRING_ENUM("TransferAssetOwnership")
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &_dummy);)
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &_dummy);)
         break;
     case 5: // JoinIdentity
         CHECK_ERROR(_toStringPermissions(&v->permissions, outValue, outValueLen, 0, pageCount);)
@@ -8290,7 +8289,7 @@ parser_error_t _toStringCAId(
 
     // First measure number of pages
     uint8_t pages[2] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringLocalCAId(&v->local_id, outValue, outValueLen, 0, &pages[1]))
 
     *pageCount = 0;
@@ -8303,7 +8302,7 @@ parser_error_t _toStringCAId(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -8412,7 +8411,7 @@ parser_error_t _toStringInitiateCorporateActionArgs(
 
     // First measure number of pages
     uint8_t pages[8] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringCAKind(&v->kind, outValue, outValueLen, 0, &pages[1]))
     CHECK_ERROR(_toStringu64(&v->declDate, outValue, outValueLen, 0, &pages[2]))
     CHECK_ERROR(_toStringOptionRecordDateSpec(&v->recordDate, outValue, outValueLen, 0, &pages[3]))
@@ -8431,7 +8430,7 @@ parser_error_t _toStringInitiateCorporateActionArgs(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -8547,7 +8546,7 @@ parser_error_t _toStringNFTs(
 
     // First measure number of pages
     uint8_t pages[2] = { 0 };
-    CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, 0, &pages[0]))
+    CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, 0, &pages[0]))
     CHECK_ERROR(_toStringVecNFTId(&v->ids, outValue, outValueLen, 0, &pages[1]))
 
     *pageCount = 0;
@@ -8560,7 +8559,7 @@ parser_error_t _toStringNFTs(
     }
 
     if (pageIdx < pages[0]) {
-        CHECK_ERROR(_toStringAssetID(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
+        CHECK_ERROR(_toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, &pages[0]))
         return parser_ok;
     }
     pageIdx -= pages[0];
@@ -9079,6 +9078,22 @@ parser_error_t _toStringMemberCount(
     return _toStringu32(&v->value, outValue, outValueLen, pageIdx, pageCount);
 }
 
+parser_error_t _toStringOptionAssetId(
+    const pd_OptionAssetId_t* v,
+    char* outValue,
+    uint16_t outValueLen,
+    uint8_t pageIdx,
+    uint8_t* pageCount)
+{
+    CLEAN_AND_CHECK()
+
+    if (v->some == 0) {
+        snprintf(outValue, outValueLen, "None");
+        return parser_ok;
+    }
+    return _toStringAssetId(&v->assetId, outValue, outValueLen, pageIdx, pageCount);
+}
+
 parser_error_t _toStringPortfolioName(
     const pd_PortfolioName_t* v,
     char* outValue,
@@ -9268,14 +9283,14 @@ parser_error_t _toStringVecClaim(
     GEN_DEF_TOSTRING_VECTOR(Claim);
 }
 
-parser_error_t _toStringVecAssetID(
+parser_error_t _toStringVecAssetId(
     const pd_VecAssetID_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,
     uint8_t* pageCount)
 {
-    GEN_DEF_TOSTRING_VECTOR(AssetID);
+    GEN_DEF_TOSTRING_VECTOR(AssetId);
 }
 
 parser_error_t _toStringVecPalletPermissions(
@@ -10189,27 +10204,6 @@ parser_error_t _toStringOptionAssetCount(
     *pageCount = 1;
     if (v->some > 0) {
         CHECK_ERROR(_toStringAssetCount(
-            &v->contained,
-            outValue, outValueLen,
-            pageIdx, pageCount));
-    } else {
-        snprintf(outValue, outValueLen, "None");
-    }
-    return parser_ok;
-}
-
-parser_error_t _toStringOptionAssetID(
-    const pd_OptionAssetID_t* v,
-    char* outValue,
-    uint16_t outValueLen,
-    uint8_t pageIdx,
-    uint8_t* pageCount)
-{
-    CLEAN_AND_CHECK()
-
-    *pageCount = 1;
-    if (v->some > 0) {
-        CHECK_ERROR(_toStringAssetID(
             &v->contained,
             outValue, outValueLen,
             pageIdx, pageCount));

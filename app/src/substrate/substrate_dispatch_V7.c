@@ -243,33 +243,19 @@ __Z_INLINE parser_error_t _readMethod_utility_batch_V7(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_utility_batch_atomic_V7(
-    parser_context_t* c, pd_utility_batch_atomic_V7_t* m)
-{
-    CHECK_ERROR(_readVecCall(c, &m->calls))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_utility_batch_optimistic_V7(
-    parser_context_t* c, pd_utility_batch_optimistic_V7_t* m)
-{
-    CHECK_ERROR(_readVecCall(c, &m->calls))
-    return parser_ok;
-}
-
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
 __Z_INLINE parser_error_t _readMethod_asset_add_mandatory_mediators_V7(
     parser_context_t* c, pd_asset_add_mandatory_mediators_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxAssetMediators(c, &m->mediators))
     return parser_ok;
 }
 __Z_INLINE parser_error_t _readMethod_asset_remove_mandatory_mediators_V7(
     parser_context_t* c, pd_asset_remove_mandatory_mediators_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readBoundedBTreeSetIdentityIdMaxAssetMediators(c, &m->mediators))
     return parser_ok;
 }
@@ -282,21 +268,21 @@ __Z_INLINE parser_error_t _readMethod_corporateaction_set_max_details_length_V7(
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_default_targets_V7(
     parser_context_t* c, pd_corporateaction_set_default_targets_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readTargetIdentities(c, &m->targets))
     return parser_ok;
 }
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_default_withholding_tax_V7(
     parser_context_t* c, pd_corporateaction_set_default_withholding_tax_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readTax(c, &m->tax))
     return parser_ok;
 }
 __Z_INLINE parser_error_t _readMethod_corporateaction_set_did_withholding_tax_V7(
     parser_context_t* c, pd_corporateaction_set_did_withholding_tax_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readIdentityId(c, &m->taxed_did))
     CHECK_ERROR(_readOptionTax(c, &m->tax))
     return parser_ok;
@@ -304,7 +290,7 @@ __Z_INLINE parser_error_t _readMethod_corporateaction_set_did_withholding_tax_V7
 __Z_INLINE parser_error_t _readMethod_corporateaction_initiate_corporate_action_V7(
     parser_context_t* c, pd_corporateaction_initiate_corporate_action_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readCAKind(c, &m->kind))
     CHECK_ERROR(_readMoment(c, &m->decl_date))
     CHECK_ERROR(_readOptionRecordDateSpec(c, &m->record_date))
@@ -339,7 +325,7 @@ __Z_INLINE parser_error_t _readMethod_corporateaction_initiate_corporate_action_
 {
     CHECK_ERROR(_readInitiateCorporateActionArgs(c, &m->ca_args))
     CHECK_ERROR(_readOptionPortfolioNumber(c, &m->portfolio))
-    CHECK_ERROR(_readAssetID(c, &m->currency))
+    CHECK_ERROR(_readAssetId(c, &m->currency))
     CHECK_ERROR(_readBalance(c, &m->per_share))
     CHECK_ERROR(_readBalance(c, &m->amount))
     CHECK_ERROR(_readMoment(c, &m->payment_at))
@@ -1423,21 +1409,21 @@ __Z_INLINE parser_error_t _readMethod_asset_create_asset_V7(
 __Z_INLINE parser_error_t _readMethod_asset_freeze_V7(
     parser_context_t* c, pd_asset_freeze_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_unfreeze_V7(
     parser_context_t* c, pd_asset_unfreeze_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_rename_asset_V7(
     parser_context_t* c, pd_asset_rename_asset_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetName(c, &m->asset_name))
     return parser_ok;
 }
@@ -1445,7 +1431,7 @@ __Z_INLINE parser_error_t _readMethod_asset_rename_asset_V7(
 __Z_INLINE parser_error_t _readMethod_asset_issue_V7(
     parser_context_t* c, pd_asset_issue_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
     CHECK_ERROR(_readPortfolioKind(c, &m->portfolio_kind))
     return parser_ok;
@@ -1454,7 +1440,7 @@ __Z_INLINE parser_error_t _readMethod_asset_issue_V7(
 __Z_INLINE parser_error_t _readMethod_asset_redeem_V7(
     parser_context_t* c, pd_asset_redeem_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
     CHECK_ERROR(_readPortfolioKind(c, &m->portfolio_kind))
     return parser_ok;
@@ -1463,7 +1449,7 @@ __Z_INLINE parser_error_t _readMethod_asset_redeem_V7(
 __Z_INLINE parser_error_t _readMethod_asset_make_divisible_V7(
     parser_context_t* c, pd_asset_make_divisible_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
@@ -1471,7 +1457,7 @@ __Z_INLINE parser_error_t _readMethod_asset_add_documents_V7(
     parser_context_t* c, pd_asset_add_documents_V7_t* m)
 {
     CHECK_ERROR(_readVecDocument(c, &m->docs))
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
@@ -1479,14 +1465,14 @@ __Z_INLINE parser_error_t _readMethod_asset_remove_documents_V7(
     parser_context_t* c, pd_asset_remove_documents_V7_t* m)
 {
     CHECK_ERROR(_readVecDocumentId(c, &m->docs_id))
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_set_funding_round_V7(
     parser_context_t* c, pd_asset_set_funding_round_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readFundingRoundName(c, &m->founding_round_name))
     return parser_ok;
 }
@@ -1494,7 +1480,7 @@ __Z_INLINE parser_error_t _readMethod_asset_set_funding_round_V7(
 __Z_INLINE parser_error_t _readMethod_asset_update_identifiers_V7(
     parser_context_t* c, pd_asset_update_identifiers_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecAssetIdentifier(c, &m->asset_identifiers))
     return parser_ok;
 }
@@ -1502,7 +1488,7 @@ __Z_INLINE parser_error_t _readMethod_asset_update_identifiers_V7(
 __Z_INLINE parser_error_t _readMethod_asset_controller_transfer_V7(
     parser_context_t* c, pd_asset_controller_transfer_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->amount))
     CHECK_ERROR(_readPortfolioId(c, &m->from_portfolio))
     return parser_ok;
@@ -1529,7 +1515,7 @@ __Z_INLINE parser_error_t _readMethod_asset_create_asset_with_custom_type_V7(
 __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_V7(
     parser_context_t* c, pd_asset_set_asset_metadata_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataKey(c, &m->key))
     CHECK_ERROR(_readAssetMetadataValue(c, &m->value))
     CHECK_ERROR(_readOptionAssetMetadataValueDetailMoment(c, &m->detail))
@@ -1539,7 +1525,7 @@ __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_V7(
 __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_details_V7(
     parser_context_t* c, pd_asset_set_asset_metadata_details_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataKey(c, &m->key))
     CHECK_ERROR(_readAssetMetadataValueDetailMoment(c, &m->detail))
     return parser_ok;
@@ -1548,7 +1534,7 @@ __Z_INLINE parser_error_t _readMethod_asset_set_asset_metadata_details_V7(
 __Z_INLINE parser_error_t _readMethod_asset_register_and_set_local_asset_metadata_V7(
     parser_context_t* c, pd_asset_register_and_set_local_asset_metadata_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataName(c, &m->name))
     CHECK_ERROR(_readAssetMetadataSpec(c, &m->spec))
     CHECK_ERROR(_readAssetMetadataValue(c, &m->value))
@@ -1559,7 +1545,7 @@ __Z_INLINE parser_error_t _readMethod_asset_register_and_set_local_asset_metadat
 __Z_INLINE parser_error_t _readMethod_asset_register_asset_metadata_local_type_V7(
     parser_context_t* c, pd_asset_register_asset_metadata_local_type_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataName(c, &m->name))
     CHECK_ERROR(_readAssetMetadataSpec(c, &m->spec))
     return parser_ok;
@@ -1576,7 +1562,7 @@ __Z_INLINE parser_error_t _readMethod_asset_register_asset_metadata_global_type_
 __Z_INLINE parser_error_t _readMethod_asset_update_asset_type_V7(
     parser_context_t* c, pd_asset_update_asset_type_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetType(c, &m->asset_type))
     return parser_ok;
 }
@@ -1584,7 +1570,7 @@ __Z_INLINE parser_error_t _readMethod_asset_update_asset_type_V7(
 __Z_INLINE parser_error_t _readMethod_asset_remove_local_metadata_key_V7(
     parser_context_t* c, pd_asset_remove_local_metadata_key_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataLocalKey(c, &m->local_key))
     return parser_ok;
 }
@@ -1592,7 +1578,7 @@ __Z_INLINE parser_error_t _readMethod_asset_remove_local_metadata_key_V7(
 __Z_INLINE parser_error_t _readMethod_asset_remove_metadata_value_V7(
     parser_context_t* c, pd_asset_remove_metadata_value_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAssetMetadataKey(c, &m->metadata_key))
     return parser_ok;
 }
@@ -1600,28 +1586,28 @@ __Z_INLINE parser_error_t _readMethod_asset_remove_metadata_value_V7(
 __Z_INLINE parser_error_t _readMethod_asset_exempt_asset_affirmation_V7(
     parser_context_t* c, pd_asset_exempt_asset_affirmation_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_remove_asset_affirmation_exemption_V7(
     parser_context_t* c, pd_asset_remove_asset_affirmation_exemption_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_pre_approve_asset_V7(
     parser_context_t* c, pd_asset_pre_approve_asset_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_asset_remove_asset_pre_approval_V7(
     parser_context_t* c, pd_asset_remove_asset_pre_approval_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
@@ -1629,7 +1615,15 @@ __Z_INLINE parser_error_t _readMethod_asset_link_ticker_to_asset_id_V7(
     parser_context_t* c, pd_asset_link_ticker_to_asset_id_V7_t* m)
 {
     CHECK_ERROR(_readTicker(c, &m->ticker))
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
+    return parser_ok;
+}
+
+__Z_INLINE parser_error_t _readMethod_asset_unlink_ticker_from_asset_id_V7(
+    parser_context_t* c, pd_asset_unlink_ticker_from_asset_id_V7_t* m)
+{
+    CHECK_ERROR(_readTicker(c, &m->ticker))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
@@ -1638,7 +1632,7 @@ __Z_INLINE parser_error_t _readMethod_capitaldistribution_distribute_V7(
 {
     CHECK_ERROR(_readCAId(c, &m->ca_id))
     CHECK_ERROR(_readOptionPortfolioNumber(c, &m->portfolio))
-    CHECK_ERROR(_readAssetID(c, &m->currency))
+    CHECK_ERROR(_readAssetId(c, &m->currency))
     CHECK_ERROR(_readBalance(c, &m->per_share))
     CHECK_ERROR(_readBalance(c, &m->amount))
     CHECK_ERROR(_readMoment(c, &m->payment_at))
@@ -1678,7 +1672,7 @@ __Z_INLINE parser_error_t _readMethod_capitaldistribution_remove_distribution_V7
 __Z_INLINE parser_error_t _readMethod_checkpoint_create_checkpoint_V7(
     parser_context_t* c, pd_checkpoint_create_checkpoint_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
@@ -1692,7 +1686,7 @@ __Z_INLINE parser_error_t _readMethod_checkpoint_set_schedules_max_complexity_V7
 __Z_INLINE parser_error_t _readMethod_checkpoint_create_schedule_V7(
     parser_context_t* c, pd_checkpoint_create_schedule_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readScheduleCheckpoints(c, &m->schedule))
     return parser_ok;
 }
@@ -1700,7 +1694,7 @@ __Z_INLINE parser_error_t _readMethod_checkpoint_create_schedule_V7(
 __Z_INLINE parser_error_t _readMethod_checkpoint_remove_schedule_V7(
     parser_context_t* c, pd_checkpoint_remove_schedule_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readScheduleId(c, &m->id))
     return parser_ok;
 }
@@ -1708,7 +1702,7 @@ __Z_INLINE parser_error_t _readMethod_checkpoint_remove_schedule_V7(
 __Z_INLINE parser_error_t _readMethod_compliancemanager_add_compliance_requirement_V7(
     parser_context_t* c, pd_compliancemanager_add_compliance_requirement_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecCondition(c, &m->sender_conditions))
     CHECK_ERROR(_readVecCondition(c, &m->receiver_conditions))
     return parser_ok;
@@ -1717,7 +1711,7 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_add_compliance_requireme
 __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_compliance_requirement_V7(
     parser_context_t* c, pd_compliancemanager_remove_compliance_requirement_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readu32(c, &m->id))
     return parser_ok;
 }
@@ -1725,7 +1719,7 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_compliance_requir
 __Z_INLINE parser_error_t _readMethod_compliancemanager_replace_asset_compliance_V7(
     parser_context_t* c, pd_compliancemanager_replace_asset_compliance_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecComplianceRequirement(c, &m->asset_compliance))
     return parser_ok;
 }
@@ -1733,28 +1727,28 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_replace_asset_compliance
 __Z_INLINE parser_error_t _readMethod_compliancemanager_reset_asset_compliance_V7(
     parser_context_t* c, pd_compliancemanager_reset_asset_compliance_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_pause_asset_compliance_V7(
     parser_context_t* c, pd_compliancemanager_pause_asset_compliance_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_resume_asset_compliance_V7(
     parser_context_t* c, pd_compliancemanager_resume_asset_compliance_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_compliancemanager_add_default_trusted_claim_issuer_V7(
     parser_context_t* c, pd_compliancemanager_add_default_trusted_claim_issuer_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readTrustedIssuer(c, &m->issuer))
     return parser_ok;
 }
@@ -1762,7 +1756,7 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_add_default_trusted_clai
 __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_default_trusted_claim_issuer_V7(
     parser_context_t* c, pd_compliancemanager_remove_default_trusted_claim_issuer_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readIdentityId(c, &m->issuer))
     return parser_ok;
 }
@@ -1770,7 +1764,7 @@ __Z_INLINE parser_error_t _readMethod_compliancemanager_remove_default_trusted_c
 __Z_INLINE parser_error_t _readMethod_compliancemanager_change_compliance_requirement_V7(
     parser_context_t* c, pd_compliancemanager_change_compliance_requirement_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readComplianceRequirement(c, &m->new_req))
     return parser_ok;
 }
@@ -1925,7 +1919,7 @@ __Z_INLINE parser_error_t _readMethod_portfolio_move_portfolio_funds_V7(
 __Z_INLINE parser_error_t _readMethod_portfolio_pre_approve_portfolio_V7(
     parser_context_t* c, pd_portfolio_pre_approve_portfolio_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readPortfolioId(c, &m->portfolio_id))
     return parser_ok;
 }
@@ -1933,7 +1927,7 @@ __Z_INLINE parser_error_t _readMethod_portfolio_pre_approve_portfolio_V7(
 __Z_INLINE parser_error_t _readMethod_portfolio_remove_portfolio_pre_approval_V7(
     parser_context_t* c, pd_portfolio_remove_portfolio_pre_approval_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readPortfolioId(c, &m->portfolio_id))
     return parser_ok;
 }
@@ -1982,7 +1976,7 @@ __Z_INLINE parser_error_t _readMethod_settlement_affirm_with_receipts_V7(
 __Z_INLINE parser_error_t _readMethod_settlement_set_venue_filtering_V7(
     parser_context_t* c, pd_settlement_set_venue_filtering_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readbool(c, &m->enabled))
     return parser_ok;
 }
@@ -1990,7 +1984,7 @@ __Z_INLINE parser_error_t _readMethod_settlement_set_venue_filtering_V7(
 __Z_INLINE parser_error_t _readMethod_settlement_allow_venues_V7(
     parser_context_t* c, pd_settlement_allow_venues_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecVenueId(c, &m->venues))
     return parser_ok;
 }
@@ -1998,7 +1992,7 @@ __Z_INLINE parser_error_t _readMethod_settlement_allow_venues_V7(
 __Z_INLINE parser_error_t _readMethod_settlement_disallow_venues_V7(
     parser_context_t* c, pd_settlement_disallow_venues_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecVenueId(c, &m->venues))
     return parser_ok;
 }
@@ -2085,9 +2079,9 @@ __Z_INLINE parser_error_t _readMethod_sto_create_fundraiser_V7(
     parser_context_t* c, pd_sto_create_fundraiser_V7_t* m)
 {
     CHECK_ERROR(_readPortfolioId(c, &m->offering_portfolio))
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readPortfolioId(c, &m->raising_portfolio))
-    CHECK_ERROR(_readAssetID(c, &m->raising_asset))
+    CHECK_ERROR(_readAssetId(c, &m->raising_asset))
     CHECK_ERROR(_readVecPriceTier(c, &m->tiers))
     CHECK_ERROR(_readVenueId(c, &m->venue_id))
     CHECK_ERROR(_readOptionMoment(c, &m->start))
@@ -2102,7 +2096,7 @@ __Z_INLINE parser_error_t _readMethod_sto_invest_V7(
 {
     CHECK_ERROR(_readPortfolioId(c, &m->investment_portfolio))
     CHECK_ERROR(_readPortfolioId(c, &m->funding_portfolio))
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readFundraiserId(c, &m->id))
     CHECK_ERROR(_readBalanceNoSymbol(c, &m->purchase_amount))
     CHECK_ERROR(_readOptionBalance(c, &m->max_price))
@@ -2113,7 +2107,7 @@ __Z_INLINE parser_error_t _readMethod_sto_invest_V7(
 __Z_INLINE parser_error_t _readMethod_sto_freeze_fundraiser_V7(
     parser_context_t* c, pd_sto_freeze_fundraiser_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
@@ -2121,7 +2115,7 @@ __Z_INLINE parser_error_t _readMethod_sto_freeze_fundraiser_V7(
 __Z_INLINE parser_error_t _readMethod_sto_unfreeze_fundraiser_V7(
     parser_context_t* c, pd_sto_unfreeze_fundraiser_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
@@ -2129,7 +2123,7 @@ __Z_INLINE parser_error_t _readMethod_sto_unfreeze_fundraiser_V7(
 __Z_INLINE parser_error_t _readMethod_sto_modify_fundraiser_window_V7(
     parser_context_t* c, pd_sto_modify_fundraiser_window_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readFundraiserId(c, &m->id))
     CHECK_ERROR(_readMoment(c, &m->start))
     CHECK_ERROR(_readOptionMoment(c, &m->end))
@@ -2139,7 +2133,7 @@ __Z_INLINE parser_error_t _readMethod_sto_modify_fundraiser_window_V7(
 __Z_INLINE parser_error_t _readMethod_sto_stop_V7(
     parser_context_t* c, pd_sto_stop_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->offering_asset))
+    CHECK_ERROR(_readAssetId(c, &m->offering_asset))
     CHECK_ERROR(_readFundraiserId(c, &m->id))
     return parser_ok;
 }
@@ -2197,17 +2191,18 @@ __Z_INLINE parser_error_t _readMethod_utility_with_weight_V7(
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_utility_batch_old_V7(
-    parser_context_t* c, pd_utility_batch_old_V7_t* m)
+__Z_INLINE parser_error_t _readMethod_utility_as_derivative_V7(
+    parser_context_t* c, pd_utility_as_derivative_V7_t* m)
 {
-    CHECK_ERROR(_readVecCall(c, &m->calls))
+    CHECK_ERROR(_readu16(c, &m->index))
+    CHECK_ERROR(_readCall(c, &m->call))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_externalagents_create_group_V7(
     parser_context_t* c, pd_externalagents_create_group_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
     return parser_ok;
 }
@@ -2215,7 +2210,7 @@ __Z_INLINE parser_error_t _readMethod_externalagents_create_group_V7(
 __Z_INLINE parser_error_t _readMethod_externalagents_set_group_permissions_V7(
     parser_context_t* c, pd_externalagents_set_group_permissions_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readAGId(c, &m->id))
     CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
     return parser_ok;
@@ -2224,7 +2219,7 @@ __Z_INLINE parser_error_t _readMethod_externalagents_set_group_permissions_V7(
 __Z_INLINE parser_error_t _readMethod_externalagents_remove_agent_V7(
     parser_context_t* c, pd_externalagents_remove_agent_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readIdentityId(c, &m->agent))
     return parser_ok;
 }
@@ -2232,14 +2227,14 @@ __Z_INLINE parser_error_t _readMethod_externalagents_remove_agent_V7(
 __Z_INLINE parser_error_t _readMethod_externalagents_abdicate_V7(
     parser_context_t* c, pd_externalagents_abdicate_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     return parser_ok;
 }
 
 __Z_INLINE parser_error_t _readMethod_externalagents_change_group_V7(
     parser_context_t* c, pd_externalagents_change_group_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readIdentityId(c, &m->agent))
     CHECK_ERROR(_readAgentGroup(c, &m->group))
     return parser_ok;
@@ -2255,7 +2250,7 @@ __Z_INLINE parser_error_t _readMethod_externalagents_accept_become_agent_V7(
 __Z_INLINE parser_error_t _readMethod_externalagents_create_group_and_add_auth_V7(
     parser_context_t* c, pd_externalagents_create_group_and_add_auth_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
     CHECK_ERROR(_readIdentityId(c, &m->target))
     CHECK_ERROR(_readOptionMoment(c, &m->expiry))
@@ -2265,7 +2260,7 @@ __Z_INLINE parser_error_t _readMethod_externalagents_create_group_and_add_auth_V
 __Z_INLINE parser_error_t _readMethod_externalagents_create_and_change_custom_group_V7(
     parser_context_t* c, pd_externalagents_create_and_change_custom_group_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readExtrinsicPermissions(c, &m->perms))
     CHECK_ERROR(_readIdentityId(c, &m->agent))
     return parser_ok;
@@ -2508,7 +2503,7 @@ __Z_INLINE parser_error_t _readMethod_preimage_unrequest_preimage_V7(
 __Z_INLINE parser_error_t _readMethod_nft_create_nft_collection_V7(
     parser_context_t* c, pd_nft_create_nft_collection_V7_t* m)
 {
-    CHECK_ERROR(_readOptionAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readOptionAssetId(c, &m->asset_id))
     CHECK_ERROR(_readOptionNonFungibleType(c, &m->nft_type))
     CHECK_ERROR(_readVecAssetMetadataKey(c, &m->collection_keys))
     return parser_ok;
@@ -2517,7 +2512,7 @@ __Z_INLINE parser_error_t _readMethod_nft_create_nft_collection_V7(
 __Z_INLINE parser_error_t _readMethod_nft_issue_nft_V7(
     parser_context_t* c, pd_nft_issue_nft_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readVecNFTMetadataAttribute(c, &m->nft_metadata_attributes))
     CHECK_ERROR(_readPortfolioKind(c, &m->portfolio_kind))
     return parser_ok;
@@ -2526,7 +2521,7 @@ __Z_INLINE parser_error_t _readMethod_nft_issue_nft_V7(
 __Z_INLINE parser_error_t _readMethod_nft_redeem_nft_V7(
     parser_context_t* c, pd_nft_redeem_nft_V7_t* m)
 {
-    CHECK_ERROR(_readAssetID(c, &m->asset_id))
+    CHECK_ERROR(_readAssetId(c, &m->asset_id))
     CHECK_ERROR(_readNFTId(c, &m->nft_id))
     CHECK_ERROR(_readPortfolioKind(c, &m->portfolio_kind))
     CHECK_ERROR(_readOptionu8(c, &m->number_of_keys))
@@ -2665,12 +2660,6 @@ parser_error_t _readMethod_V7(
         break;
     case 10496: /* module 41 call 0 */
         CHECK_ERROR(_readMethod_utility_batch_V7(c, &method->nested.utility_batch_V7))
-        break;
-    case 10503: /* module 41 call 7 */
-        CHECK_ERROR(_readMethod_utility_batch_atomic_V7(c, &method->nested.utility_batch_atomic_V7))
-        break;
-    case 10504: /* module 41 call 8 */
-        CHECK_ERROR(_readMethod_utility_batch_optimistic_V7(c, &method->nested.utility_batch_optimistic_V7))
         break;
 
 #ifdef SUBSTRATE_PARSER_FULL
@@ -3207,6 +3196,9 @@ parser_error_t _readMethod_V7(
     case 6687: /* module 26 call 31 */
         CHECK_ERROR(_readMethod_asset_link_ticker_to_asset_id_V7(c, &method->basic.asset_link_ticker_to_asset_id_V7))
         break;
+    case 6688: /* module 26 call 32 */
+        CHECK_ERROR(_readMethod_asset_unlink_ticker_from_asset_id_V7(c, &method->basic.asset_unlink_ticker_from_asset_id_V7))
+        break;
     case 6912: /* module 27 call 0 */
         CHECK_ERROR(_readMethod_capitaldistribution_distribute_V7(c, &method->nested.capitaldistribution_distribute_V7))
         break;
@@ -3403,19 +3395,19 @@ parser_error_t _readMethod_V7(
         CHECK_ERROR(_readMethod_utility_relay_tx_V7(c, &method->nested.utility_relay_tx_V7))
         break;
     case 10498: /* module 41 call 2 */
-        CHECK_ERROR(_readMethod_utility_batch_all_V7(c, &method->basic.utility_batch_all_V7))
+        CHECK_ERROR(_readMethod_utility_batch_all_V7(c, &method->nested.utility_batch_all_V7))
         break;
     case 10499: /* module 41 call 3 */
-        CHECK_ERROR(_readMethod_utility_dispatch_as_V7(c, &method->basic.utility_dispatch_as_V7))
+        CHECK_ERROR(_readMethod_utility_dispatch_as_V7(c, &method->nested.utility_dispatch_as_V7))
         break;
     case 10500: /* module 41 call 4 */
-        CHECK_ERROR(_readMethod_utility_force_batch_V7(c, &method->basic.utility_force_batch_V7))
+        CHECK_ERROR(_readMethod_utility_force_batch_V7(c, &method->nested.utility_force_batch_V7))
         break;
     case 10501: /* module 41 call 5 */
         CHECK_ERROR(_readMethod_utility_with_weight_V7(c, &method->basic.utility_with_weight_V7))
         break;
-    case 10502: /* module 41 call 6 */
-        CHECK_ERROR(_readMethod_utility_batch_old_V7(c, &method->basic.utility_batch_old_V7))
+    case 10505: /* module 41 call 9 */
+        CHECK_ERROR(_readMethod_utility_as_derivative_V7(c, &method->nested.utility_as_derivative_V7))
         break;
     case 11008: /* module 43 call 0 */
         CHECK_ERROR(_readMethod_externalagents_create_group_V7(c, &method->basic.externalagents_create_group_V7))
@@ -3700,10 +3692,6 @@ const char* _getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx)
         return STR_ME_VOTE;
     case 10496: /* module 41 call 0 */
         return STR_ME_BATCH;
-    case 10503: /* module 41 call 7 */
-        return STR_ME_BATCH_ATOMIC;
-    case 10504: /* module 41 call 8 */
-        return STR_ME_BATCH_OPTIMISTIC;
     default:
         return _getMethod_Name_V7_ParserFull(callPrivIdx);
     }
@@ -4071,6 +4059,8 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
         return STR_ME_REMOVE_ASSET_PRE_APPROVAL;
     case 6687: /* module 26 call 31 */
         return STR_ME_LINK_TICKER_TO_ASSET_ID;
+    case 6688: /* module 26 call 32 */
+        return STR_ME_UNLINK_TICKER_FROM_ASSET_ID;
     case 6912: /* module 27 call 0 */
         return STR_ME_DISTRIBUTE;
     case 6913: /* module 27 call 1 */
@@ -4209,8 +4199,8 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
         return STR_ME_FORCE_BATCH;
     case 10501: /* module 41 call 5 */
         return STR_ME_WITH_WEIGHT;
-    case 10502: /* module 41 call 6 */
-        return STR_ME_BATCH_OLD;
+    case 10505: /* module 41 call 9 */
+        return STR_ME_AS_DERIVATIVE;
     case 11008: /* module 43 call 0 */
         return STR_ME_CREATE_GROUP;
     case 11009: /* module 43 call 1 */
@@ -4361,10 +4351,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
     case 8455: /* module 33 call 7 */
         return 3;
     case 10496: /* module 41 call 0 */
-        return 1;
-    case 10503: /* module 41 call 7 */
-        return 1;
-    case 10504: /* module 41 call 8 */
         return 1;
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
@@ -4603,6 +4589,8 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 3856: /* module 15 call 16 */
         return 1;
+    case 3857: /* module 15 call 17 */
+        return 0;
     case 4361: /* module 17 call 9 */
         return 1;
     case 4362: /* module 17 call 10 */
@@ -4722,6 +4710,8 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
     case 6684: /* module 26 call 28 */
         return 1;
     case 6687: /* module 26 call 31 */
+        return 2;
+    case 6688: /* module 26 call 32 */
         return 2;
     case 6912: /* module 27 call 0 */
         return 7;
@@ -4861,8 +4851,8 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 1;
     case 10501: /* module 41 call 5 */
         return 2;
-    case 10502: /* module 41 call 6 */
-        return 1;
+    case 10505: /* module 41 call 9 */
+        return 2;
     case 11008: /* module 43 call 0 */
         return 2;
     case 11009: /* module 43 call 1 */
@@ -5182,20 +5172,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return NULL;
         }
     case 10496: /* module 41 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_calls;
-        default:
-            return NULL;
-        }
-    case 10503: /* module 41 call 7 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_calls;
-        default:
-            return NULL;
-        }
-    case 10504: /* module 41 call 8 */
         switch (itemIdx) {
         case 0:
             return STR_IT_calls;
@@ -6224,6 +6200,11 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
+    case 3857: /* module 15 call 17 */
+        switch (itemIdx) {
+        default:
+            return NULL;
+        }
     case 4361: /* module 17 call 9 */
         switch (itemIdx) {
         case 0:
@@ -6730,6 +6711,15 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return NULL;
         }
     case 6687: /* module 26 call 31 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_ticker;
+        case 1:
+            return STR_IT_asset_id;
+        default:
+            return NULL;
+        }
+    case 6688: /* module 26 call 32 */
         switch (itemIdx) {
         case 0:
             return STR_IT_ticker;
@@ -7375,10 +7365,12 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
-    case 10502: /* module 41 call 6 */
+    case 10505: /* module 41 call 9 */
         switch (itemIdx) {
         case 0:
-            return STR_IT_calls;
+            return STR_IT_index;
+        case 1:
+            return STR_IT_call;
         default:
             return NULL;
         }
@@ -8209,32 +8201,12 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
-    case 10503: /* module 41 call 7 */
-        switch (itemIdx) {
-        case 0: /* utility_batch_atomic_V7 - calls */;
-            return _toStringVecCall(
-                &m->nested.utility_batch_atomic_V7.calls,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 10504: /* module 41 call 8 */
-        switch (itemIdx) {
-        case 0: /* utility_batch_optimistic_V7 - calls */;
-            return _toStringVecCall(
-                &m->nested.utility_batch_optimistic_V7.calls,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
     case 6685: /* module 26 call 29 */
         switch (itemIdx) {
         case 0: /* asset_add_mandatory_mediators_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_add_mandatory_mediators_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8249,7 +8221,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6686: /* module 26 call 30 */
         switch (itemIdx) {
         case 0: /* asset_remove_mandatory_mediators_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_remove_mandatory_mediators_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8274,7 +8246,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7681: /* module 30 call 1 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_default_targets_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.corporateaction_set_default_targets_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8289,7 +8261,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7682: /* module 30 call 2 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_default_withholding_tax_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.corporateaction_set_default_withholding_tax_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8304,7 +8276,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7683: /* module 30 call 3 */
         switch (itemIdx) {
         case 0: /* corporateaction_set_did_withholding_tax_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.corporateaction_set_did_withholding_tax_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8324,7 +8296,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7684: /* module 30 call 4 */
         switch (itemIdx) {
         case 0: /* corporateaction_initiate_corporate_action_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.corporateaction_initiate_corporate_action_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -8419,7 +8391,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* corporateaction_initiate_corporate_action_and_distribute_V7 - currency */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.corporateaction_initiate_corporate_action_and_distribute_V7.currency,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -9902,6 +9874,11 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
+    case 3857: /* module 15 call 17 */
+        switch (itemIdx) {
+        default:
+            return parser_no_data;
+        }
     case 4361: /* module 17 call 9 */
         switch (itemIdx) {
         case 0: /* staking_set_validator_count_V7 - new_ */;
@@ -10325,7 +10302,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6660: /* module 26 call 4 */
         switch (itemIdx) {
         case 0: /* asset_freeze_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_freeze_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10335,7 +10312,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6661: /* module 26 call 5 */
         switch (itemIdx) {
         case 0: /* asset_unfreeze_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_unfreeze_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10345,7 +10322,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6662: /* module 26 call 6 */
         switch (itemIdx) {
         case 0: /* asset_rename_asset_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_rename_asset_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10360,7 +10337,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6663: /* module 26 call 7 */
         switch (itemIdx) {
         case 0: /* asset_issue_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_issue_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10380,7 +10357,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6664: /* module 26 call 8 */
         switch (itemIdx) {
         case 0: /* asset_redeem_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_redeem_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10400,7 +10377,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6665: /* module 26 call 9 */
         switch (itemIdx) {
         case 0: /* asset_make_divisible_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_make_divisible_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10415,7 +10392,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_add_documents_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_add_documents_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10430,7 +10407,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_remove_documents_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_remove_documents_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10440,7 +10417,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6668: /* module 26 call 12 */
         switch (itemIdx) {
         case 0: /* asset_set_funding_round_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_set_funding_round_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10455,7 +10432,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6669: /* module 26 call 13 */
         switch (itemIdx) {
         case 0: /* asset_update_identifiers_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.asset_update_identifiers_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10470,7 +10447,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6670: /* module 26 call 14 */
         switch (itemIdx) {
         case 0: /* asset_controller_transfer_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_controller_transfer_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10530,7 +10507,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6673: /* module 26 call 17 */
         switch (itemIdx) {
         case 0: /* asset_set_asset_metadata_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_set_asset_metadata_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10555,7 +10532,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6674: /* module 26 call 18 */
         switch (itemIdx) {
         case 0: /* asset_set_asset_metadata_details_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_set_asset_metadata_details_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10575,7 +10552,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6675: /* module 26 call 19 */
         switch (itemIdx) {
         case 0: /* asset_register_and_set_local_asset_metadata_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_register_and_set_local_asset_metadata_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10605,7 +10582,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6676: /* module 26 call 20 */
         switch (itemIdx) {
         case 0: /* asset_register_asset_metadata_local_type_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_register_asset_metadata_local_type_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10640,7 +10617,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6678: /* module 26 call 22 */
         switch (itemIdx) {
         case 0: /* asset_update_asset_type_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_update_asset_type_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10655,7 +10632,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6679: /* module 26 call 23 */
         switch (itemIdx) {
         case 0: /* asset_remove_local_metadata_key_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_remove_local_metadata_key_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10670,7 +10647,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6680: /* module 26 call 24 */
         switch (itemIdx) {
         case 0: /* asset_remove_metadata_value_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_remove_metadata_value_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10685,7 +10662,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6681: /* module 26 call 25 */
         switch (itemIdx) {
         case 0: /* asset_exempt_asset_affirmation_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_exempt_asset_affirmation_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10695,7 +10672,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6682: /* module 26 call 26 */
         switch (itemIdx) {
         case 0: /* asset_remove_asset_affirmation_exemption_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_remove_asset_affirmation_exemption_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10705,7 +10682,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6683: /* module 26 call 27 */
         switch (itemIdx) {
         case 0: /* asset_pre_approve_asset_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_pre_approve_asset_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10715,7 +10692,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 6684: /* module 26 call 28 */
         switch (itemIdx) {
         case 0: /* asset_remove_asset_pre_approval_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_remove_asset_pre_approval_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10730,8 +10707,23 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* asset_link_ticker_to_asset_id_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.asset_link_ticker_to_asset_id_V7.asset_id,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6688: /* module 26 call 32 */
+        switch (itemIdx) {
+        case 0: /* asset_unlink_ticker_from_asset_id_V7 - ticker */;
+            return _toStringTicker(
+                &m->basic.asset_unlink_ticker_from_asset_id_V7.ticker,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* asset_unlink_ticker_from_asset_id_V7 - asset_id */;
+            return _toStringAssetId(
+                &m->basic.asset_unlink_ticker_from_asset_id_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -10750,7 +10742,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* capitaldistribution_distribute_V7 - currency */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.capitaldistribution_distribute_V7.currency,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10825,7 +10817,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7168: /* module 28 call 0 */
         switch (itemIdx) {
         case 0: /* checkpoint_create_checkpoint_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.checkpoint_create_checkpoint_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10845,7 +10837,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7170: /* module 28 call 2 */
         switch (itemIdx) {
         case 0: /* checkpoint_create_schedule_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.checkpoint_create_schedule_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10860,7 +10852,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7171: /* module 28 call 3 */
         switch (itemIdx) {
         case 0: /* checkpoint_remove_schedule_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.checkpoint_remove_schedule_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10875,7 +10867,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7424: /* module 29 call 0 */
         switch (itemIdx) {
         case 0: /* compliancemanager_add_compliance_requirement_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_add_compliance_requirement_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10895,7 +10887,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7425: /* module 29 call 1 */
         switch (itemIdx) {
         case 0: /* compliancemanager_remove_compliance_requirement_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_remove_compliance_requirement_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10910,7 +10902,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7426: /* module 29 call 2 */
         switch (itemIdx) {
         case 0: /* compliancemanager_replace_asset_compliance_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_replace_asset_compliance_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10925,7 +10917,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7427: /* module 29 call 3 */
         switch (itemIdx) {
         case 0: /* compliancemanager_reset_asset_compliance_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_reset_asset_compliance_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10935,7 +10927,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7428: /* module 29 call 4 */
         switch (itemIdx) {
         case 0: /* compliancemanager_pause_asset_compliance_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_pause_asset_compliance_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10945,7 +10937,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7429: /* module 29 call 5 */
         switch (itemIdx) {
         case 0: /* compliancemanager_resume_asset_compliance_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_resume_asset_compliance_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10955,7 +10947,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7430: /* module 29 call 6 */
         switch (itemIdx) {
         case 0: /* compliancemanager_add_default_trusted_claim_issuer_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_add_default_trusted_claim_issuer_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10970,7 +10962,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7431: /* module 29 call 7 */
         switch (itemIdx) {
         case 0: /* compliancemanager_remove_default_trusted_claim_issuer_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_remove_default_trusted_claim_issuer_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -10985,7 +10977,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 7432: /* module 29 call 8 */
         switch (itemIdx) {
         case 0: /* compliancemanager_change_compliance_requirement_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.compliancemanager_change_compliance_requirement_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11215,7 +11207,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 8710: /* module 34 call 6 */
         switch (itemIdx) {
         case 0: /* portfolio_pre_approve_portfolio_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.portfolio_pre_approve_portfolio_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11230,7 +11222,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 8711: /* module 34 call 7 */
         switch (itemIdx) {
         case 0: /* portfolio_remove_portfolio_pre_approval_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.portfolio_remove_portfolio_pre_approval_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11325,7 +11317,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9476: /* module 37 call 4 */
         switch (itemIdx) {
         case 0: /* settlement_set_venue_filtering_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.settlement_set_venue_filtering_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11340,7 +11332,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9477: /* module 37 call 5 */
         switch (itemIdx) {
         case 0: /* settlement_allow_venues_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.settlement_allow_venues_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11355,7 +11347,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9478: /* module 37 call 6 */
         switch (itemIdx) {
         case 0: /* settlement_disallow_venues_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->nested.settlement_disallow_venues_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11565,7 +11557,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* sto_create_fundraiser_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_create_fundraiser_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11575,7 +11567,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 3: /* sto_create_fundraiser_V7 - raising_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_create_fundraiser_V7.raising_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11625,7 +11617,7 @@ parser_error_t _getMethod_ItemValue_V7(
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 2: /* sto_invest_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_invest_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11655,7 +11647,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9986: /* module 39 call 2 */
         switch (itemIdx) {
         case 0: /* sto_freeze_fundraiser_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_freeze_fundraiser_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11670,7 +11662,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9987: /* module 39 call 3 */
         switch (itemIdx) {
         case 0: /* sto_unfreeze_fundraiser_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_unfreeze_fundraiser_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11685,7 +11677,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9988: /* module 39 call 4 */
         switch (itemIdx) {
         case 0: /* sto_modify_fundraiser_window_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_modify_fundraiser_window_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11710,7 +11702,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 9989: /* module 39 call 5 */
         switch (itemIdx) {
         case 0: /* sto_stop_V7 - offering_asset */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.sto_stop_V7.offering_asset,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11766,7 +11758,7 @@ parser_error_t _getMethod_ItemValue_V7(
         switch (itemIdx) {
         case 0: /* utility_batch_all_V7 - calls */;
             return _toStringVecCall(
-                &m->basic.utility_batch_all_V7.calls,
+                &m->nested.utility_batch_all_V7.calls,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11776,12 +11768,12 @@ parser_error_t _getMethod_ItemValue_V7(
         switch (itemIdx) {
         case 0: /* utility_dispatch_as_V7 - as_origin */;
             return _toStringBoxPalletsOrigin(
-                &m->basic.utility_dispatch_as_V7.as_origin,
+                &m->nested.utility_dispatch_as_V7.as_origin,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         case 1: /* utility_dispatch_as_V7 - call */;
             return _toStringCall(
-                &m->basic.utility_dispatch_as_V7.call,
+                &m->nested.utility_dispatch_as_V7.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11791,7 +11783,7 @@ parser_error_t _getMethod_ItemValue_V7(
         switch (itemIdx) {
         case 0: /* utility_force_batch_V7 - calls */;
             return _toStringVecCall(
-                &m->basic.utility_force_batch_V7.calls,
+                &m->nested.utility_force_batch_V7.calls,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11812,11 +11804,16 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
-    case 10502: /* module 41 call 6 */
+    case 10505: /* module 41 call 9 */
         switch (itemIdx) {
-        case 0: /* utility_batch_old_V7 - calls */;
-            return _toStringVecCall(
-                &m->basic.utility_batch_old_V7.calls,
+        case 0: /* utility_as_derivative_V7 - index */;
+            return _toStringu16(
+                &m->nested.utility_as_derivative_V7.index,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* utility_as_derivative_V7 - call */;
+            return _toStringCall(
+                &m->nested.utility_as_derivative_V7.call,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -11825,7 +11822,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11008: /* module 43 call 0 */
         switch (itemIdx) {
         case 0: /* externalagents_create_group_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_create_group_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11840,7 +11837,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11009: /* module 43 call 1 */
         switch (itemIdx) {
         case 0: /* externalagents_set_group_permissions_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_set_group_permissions_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11860,7 +11857,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11010: /* module 43 call 2 */
         switch (itemIdx) {
         case 0: /* externalagents_remove_agent_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_remove_agent_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11875,7 +11872,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11011: /* module 43 call 3 */
         switch (itemIdx) {
         case 0: /* externalagents_abdicate_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_abdicate_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11885,7 +11882,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11012: /* module 43 call 4 */
         switch (itemIdx) {
         case 0: /* externalagents_change_group_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_change_group_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11915,7 +11912,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11014: /* module 43 call 6 */
         switch (itemIdx) {
         case 0: /* externalagents_create_group_and_add_auth_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_create_group_and_add_auth_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -11940,7 +11937,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 11015: /* module 43 call 7 */
         switch (itemIdx) {
         case 0: /* externalagents_create_and_change_custom_group_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.externalagents_create_and_change_custom_group_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -12505,7 +12502,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 12544: /* module 49 call 0 */
         switch (itemIdx) {
         case 0: /* nft_create_nft_collection_V7 - asset_id */;
-            return _toStringOptionAssetID(
+            return _toStringOptionAssetId(
                 &m->basic.nft_create_nft_collection_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -12525,7 +12522,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 12545: /* module 49 call 1 */
         switch (itemIdx) {
         case 0: /* nft_issue_nft_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.nft_issue_nft_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -12545,7 +12542,7 @@ parser_error_t _getMethod_ItemValue_V7(
     case 12546: /* module 49 call 2 */
         switch (itemIdx) {
         case 0: /* nft_redeem_nft_V7 - asset_id */;
-            return _toStringAssetID(
+            return _toStringAssetId(
                 &m->basic.nft_redeem_nft_V7.asset_id,
                 outValue, outValueLen,
                 pageIdx, pageCount);
@@ -12695,6 +12692,7 @@ bool _getMethod_IsNestingSupported_V7(uint8_t moduleIdx, uint8_t callIdx)
     case 6685: // Asset:Add mandatory mediators
     case 6686: // Asset:Remove mandatory mediators
     case 6687: // Asset:Link ticker to asset id
+    case 6688: // Asset:Unlink ticker from asset id
     case 8707: // Portfolio:Quit portfolio custody
     case 8708: // Portfolio:Accept portfolio custody
     case 8710: // Portfolio:Pre approve portfolio
@@ -12721,11 +12719,7 @@ bool _getMethod_IsNestingSupported_V7(uint8_t moduleIdx, uint8_t callIdx)
     case 9987: // Sto:Unfreeze fundraiser
     case 9988: // Sto:Modify fundraiser window
     case 9989: // Sto:Stop
-    case 10498: // Utility:Batch all
-    case 10499: // Utility:Dispatch as
-    case 10500: // Utility:Force batch
     case 10501: // Utility:With weight
-    case 10502: // Utility:Batch old
     case 11008: // ExternalAgents:Create group
     case 11009: // ExternalAgents:Set group permissions
     case 11010: // ExternalAgents:Remove agent

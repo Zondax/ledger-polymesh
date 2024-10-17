@@ -121,7 +121,7 @@ typedef struct {
 typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
-} pd_AssetID_t;
+} pd_AssetId_t;
 
 typedef struct {
     const uint8_t* _ptr;
@@ -131,7 +131,7 @@ typedef struct {
     uint8_t value;
     union {
         pd_IdentityId_t identity;
-        pd_AssetID_t assetId;
+        pd_AssetId_t assetId;
         uint64_t _len;
         const uint8_t* _ptr;
     };
@@ -713,13 +713,13 @@ typedef struct {
 } pd_DocumentUri_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_BalanceNoSymbol_t amount;
     pd_OptionMemo_t memo;
 } pd_FundFungible_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_Vecu64_t ids;
     pd_OptionMemo_t memo;
 } pd_FundNonFungible_t;
@@ -727,14 +727,14 @@ typedef struct {
 typedef struct {
     pd_PortfolioId_t sender;
     pd_PortfolioId_t receiver;
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_BalanceNoSymbol_t amount;
 } pd_LegFungible_t;
 
 typedef struct {
     pd_PortfolioId_t sender;
     pd_PortfolioId_t receiver;
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_Vecu64_t ids;
 } pd_LegNonFungible_t;
 
@@ -977,7 +977,7 @@ typedef struct {
 } pd_BallotVote_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_AgentGroup_t agentGroup;
 } pd_BecomeAgent_t;
 
@@ -1254,7 +1254,7 @@ typedef struct {
         pd_IdentityId_t identityId;
         pd_AccountId_t accountId;
         pd_Ticker_t ticker;
-        pd_AssetID_t assetId;
+        pd_AssetId_t assetId;
         pd_Permissions_t permissions;
         pd_PortfolioId_t portfolioId;
         pd_BecomeAgent_t becomeAgent;
@@ -1308,7 +1308,7 @@ typedef struct {
 } pd_BoxTasConfigProposal_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_LocalCAId_t local_id;
 } pd_CAId_t;
 
@@ -1332,7 +1332,7 @@ typedef struct {
 } pd_ConfigOpPercent_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_CAKind_t kind;
     uint64_t declDate;
     pd_OptionRecordDateSpec_t recordDate;
@@ -1358,7 +1358,7 @@ typedef struct {
 } pd_MaybeBlockBlockNumber_t;
 
 typedef struct {
-    pd_AssetID_t assetId;
+    pd_AssetId_t assetId;
     pd_VecNFTId_t ids;
 } pd_NFTs_t;
 
@@ -1614,8 +1614,8 @@ typedef struct {
 
 typedef struct {
     uint8_t some;
-    pd_AssetID_t contained;
-} pd_OptionAssetID_t;
+    pd_AssetId_t assetId;
+} pd_OptionAssetId_t;
 
 typedef struct {
     uint8_t some;
