@@ -344,25 +344,25 @@
 
 ## Pips
 
-| Name                         | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                                             |
-| ---------------------------- | ------------------ | ------------------ | ------------------ | ------------------ | ----------------------------------------------------------------------------------------------------- |
-| Set prune historical pips    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `bool`prune<br/>                                                                                      |
-| Set min proposal deposit     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Balance`deposit<br/>                                                                                 |
-| Set default enactment period |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `BlockNumber`duration<br/>                                                                            |
-| Set pending pip expiry       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlockBlockNumber`expiry<br/>                                                                    |
-| Set max pip skip count       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `SkippedCount`max<br/>                                                                                |
-| Set active pip limit         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u32`limit<br/>                                                                                       |
-| Propose                      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `Proposal`proposal<br/>`Balance`deposit<br/>`OptionUrl`url<br/>`OptionPipDescription`description<br/> |
-| Vote                         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>`bool`aye_or_nay<br/>`Balance`deposit<br/>                                              |
-| Approve committee proposal   |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
-| Reject proposal              |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
-| Prune proposal               |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
-| Reschedule execution         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>`OptionBlockNumber`until<br/>                                                           |
-| Clear snapshot               |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                       |
-| Snapshot                     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                                                                                       |
-| Enact snapshot results       |                    |                    | :heavy_check_mark: | :heavy_check_mark: | `VecTuplePipIdSnapshotResult`results<br/>                                                             |
-| Execute scheduled pip        |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
-| Expire scheduled pip         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`did<br/>`PipId`id<br/>                                                                    |
+| Name                         | Nano S             | Nano S XL | Nano SP/X - Stax   | Nesting            | Arguments                                                                                             |
+| ---------------------------- | ------------------ | --------- | ------------------ | ------------------ | ----------------------------------------------------------------------------------------------------- |
+| Set prune historical pips    |                    |           | :heavy_check_mark: | :heavy_check_mark: | `bool`prune<br/>                                                                                      |
+| Set min proposal deposit     |                    |           | :heavy_check_mark: | :heavy_check_mark: | `Balance`deposit<br/>                                                                                 |
+| Set default enactment period |                    |           | :heavy_check_mark: | :heavy_check_mark: | `BlockNumber`duration<br/>                                                                            |
+| Set pending pip expiry       |                    |           | :heavy_check_mark: | :heavy_check_mark: | `MaybeBlockBlockNumber`expiry<br/>                                                                    |
+| Set max pip skip count       |                    |           | :heavy_check_mark: | :heavy_check_mark: | `SkippedCount`max<br/>                                                                                |
+| Set active pip limit         |                    |           | :heavy_check_mark: | :heavy_check_mark: | `u32`limit<br/>                                                                                       |
+| Propose                      | :heavy_check_mark: |           | :heavy_check_mark: | :heavy_check_mark: | `Proposal`proposal<br/>`Balance`deposit<br/>`OptionUrl`url<br/>`OptionPipDescription`description<br/> |
+| Vote                         | :heavy_check_mark: |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>`bool`aye_or_nay<br/>`Balance`deposit<br/>                                              |
+| Approve committee proposal   |                    |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
+| Reject proposal              |                    |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
+| Prune proposal               |                    |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
+| Reschedule execution         |                    |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>`OptionBlockNumber`until<br/>                                                           |
+| Clear snapshot               |                    |           | :heavy_check_mark: | :heavy_check_mark: |                                                                                                       |
+| Snapshot                     |                    |           | :heavy_check_mark: | :heavy_check_mark: |                                                                                                       |
+| Enact snapshot results       |                    |           | :heavy_check_mark: | :heavy_check_mark: | `VecTuplePipIdSnapshotResult`results<br/>                                                             |
+| Execute scheduled pip        |                    |           | :heavy_check_mark: | :heavy_check_mark: | `PipId`id<br/>                                                                                        |
+| Expire scheduled pip         |                    |           | :heavy_check_mark: | :heavy_check_mark: | `IdentityId`did<br/>`PipId`id<br/>                                                                    |
 
 ## Portfolio
 
