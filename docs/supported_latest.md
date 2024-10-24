@@ -176,7 +176,6 @@
 | Remove payer via payer            |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>                                                                              |
 | Approve join identity             |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`u64`auth_id<br/>                                                             |
 | Join identity                     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                     |
-| Remove admin                      |                    |                    |                    |                    |                                                                                                       |
 
 ## Staking
 
@@ -240,12 +239,12 @@
 
 ## Sudo
 
-| Name                  | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                           |
-| --------------------- | ------ | ------------------ | ------------------ | ------- | --------------------------------------------------- |
-| Sudo                  |        | :heavy_check_mark: | :heavy_check_mark: |         | `Call`call<br/>                                     |
-| Sudo unchecked weight |        | :heavy_check_mark: | :heavy_check_mark: |         | `Call`call<br/>`Weight`\_weight<br/>                |
-| Set key               |        | :heavy_check_mark: | :heavy_check_mark: |         | `LookupasStaticLookupSource`new\_<br/>              |
-| Sudo as               |        | :heavy_check_mark: | :heavy_check_mark: |         | `LookupasStaticLookupSource`who<br/>`Call`call<br/> |
+| Name                  | Nano S | Nano S XL | Nano SP/X - Stax   | Nesting | Arguments                                           |
+| --------------------- | ------ | --------- | ------------------ | ------- | --------------------------------------------------- |
+| Sudo                  |        |           | :heavy_check_mark: |         | `Call`call<br/>                                     |
+| Sudo unchecked weight |        |           | :heavy_check_mark: |         | `Call`call<br/>`Weight`\_weight<br/>                |
+| Set key               |        |           | :heavy_check_mark: |         | `LookupasStaticLookupSource`new\_<br/>              |
+| Sudo as               |        |           | :heavy_check_mark: |         | `LookupasStaticLookupSource`who<br/>`Call`call<br/> |
 
 ## Asset
 
@@ -544,10 +543,10 @@
 | Name                          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                  |
 | ----------------------------- | ------ | ------------------ | ------------------ | ------- | ------------------------------------------------------------------------------------------ |
 | Submit unsigned               |        | :heavy_check_mark: | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>`SolutionOrSnapshotSize`witness<br/> |
-| Set minimum untrusted score   |        | :heavy_check_mark: | :heavy_check_mark: |         | `OptionElectionScore`maybe_next_score<br/>                                                 |
-| Set emergency election result |        | :heavy_check_mark: | :heavy_check_mark: |         | `SupportsAccountId`supports<br/>                                                           |
-| Submit                        |        | :heavy_check_mark: | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>                                     |
-| Governance fallback           |        | :heavy_check_mark: | :heavy_check_mark: |         | `Optionu32`maybe_max_voters<br/>`Optionu32`maybe_max_targets<br/>                          |
+| Set minimum untrusted score   |        |                    | :heavy_check_mark: |         | `OptionElectionScore`maybe_next_score<br/>                                                 |
+| Set emergency election result |        |                    | :heavy_check_mark: |         | `SupportsAccountId`supports<br/>                                                           |
+| Submit                        |        |                    | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>                                     |
+| Governance fallback           |        |                    | :heavy_check_mark: |         | `Optionu32`maybe_max_voters<br/>`Optionu32`maybe_max_targets<br/>                          |
 
 ## TestUtils
 

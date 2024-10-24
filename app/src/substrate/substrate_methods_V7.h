@@ -69,6 +69,24 @@ extern "C" {
 
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+#define PD_CALL_SUDO_SUDO_V7 0
+typedef struct {
+    pd_Call_t call;
+} pd_sudo_sudo_V7_t;
+#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V7 1
+typedef struct {
+    pd_Call_t call;
+    pd_Weight_t _weight;
+} pd_sudo_sudo_unchecked_weight_V7_t;
+#define PD_CALL_SUDO_SET_KEY_V7 2
+typedef struct {
+    pd_LookupasStaticLookupSource_t new_;
+} pd_sudo_set_key_V7_t;
+#define PD_CALL_SUDO_SUDO_AS_V7 3
+typedef struct {
+    pd_LookupasStaticLookupSource_t who;
+    pd_Call_t call;
+} pd_sudo_sudo_as_V7_t;
 #define PD_CALL_ASSET_ADD_MANDATORY_MEDIATORS_V7 29
 typedef struct {
     pd_AssetId_t asset_id;
@@ -158,29 +176,24 @@ typedef struct {
     pd_PortfolioId_t source_portfolio;
     pd_PortfolioKind_t callers_portfolio_kind;
 } pd_nft_controller_transfer_V7_t;
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_MINIMUM_UNTRUSTED_SCORE_V7 1
+typedef struct {
+    pd_OptionElectionScore_t maybe_next_score;
+} pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t;
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_EMERGENCY_ELECTION_RESULT_V7 2
+typedef struct {
+    pd_SupportsAccountId_t supports;
+} pd_electionprovidermultiphase_set_emergency_election_result_V7_t;
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SUBMIT_V7 3
+typedef struct {
+    pd_BoxRawSolutionSolutionOfMinerConfig_t raw_solution;
+} pd_electionprovidermultiphase_submit_V7_t;
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_GOVERNANCE_FALLBACK_V7 4
+typedef struct {
+    pd_Optionu32_t maybe_max_voters;
+    pd_Optionu32_t maybe_max_targets;
+} pd_electionprovidermultiphase_governance_fallback_V7_t;
 #endif
-
-#define PD_CALL_SUDO_SUDO_V7 0
-typedef struct {
-    pd_Call_t call;
-} pd_sudo_sudo_V7_t;
-
-#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V7 1
-typedef struct {
-    pd_Call_t call;
-    pd_Weight_t _weight;
-} pd_sudo_sudo_unchecked_weight_V7_t;
-
-#define PD_CALL_SUDO_SET_KEY_V7 2
-typedef struct {
-    pd_LookupasStaticLookupSource_t new_;
-} pd_sudo_set_key_V7_t;
-
-#define PD_CALL_SUDO_SUDO_AS_V7 3
-typedef struct {
-    pd_LookupasStaticLookupSource_t who;
-    pd_Call_t call;
-} pd_sudo_sudo_as_V7_t;
 
 #define PD_CALL_ASSET_REGISTER_UNIQUE_TICKER_V7 0
 typedef struct {
@@ -647,32 +660,15 @@ typedef struct {
     pd_SolutionOrSnapshotSize_t witness;
 } pd_electionprovidermultiphase_submit_unsigned_V7_t;
 
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_MINIMUM_UNTRUSTED_SCORE_V7 1
-typedef struct {
-    pd_OptionElectionScore_t maybe_next_score;
-} pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t;
-
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_EMERGENCY_ELECTION_RESULT_V7 2
-typedef struct {
-    pd_SupportsAccountId_t supports;
-} pd_electionprovidermultiphase_set_emergency_election_result_V7_t;
-
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SUBMIT_V7 3
-typedef struct {
-    pd_BoxRawSolutionSolutionOfMinerConfig_t raw_solution;
-} pd_electionprovidermultiphase_submit_V7_t;
-
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_GOVERNANCE_FALLBACK_V7 4
-typedef struct {
-    pd_Optionu32_t maybe_max_voters;
-    pd_Optionu32_t maybe_max_targets;
-} pd_electionprovidermultiphase_governance_fallback_V7_t;
-
 #endif
 
 typedef union {
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    pd_sudo_sudo_V7_t sudo_sudo_V7;
+    pd_sudo_sudo_unchecked_weight_V7_t sudo_sudo_unchecked_weight_V7;
+    pd_sudo_set_key_V7_t sudo_set_key_V7;
+    pd_sudo_sudo_as_V7_t sudo_sudo_as_V7;
     pd_asset_add_mandatory_mediators_V7_t asset_add_mandatory_mediators_V7;
     pd_asset_remove_mandatory_mediators_V7_t asset_remove_mandatory_mediators_V7;
     pd_portfolio_allow_identity_to_create_portfolios_V7_t portfolio_allow_identity_to_create_portfolios_V7;
@@ -688,11 +684,11 @@ typedef union {
     pd_settlement_withdraw_affirmation_as_mediator_V7_t settlement_withdraw_affirmation_as_mediator_V7;
     pd_settlement_reject_instruction_as_mediator_V7_t settlement_reject_instruction_as_mediator_V7;
     pd_nft_controller_transfer_V7_t nft_controller_transfer_V7;
+    pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t electionprovidermultiphase_set_minimum_untrusted_score_V7;
+    pd_electionprovidermultiphase_set_emergency_election_result_V7_t electionprovidermultiphase_set_emergency_election_result_V7;
+    pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
+    pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
 #endif
-    pd_sudo_sudo_V7_t sudo_sudo_V7;
-    pd_sudo_sudo_unchecked_weight_V7_t sudo_sudo_unchecked_weight_V7;
-    pd_sudo_set_key_V7_t sudo_set_key_V7;
-    pd_sudo_sudo_as_V7_t sudo_sudo_as_V7;
     pd_asset_register_unique_ticker_V7_t asset_register_unique_ticker_V7;
     pd_asset_controller_transfer_V7_t asset_controller_transfer_V7;
     pd_asset_register_custom_asset_type_V7_t asset_register_custom_asset_type_V7;
@@ -761,10 +757,6 @@ typedef union {
     pd_nft_issue_nft_V7_t nft_issue_nft_V7;
     pd_nft_redeem_nft_V7_t nft_redeem_nft_V7;
     pd_electionprovidermultiphase_submit_unsigned_V7_t electionprovidermultiphase_submit_unsigned_V7;
-    pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t electionprovidermultiphase_set_minimum_untrusted_score_V7;
-    pd_electionprovidermultiphase_set_emergency_election_result_V7_t electionprovidermultiphase_set_emergency_election_result_V7;
-    pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
-    pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
 #endif
 } pd_MethodBasic_V7_t;
 

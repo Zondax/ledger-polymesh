@@ -176,7 +176,6 @@
 | Remove payer via payer            |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>                                                                              |
 | Approve join identity             |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`multisig<br/>`u64`auth_id<br/>                                                             |
 | Join identity                     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u64`auth_id<br/>                                                                                     |
-| Remove admin                      |                    |                    |                    |                    |                                                                                                       |
 
 ## Staking
 
@@ -240,12 +239,12 @@
 
 ## Sudo
 
-| Name                  | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                           |
-| --------------------- | ------ | ------------------ | ------------------ | ------- | --------------------------------------------------- |
-| Sudo                  |        | :heavy_check_mark: | :heavy_check_mark: |         | `Call`call<br/>                                     |
-| Sudo unchecked weight |        | :heavy_check_mark: | :heavy_check_mark: |         | `Call`call<br/>`Weight`\_weight<br/>                |
-| Set key               |        | :heavy_check_mark: | :heavy_check_mark: |         | `LookupasStaticLookupSource`new\_<br/>              |
-| Sudo as               |        | :heavy_check_mark: | :heavy_check_mark: |         | `LookupasStaticLookupSource`who<br/>`Call`call<br/> |
+| Name                  | Nano S | Nano S XL | Nano SP/X - Stax   | Nesting | Arguments                                           |
+| --------------------- | ------ | --------- | ------------------ | ------- | --------------------------------------------------- |
+| Sudo                  |        |           | :heavy_check_mark: |         | `Call`call<br/>                                     |
+| Sudo unchecked weight |        |           | :heavy_check_mark: |         | `Call`call<br/>`Weight`\_weight<br/>                |
+| Set key               |        |           | :heavy_check_mark: |         | `LookupasStaticLookupSource`new\_<br/>              |
+| Sudo as               |        |           | :heavy_check_mark: |         | `LookupasStaticLookupSource`who<br/>`Call`call<br/> |
 
 ## Asset
 
@@ -268,10 +267,10 @@
 | Controller transfer                   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`BalanceNoSymbol`amount<br/>`PortfolioId`from_portfolio<br/>                                                                                   |
 | Register custom asset type            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `Vecu8`ty<br/>                                                                                                                                                       |
 | Create asset with custom type         |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetName`asset_name<br/>`bool`divisible<br/>`Vecu8`custom_asset_type<br/>`VecAssetIdentifier`asset_identifiers<br/>`OptionFundingRoundName`funding_round_name<br/> |
-| Set asset metadata                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetMetadataKey`key<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>                                      |
-| Set asset metadata details            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetMetadataKey`key<br/>`AssetMetadataValueDetailMoment`detail<br/>                                                                          |
-| Register and set local asset metadata |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>        |
-| Register asset metadata local type    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                       |
+| Set asset metadata                    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetID`asset_id<br/>`AssetMetadataKey`key<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>                                      |
+| Set asset metadata details            |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetID`asset_id<br/>`AssetMetadataKey`key<br/>`AssetMetadataValueDetailMoment`detail<br/>                                                                          |
+| Register and set local asset metadata |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetID`asset_id<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>`AssetMetadataValue`value<br/>`OptionAssetMetadataValueDetailMoment`detail<br/>        |
+| Register asset metadata local type    |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetID`asset_id<br/>`AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                       |
 | Register asset metadata global type   |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetMetadataName`name<br/>`AssetMetadataSpec`spec<br/>                                                                                                             |
 | Update asset type                     |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetType`asset_type<br/>                                                                                                                     |
 | Remove local metadata key             |        | :heavy_check_mark: | :heavy_check_mark: |                    | `AssetId`asset_id<br/>`AssetMetadataLocalKey`local_key<br/>                                                                                                          |
@@ -457,15 +456,18 @@
 
 ## Utility
 
-| Name          | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                    |
-| ------------- | ------------------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------- |
-| Batch         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
-| Relay tx      |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target<br/>`OffChainSignature`signature<br/>`UniqueCall`call<br/> |
-| Batch all     |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
-| Dispatch as   |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `BoxPalletsOrigin`as_origin<br/>`Call`call<br/>                              |
-| Force batch   |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
-| With weight   |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `Call`call<br/>`Weight`weight<br/>                                           |
-| As derivative |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u16`index<br/>`Call`call<br/>                                               |
+| Name             | Nano S             | Nano S XL          | Nano SP/X - Stax   | Nesting            | Arguments                                                                    |
+| ---------------- | ------------------ | ------------------ | ------------------ | ------------------ | ---------------------------------------------------------------------------- |
+| Batch            | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
+| Relay tx         |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `AccountId`target<br/>`OffChainSignature`signature<br/>`UniqueCall`call<br/> |
+| Batch all        |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
+| Dispatch as      |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `BoxPalletsOrigin`as_origin<br/>`Call`call<br/>                              |
+| Force batch      |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `VecCall`calls<br/>                                                          |
+| With weight      |                    | :heavy_check_mark: | :heavy_check_mark: |                    | `Call`call<br/>`Weight`weight<br/>                                           |
+| Batch old        |                    |                    |                    |                    | `VecCall`calls<br/>                                                          |
+| Batch atomic     |                    |                    |                    |                    | `VecCall`calls<br/>                                                          |
+| Batch optimistic |                    |                    |                    |                    | `VecCall`calls<br/>                                                          |
+| As derivative    |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | `u16`index<br/>`Call`call<br/>                                               |
 
 ## Base
 
@@ -544,10 +546,10 @@
 | Name                          | Nano S | Nano S XL          | Nano SP/X - Stax   | Nesting | Arguments                                                                                  |
 | ----------------------------- | ------ | ------------------ | ------------------ | ------- | ------------------------------------------------------------------------------------------ |
 | Submit unsigned               |        | :heavy_check_mark: | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>`SolutionOrSnapshotSize`witness<br/> |
-| Set minimum untrusted score   |        | :heavy_check_mark: | :heavy_check_mark: |         | `OptionElectionScore`maybe_next_score<br/>                                                 |
-| Set emergency election result |        | :heavy_check_mark: | :heavy_check_mark: |         | `SupportsAccountId`supports<br/>                                                           |
-| Submit                        |        | :heavy_check_mark: | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>                                     |
-| Governance fallback           |        | :heavy_check_mark: | :heavy_check_mark: |         | `Optionu32`maybe_max_voters<br/>`Optionu32`maybe_max_targets<br/>                          |
+| Set minimum untrusted score   |        |                    | :heavy_check_mark: |         | `OptionElectionScore`maybe_next_score<br/>                                                 |
+| Set emergency election result |        |                    | :heavy_check_mark: |         | `SupportsAccountId`supports<br/>                                                           |
+| Submit                        |        |                    | :heavy_check_mark: |         | `BoxRawSolutionSolutionOfMinerConfig`raw_solution<br/>                                     |
+| Governance fallback           |        |                    | :heavy_check_mark: |         | `Optionu32`maybe_max_voters<br/>`Optionu32`maybe_max_targets<br/>                          |
 
 ## TestUtils
 

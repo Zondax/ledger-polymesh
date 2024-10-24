@@ -245,6 +245,32 @@ __Z_INLINE parser_error_t _readMethod_utility_batch_V7(
 
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+__Z_INLINE parser_error_t _readMethod_sudo_sudo_V7(
+    parser_context_t* c, pd_sudo_sudo_V7_t* m)
+{
+    CHECK_ERROR(_readCall(c, &m->call))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_sudo_sudo_unchecked_weight_V7(
+    parser_context_t* c, pd_sudo_sudo_unchecked_weight_V7_t* m)
+{
+    CHECK_ERROR(_readCall(c, &m->call))
+    CHECK_ERROR(_readWeight(c, &m->_weight))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_sudo_set_key_V7(
+    parser_context_t* c, pd_sudo_set_key_V7_t* m)
+{
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->new_))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_sudo_sudo_as_V7(
+    parser_context_t* c, pd_sudo_sudo_as_V7_t* m)
+{
+    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->who))
+    CHECK_ERROR(_readCall(c, &m->call))
+    return parser_ok;
+}
 __Z_INLINE parser_error_t _readMethod_asset_add_mandatory_mediators_V7(
     parser_context_t* c, pd_asset_add_mandatory_mediators_V7_t* m)
 {
@@ -484,6 +510,31 @@ __Z_INLINE parser_error_t _readMethod_nft_controller_transfer_V7(
     CHECK_ERROR(_readNFTs(c, &m->nfts))
     CHECK_ERROR(_readPortfolioId(c, &m->source_portfolio))
     CHECK_ERROR(_readPortfolioKind(c, &m->callers_portfolio_kind))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_set_minimum_untrusted_score_V7(
+    parser_context_t* c, pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t* m)
+{
+    CHECK_ERROR(_readOptionElectionScore(c, &m->maybe_next_score))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_set_emergency_election_result_V7(
+    parser_context_t* c, pd_electionprovidermultiphase_set_emergency_election_result_V7_t* m)
+{
+    CHECK_ERROR(_readSupportsAccountId(c, &m->supports))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_submit_V7(
+    parser_context_t* c, pd_electionprovidermultiphase_submit_V7_t* m)
+{
+    CHECK_ERROR(_readBoxRawSolutionSolutionOfMinerConfig(c, &m->raw_solution))
+    return parser_ok;
+}
+__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_governance_fallback_V7(
+    parser_context_t* c, pd_electionprovidermultiphase_governance_fallback_V7_t* m)
+{
+    CHECK_ERROR(_readOptionu32(c, &m->maybe_max_voters))
+    CHECK_ERROR(_readOptionu32(c, &m->maybe_max_targets))
     return parser_ok;
 }
 #endif
@@ -1341,36 +1392,6 @@ __Z_INLINE parser_error_t _readMethod_session_purge_keys_V7(
 {
     UNUSED(c);
     UNUSED(m);
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_sudo_sudo_V7(
-    parser_context_t* c, pd_sudo_sudo_V7_t* m)
-{
-    CHECK_ERROR(_readCall(c, &m->call))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_sudo_sudo_unchecked_weight_V7(
-    parser_context_t* c, pd_sudo_sudo_unchecked_weight_V7_t* m)
-{
-    CHECK_ERROR(_readCall(c, &m->call))
-    CHECK_ERROR(_readWeight(c, &m->_weight))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_sudo_set_key_V7(
-    parser_context_t* c, pd_sudo_set_key_V7_t* m)
-{
-    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->new_))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_sudo_sudo_as_V7(
-    parser_context_t* c, pd_sudo_sudo_as_V7_t* m)
-{
-    CHECK_ERROR(_readLookupasStaticLookupSource(c, &m->who))
-    CHECK_ERROR(_readCall(c, &m->call))
     return parser_ok;
 }
 
@@ -2536,35 +2557,6 @@ __Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_submit_unsigned
     return parser_ok;
 }
 
-__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_set_minimum_untrusted_score_V7(
-    parser_context_t* c, pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t* m)
-{
-    CHECK_ERROR(_readOptionElectionScore(c, &m->maybe_next_score))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_set_emergency_election_result_V7(
-    parser_context_t* c, pd_electionprovidermultiphase_set_emergency_election_result_V7_t* m)
-{
-    CHECK_ERROR(_readSupportsAccountId(c, &m->supports))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_submit_V7(
-    parser_context_t* c, pd_electionprovidermultiphase_submit_V7_t* m)
-{
-    CHECK_ERROR(_readBoxRawSolutionSolutionOfMinerConfig(c, &m->raw_solution))
-    return parser_ok;
-}
-
-__Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_governance_fallback_V7(
-    parser_context_t* c, pd_electionprovidermultiphase_governance_fallback_V7_t* m)
-{
-    CHECK_ERROR(_readOptionu32(c, &m->maybe_max_voters))
-    CHECK_ERROR(_readOptionu32(c, &m->maybe_max_targets))
-    return parser_ok;
-}
-
 #endif
 
 parser_error_t _readMethod_V7(
@@ -2664,6 +2656,18 @@ parser_error_t _readMethod_V7(
 
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 6400: /* module 25 call 0 */
+        CHECK_ERROR(_readMethod_sudo_sudo_V7(c, &method->basic.sudo_sudo_V7))
+        break;
+    case 6401: /* module 25 call 1 */
+        CHECK_ERROR(_readMethod_sudo_sudo_unchecked_weight_V7(c, &method->basic.sudo_sudo_unchecked_weight_V7))
+        break;
+    case 6402: /* module 25 call 2 */
+        CHECK_ERROR(_readMethod_sudo_set_key_V7(c, &method->basic.sudo_set_key_V7))
+        break;
+    case 6403: /* module 25 call 3 */
+        CHECK_ERROR(_readMethod_sudo_sudo_as_V7(c, &method->basic.sudo_sudo_as_V7))
+        break;
     case 6685: /* module 26 call 29 */
         CHECK_ERROR(_readMethod_asset_add_mandatory_mediators_V7(c, &method->basic.asset_add_mandatory_mediators_V7))
         break;
@@ -2756,6 +2760,18 @@ parser_error_t _readMethod_V7(
         break;
     case 12547: /* module 49 call 3 */
         CHECK_ERROR(_readMethod_nft_controller_transfer_V7(c, &method->basic.nft_controller_transfer_V7))
+        break;
+    case 12801: /* module 50 call 1 */
+        CHECK_ERROR(_readMethod_electionprovidermultiphase_set_minimum_untrusted_score_V7(c, &method->basic.electionprovidermultiphase_set_minimum_untrusted_score_V7))
+        break;
+    case 12802: /* module 50 call 2 */
+        CHECK_ERROR(_readMethod_electionprovidermultiphase_set_emergency_election_result_V7(c, &method->basic.electionprovidermultiphase_set_emergency_election_result_V7))
+        break;
+    case 12803: /* module 50 call 3 */
+        CHECK_ERROR(_readMethod_electionprovidermultiphase_submit_V7(c, &method->basic.electionprovidermultiphase_submit_V7))
+        break;
+    case 12804: /* module 50 call 4 */
+        CHECK_ERROR(_readMethod_electionprovidermultiphase_governance_fallback_V7(c, &method->basic.electionprovidermultiphase_governance_fallback_V7))
         break;
 #endif
     case 0: /* module 0 call 0 */
@@ -3093,18 +3109,6 @@ parser_error_t _readMethod_V7(
         break;
     case 4865: /* module 19 call 1 */
         CHECK_ERROR(_readMethod_session_purge_keys_V7(c, &method->nested.session_purge_keys_V7))
-        break;
-    case 6400: /* module 25 call 0 */
-        CHECK_ERROR(_readMethod_sudo_sudo_V7(c, &method->basic.sudo_sudo_V7))
-        break;
-    case 6401: /* module 25 call 1 */
-        CHECK_ERROR(_readMethod_sudo_sudo_unchecked_weight_V7(c, &method->basic.sudo_sudo_unchecked_weight_V7))
-        break;
-    case 6402: /* module 25 call 2 */
-        CHECK_ERROR(_readMethod_sudo_set_key_V7(c, &method->basic.sudo_set_key_V7))
-        break;
-    case 6403: /* module 25 call 3 */
-        CHECK_ERROR(_readMethod_sudo_sudo_as_V7(c, &method->basic.sudo_sudo_as_V7))
         break;
     case 6656: /* module 26 call 0 */
         CHECK_ERROR(_readMethod_asset_register_unique_ticker_V7(c, &method->basic.asset_register_unique_ticker_V7))
@@ -3520,18 +3524,6 @@ parser_error_t _readMethod_V7(
     case 12800: /* module 50 call 0 */
         CHECK_ERROR(_readMethod_electionprovidermultiphase_submit_unsigned_V7(c, &method->basic.electionprovidermultiphase_submit_unsigned_V7))
         break;
-    case 12801: /* module 50 call 1 */
-        CHECK_ERROR(_readMethod_electionprovidermultiphase_set_minimum_untrusted_score_V7(c, &method->basic.electionprovidermultiphase_set_minimum_untrusted_score_V7))
-        break;
-    case 12802: /* module 50 call 2 */
-        CHECK_ERROR(_readMethod_electionprovidermultiphase_set_emergency_election_result_V7(c, &method->basic.electionprovidermultiphase_set_emergency_election_result_V7))
-        break;
-    case 12803: /* module 50 call 3 */
-        CHECK_ERROR(_readMethod_electionprovidermultiphase_submit_V7(c, &method->basic.electionprovidermultiphase_submit_V7))
-        break;
-    case 12804: /* module 50 call 4 */
-        CHECK_ERROR(_readMethod_electionprovidermultiphase_governance_fallback_V7(c, &method->basic.electionprovidermultiphase_governance_fallback_V7))
-        break;
 #endif
     default:
         return parser_unexpected_callIndex;
@@ -3562,6 +3554,8 @@ const char* _getMethod_ModuleName_V7(uint8_t moduleIdx)
         return STR_MO_UTILITY;
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 25:
+        return STR_MO_SUDO;
     case 30:
         return STR_MO_CORPORATEACTION;
     case 31:
@@ -3589,8 +3583,6 @@ const char* _getMethod_ModuleName_V7(uint8_t moduleIdx)
         return STR_MO_UPGRADECOMMITTEEMEMBERSHIP;
     case 19:
         return STR_MO_SESSION;
-    case 25:
-        return STR_MO_SUDO;
     case 26:
         return STR_MO_ASSET;
     case 27:
@@ -3704,6 +3696,14 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
     switch (callPrivIdx) {
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 6400: /* module 25 call 0 */
+        return STR_ME_SUDO;
+    case 6401: /* module 25 call 1 */
+        return STR_ME_SUDO_UNCHECKED_WEIGHT;
+    case 6402: /* module 25 call 2 */
+        return STR_ME_SET_KEY;
+    case 6403: /* module 25 call 3 */
+        return STR_ME_SUDO_AS;
     case 6685: /* module 26 call 29 */
         return STR_ME_ADD_MANDATORY_MEDIATORS;
     case 6686: /* module 26 call 30 */
@@ -3766,6 +3766,14 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
         return STR_ME_REJECT_INSTRUCTION_AS_MEDIATOR;
     case 12547: /* module 49 call 3 */
         return STR_ME_CONTROLLER_TRANSFER;
+    case 12801: /* module 50 call 1 */
+        return STR_ME_SET_MINIMUM_UNTRUSTED_SCORE;
+    case 12802: /* module 50 call 2 */
+        return STR_ME_SET_EMERGENCY_ELECTION_RESULT;
+    case 12803: /* module 50 call 3 */
+        return STR_ME_SUBMIT;
+    case 12804: /* module 50 call 4 */
+        return STR_ME_GOVERNANCE_FALLBACK;
 #endif
     case 0: /* module 0 call 0 */
         return STR_ME_REMARK;
@@ -3991,14 +3999,6 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
         return STR_ME_SET_KEYS;
     case 4865: /* module 19 call 1 */
         return STR_ME_PURGE_KEYS;
-    case 6400: /* module 25 call 0 */
-        return STR_ME_SUDO;
-    case 6401: /* module 25 call 1 */
-        return STR_ME_SUDO_UNCHECKED_WEIGHT;
-    case 6402: /* module 25 call 2 */
-        return STR_ME_SET_KEY;
-    case 6403: /* module 25 call 3 */
-        return STR_ME_SUDO_AS;
     case 6656: /* module 26 call 0 */
         return STR_ME_REGISTER_UNIQUE_TICKER;
     case 6657: /* module 26 call 1 */
@@ -4275,14 +4275,6 @@ const char* _getMethod_Name_V7_ParserFull(uint16_t callPrivIdx)
         return STR_ME_REDEEM_NFT;
     case 12800: /* module 50 call 0 */
         return STR_ME_SUBMIT_UNSIGNED;
-    case 12801: /* module 50 call 1 */
-        return STR_ME_SET_MINIMUM_UNTRUSTED_SCORE;
-    case 12802: /* module 50 call 2 */
-        return STR_ME_SET_EMERGENCY_ELECTION_RESULT;
-    case 12803: /* module 50 call 3 */
-        return STR_ME_SUBMIT;
-    case 12804: /* module 50 call 4 */
-        return STR_ME_GOVERNANCE_FALLBACK;
 #endif
     default:
         return NULL;
@@ -4354,6 +4346,14 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 1;
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 6400: /* module 25 call 0 */
+        return 1;
+    case 6401: /* module 25 call 1 */
+        return 2;
+    case 6402: /* module 25 call 2 */
+        return 1;
+    case 6403: /* module 25 call 3 */
+        return 2;
     case 6685: /* module 26 call 29 */
         return 2;
     case 6686: /* module 26 call 30 */
@@ -4416,6 +4416,14 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 12547: /* module 49 call 3 */
         return 3;
+    case 12801: /* module 50 call 1 */
+        return 1;
+    case 12802: /* module 50 call 2 */
+        return 1;
+    case 12803: /* module 50 call 3 */
+        return 1;
+    case 12804: /* module 50 call 4 */
+        return 2;
 #endif
     case 0: /* module 0 call 0 */
         return 1;
@@ -4589,8 +4597,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 3856: /* module 15 call 16 */
         return 1;
-    case 3857: /* module 15 call 17 */
-        return 0;
     case 4361: /* module 17 call 9 */
         return 1;
     case 4362: /* module 17 call 10 */
@@ -4643,14 +4649,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 2;
     case 4865: /* module 19 call 1 */
         return 0;
-    case 6400: /* module 25 call 0 */
-        return 1;
-    case 6401: /* module 25 call 1 */
-        return 2;
-    case 6402: /* module 25 call 2 */
-        return 1;
-    case 6403: /* module 25 call 3 */
-        return 2;
     case 6656: /* module 26 call 0 */
         return 1;
     case 6657: /* module 26 call 1 */
@@ -4927,14 +4925,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx)
         return 4;
     case 12800: /* module 50 call 0 */
         return 2;
-    case 12801: /* module 50 call 1 */
-        return 1;
-    case 12802: /* module 50 call 2 */
-        return 1;
-    case 12803: /* module 50 call 3 */
-        return 1;
-    case 12804: /* module 50 call 4 */
-        return 2;
 #endif
     default:
         return 0;
@@ -5180,6 +5170,38 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         }
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 6400: /* module 25 call 0 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_call;
+        default:
+            return NULL;
+        }
+    case 6401: /* module 25 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_call;
+        case 1:
+            return STR_IT__weight;
+        default:
+            return NULL;
+        }
+    case 6402: /* module 25 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_new_;
+        default:
+            return NULL;
+        }
+    case 6403: /* module 25 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_who;
+        case 1:
+            return STR_IT_call;
+        default:
+            return NULL;
+        }
     case 6685: /* module 26 call 29 */
         switch (itemIdx) {
         case 0:
@@ -5504,6 +5526,36 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
             return STR_IT_source_portfolio;
         case 2:
             return STR_IT_callers_portfolio_kind;
+        default:
+            return NULL;
+        }
+    case 12801: /* module 50 call 1 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_maybe_next_score;
+        default:
+            return NULL;
+        }
+    case 12802: /* module 50 call 2 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_supports;
+        default:
+            return NULL;
+        }
+    case 12803: /* module 50 call 3 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_raw_solution;
+        default:
+            return NULL;
+        }
+    case 12804: /* module 50 call 4 */
+        switch (itemIdx) {
+        case 0:
+            return STR_IT_maybe_max_voters;
+        case 1:
+            return STR_IT_maybe_max_targets;
         default:
             return NULL;
         }
@@ -6200,11 +6252,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
-    case 3857: /* module 15 call 17 */
-        switch (itemIdx) {
-        default:
-            return NULL;
-        }
     case 4361: /* module 17 call 9 */
         switch (itemIdx) {
         case 0:
@@ -6404,38 +6451,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         }
     case 4865: /* module 19 call 1 */
         switch (itemIdx) {
-        default:
-            return NULL;
-        }
-    case 6400: /* module 25 call 0 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_call;
-        default:
-            return NULL;
-        }
-    case 6401: /* module 25 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_call;
-        case 1:
-            return STR_IT__weight;
-        default:
-            return NULL;
-        }
-    case 6402: /* module 25 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_new_;
-        default:
-            return NULL;
-        }
-    case 6403: /* module 25 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_who;
-        case 1:
-            return STR_IT_call;
         default:
             return NULL;
         }
@@ -7789,36 +7804,6 @@ const char* _getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
         default:
             return NULL;
         }
-    case 12801: /* module 50 call 1 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_maybe_next_score;
-        default:
-            return NULL;
-        }
-    case 12802: /* module 50 call 2 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_supports;
-        default:
-            return NULL;
-        }
-    case 12803: /* module 50 call 3 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_raw_solution;
-        default:
-            return NULL;
-        }
-    case 12804: /* module 50 call 4 */
-        switch (itemIdx) {
-        case 0:
-            return STR_IT_maybe_max_voters;
-        case 1:
-            return STR_IT_maybe_max_targets;
-        default:
-            return NULL;
-        }
 #endif
     default:
         return NULL;
@@ -8203,6 +8188,56 @@ parser_error_t _getMethod_ItemValue_V7(
         }
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
+    case 6400: /* module 25 call 0 */
+        switch (itemIdx) {
+        case 0: /* sudo_sudo_V7 - call */;
+            return _toStringCall(
+                &m->basic.sudo_sudo_V7.call,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6401: /* module 25 call 1 */
+        switch (itemIdx) {
+        case 0: /* sudo_sudo_unchecked_weight_V7 - call */;
+            return _toStringCall(
+                &m->basic.sudo_sudo_unchecked_weight_V7.call,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* sudo_sudo_unchecked_weight_V7 - _weight */;
+            return _toStringWeight(
+                &m->basic.sudo_sudo_unchecked_weight_V7._weight,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6402: /* module 25 call 2 */
+        switch (itemIdx) {
+        case 0: /* sudo_set_key_V7 - new_ */;
+            return _toStringLookupasStaticLookupSource(
+                &m->basic.sudo_set_key_V7.new_,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 6403: /* module 25 call 3 */
+        switch (itemIdx) {
+        case 0: /* sudo_sudo_as_V7 - who */;
+            return _toStringLookupasStaticLookupSource(
+                &m->basic.sudo_sudo_as_V7.who,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* sudo_sudo_as_V7 - call */;
+            return _toStringCall(
+                &m->basic.sudo_sudo_as_V7.call,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
     case 6685: /* module 26 call 29 */
         switch (itemIdx) {
         case 0: /* asset_add_mandatory_mediators_V7 - asset_id */;
@@ -8783,6 +8818,51 @@ parser_error_t _getMethod_ItemValue_V7(
         case 2: /* nft_controller_transfer_V7 - callers_portfolio_kind */;
             return _toStringPortfolioKind(
                 &m->basic.nft_controller_transfer_V7.callers_portfolio_kind,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12801: /* module 50 call 1 */
+        switch (itemIdx) {
+        case 0: /* electionprovidermultiphase_set_minimum_untrusted_score_V7 - maybe_next_score */;
+            return _toStringOptionElectionScore(
+                &m->basic.electionprovidermultiphase_set_minimum_untrusted_score_V7.maybe_next_score,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12802: /* module 50 call 2 */
+        switch (itemIdx) {
+        case 0: /* electionprovidermultiphase_set_emergency_election_result_V7 - supports */;
+            return _toStringSupportsAccountId(
+                &m->basic.electionprovidermultiphase_set_emergency_election_result_V7.supports,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12803: /* module 50 call 3 */
+        switch (itemIdx) {
+        case 0: /* electionprovidermultiphase_submit_V7 - raw_solution */;
+            return _toStringBoxRawSolutionSolutionOfMinerConfig(
+                &m->basic.electionprovidermultiphase_submit_V7.raw_solution,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        default:
+            return parser_no_data;
+        }
+    case 12804: /* module 50 call 4 */
+        switch (itemIdx) {
+        case 0: /* electionprovidermultiphase_governance_fallback_V7 - maybe_max_voters */;
+            return _toStringOptionu32(
+                &m->basic.electionprovidermultiphase_governance_fallback_V7.maybe_max_voters,
+                outValue, outValueLen,
+                pageIdx, pageCount);
+        case 1: /* electionprovidermultiphase_governance_fallback_V7 - maybe_max_targets */;
+            return _toStringOptionu32(
+                &m->basic.electionprovidermultiphase_governance_fallback_V7.maybe_max_targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
@@ -9874,11 +9954,6 @@ parser_error_t _getMethod_ItemValue_V7(
         default:
             return parser_no_data;
         }
-    case 3857: /* module 15 call 17 */
-        switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
     case 4361: /* module 17 call 9 */
         switch (itemIdx) {
         case 0: /* staking_set_validator_count_V7 - new_ */;
@@ -10186,56 +10261,6 @@ parser_error_t _getMethod_ItemValue_V7(
         }
     case 4865: /* module 19 call 1 */
         switch (itemIdx) {
-        default:
-            return parser_no_data;
-        }
-    case 6400: /* module 25 call 0 */
-        switch (itemIdx) {
-        case 0: /* sudo_sudo_V7 - call */;
-            return _toStringCall(
-                &m->basic.sudo_sudo_V7.call,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 6401: /* module 25 call 1 */
-        switch (itemIdx) {
-        case 0: /* sudo_sudo_unchecked_weight_V7 - call */;
-            return _toStringCall(
-                &m->basic.sudo_sudo_unchecked_weight_V7.call,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* sudo_sudo_unchecked_weight_V7 - _weight */;
-            return _toStringWeight(
-                &m->basic.sudo_sudo_unchecked_weight_V7._weight,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 6402: /* module 25 call 2 */
-        switch (itemIdx) {
-        case 0: /* sudo_set_key_V7 - new_ */;
-            return _toStringLookupasStaticLookupSource(
-                &m->basic.sudo_set_key_V7.new_,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 6403: /* module 25 call 3 */
-        switch (itemIdx) {
-        case 0: /* sudo_sudo_as_V7 - who */;
-            return _toStringLookupasStaticLookupSource(
-                &m->basic.sudo_sudo_as_V7.who,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* sudo_sudo_as_V7 - call */;
-            return _toStringCall(
-                &m->basic.sudo_sudo_as_V7.call,
-                outValue, outValueLen,
-                pageIdx, pageCount);
         default:
             return parser_no_data;
         }
@@ -12574,51 +12599,6 @@ parser_error_t _getMethod_ItemValue_V7(
         case 1: /* electionprovidermultiphase_submit_unsigned_V7 - witness */;
             return _toStringSolutionOrSnapshotSize(
                 &m->basic.electionprovidermultiphase_submit_unsigned_V7.witness,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 12801: /* module 50 call 1 */
-        switch (itemIdx) {
-        case 0: /* electionprovidermultiphase_set_minimum_untrusted_score_V7 - maybe_next_score */;
-            return _toStringOptionElectionScore(
-                &m->basic.electionprovidermultiphase_set_minimum_untrusted_score_V7.maybe_next_score,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 12802: /* module 50 call 2 */
-        switch (itemIdx) {
-        case 0: /* electionprovidermultiphase_set_emergency_election_result_V7 - supports */;
-            return _toStringSupportsAccountId(
-                &m->basic.electionprovidermultiphase_set_emergency_election_result_V7.supports,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 12803: /* module 50 call 3 */
-        switch (itemIdx) {
-        case 0: /* electionprovidermultiphase_submit_V7 - raw_solution */;
-            return _toStringBoxRawSolutionSolutionOfMinerConfig(
-                &m->basic.electionprovidermultiphase_submit_V7.raw_solution,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        default:
-            return parser_no_data;
-        }
-    case 12804: /* module 50 call 4 */
-        switch (itemIdx) {
-        case 0: /* electionprovidermultiphase_governance_fallback_V7 - maybe_max_voters */;
-            return _toStringOptionu32(
-                &m->basic.electionprovidermultiphase_governance_fallback_V7.maybe_max_voters,
-                outValue, outValueLen,
-                pageIdx, pageCount);
-        case 1: /* electionprovidermultiphase_governance_fallback_V7 - maybe_max_targets */;
-            return _toStringOptionu32(
-                &m->basic.electionprovidermultiphase_governance_fallback_V7.maybe_max_targets,
                 outValue, outValueLen,
                 pageIdx, pageCount);
         default:
