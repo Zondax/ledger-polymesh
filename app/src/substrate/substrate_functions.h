@@ -72,7 +72,7 @@ parser_error_t _readMemo(parser_context_t* c, pd_Memo_t* v);
 parser_error_t _readSr25519Signature(parser_context_t* c, pd_Sr25519Signature_t* v);
 parser_error_t _readTax(parser_context_t* c, pd_Tax_t* v);
 parser_error_t _readTupleCompactu16Compactu16(parser_context_t* c, pd_TupleCompactu16Compactu16_t* v);
-parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetID_t* v);
+parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetId_t* v);
 parser_error_t _readVecPalletPermissions(parser_context_t* c, pd_VecPalletPermissions_t* v);
 parser_error_t _readVecPortfolioId(parser_context_t* c, pd_VecPortfolioId_t* v);
 parser_error_t _readVecTrustedIssuer(parser_context_t* c, pd_VecTrustedIssuer_t* v);
@@ -637,7 +637,7 @@ parser_error_t _toStringTupleCompactu16Compactu16(
     uint8_t* pageCount);
 
 parser_error_t _toStringVecAssetId(
-    const pd_VecAssetID_t* v,
+    const pd_VecAssetId_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

@@ -317,7 +317,7 @@ typedef struct {
     uint64_t _len;
     const uint8_t* _ptr;
     uint64_t _lenBuffer;
-} pd_VecAssetID_t;
+} pd_VecAssetId_t;
 
 typedef struct {
     uint64_t _len;
@@ -345,7 +345,7 @@ typedef struct {
 
 typedef struct {
     uint8_t value;
-    pd_VecAssetID_t contained;
+    pd_VecAssetId_t contained;
 } pd_AssetPermissions_t;
 
 typedef struct {

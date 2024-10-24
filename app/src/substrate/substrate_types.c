@@ -2266,7 +2266,7 @@ parser_error_t _readVecClaim(parser_context_t* c, pd_VecClaim_t* v) {
     GEN_DEF_READVECTOR(Claim)
 }
 
-parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetID_t* v) {
+parser_error_t _readVecAssetId(parser_context_t* c, pd_VecAssetId_t* v) {
     GEN_DEF_READVECTOR(AssetId)
 }
 
@@ -9284,7 +9284,7 @@ parser_error_t _toStringVecClaim(
 }
 
 parser_error_t _toStringVecAssetId(
-    const pd_VecAssetID_t* v,
+    const pd_VecAssetId_t* v,
     char* outValue,
     uint16_t outValueLen,
     uint8_t pageIdx,

@@ -1005,10 +1005,66 @@ typedef struct {
 typedef struct {
     pd_CAId_t ca_id;
 } pd_corporateballot_remove_ballot_V7_t;
+#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
+typedef struct {
+    pd_bool_t prune;
+} pd_pips_set_prune_historical_pips_V7_t;
+#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
+typedef struct {
+    pd_Balance_t deposit;
+} pd_pips_set_min_proposal_deposit_V7_t;
+#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
+typedef struct {
+    pd_BlockNumber_t duration;
+} pd_pips_set_default_enactment_period_V7_t;
+#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
+typedef struct {
+    pd_MaybeBlockBlockNumber_t expiry;
+} pd_pips_set_pending_pip_expiry_V7_t;
+#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
+typedef struct {
+    pd_SkippedCount_t max;
+} pd_pips_set_max_pip_skip_count_V7_t;
+#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
+typedef struct {
+    pd_u32_t limit;
+} pd_pips_set_active_pip_limit_V7_t;
+#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_approve_committee_proposal_V7_t;
+#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_reject_proposal_V7_t;
+#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_prune_proposal_V7_t;
+#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
+typedef struct {
+    pd_PipId_t id;
+    pd_OptionBlockNumber_t until;
+} pd_pips_reschedule_execution_V7_t;
+#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
+typedef struct {
+} pd_pips_clear_snapshot_V7_t;
+#define PD_CALL_PIPS_SNAPSHOT_V7 13
+typedef struct {
+} pd_pips_snapshot_V7_t;
 #define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS_V7 14
 typedef struct {
     pd_VecTuplePipIdSnapshotResult_t results;
 } pd_pips_enact_snapshot_results_V7_t;
+#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_execute_scheduled_pip_V7_t;
+#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
+typedef struct {
+    pd_IdentityId_t did;
+    pd_PipId_t id;
+} pd_pips_expire_scheduled_pip_V7_t;
 #endif
 #define PD_CALL_SYSTEM_REMARK_V7 0
 typedef struct {
@@ -1809,76 +1865,6 @@ typedef struct {
     pd_ComplianceRequirement_t new_req;
 } pd_compliancemanager_change_compliance_requirement_V7_t;
 
-#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
-typedef struct {
-    pd_bool_t prune;
-} pd_pips_set_prune_historical_pips_V7_t;
-
-#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
-typedef struct {
-    pd_Balance_t deposit;
-} pd_pips_set_min_proposal_deposit_V7_t;
-
-#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
-typedef struct {
-    pd_BlockNumber_t duration;
-} pd_pips_set_default_enactment_period_V7_t;
-
-#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
-typedef struct {
-    pd_MaybeBlockBlockNumber_t expiry;
-} pd_pips_set_pending_pip_expiry_V7_t;
-
-#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
-typedef struct {
-    pd_SkippedCount_t max;
-} pd_pips_set_max_pip_skip_count_V7_t;
-
-#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
-typedef struct {
-    pd_u32_t limit;
-} pd_pips_set_active_pip_limit_V7_t;
-
-#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_approve_committee_proposal_V7_t;
-
-#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_reject_proposal_V7_t;
-
-#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_prune_proposal_V7_t;
-
-#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
-typedef struct {
-    pd_PipId_t id;
-    pd_OptionBlockNumber_t until;
-} pd_pips_reschedule_execution_V7_t;
-
-#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
-typedef struct {
-} pd_pips_clear_snapshot_V7_t;
-
-#define PD_CALL_PIPS_SNAPSHOT_V7 13
-typedef struct {
-} pd_pips_snapshot_V7_t;
-
-#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_execute_scheduled_pip_V7_t;
-
-#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
-typedef struct {
-    pd_IdentityId_t did;
-    pd_PipId_t id;
-} pd_pips_expire_scheduled_pip_V7_t;
-
 #define PD_CALL_PORTFOLIO_CREATE_PORTFOLIO_V7 0
 typedef struct {
     pd_PortfolioName_t name;
@@ -2090,7 +2076,21 @@ typedef union {
     pd_corporateballot_change_meta_V7_t corporateballot_change_meta_V7;
     pd_corporateballot_change_rcv_V7_t corporateballot_change_rcv_V7;
     pd_corporateballot_remove_ballot_V7_t corporateballot_remove_ballot_V7;
+    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
+    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
+    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
+    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
+    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
+    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
+    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
+    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
+    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
+    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
+    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
+    pd_pips_snapshot_V7_t pips_snapshot_V7;
     pd_pips_enact_snapshot_results_V7_t pips_enact_snapshot_results_V7;
+    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
+    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
 #endif
     pd_system_remark_V7_t system_remark_V7;
     pd_system_set_heap_pages_V7_t system_set_heap_pages_V7;
@@ -2235,20 +2235,6 @@ typedef union {
     pd_compliancemanager_add_default_trusted_claim_issuer_V7_t compliancemanager_add_default_trusted_claim_issuer_V7;
     pd_compliancemanager_remove_default_trusted_claim_issuer_V7_t compliancemanager_remove_default_trusted_claim_issuer_V7;
     pd_compliancemanager_change_compliance_requirement_V7_t compliancemanager_change_compliance_requirement_V7;
-    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
-    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
-    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
-    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
-    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
-    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
-    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
-    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
-    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
-    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
-    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
-    pd_pips_snapshot_V7_t pips_snapshot_V7;
-    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
-    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
     pd_portfolio_create_portfolio_V7_t portfolio_create_portfolio_V7;
     pd_portfolio_delete_portfolio_V7_t portfolio_delete_portfolio_V7;
     pd_portfolio_rename_portfolio_V7_t portfolio_rename_portfolio_V7;
