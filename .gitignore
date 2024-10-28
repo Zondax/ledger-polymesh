@@ -76,3 +76,4 @@ tests_zemu/yarn.lock
 tests_tools/target
 fuzz-*.log
 /scan-build
+.venv
