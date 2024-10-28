@@ -84,16 +84,6 @@ jobs:
         run: |
           SUBSTRATE_PARSER_FULL=1 SUPPORT_SR25519=1 make
 
-  size_nano_s:
-    needs: build_ledger
-    runs-on: ubuntu-latest
-    env:
-      NANOS_LIMIT_SIZE: 136
-    steps:
-      - run: |
-          echo "LNS app size: ${{needs.build_ledger.outputs.size}} KiB"
-          [ ${{needs.build_ledger.outputs.size}} -le $NANOS_LIMIT_SIZE ]
-
   test_zemu:
     runs-on: ubuntu-latest
     steps:
@@ -126,77 +116,90 @@ jobs:
           name: snapshots-tmp
           path: tests_zemu/snapshots-tmp/
 
-  build_package_nanos:
-    needs: [configure, build, build_ledger, test_zemu]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    container:
-      image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
-      env:
-        BOLOS_SDK: /opt/nanos-secure-sdk
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Install deps
-        run: pip install ledgerblue
+#  Comment out nanoS build, the device is not supported anymore. 
+#  The github workflow for the latest supported version is running in nanos.yml
 
-      - name: Build NanoS
-        shell: bash -l {0}
-        run: |
-          make SUBSTRATE_PARSER_FULL=0 PRODUCTION_BUILD=0
-          mv ./app/pkg/installer_s.sh ./app/pkg/installer_nanos.sh
-      - name: Set tag
-        id: nanos_light
-        run: echo "tag_name=$(./app/pkg/installer_nanos.sh version)" >> $GITHUB_OUTPUT
-      - name: Create or Update Release (1)
-        id: create_release_0
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          files: ./app/pkg/installer_nanos.sh
-          tag_name: ${{ steps.nanos_light.outputs.tag_name }}
-          draft: false
-          prerelease: false
+#  size_nano_s:
+#    needs: build_ledger
+#    runs-on: ubuntu-latest
+#    env:
+#      NANOS_LIMIT_SIZE: 136
+#    steps:
+#      - run: |
+#          echo "LNS app size: ${{needs.build_ledger.outputs.size}} KiB"
+#          [ ${{needs.build_ledger.outputs.size}} -le $NANOS_LIMIT_SIZE ]
 
-  build_package_nanos_xl:
-    needs: [configure, build, build_ledger, test_zemu]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    container:
-      image: zondax/ledger-app-builder:latest
-      options: --user ${{ needs.configure.outputs.uid_gid }}
-      env:
-        BOLOS_SDK: /opt/nanos-secure-sdk
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Install deps
-        run: pip install ledgerblue
+#  build_package_nanos:
+#    needs: [configure, build, build_ledger, test_zemu]
+#    if: ${{ github.ref == 'refs/heads/main' }}
+#    runs-on: ubuntu-latest
+#    container:
+#      image: zondax/ledger-app-builder:latest
+#      options: --user ${{ needs.configure.outputs.uid_gid }}
+#      env:
+#        BOLOS_SDK: /opt/nanos-secure-sdk
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: true
+#      - name: Install deps
+#        run: pip install ledgerblue
+#
+#      - name: Build NanoS
+#        shell: bash -l {0}
+#        run: |
+#          make SUBSTRATE_PARSER_FULL=0 PRODUCTION_BUILD=0
+#          mv ./app/pkg/installer_s.sh ./app/pkg/installer_nanos.sh
+#      - name: Set tag
+#        id: nanos_light
+#        run: echo "tag_name=$(./app/pkg/installer_nanos.sh version)" >> $GITHUB_OUTPUT
+#      - name: Create or Update Release (1)
+#        id: create_release_0
+#        uses: softprops/action-gh-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#        with:
+#          files: ./app/pkg/installer_nanos.sh
+#          tag_name: ${{ steps.nanos_light.outputs.tag_name }}
+#          draft: false
+#          prerelease: false
 
-      - name: Build NanoS XL
-        shell: bash -l {0}
-        run: |
-          make SUBSTRATE_PARSER_FULL=1 PRODUCTION_BUILD=0
-          mv ./app/pkg/installer_s.sh ./app/pkg/installer_nanos_xl.sh
-      - name: Set tag
-        id: nanos_xl
-        run: echo "tag_name=$(./app/pkg/installer_nanos_xl.sh version)" >> $GITHUB_OUTPUT
-      - name: Update Release
-        id: update_release_1
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          files: ./app/pkg/installer_nanos_xl.sh
-          tag_name: ${{ steps.nanos_xl.outputs.tag_name }}
-          draft: false
-          prerelease: false
+#  build_package_nanos_xl:
+#    needs: [configure, build, build_ledger, test_zemu]
+#    if: ${{ github.ref == 'refs/heads/main' }}
+#    runs-on: ubuntu-latest
+#    container:
+#      image: zondax/ledger-app-builder:latest
+#      options: --user ${{ needs.configure.outputs.uid_gid }}
+#      env:
+#        BOLOS_SDK: /opt/nanos-secure-sdk
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: true
+#      - name: Install deps
+#        run: pip install ledgerblue
+#
+#      - name: Build NanoS XL
+#        shell: bash -l {0}
+#        run: |
+#          make SUBSTRATE_PARSER_FULL=1 PRODUCTION_BUILD=0
+#          mv ./app/pkg/installer_s.sh ./app/pkg/installer_nanos_xl.sh
+#      - name: Set tag
+#        id: nanos_xl
+#        run: echo "tag_name=$(./app/pkg/installer_nanos_xl.sh version)" >> $GITHUB_OUTPUT
+#      - name: Update Release
+#        id: update_release_1
+#        uses: softprops/action-gh-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#        with:
+#          files: ./app/pkg/installer_nanos_xl.sh
+#          tag_name: ${{ steps.nanos_xl.outputs.tag_name }}
+#          draft: false
+#          prerelease: false
 
   build_package_nanosp:
     needs: [configure, build, build_ledger, test_zemu]
