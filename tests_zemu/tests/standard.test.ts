@@ -25,7 +25,7 @@ const defaultOptions = {
   X11: false,
 }
 
-const expected_address = '5GXTGpFBgKcNZzhj7C6LqM6S9ME9B4uceNz2GE2AnNbkvkaa'
+const expected_address = '2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr'
 const expected_pk = 'c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a'
 
 jest.setTimeout(180000)
@@ -71,7 +71,7 @@ describe('Standard', function () {
 
       expect(resp.major).toEqual(107)
       expect(resp.minor).toEqual(7000)
-      expect(resp.patch).toEqual(0)
+      expect(resp.patch).toEqual(1)
     } finally {
       await sim.close()
     }
