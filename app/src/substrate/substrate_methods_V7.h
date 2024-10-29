@@ -69,24 +69,6 @@ extern "C" {
 
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
-#define PD_CALL_SUDO_SUDO_V7 0
-typedef struct {
-    pd_Call_t call;
-} pd_sudo_sudo_V7_t;
-#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V7 1
-typedef struct {
-    pd_Call_t call;
-    pd_Weight_t _weight;
-} pd_sudo_sudo_unchecked_weight_V7_t;
-#define PD_CALL_SUDO_SET_KEY_V7 2
-typedef struct {
-    pd_LookupasStaticLookupSource_t new_;
-} pd_sudo_set_key_V7_t;
-#define PD_CALL_SUDO_SUDO_AS_V7 3
-typedef struct {
-    pd_LookupasStaticLookupSource_t who;
-    pd_Call_t call;
-} pd_sudo_sudo_as_V7_t;
 #define PD_CALL_ASSET_ADD_MANDATORY_MEDIATORS_V7 29
 typedef struct {
     pd_AssetId_t asset_id;
@@ -176,24 +158,29 @@ typedef struct {
     pd_PortfolioId_t source_portfolio;
     pd_PortfolioKind_t callers_portfolio_kind;
 } pd_nft_controller_transfer_V7_t;
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_MINIMUM_UNTRUSTED_SCORE_V7 1
-typedef struct {
-    pd_OptionElectionScore_t maybe_next_score;
-} pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t;
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_EMERGENCY_ELECTION_RESULT_V7 2
-typedef struct {
-    pd_SupportsAccountId_t supports;
-} pd_electionprovidermultiphase_set_emergency_election_result_V7_t;
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SUBMIT_V7 3
-typedef struct {
-    pd_BoxRawSolutionSolutionOfMinerConfig_t raw_solution;
-} pd_electionprovidermultiphase_submit_V7_t;
-#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_GOVERNANCE_FALLBACK_V7 4
-typedef struct {
-    pd_Optionu32_t maybe_max_voters;
-    pd_Optionu32_t maybe_max_targets;
-} pd_electionprovidermultiphase_governance_fallback_V7_t;
 #endif
+
+#define PD_CALL_SUDO_SUDO_V7 0
+typedef struct {
+    pd_Call_t call;
+} pd_sudo_sudo_V7_t;
+
+#define PD_CALL_SUDO_SUDO_UNCHECKED_WEIGHT_V7 1
+typedef struct {
+    pd_Call_t call;
+    pd_Weight_t _weight;
+} pd_sudo_sudo_unchecked_weight_V7_t;
+
+#define PD_CALL_SUDO_SET_KEY_V7 2
+typedef struct {
+    pd_LookupasStaticLookupSource_t new_;
+} pd_sudo_set_key_V7_t;
+
+#define PD_CALL_SUDO_SUDO_AS_V7 3
+typedef struct {
+    pd_LookupasStaticLookupSource_t who;
+    pd_Call_t call;
+} pd_sudo_sudo_as_V7_t;
 
 #define PD_CALL_ASSET_REGISTER_UNIQUE_TICKER_V7 0
 typedef struct {
@@ -660,15 +647,32 @@ typedef struct {
     pd_SolutionOrSnapshotSize_t witness;
 } pd_electionprovidermultiphase_submit_unsigned_V7_t;
 
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_MINIMUM_UNTRUSTED_SCORE_V7 1
+typedef struct {
+    pd_OptionElectionScore_t maybe_next_score;
+} pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t;
+
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SET_EMERGENCY_ELECTION_RESULT_V7 2
+typedef struct {
+    pd_SupportsAccountId_t supports;
+} pd_electionprovidermultiphase_set_emergency_election_result_V7_t;
+
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_SUBMIT_V7 3
+typedef struct {
+    pd_BoxRawSolutionSolutionOfMinerConfig_t raw_solution;
+} pd_electionprovidermultiphase_submit_V7_t;
+
+#define PD_CALL_ELECTIONPROVIDERMULTIPHASE_GOVERNANCE_FALLBACK_V7 4
+typedef struct {
+    pd_Optionu32_t maybe_max_voters;
+    pd_Optionu32_t maybe_max_targets;
+} pd_electionprovidermultiphase_governance_fallback_V7_t;
+
 #endif
 
 typedef union {
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
-    pd_sudo_sudo_V7_t sudo_sudo_V7;
-    pd_sudo_sudo_unchecked_weight_V7_t sudo_sudo_unchecked_weight_V7;
-    pd_sudo_set_key_V7_t sudo_set_key_V7;
-    pd_sudo_sudo_as_V7_t sudo_sudo_as_V7;
     pd_asset_add_mandatory_mediators_V7_t asset_add_mandatory_mediators_V7;
     pd_asset_remove_mandatory_mediators_V7_t asset_remove_mandatory_mediators_V7;
     pd_portfolio_allow_identity_to_create_portfolios_V7_t portfolio_allow_identity_to_create_portfolios_V7;
@@ -684,11 +688,11 @@ typedef union {
     pd_settlement_withdraw_affirmation_as_mediator_V7_t settlement_withdraw_affirmation_as_mediator_V7;
     pd_settlement_reject_instruction_as_mediator_V7_t settlement_reject_instruction_as_mediator_V7;
     pd_nft_controller_transfer_V7_t nft_controller_transfer_V7;
-    pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t electionprovidermultiphase_set_minimum_untrusted_score_V7;
-    pd_electionprovidermultiphase_set_emergency_election_result_V7_t electionprovidermultiphase_set_emergency_election_result_V7;
-    pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
-    pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
 #endif
+    pd_sudo_sudo_V7_t sudo_sudo_V7;
+    pd_sudo_sudo_unchecked_weight_V7_t sudo_sudo_unchecked_weight_V7;
+    pd_sudo_set_key_V7_t sudo_set_key_V7;
+    pd_sudo_sudo_as_V7_t sudo_sudo_as_V7;
     pd_asset_register_unique_ticker_V7_t asset_register_unique_ticker_V7;
     pd_asset_controller_transfer_V7_t asset_controller_transfer_V7;
     pd_asset_register_custom_asset_type_V7_t asset_register_custom_asset_type_V7;
@@ -757,6 +761,10 @@ typedef union {
     pd_nft_issue_nft_V7_t nft_issue_nft_V7;
     pd_nft_redeem_nft_V7_t nft_redeem_nft_V7;
     pd_electionprovidermultiphase_submit_unsigned_V7_t electionprovidermultiphase_submit_unsigned_V7;
+    pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t electionprovidermultiphase_set_minimum_untrusted_score_V7;
+    pd_electionprovidermultiphase_set_emergency_election_result_V7_t electionprovidermultiphase_set_emergency_election_result_V7;
+    pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
+    pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
 #endif
 } pd_MethodBasic_V7_t;
 
@@ -788,27 +796,6 @@ typedef struct {
 typedef struct {
 } pd_identity_leave_identity_as_key_V7_t;
 
-#define PD_CALL_IDENTITY_ADD_CLAIM_V7 6
-typedef struct {
-    pd_IdentityId_t target;
-    pd_Claim_t claim;
-    pd_OptionMoment_t expiry;
-} pd_identity_add_claim_V7_t;
-
-#define PD_CALL_IDENTITY_REVOKE_CLAIM_V7 7
-typedef struct {
-    pd_IdentityId_t target;
-    pd_Claim_t claim;
-} pd_identity_revoke_claim_V7_t;
-
-#define PD_CALL_IDENTITY_FREEZE_SECONDARY_KEYS_V7 8
-typedef struct {
-} pd_identity_freeze_secondary_keys_V7_t;
-
-#define PD_CALL_IDENTITY_UNFREEZE_SECONDARY_KEYS_V7 9
-typedef struct {
-} pd_identity_unfreeze_secondary_keys_V7_t;
-
 #define PD_CALL_IDENTITY_ADD_AUTHORIZATION_V7 10
 typedef struct {
     pd_SignatoryAccountId_t target;
@@ -822,17 +809,6 @@ typedef struct {
     pd_u64_t auth_id;
     pd_bool_t _auth_issuer_pays;
 } pd_identity_remove_authorization_V7_t;
-
-#define PD_CALL_IDENTITY_ADD_SECONDARY_KEYS_WITH_AUTHORIZATION_V7 16
-typedef struct {
-    pd_VecSecondaryKeyWithAuthAccountId_t additional_keys;
-    pd_Moment_t expires_at;
-} pd_identity_add_secondary_keys_with_authorization_V7_t;
-
-#define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V7 18
-typedef struct {
-    pd_VecAccountId_t keys_to_remove;
-} pd_identity_remove_secondary_keys_V7_t;
 
 #define PD_CALL_MULTISIG_CREATE_MULTISIG_V7 0
 typedef struct {
@@ -896,21 +872,6 @@ typedef struct {
 typedef struct {
     pd_CompactBalance_t amount;
 } pd_staking_rebond_V7_t;
-
-#define PD_CALL_PIPS_PROPOSE_V7 6
-typedef struct {
-    pd_Proposal_t proposal;
-    pd_Balance_t deposit;
-    pd_OptionUrl_t url;
-    pd_OptionPipDescription_t description;
-} pd_pips_propose_V7_t;
-
-#define PD_CALL_PIPS_VOTE_V7 7
-typedef struct {
-    pd_PipId_t id;
-    pd_bool_t aye_or_nay;
-    pd_Balance_t deposit;
-} pd_pips_vote_V7_t;
 
 #define PD_CALL_UTILITY_BATCH_V7 0
 typedef struct {
@@ -1005,66 +966,6 @@ typedef struct {
 typedef struct {
     pd_CAId_t ca_id;
 } pd_corporateballot_remove_ballot_V7_t;
-#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
-typedef struct {
-    pd_bool_t prune;
-} pd_pips_set_prune_historical_pips_V7_t;
-#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
-typedef struct {
-    pd_Balance_t deposit;
-} pd_pips_set_min_proposal_deposit_V7_t;
-#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
-typedef struct {
-    pd_BlockNumber_t duration;
-} pd_pips_set_default_enactment_period_V7_t;
-#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
-typedef struct {
-    pd_MaybeBlockBlockNumber_t expiry;
-} pd_pips_set_pending_pip_expiry_V7_t;
-#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
-typedef struct {
-    pd_SkippedCount_t max;
-} pd_pips_set_max_pip_skip_count_V7_t;
-#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
-typedef struct {
-    pd_u32_t limit;
-} pd_pips_set_active_pip_limit_V7_t;
-#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_approve_committee_proposal_V7_t;
-#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_reject_proposal_V7_t;
-#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_prune_proposal_V7_t;
-#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
-typedef struct {
-    pd_PipId_t id;
-    pd_OptionBlockNumber_t until;
-} pd_pips_reschedule_execution_V7_t;
-#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
-typedef struct {
-} pd_pips_clear_snapshot_V7_t;
-#define PD_CALL_PIPS_SNAPSHOT_V7 13
-typedef struct {
-} pd_pips_snapshot_V7_t;
-#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS_V7 14
-typedef struct {
-    pd_VecTuplePipIdSnapshotResult_t results;
-} pd_pips_enact_snapshot_results_V7_t;
-#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
-typedef struct {
-    pd_PipId_t id;
-} pd_pips_execute_scheduled_pip_V7_t;
-#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
-typedef struct {
-    pd_IdentityId_t did;
-    pd_PipId_t id;
-} pd_pips_expire_scheduled_pip_V7_t;
 #endif
 #define PD_CALL_SYSTEM_REMARK_V7 0
 typedef struct {
@@ -1166,6 +1067,27 @@ typedef struct {
     pd_bool_t auth_required;
 } pd_identity_change_cdd_requirement_for_mk_rotation_V7_t;
 
+#define PD_CALL_IDENTITY_ADD_CLAIM_V7 6
+typedef struct {
+    pd_IdentityId_t target;
+    pd_Claim_t claim;
+    pd_OptionMoment_t expiry;
+} pd_identity_add_claim_V7_t;
+
+#define PD_CALL_IDENTITY_REVOKE_CLAIM_V7 7
+typedef struct {
+    pd_IdentityId_t target;
+    pd_Claim_t claim;
+} pd_identity_revoke_claim_V7_t;
+
+#define PD_CALL_IDENTITY_FREEZE_SECONDARY_KEYS_V7 8
+typedef struct {
+} pd_identity_freeze_secondary_keys_V7_t;
+
+#define PD_CALL_IDENTITY_UNFREEZE_SECONDARY_KEYS_V7 9
+typedef struct {
+} pd_identity_unfreeze_secondary_keys_V7_t;
+
 #define PD_CALL_IDENTITY_GC_ADD_CDD_CLAIM_V7 12
 typedef struct {
     pd_IdentityId_t target;
@@ -1189,11 +1111,22 @@ typedef struct {
     pd_Optionu64_t optional_cdd_auth_id;
 } pd_identity_rotate_primary_key_to_secondary_V7_t;
 
+#define PD_CALL_IDENTITY_ADD_SECONDARY_KEYS_WITH_AUTHORIZATION_V7 16
+typedef struct {
+    pd_VecSecondaryKeyWithAuthAccountId_t additional_keys;
+    pd_Moment_t expires_at;
+} pd_identity_add_secondary_keys_with_authorization_V7_t;
+
 #define PD_CALL_IDENTITY_SET_SECONDARY_KEY_PERMISSIONS_V7 17
 typedef struct {
     pd_AccountId_t key;
     pd_Permissions_t perms;
 } pd_identity_set_secondary_key_permissions_V7_t;
+
+#define PD_CALL_IDENTITY_REMOVE_SECONDARY_KEYS_V7 18
+typedef struct {
+    pd_VecAccountId_t keys_to_remove;
+} pd_identity_remove_secondary_keys_V7_t;
 
 #define PD_CALL_IDENTITY_REGISTER_CUSTOM_CLAIM_TYPE_V7 19
 typedef struct {
@@ -1865,6 +1798,96 @@ typedef struct {
     pd_ComplianceRequirement_t new_req;
 } pd_compliancemanager_change_compliance_requirement_V7_t;
 
+#define PD_CALL_PIPS_SET_PRUNE_HISTORICAL_PIPS_V7 0
+typedef struct {
+    pd_bool_t prune;
+} pd_pips_set_prune_historical_pips_V7_t;
+
+#define PD_CALL_PIPS_SET_MIN_PROPOSAL_DEPOSIT_V7 1
+typedef struct {
+    pd_Balance_t deposit;
+} pd_pips_set_min_proposal_deposit_V7_t;
+
+#define PD_CALL_PIPS_SET_DEFAULT_ENACTMENT_PERIOD_V7 2
+typedef struct {
+    pd_BlockNumber_t duration;
+} pd_pips_set_default_enactment_period_V7_t;
+
+#define PD_CALL_PIPS_SET_PENDING_PIP_EXPIRY_V7 3
+typedef struct {
+    pd_MaybeBlockBlockNumber_t expiry;
+} pd_pips_set_pending_pip_expiry_V7_t;
+
+#define PD_CALL_PIPS_SET_MAX_PIP_SKIP_COUNT_V7 4
+typedef struct {
+    pd_SkippedCount_t max;
+} pd_pips_set_max_pip_skip_count_V7_t;
+
+#define PD_CALL_PIPS_SET_ACTIVE_PIP_LIMIT_V7 5
+typedef struct {
+    pd_u32_t limit;
+} pd_pips_set_active_pip_limit_V7_t;
+
+#define PD_CALL_PIPS_PROPOSE_V7 6
+typedef struct {
+    pd_Proposal_t proposal;
+    pd_Balance_t deposit;
+    pd_OptionUrl_t url;
+    pd_OptionPipDescription_t description;
+} pd_pips_propose_V7_t;
+
+#define PD_CALL_PIPS_VOTE_V7 7
+typedef struct {
+    pd_PipId_t id;
+    pd_bool_t aye_or_nay;
+    pd_Balance_t deposit;
+} pd_pips_vote_V7_t;
+
+#define PD_CALL_PIPS_APPROVE_COMMITTEE_PROPOSAL_V7 8
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_approve_committee_proposal_V7_t;
+
+#define PD_CALL_PIPS_REJECT_PROPOSAL_V7 9
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_reject_proposal_V7_t;
+
+#define PD_CALL_PIPS_PRUNE_PROPOSAL_V7 10
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_prune_proposal_V7_t;
+
+#define PD_CALL_PIPS_RESCHEDULE_EXECUTION_V7 11
+typedef struct {
+    pd_PipId_t id;
+    pd_OptionBlockNumber_t until;
+} pd_pips_reschedule_execution_V7_t;
+
+#define PD_CALL_PIPS_CLEAR_SNAPSHOT_V7 12
+typedef struct {
+} pd_pips_clear_snapshot_V7_t;
+
+#define PD_CALL_PIPS_SNAPSHOT_V7 13
+typedef struct {
+} pd_pips_snapshot_V7_t;
+
+#define PD_CALL_PIPS_ENACT_SNAPSHOT_RESULTS_V7 14
+typedef struct {
+    pd_VecTuplePipIdSnapshotResult_t results;
+} pd_pips_enact_snapshot_results_V7_t;
+
+#define PD_CALL_PIPS_EXECUTE_SCHEDULED_PIP_V7 15
+typedef struct {
+    pd_PipId_t id;
+} pd_pips_execute_scheduled_pip_V7_t;
+
+#define PD_CALL_PIPS_EXPIRE_SCHEDULED_PIP_V7 16
+typedef struct {
+    pd_IdentityId_t did;
+    pd_PipId_t id;
+} pd_pips_expire_scheduled_pip_V7_t;
+
 #define PD_CALL_PORTFOLIO_CREATE_PORTFOLIO_V7 0
 typedef struct {
     pd_PortfolioName_t name;
@@ -2036,14 +2059,8 @@ typedef union {
     pd_identity_accept_primary_key_V7_t identity_accept_primary_key_V7;
     pd_identity_join_identity_as_key_V7_t identity_join_identity_as_key_V7;
     pd_identity_leave_identity_as_key_V7_t identity_leave_identity_as_key_V7;
-    pd_identity_add_claim_V7_t identity_add_claim_V7;
-    pd_identity_revoke_claim_V7_t identity_revoke_claim_V7;
-    pd_identity_freeze_secondary_keys_V7_t identity_freeze_secondary_keys_V7;
-    pd_identity_unfreeze_secondary_keys_V7_t identity_unfreeze_secondary_keys_V7;
     pd_identity_add_authorization_V7_t identity_add_authorization_V7;
     pd_identity_remove_authorization_V7_t identity_remove_authorization_V7;
-    pd_identity_add_secondary_keys_with_authorization_V7_t identity_add_secondary_keys_with_authorization_V7;
-    pd_identity_remove_secondary_keys_V7_t identity_remove_secondary_keys_V7;
     pd_multisig_create_multisig_V7_t multisig_create_multisig_V7;
     pd_multisig_change_sigs_required_V7_t multisig_change_sigs_required_V7;
     pd_staking_bond_V7_t staking_bond_V7;
@@ -2056,8 +2073,6 @@ typedef union {
     pd_staking_set_payee_V7_t staking_set_payee_V7;
     pd_staking_set_controller_V7_t staking_set_controller_V7;
     pd_staking_rebond_V7_t staking_rebond_V7;
-    pd_pips_propose_V7_t pips_propose_V7;
-    pd_pips_vote_V7_t pips_vote_V7;
     pd_utility_batch_V7_t utility_batch_V7;
 #ifdef SUBSTRATE_PARSER_FULL
 #ifndef TARGET_NANOS
@@ -2076,21 +2091,6 @@ typedef union {
     pd_corporateballot_change_meta_V7_t corporateballot_change_meta_V7;
     pd_corporateballot_change_rcv_V7_t corporateballot_change_rcv_V7;
     pd_corporateballot_remove_ballot_V7_t corporateballot_remove_ballot_V7;
-    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
-    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
-    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
-    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
-    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
-    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
-    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
-    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
-    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
-    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
-    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
-    pd_pips_snapshot_V7_t pips_snapshot_V7;
-    pd_pips_enact_snapshot_results_V7_t pips_enact_snapshot_results_V7;
-    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
-    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
 #endif
     pd_system_remark_V7_t system_remark_V7;
     pd_system_set_heap_pages_V7_t system_set_heap_pages_V7;
@@ -2110,11 +2110,17 @@ typedef union {
     pd_identity_cdd_register_did_V7_t identity_cdd_register_did_V7;
     pd_identity_invalidate_cdd_claims_V7_t identity_invalidate_cdd_claims_V7;
     pd_identity_change_cdd_requirement_for_mk_rotation_V7_t identity_change_cdd_requirement_for_mk_rotation_V7;
+    pd_identity_add_claim_V7_t identity_add_claim_V7;
+    pd_identity_revoke_claim_V7_t identity_revoke_claim_V7;
+    pd_identity_freeze_secondary_keys_V7_t identity_freeze_secondary_keys_V7;
+    pd_identity_unfreeze_secondary_keys_V7_t identity_unfreeze_secondary_keys_V7;
     pd_identity_gc_add_cdd_claim_V7_t identity_gc_add_cdd_claim_V7;
     pd_identity_gc_revoke_cdd_claim_V7_t identity_gc_revoke_cdd_claim_V7;
     pd_identity_revoke_claim_by_index_V7_t identity_revoke_claim_by_index_V7;
     pd_identity_rotate_primary_key_to_secondary_V7_t identity_rotate_primary_key_to_secondary_V7;
+    pd_identity_add_secondary_keys_with_authorization_V7_t identity_add_secondary_keys_with_authorization_V7;
     pd_identity_set_secondary_key_permissions_V7_t identity_set_secondary_key_permissions_V7;
+    pd_identity_remove_secondary_keys_V7_t identity_remove_secondary_keys_V7;
     pd_identity_register_custom_claim_type_V7_t identity_register_custom_claim_type_V7;
     pd_identity_cdd_register_did_with_cdd_V7_t identity_cdd_register_did_with_cdd_V7;
     pd_identity_create_child_identity_V7_t identity_create_child_identity_V7;
@@ -2235,6 +2241,23 @@ typedef union {
     pd_compliancemanager_add_default_trusted_claim_issuer_V7_t compliancemanager_add_default_trusted_claim_issuer_V7;
     pd_compliancemanager_remove_default_trusted_claim_issuer_V7_t compliancemanager_remove_default_trusted_claim_issuer_V7;
     pd_compliancemanager_change_compliance_requirement_V7_t compliancemanager_change_compliance_requirement_V7;
+    pd_pips_set_prune_historical_pips_V7_t pips_set_prune_historical_pips_V7;
+    pd_pips_set_min_proposal_deposit_V7_t pips_set_min_proposal_deposit_V7;
+    pd_pips_set_default_enactment_period_V7_t pips_set_default_enactment_period_V7;
+    pd_pips_set_pending_pip_expiry_V7_t pips_set_pending_pip_expiry_V7;
+    pd_pips_set_max_pip_skip_count_V7_t pips_set_max_pip_skip_count_V7;
+    pd_pips_set_active_pip_limit_V7_t pips_set_active_pip_limit_V7;
+    pd_pips_propose_V7_t pips_propose_V7;
+    pd_pips_vote_V7_t pips_vote_V7;
+    pd_pips_approve_committee_proposal_V7_t pips_approve_committee_proposal_V7;
+    pd_pips_reject_proposal_V7_t pips_reject_proposal_V7;
+    pd_pips_prune_proposal_V7_t pips_prune_proposal_V7;
+    pd_pips_reschedule_execution_V7_t pips_reschedule_execution_V7;
+    pd_pips_clear_snapshot_V7_t pips_clear_snapshot_V7;
+    pd_pips_snapshot_V7_t pips_snapshot_V7;
+    pd_pips_enact_snapshot_results_V7_t pips_enact_snapshot_results_V7;
+    pd_pips_execute_scheduled_pip_V7_t pips_execute_scheduled_pip_V7;
+    pd_pips_expire_scheduled_pip_V7_t pips_expire_scheduled_pip_V7;
     pd_portfolio_create_portfolio_V7_t portfolio_create_portfolio_V7;
     pd_portfolio_delete_portfolio_V7_t portfolio_delete_portfolio_V7;
     pd_portfolio_rename_portfolio_V7_t portfolio_rename_portfolio_V7;
