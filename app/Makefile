@@ -70,12 +70,6 @@ endif
 APPNAME = "Polymesh"
 APPPATH = "44'/595'"
 
-else ifeq ($(COIN),POLYX_XL)
-# XL app configuration
-DEFINES += APP_STANDARD SUBSTRATE_PARSER_FULL
-APPNAME = "Polymesh XL"
-APPPATH = "44'/595'"
-
 else
 define error_message
 
@@ -125,11 +119,7 @@ dep/%.d: %.c Makefile
 
 .PHONY: listvariants
 listvariants:
-ifeq ($(TARGET_NAME),TARGET_NANOS)
-	@echo VARIANTS COIN POLYX POLYX_XL
-else
 	@echo VARIANTS COIN POLYX
-endif
 
 .PHONY: version
 version:
