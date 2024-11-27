@@ -53,6 +53,7 @@ extern "C" {
 #define GEN_DEF_TOSTRING_ARRAY(SIZE) \
     CLEAN_AND_CHECK();                                                                  \
     if ((SIZE) == 0) {                                                                  \
+        *pageCount = 1;                                                                 \
         snprintf(outValue, outValueLen, "Empty");                                       \
         return parser_ok;                                                               \
     }                                                                                   \
