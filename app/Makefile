@@ -20,106 +20,128 @@ ifeq ($(BOLOS_SDK),)
 $(error BOLOS_SDK is not set)
 endif
 
-MY_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
-
+########################################
+#        Mandatory configuration       #
+########################################
+# Upload targets to configure the devices 
 include $(BOLOS_SDK)/Makefile.defines
 
-# Set the default value for PRODUCTION_BUILD to 1 if not already defined
+# Application name
+APPNAME = "Polymesh"
+
+# Application version
+include $(CURDIR)/Makefile.version
+APPVERSION = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
+
+# Application source files
+APP_SOURCE_PATH += src
+
+# Application icons following guidelines:
+# https://developers.ledger.com/docs/embedded-app/design-requirements/#device-icon
+ICON_NANOX = nanox_icon.gif
+ICON_NANOSP = nanox_icon.gif
+ICON_STAX = stax_icon.gif
+ICON_FLEX = flex_icon.gif
+ICON_APEX_P = apex_p_icon.png
+
+# Application allowed derivation curves.
+# Possibles curves are: secp256k1, secp256r1, ed25519 and bls12381g1
+# If your app needs it, you can specify multiple curves by using:
+# `CURVE_APP_LOAD_PARAMS = <curve1> <curve2>`
+CURVE_APP_LOAD_PARAMS = ed25519
+
+# Application allowed derivation paths.
+# You should request a specific path for your app.
+# This serve as an isolation mechanism.
+# Most application will have to request a path according to the BIP-0044
+# and SLIP-0044 standards.
+# If your app needs it, you can specify multiple path by using:
+# `PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'"`
+
+APPPATH = "44'/595'"
+$(info PATHS LIST = $(APPPATH))
+PATH_APP_LOAD_PARAMS = $(APPPATH)
+
+# Setting to allow building variant applications
+# - <VARIANT_PARAM> is the name of the parameter which should be set
+#   to specify the variant that should be build.
+# - <VARIANT_VALUES> a list of variant that can be build using this app code.
+#   * It must at least contains one value.
+#   * Values can be the app ticker or anything else but should be unique.
+ifeq ($(COIN),)
+    COIN=POLYX
+endif
+$(info COIN  = [$(COIN)])
+VARIANT_PARAM=COIN
+VARIANT_VALUES=$(COIN)
+
+INCLUDES_PATH += $(CURDIR)/src/common
+INCLUDES_PATH += $(CURDIR)/../deps/ledger-zxlib/include
+
+########################################
+# Application communication interfaces #
+########################################
+ENABLE_BLUETOOTH = 1
+#ENABLE_NFC = 1
+
+########################################
+#         NBGL custom features         #
+########################################
+ENABLE_NBGL_QRCODE = 1
+#ENABLE_NBGL_KEYBOARD = 1
+#ENABLE_NBGL_KEYPAD = 1
+
+########################################
+#          Features disablers          #
+########################################
+# These advanced settings allow to disable some feature that are by
+# default enabled in the SDK `Makefile.standard_app`.
+#DISABLE_STANDARD_APP_FILES = 1
+#DISABLE_DEFAULT_IO_SEPROXY_BUFFER_SIZE = 1 # To allow custom size declaration
+#DISABLE_STANDARD_APP_DEFINES = 1 # Will set all the following disablers
+#DISABLE_STANDARD_SNPRINTF = 1
+#DISABLE_STANDARD_USB = 1
+#DISABLE_STANDARD_WEBUSB = 1
+#DISABLE_DEBUG_LEDGER_ASSERT = 1
+#DISABLE_DEBUG_THROW = 1
+
+########################################
+#        Other configurations          #
+########################################
+# Set the default value for PRODUCTION_BUILD to 0 if not already defined
 PRODUCTION_BUILD ?= 1
-
-$(info ************ TARGET_NAME  = [$(TARGET_NAME)])
-
 # Display whether this is a production build or for internal use
 ifeq ($(PRODUCTION_BUILD), 1)
     $(info ************ PRODUCTION_BUILD  = [PRODUCTION BUILD])
 else
     $(info ************ PRODUCTION_BUILD  = [INTERNAL USE])
 endif
-# Add the PRODUCTION_BUILD definition to the compiler flags
+ # Add the PRODUCTION_BUILD definition to the compiler flags
 DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
 
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
-
-ifeq ($(SUPPORT_SR25519),1)
-DEFINES += SUPPORT_SR25519
-OUTPUT_ELF ?= $(CURDIR)/output/app_sr25519.elf
-$(info ************  SR25519 ENABLED ************)
-endif
-
-ifeq ($(SUBSTRATE_PARSER_FULL),1)
-DEFINES += SUBSTRATE_PARSER_FULL
-$(info ************ FULL PARSER ENABLED ************)
-endif
-
-ifndef COIN
-COIN=POLYX
-endif
-
-include $(CURDIR)/Makefile.version
-
-$(info COIN  = [$(COIN)])
-
-ifeq ($(COIN),POLYX)
-# Main app configuration
-DEFINES += APP_STANDARD
-ifneq ($(TARGET_NAME),TARGET_NANOS)
-DEFINES += SUBSTRATE_PARSER_FULL
-endif
-APPNAME = "Polymesh"
-APPPATH = "44'/595'"
-
+# Display whether swap functionality is enabled or not
+ifeq ($(ENABLE_SWAP), 1)
+    $(info ************ HAVE_SWAP  = [ENABLED])
 else
-define error_message
-
-COIN value not supported: [$(COIN)]
-
-endef
-$(error "$(error_message)")
+    $(info ************ HAVE_SWAP  = [DISABLED])
 endif
 
-APP_LOAD_PARAMS = --curve ed25519 $(COMMON_LOAD_PARAMS) --path $(APPPATH)
+########################################
 
+# Configure devices and permissions
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
+# Create installer script
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.installer_script
+# Enable logging
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
+# Call standard app flags
+include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
 
 $(info TARGET_NAME  = [$(TARGET_NAME)])
 $(info ICONNAME  = [$(ICONNAME)])
-
-ifndef ICONNAME
+ifeq ($(ICONNAME),)
 $(error ICONNAME is not set)
 endif
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
-LDFLAGS += -z muldefs
-
-ifeq ($(SUPPORT_SR25519),1)
-APP_CUSTOM_LINK_DEPENDENCIES = rust
-LDLIBS += -Lrust/target/thumbv6m-none-eabi/release -lrslib
-APP_SOURCE_PATH += $(CURDIR)/rust/include
-endif
-
-.PHONY: rust
-rust:
-	cd rust && CARGO_HOME="$(CURDIR)/rust/.cargo" cargo build --target thumbv6m-none-eabi --release
-
-.PHONY: rust_clean
-rust_clean:
-	cd rust && CARGO_HOME="$(CURDIR)/rust/.cargo" cargo clean
-
-clean: rust_clean
-
-include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.side_loading
-
-# Import generic rules from the SDK
-include $(BOLOS_SDK)/Makefile.rules
-
-#add dependency on custom makefile filename
-dep/%.d: %.c Makefile
-
-.PHONY: listvariants
-listvariants:
-	@echo VARIANTS COIN POLYX
 
 .PHONY: version
 version:

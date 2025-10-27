@@ -27,6 +27,12 @@ ifeq ($(BOLOS_SDK),)
 
 SUBSTRATE_PARSER_FULL ?= 1
 PRODUCTION_BUILD ?= 1
+SKIP_NANOS = 1
+
+ifeq ($(SKIP_NANOS), 0)
+$(error "NanoS device is not supported")
+endif
+
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
 
 else
@@ -48,6 +54,4 @@ zemu_install: tests_tools_build
 test_all:
 	make zemu_install
 	SUBSTRATE_PARSER_FULL=1 make
-	make clean_build
-	SUBSTRATE_PARSER_FULL=1 SUPPORT_SR25519=1 make buildS
 	make zemu_test
