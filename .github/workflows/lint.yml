@@ -1,7 +1,8 @@
-name: Verify PRs to main
+name: Lint and format 💅
 
 on:
   workflow_dispatch:
+  push:
   pull_request:
     branches:
       - main
@@ -10,7 +11,7 @@ on:
       - dev
 
 jobs:
-  ledger-check-version:
-    uses: Zondax/_workflows/.github/workflows/_ledger_check_version.yml@v3
+  ledger-lint:
+    uses: Zondax/_workflows/.github/workflows/_ledger_lint.yml@v3
     with:
       runs-on: ${{ github.repository_owner == 'zondax' && 'zondax-runners' || 'ubuntu-latest' }}
