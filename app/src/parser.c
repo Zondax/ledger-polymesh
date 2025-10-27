@@ -167,8 +167,7 @@ parser_error_t parser_getItem(const parser_context_t *ctx,
         // CONTINUE WITH FIXED ARGUMENTS
         displayIdx -= methodArgCount;
         if (displayIdx == FIELD_NETWORK) {
-#if !defined(TARGET_NANOS) && !defined(TARGET_NANOX) && !defined(TARGET_NANOS2) && !defined(TARGET_STAX) && \
-    !defined(TARGET_FLEX)
+#if !defined(LEDGER_SPECIFIC)
             if (parser_show_expert_fields()) {
                 snprintf(outKey, outKeyLen, "Chain");
                 snprintf(outVal, outValLen, COIN_NAME);
