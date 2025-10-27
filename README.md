@@ -12,9 +12,9 @@ _Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
 ---
 
-This project contains the Polymesh app (https://polymath.network/) for Ledger Nano S and X.
+This project contains the Polymesh app (https://polymath.network/) for Ledger Nano S+, Nano X, Flex, Stax, and Apex P.
 
-- Ledger Nano S/X BOLOS app
+- Ledger Nano S+/X, Flex, Stax, and Apex P BOLOS app
 - Specs / Documentation
 - C++ unit tests
 - Zemu tests

@@ -62,7 +62,7 @@ describe('Standard', function () {
 
       expect(resp.return_code).toEqual(0x9000)
       expect(resp.error_message).toEqual('No errors')
-      
+
       expect(resp).toHaveProperty('test_mode')
 
       expect(resp).toHaveProperty('major')
@@ -145,7 +145,6 @@ describe('Standard', function () {
 
       const resp = await respRequest
       console.log(resp)
-
     } finally {
       await sim.close()
     }
