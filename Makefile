@@ -43,14 +43,6 @@ default:
 	COIN=$(COIN) $(MAKE) -C app $@
 endif
 
-tests_tools_build:
-	cd tests_tools/neon && yarn install
-
-tests_tools_test: tests_tools_build
-	cd tests_tools/neon && yarn test
-
-zemu_install: tests_tools_build
-
 test_all:
 	make zemu_install
 	SUBSTRATE_PARSER_FULL=1 make
