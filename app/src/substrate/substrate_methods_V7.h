@@ -67,9 +67,6 @@ extern "C" {
 #define PD_CALL_PREIMAGE_V7 48
 #define PD_CALL_NFT_V7 49
 #define PD_CALL_ELECTIONPROVIDERMULTIPHASE_V7 50
-
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
 #define PD_CALL_ASSET_ADD_MANDATORY_MEDIATORS_V7 29
 typedef struct {
     pd_AssetId_t asset_id;
@@ -159,7 +156,6 @@ typedef struct {
     pd_PortfolioId_t source_portfolio;
     pd_PortfolioKind_t callers_portfolio_kind;
 } pd_nft_controller_transfer_V7_t;
-#endif
 
 #define PD_CALL_SUDO_SUDO_V7 0
 typedef struct {
@@ -669,11 +665,7 @@ typedef struct {
     pd_Optionu32_t maybe_max_targets;
 } pd_electionprovidermultiphase_governance_fallback_V7_t;
 
-#endif
-
 typedef union {
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
     pd_asset_add_mandatory_mediators_V7_t asset_add_mandatory_mediators_V7;
     pd_asset_remove_mandatory_mediators_V7_t asset_remove_mandatory_mediators_V7;
     pd_portfolio_allow_identity_to_create_portfolios_V7_t portfolio_allow_identity_to_create_portfolios_V7;
@@ -689,7 +681,6 @@ typedef union {
     pd_settlement_withdraw_affirmation_as_mediator_V7_t settlement_withdraw_affirmation_as_mediator_V7;
     pd_settlement_reject_instruction_as_mediator_V7_t settlement_reject_instruction_as_mediator_V7;
     pd_nft_controller_transfer_V7_t nft_controller_transfer_V7;
-#endif
     pd_sudo_sudo_V7_t sudo_sudo_V7;
     pd_sudo_sudo_unchecked_weight_V7_t sudo_sudo_unchecked_weight_V7;
     pd_sudo_set_key_V7_t sudo_set_key_V7;
@@ -767,7 +758,6 @@ typedef union {
         electionprovidermultiphase_set_emergency_election_result_V7;
     pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
     pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
-#endif
 } pd_MethodBasic_V7_t;
 
 #define PD_CALL_BALANCES_TRANSFER_V7 0
@@ -880,8 +870,6 @@ typedef struct {
     pd_VecCall_t calls;
 } pd_utility_batch_V7_t;
 
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
 #define PD_CALL_CORPORATEACTION_SET_MAX_DETAILS_LENGTH_V7 0
 typedef struct {
     pd_u32_t length;
@@ -968,7 +956,7 @@ typedef struct {
 typedef struct {
     pd_CAId_t ca_id;
 } pd_corporateballot_remove_ballot_V7_t;
-#endif
+
 #define PD_CALL_SYSTEM_REMARK_V7 0
 typedef struct {
     pd_Bytes_t remark;
@@ -2053,8 +2041,6 @@ typedef struct {
     pd_Bytes_t salt;
 } pd_contracts_instantiate_V7_t;
 
-#endif
-
 typedef union {
     pd_balances_transfer_V7_t balances_transfer_V7;
     pd_balances_transfer_with_memo_V7_t balances_transfer_with_memo_V7;
@@ -2076,8 +2062,6 @@ typedef union {
     pd_staking_set_controller_V7_t staking_set_controller_V7;
     pd_staking_rebond_V7_t staking_rebond_V7;
     pd_utility_batch_V7_t utility_batch_V7;
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
     pd_corporateaction_set_max_details_length_V7_t corporateaction_set_max_details_length_V7;
     pd_corporateaction_set_default_targets_V7_t corporateaction_set_default_targets_V7;
     pd_corporateaction_set_default_withholding_tax_V7_t corporateaction_set_default_withholding_tax_V7;
@@ -2094,7 +2078,6 @@ typedef union {
     pd_corporateballot_change_meta_V7_t corporateballot_change_meta_V7;
     pd_corporateballot_change_rcv_V7_t corporateballot_change_rcv_V7;
     pd_corporateballot_remove_ballot_V7_t corporateballot_remove_ballot_V7;
-#endif
     pd_system_remark_V7_t system_remark_V7;
     pd_system_set_heap_pages_V7_t system_set_heap_pages_V7;
     pd_system_set_code_V7_t system_set_code_V7;
@@ -2286,7 +2269,6 @@ typedef union {
     pd_utility_as_derivative_V7_t utility_as_derivative_V7;
     pd_contracts_call_V7_t contracts_call_V7;
     pd_contracts_instantiate_V7_t contracts_instantiate_V7;
-#endif
 } pd_MethodNested_V7_t;
 
 typedef union {

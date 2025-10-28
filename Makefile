@@ -25,7 +25,6 @@ ifeq ($(BOLOS_SDK),)
 # In this case, there is not predefined SDK and we run dockerized
 # When not using the SDK, we override and build the XL complete app
 
-SUBSTRATE_PARSER_FULL ?= 1
 PRODUCTION_BUILD ?= 1
 SKIP_NANOS = 1
 
@@ -45,5 +44,5 @@ endif
 
 test_all:
 	make zemu_install
-	SUBSTRATE_PARSER_FULL=1 make
+	make
 	make zemu_test

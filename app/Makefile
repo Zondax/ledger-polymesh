@@ -118,7 +118,6 @@ else
 endif
  # Add the PRODUCTION_BUILD definition to the compiler flags
 DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
-DEFINES += SUBSTRATE_PARSER_FULL
 
 # Display whether swap functionality is enabled or not
 ifeq ($(ENABLE_SWAP), 1)

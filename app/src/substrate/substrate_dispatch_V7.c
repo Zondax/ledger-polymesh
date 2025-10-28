@@ -146,8 +146,6 @@ __Z_INLINE parser_error_t _readMethod_utility_batch_V7(parser_context_t *c, pd_u
     return parser_ok;
 }
 
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
 __Z_INLINE parser_error_t _readMethod_asset_add_mandatory_mediators_V7(parser_context_t *c,
                                                                        pd_asset_add_mandatory_mediators_V7_t *m) {
     CHECK_ERROR(_readAssetId(c, &m->asset_id))
@@ -351,7 +349,6 @@ __Z_INLINE parser_error_t _readMethod_nft_controller_transfer_V7(parser_context_
     CHECK_ERROR(_readPortfolioKind(c, &m->callers_portfolio_kind))
     return parser_ok;
 }
-#endif
 __Z_INLINE parser_error_t _readMethod_system_remark_V7(parser_context_t *c, pd_system_remark_V7_t *m) {
     CHECK_ERROR(_readBytes(c, &m->remark))
     return parser_ok;
@@ -2156,8 +2153,6 @@ __Z_INLINE parser_error_t _readMethod_electionprovidermultiphase_governance_fall
     return parser_ok;
 }
 
-#endif
-
 parser_error_t _readMethod_V7(parser_context_t *c, uint8_t moduleIdx, uint8_t callIdx, pd_Method_V7_t *method) {
     uint16_t callPrivIdx = ((uint16_t)moduleIdx << 8u) + callIdx;
 
@@ -2222,9 +2217,6 @@ parser_error_t _readMethod_V7(parser_context_t *c, uint8_t moduleIdx, uint8_t ca
         case 10496: /* module 41 call 0 */
             CHECK_ERROR(_readMethod_utility_batch_V7(c, &method->nested.utility_batch_V7))
             break;
-
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 6685: /* module 26 call 29 */
             CHECK_ERROR(_readMethod_asset_add_mandatory_mediators_V7(c, &method->basic.asset_add_mandatory_mediators_V7))
             break;
@@ -2335,7 +2327,6 @@ parser_error_t _readMethod_V7(parser_context_t *c, uint8_t moduleIdx, uint8_t ca
         case 12547: /* module 49 call 3 */
             CHECK_ERROR(_readMethod_nft_controller_transfer_V7(c, &method->basic.nft_controller_transfer_V7))
             break;
-#endif
         case 0: /* module 0 call 0 */
             CHECK_ERROR(_readMethod_system_remark_V7(c, &method->nested.system_remark_V7))
             break;
@@ -3246,7 +3237,6 @@ parser_error_t _readMethod_V7(parser_context_t *c, uint8_t moduleIdx, uint8_t ca
             CHECK_ERROR(_readMethod_electionprovidermultiphase_governance_fallback_V7(
                 c, &method->basic.electionprovidermultiphase_governance_fallback_V7))
             break;
-#endif
         default:
             return parser_unexpected_callIndex;
     }
@@ -3271,13 +3261,10 @@ const char *_getMethod_ModuleName_V7(uint8_t moduleIdx) {
             return STR_MO_STAKING;
         case 41:
             return STR_MO_UTILITY;
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 30:
             return STR_MO_CORPORATEACTION;
         case 31:
             return STR_MO_CORPORATEBALLOT;
-#endif
         case 0:
             return STR_MO_SYSTEM;
         case 2:
@@ -3336,7 +3323,6 @@ const char *_getMethod_ModuleName_V7(uint8_t moduleIdx) {
             return STR_MO_NFT;
         case 50:
             return STR_MO_ELECTIONPROVIDERMULTIPHASE;
-#endif
         default:
             return NULL;
     }
@@ -3397,8 +3383,6 @@ const char *_getMethod_Name_V7(uint8_t moduleIdx, uint8_t callIdx) {
 
 const char *_getMethod_Name_V7_ParserFull(uint16_t callPrivIdx) {
     switch (callPrivIdx) {
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 6685: /* module 26 call 29 */
             return STR_ME_ADD_MANDATORY_MEDIATORS;
         case 6686: /* module 26 call 30 */
@@ -3459,7 +3443,6 @@ const char *_getMethod_Name_V7_ParserFull(uint16_t callPrivIdx) {
             return STR_ME_REJECT_INSTRUCTION_AS_MEDIATOR;
         case 12547: /* module 49 call 3 */
             return STR_ME_CONTROLLER_TRANSFER;
-#endif
         case 0: /* module 0 call 0 */
             return STR_ME_REMARK;
         case 1: /* module 0 call 1 */
@@ -3994,7 +3977,6 @@ const char *_getMethod_Name_V7_ParserFull(uint16_t callPrivIdx) {
             return STR_ME_SUBMIT;
         case 12804: /* module 50 call 4 */
             return STR_ME_GOVERNANCE_FALLBACK;
-#endif
         default:
             return NULL;
     }
@@ -4046,8 +4028,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx) {
             return 1;
         case 10496: /* module 41 call 0 */
             return 1;
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 6685: /* module 26 call 29 */
             return 2;
         case 6686: /* module 26 call 30 */
@@ -4108,7 +4088,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx) {
             return 2;
         case 12547: /* module 49 call 3 */
             return 3;
-#endif
         case 0: /* module 0 call 0 */
             return 1;
         case 1: /* module 0 call 1 */
@@ -4643,7 +4622,6 @@ uint8_t _getMethod_NumItems_V7(uint8_t moduleIdx, uint8_t callIdx) {
             return 1;
         case 12804: /* module 50 call 4 */
             return 2;
-#endif
         default:
             return 0;
     }
@@ -4815,8 +4793,6 @@ const char *_getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
                 default:
                     return NULL;
             }
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 6685: /* module 26 call 29 */
             switch (itemIdx) {
                 case 0:
@@ -5137,7 +5113,6 @@ const char *_getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
                 default:
                     return NULL;
             }
-#endif
         case 0: /* module 0 call 0 */
             switch (itemIdx) {
                 case 0:
@@ -7521,7 +7496,6 @@ const char *_getMethod_ItemName_V7(uint8_t moduleIdx, uint8_t callIdx, uint8_t i
                 default:
                     return NULL;
             }
-#endif
         default:
             return NULL;
     }
@@ -7723,8 +7697,6 @@ parser_error_t _getMethod_ItemValue_V7(pd_Method_V7_t *m, uint8_t moduleIdx, uin
                 default:
                     return parser_no_data;
             }
-#ifdef SUBSTRATE_PARSER_FULL
-#ifndef TARGET_NANOS
         case 6685: /* module 26 call 29 */
             switch (itemIdx) {
                 case 0: /* asset_add_mandatory_mediators_V7 - asset_id */;
@@ -8143,7 +8115,6 @@ parser_error_t _getMethod_ItemValue_V7(pd_Method_V7_t *m, uint8_t moduleIdx, uin
                 default:
                     return parser_no_data;
             }
-#endif
         case 0: /* module 0 call 0 */
             switch (itemIdx) {
                 case 0: /* system_remark_V7 - remark */;
@@ -11047,7 +11018,6 @@ parser_error_t _getMethod_ItemValue_V7(pd_Method_V7_t *m, uint8_t moduleIdx, uin
                 default:
                     return parser_no_data;
             }
-#endif
         default:
             return parser_ok;
     }
