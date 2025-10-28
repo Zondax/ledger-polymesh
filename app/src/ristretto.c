@@ -124,7 +124,7 @@ static cx_err_t ristretto255_sqrt_ratio_m1_sdk(fe25519_sdk x, const fe25519_sdk 
     fe25519_sdk vxx;
     fe25519_sdk m_root_check, p_root_check, f_root_check;
     fe25519_sdk x_sqrtm1;
-    int has_p_root, has_f_root;
+    int has_p_root = 0, has_f_root = 0;
 
     CHECK_CXERROR(fe25519_sq_sdk(v3, v));
     CHECK_CXERROR(fe25519_mul_sdk(v3, v3, v)); /* v3 = v^3 */
@@ -167,7 +167,7 @@ static cx_err_t ristretto255_p3_tobytes_sdk(fe25519_sdk s, const ge25519_p3_sdk 
     fe25519_sdk x_z_inv;
     fe25519_sdk z_inv;
     fe25519_sdk zmy;
-    int rotate;
+    int rotate = 0;
 
     CHECK_CXERROR(fe25519_add_sdk(u1, h->Z, h->Y));  /* u1 = Z+Y */
     CHECK_CXERROR(fe25519_sub_sdk(zmy, h->Z, h->Y)); /* zmy = Z-Y */
@@ -213,7 +213,7 @@ static cx_err_t ristretto255_p3_tobytes_sdk(fe25519_sdk s, const ge25519_p3_sdk 
 
 cx_err_t crypto_scalarmult_ristretto255_base_sdk(unsigned char *q, const unsigned char *n) {
     unsigned char *t = q;
-    unsigned int i;
+    unsigned int i = 0;
     for (i = 0; i < ED25519_SCALAR_BYTES; ++i) {
         t[i] = n[ED25519_SCALAR_BYTES - 1 - i];
     }

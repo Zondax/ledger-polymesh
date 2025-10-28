@@ -2778,7 +2778,7 @@ parser_error_t _toStringClaim(const pd_Claim_t *v, char *outValue, uint16_t outV
                               uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
     // If pageIdx == 0, prints enum name, else prints value.
@@ -2845,7 +2845,7 @@ parser_error_t _toStringDispatchableNames(const pd_DispatchableNames_t *v, char 
                                           uint8_t pageIdx, uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     switch (v->value) {
         case 0:  // Whole
@@ -3188,7 +3188,7 @@ parser_error_t _toStringAssetPermissions(const pd_AssetPermissions_t *v, char *o
                                          uint8_t pageIdx, uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     switch (v->value) {
         case 0:  // Whole
@@ -3275,7 +3275,7 @@ parser_error_t _toStringExtrinsicPermissions(const pd_ExtrinsicPermissions_t *v,
                                              uint8_t pageIdx, uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     switch (v->value) {
         case 0:  // Whole
@@ -3365,7 +3365,7 @@ parser_error_t _toStringPortfolioPermissions(const pd_PortfolioPermissions_t *v,
                                              uint8_t pageIdx, uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     switch (v->value) {
         case 0:  // Whole
@@ -4853,7 +4853,7 @@ parser_error_t _toStringAgentGroup(const pd_AgentGroup_t *v, char *outValue, uin
                                    uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
     // If pageIdx == 0, prints enum name, else prints value.
@@ -5787,7 +5787,7 @@ parser_error_t _toStringCall(const pd_Call_t *v, char *outValue, uint16_t outVal
 
     parser_context_t ctx;
 
-    const uint8_t *buffer;
+    const uint8_t *buffer = NULL;
     if (v->nestCallIdx.isTail) {
         buffer = v->nestCallIdx._ptr;
     } else {
@@ -5843,7 +5843,7 @@ parser_error_t _toStringCall(const pd_Call_t *v, char *outValue, uint16_t outVal
                              outValueLen, 0, &itemPages);
 
         if (pageIdx < itemPages) {
-            uint8_t tmp;
+            uint8_t tmp = 0;
             _getMethod_ItemValue(*v->_txVerPtr, &_txObj.method, v->callIndex.moduleIdx, v->callIndex.idx, i, outValue,
                                  outValueLen, pageIdx, &tmp);
             return parser_ok;
@@ -6181,7 +6181,7 @@ parser_error_t _toStringNonFungibleType(const pd_NonFungibleType_t *v, char *out
             snprintf(outValue, outValueLen, "Invoice");
             break;
         case 3: {  // Custom
-            uint8_t _dummy;
+            uint8_t _dummy = 0;
             CHECK_ERROR(_toStringu32(&v->custom, outValue, outValueLen, 0, pageCount))
             GEN_DEF_TOSTRING_ENUM("Custom")
             CHECK_ERROR(_toStringu32(&v->custom, outValue, outValueLen, 0, &_dummy))
@@ -6770,7 +6770,7 @@ parser_error_t _toStringAssetType(const pd_AssetType_t *v, char *outValue, uint1
                                   uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
     switch (v->value) {
         case 0:
             GEN_DEF_TOSTRING_ENUM("EquityCommon");
@@ -6816,7 +6816,7 @@ parser_error_t _toStringAuthorizationDataAccountId(const pd_AuthorizationDataAcc
                                                    uint16_t outValueLen, uint8_t pageIdx, uint8_t *pageCount) {
     CLEAN_AND_CHECK()
     *pageCount = 0;
-    uint8_t _dummy;
+    uint8_t _dummy = 0;
 
     // Count the total pages (pageCount) first (Printing the enum name adds 1 page).
     // If pageIdx == 0, prints enum name, else prints value.
@@ -7551,8 +7551,8 @@ parser_error_t _toStringVecCall(const pd_VecCall_t *v, char *outValue, uint16_t 
     CLEAN_AND_CHECK()
     /* count number of pages, then output specific */
     *pageCount = 0;
-    uint8_t chunkPageCount;
-    uint16_t currentPage, currentTotalPage = 0;
+    uint8_t chunkPageCount = 0;
+    uint16_t currentPage = 0, currentTotalPage = 0;
     /* We need to do it twice because there is no memory to keep intermediate results*/
     /* First count*/
     parser_context_t ctx;

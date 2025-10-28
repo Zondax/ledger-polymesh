@@ -54,7 +54,7 @@ __Z_INLINE bool parser_show_expert_fields() { return app_mode_expert(); }
 
 bool parser_show_tip(const parser_context_t *ctx) {
     if (ctx->tx_obj->tip.value.len <= 4) {
-        uint64_t v;
+        uint64_t v = 0;
         _getValue(&ctx->tx_obj->tip.value, &v);
         if (v == 0) {
             return false;
@@ -111,7 +111,7 @@ parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, c
     snprintf(outVal, outValLen, "?");
     *pageCount = 1;
 
-    uint8_t numItems;
+    uint8_t numItems = 0;
     CHECK_PARSER_ERR(parser_getNumItems(ctx, &numItems))
     CHECK_APP_CANARY()
 

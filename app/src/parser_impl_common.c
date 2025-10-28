@@ -133,7 +133,7 @@ parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v) {
     v->ptr = c->buffer + c->offset;
     const uint8_t mode = *v->ptr & 0x03u;  // get mode from two least significant bits
 
-    uint64_t tmp;
+    uint64_t tmp = 0;
     switch (mode) {
         case 0:  // single byte
             v->len = 1;
@@ -201,7 +201,7 @@ parser_error_t _toStringCompactInt(const compactInt_t *c, uint8_t decimalPlaces,
     *pageCount = 1;
 
     if (c->len <= 4) {
-        uint64_t v;
+        uint64_t v = 0;
         _getValue(c, &v);
         if (uint64_to_str(bufferUI, sizeof(bufferUI), v) != NULL) {
             return parser_unexpected_value;
@@ -254,7 +254,7 @@ parser_error_t _readEra(parser_context_t *c, pd_ExtrinsicEra_t *v) {
     v->period = 0;
     v->phase = 0;
 
-    uint8_t first;
+    uint8_t first = 0;
     CHECK_ERROR(_readUInt8(c, &first))
     if (first == 0) {
         return parser_ok;
@@ -363,7 +363,7 @@ uint16_t _getAddressType() { return __address_type; }
 
 uint16_t _detectAddressType(const parser_context_t *c) {
     char hashstr[65];
-    uint8_t pc;
+    uint8_t pc = 0;
 
     if (c->tx_obj->genesisHash._ptr != NULL) {
         _toStringHash(&c->tx_obj->genesisHash, hashstr, 65, 0, &pc);
@@ -389,7 +389,7 @@ parser_error_t _readAddress(parser_context_t *c, pd_Address_t *v) {
     // Based on
     // https://github.com/paritytech/substrate/blob/fc3adc87dc806237eb7371c1d21055eea1702be0/srml/indices/src/address.rs#L66
 
-    uint8_t tmp;
+    uint8_t tmp = 0;
     CHECK_ERROR(_readUInt8(c, &tmp))
 
     switch (tmp) {
@@ -412,7 +412,7 @@ parser_error_t _readAddress(parser_context_t *c, pd_Address_t *v) {
             break;
         }
         case 0xFD: {
-            uint32_t tmpval;
+            uint32_t tmpval = 0;
             CHECK_ERROR(_readUInt32(c, &tmpval))
             v->type = eAddressIndex;
             v->idx = tmpval;
@@ -422,7 +422,7 @@ parser_error_t _readAddress(parser_context_t *c, pd_Address_t *v) {
             break;
         }
         case 0xFC: {
-            uint16_t tmpval;
+            uint16_t tmpval = 0;
             CHECK_ERROR(_readUInt16(c, &tmpval))
             v->type = eAddressIndex;
             v->idx = tmpval;
