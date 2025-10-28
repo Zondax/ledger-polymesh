@@ -18,8 +18,7 @@ Checks: "-*,
   -readability-isolate-declaration,
   -readability-uppercase-literal-suffix,
   -clang-diagnostic-error,
-  -clang-diagnostic-return-type,
-  -cppcoreguidelines-init-variables"
+  -clang-diagnostic-return-type"
 WarningsAsErrors: ""
 HeaderFilterRegex: "^((?!substrate_functions\\.h|ristretto\\.h|addr\\.h).)*$"
 CheckOptions:
