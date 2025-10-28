@@ -14,6 +14,8 @@
  *  limitations under the License.
  ********************************************************************************/
 
+#include "cx_errors.h"
+
 #define ED25519_SCALAR_BYTES 32
 #define RISTRETTO_BYTES 32
 #define ED25519_SDKPOINT_BYTES 65
