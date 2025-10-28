@@ -19,9 +19,10 @@
 extern "C" {
 #endif
 
-#include "stdbool.h"
 #include <stddef.h>
 #include <stdint.h>
+
+#include "stdbool.h"
 
 #ifdef __cplusplus
 #pragma clang diagnostic push
@@ -44,11 +45,10 @@ typedef uint32_t pd_u32_t;
 typedef uint64_t pd_u64_t;
 typedef uint32_t pd_BlockNumber_t;
 
-#define CHECK_ERROR(FUNC_CALL)          \
-    {                                   \
-        parser_error_t err = FUNC_CALL; \
-        if (err != parser_ok)           \
-            return err;                 \
+#define CHECK_ERROR(FUNC_CALL)            \
+    {                                     \
+        parser_error_t err = FUNC_CALL;   \
+        if (err != parser_ok) return err; \
     }
 
 typedef struct {
@@ -56,10 +56,7 @@ typedef struct {
     uint8_t idx;
 } pd_CallIndex_t;
 
-typedef enum {
-    eEraImmortal = 0,
-    eEraMortal = 1
-} pd_ExtrinsicEra_e;
+typedef enum { eEraImmortal = 0, eEraMortal = 1 } pd_ExtrinsicEra_e;
 
 // This type has a non-standard serialization
 // core/sr-primitives/src/generic/era.rs
@@ -70,15 +67,15 @@ typedef struct {
 } pd_ExtrinsicEra_t;
 
 typedef struct {
-    const uint8_t* ptr;
+    const uint8_t *ptr;
     uint8_t len;
 } compactInt_t;
 
 typedef struct {
     uint32_t _lenBuffer;
-    const uint8_t* _ptr; // Pointer to actual
-    const uint8_t* _nextPtr; // Pointer to next Call
-    uint8_t slotIdx; // Count of nested calls
+    const uint8_t *_ptr;      // Pointer to actual
+    const uint8_t *_nextPtr;  // Pointer to next Call
+    uint8_t slotIdx;          // Count of nested calls
     bool isTail;
 } pd_NestCallIdx_t;
 
@@ -86,8 +83,8 @@ typedef struct {
 // Common types
 ////////////////////////
 
-typedef compactInt_t pd_Compactu32_t; // u32
-typedef compactInt_t pd_Compactu64_t; // u64
+typedef compactInt_t pd_Compactu32_t;  // u32
+typedef compactInt_t pd_Compactu64_t;  // u64
 typedef compactInt_t pd_CompactAssignments_t;
 typedef compactInt_t pd_CompactBountyIndex_t;
 typedef compactInt_t pd_CompactEraIndex_t;
@@ -99,15 +96,12 @@ typedef compactInt_t pd_CompactReferendumIndex_t;
 typedef compactInt_t pd_CompactRegistrarIndex_t;
 typedef compactInt_t pd_CompactWeight_t;
 
-typedef enum {
-    eAddressIndex = 0,
-    eAddressId = 1
-} pd_Address_e;
+typedef enum { eAddressIndex = 0, eAddressId = 1 } pd_Address_e;
 
 typedef struct {
     pd_Address_e type;
     uint64_t idx;
-    const uint8_t* idPtr;
+    const uint8_t *idPtr;
 } pd_Address_t;
 
 typedef struct {
@@ -120,11 +114,11 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_AssetId_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_IdentityId_t;
 
 typedef struct {
@@ -133,12 +127,12 @@ typedef struct {
         pd_IdentityId_t identity;
         pd_AssetId_t assetId;
         uint64_t _len;
-        const uint8_t* _ptr;
+        const uint8_t *_ptr;
     };
 } pd_Scope_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_CddId_t;
 
 typedef struct {
@@ -151,7 +145,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_DispatchableName_t;
 
 typedef struct {
@@ -160,7 +154,7 @@ typedef struct {
 } pd_OptionScope_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_ScopeId_t;
 
 typedef struct {
@@ -185,22 +179,22 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecClaimType_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecDispatchableName_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_AccountId_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_BalanceNoSymbol_t;
 
 typedef struct {
@@ -221,7 +215,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_PalletName_t;
 
 typedef struct {
@@ -268,13 +262,13 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecClaim_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_ChoiceTitle_t;
 
 typedef struct {
@@ -287,20 +281,20 @@ typedef struct {
 } pd_ConditionType_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_EcdsaSignature_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Ed25519Signature_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Memo_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Sr25519Signature_t;
 
 typedef struct {
@@ -315,31 +309,31 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecAssetId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecPalletPermissions_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecPortfolioId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTrustedIssuer_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTupleAccountId32u128_t;
 
@@ -359,7 +353,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_DocumentType_t;
 
 typedef struct {
@@ -373,12 +367,12 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_MotionInfoLink_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_MotionTitle_t;
 
 typedef struct {
@@ -401,7 +395,7 @@ typedef struct {
 } pd_PortfolioPermissions_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_ReceiptMetadata_t;
 
 typedef struct {
@@ -420,7 +414,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Ticker_t;
 
 typedef struct {
@@ -430,19 +424,19 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecChoiceTitle_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecIdentityId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_Vecu64_t;
 
@@ -684,12 +678,12 @@ typedef struct {
 } pd_AssetMetadataLockStatusMoment_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Balance_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Bytes_t;
 
 typedef struct {
@@ -699,17 +693,17 @@ typedef struct {
 typedef struct {
     uint8_t value;
     uint8_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_DocumentHash_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_DocumentName_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_DocumentUri_t;
 
 typedef struct {
@@ -799,7 +793,7 @@ typedef struct {
 } pd_RecordDateSpec_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Signature_t;
 
 typedef struct {
@@ -819,114 +813,114 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecCondition_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTupleIdentityIdTax_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteEight_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteEleven_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteFifteen_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteFive_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteFour_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteFourteen_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteNine_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteOne_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteSeven_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteSix_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteSixteen_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteTen_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteThirteen_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteThree_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteTwelve_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVoteTwo_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_u8_array_32_t;
 
 typedef struct {
@@ -935,7 +929,7 @@ typedef struct {
         pd_AccountId_t id;
         pd_CompactAccountIndex_t index;
         pd_Bytes_t raw;
-        const uint8_t* _ptr;
+        const uint8_t *_ptr;
     };
 } pd_AccountIdLookupOfT_t;
 
@@ -958,7 +952,7 @@ typedef struct {
 typedef struct {
     uint8_t value;
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_AssetIdentifier_t;
 
 typedef struct {
@@ -968,7 +962,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_BallotTitle_t;
 
 typedef struct {
@@ -992,7 +986,7 @@ typedef struct {
 
 typedef struct {
     pd_CallIndex_t callIndex;
-    const uint32_t* _txVerPtr;
+    const uint32_t *_txVerPtr;
     pd_NestCallIdx_t nestCallIdx;
 } pd_Call_t;
 
@@ -1052,11 +1046,11 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_FundingRoundName_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Hash_t;
 
 typedef struct {
@@ -1117,7 +1111,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_PipDescription_t;
 
 typedef struct {
@@ -1183,30 +1177,30 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Url_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecAccountId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecMotion_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecNFTId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTupleAccountId32SpNposElectionsSupport_t;
 
@@ -1220,7 +1214,7 @@ typedef struct {
 } pd_Weight_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_u8_array_4_t;
 
 typedef struct {
@@ -1348,7 +1342,7 @@ typedef struct {
         pd_AccountId_t id;
         pd_CompactAccountIndex_t index;
         pd_Bytes_t raw;
-        const uint8_t* _ptr;
+        const uint8_t *_ptr;
     };
 } pd_LookupasStaticLookupSource_t;
 
@@ -1456,98 +1450,98 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecAccountIdLookupOfT_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecBallotVote_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecBeneficiary_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
     uint32_t callTxVersion;
 } pd_VecCall_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecComplianceRequirement_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecCreateChildIdentityWithAuthAccountId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecDocument_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecFund_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecLeg_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecNFTMetadataAttribute_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecPriceTier_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecReceiptDetails_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecSecondaryKeyAccountId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecSecondaryKeyWithAuthAccountId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTupleExtrinsicIdbool_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecTuplePipIdSnapshotResult_t;
 
@@ -1565,12 +1559,12 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_AssetName_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_CADetails_t;
 
 typedef struct {
@@ -1592,7 +1586,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_FundraiserName_t;
 
 typedef struct {
@@ -1600,7 +1594,7 @@ typedef struct {
 } pd_InstructionId_t;
 
 typedef struct {
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_Keys_t;
 
 typedef struct {
@@ -1679,7 +1673,7 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_PortfolioName_t;
 
 typedef struct {
@@ -1701,43 +1695,43 @@ typedef struct {
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecAssetIdentifier_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecAssetMetadataKey_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecDocumentId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_VecVenueId_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_Vecu32_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
     uint64_t _lenBuffer;
 } pd_Vecu8_t;
 
 typedef struct {
     uint64_t _len;
-    const uint8_t* _ptr;
+    const uint8_t *_ptr;
 } pd_VenueDetails_t;
 
 typedef struct {

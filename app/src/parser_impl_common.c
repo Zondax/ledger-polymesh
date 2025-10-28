@@ -1,32 +1,31 @@
 /*******************************************************************************
-*  (c) 2019 - 2024  Zondax AG
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *  (c) 2019 - 2024  Zondax AG
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 
-#include <zxmacros.h>
 #include <zxformat.h>
-#include "parser_impl.h"
-#include "parser_txdef.h"
+#include <zxmacros.h>
+
+#include "bignum.h"
 #include "coin.h"
 #include "crypto_helper.h"
-#include "bignum.h"
-#include "substrate_types.h"
+#include "parser_impl.h"
+#include "parser_txdef.h"
 #include "substrate_dispatch.h"
+#include "substrate_types.h"
 
-parser_error_t parser_init_context(parser_context_t *ctx,
-                                   const uint8_t *buffer,
-                                   uint16_t bufferSize) {
+parser_error_t parser_init_context(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
     if (ctx == NULL || bufferSize == 0 || buffer == NULL) {
         // Not available, use defaults
         return parser_init_context_empty;
@@ -132,26 +131,26 @@ parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v) {
     CHECK_INPUT()
 
     v->ptr = c->buffer + c->offset;
-    const uint8_t mode = *v->ptr & 0x03u;      // get mode from two least significant bits
+    const uint8_t mode = *v->ptr & 0x03u;  // get mode from two least significant bits
 
     uint64_t tmp;
     switch (mode) {
-        case 0:         // single byte
+        case 0:  // single byte
             v->len = 1;
             CTX_CHECK_AND_ADVANCE(c, v->len)
             _getValue(v, &tmp);
             break;
-        case 1:         // 2-byte
+        case 1:  // 2-byte
             v->len = 2;
             CTX_CHECK_AND_ADVANCE(c, v->len)
             _getValue(v, &tmp);
             break;
-        case 2:         // 4-byte
+        case 2:  // 4-byte
             v->len = 4;
             CTX_CHECK_AND_ADVANCE(c, v->len)
             _getValue(v, &tmp);
             break;
-        case 3:         // bigint
+        case 3:  // bigint
             v->len = (*v->ptr >> 2u) + 4 + 1;
             CTX_CHECK_AND_ADVANCE(c, v->len)
             break;
@@ -193,12 +192,8 @@ parser_error_t _getValue(const compactInt_t *c, uint64_t *v) {
     return parser_ok;
 }
 
-parser_error_t _toStringCompactInt(const compactInt_t *c,
-                                   uint8_t decimalPlaces,
-                                   bool trimTrailingZeros,
-                                   const char postfix[],
-                                   const char prefix[],
-                                   char *outValue, uint16_t outValueLen,
+parser_error_t _toStringCompactInt(const compactInt_t *c, uint8_t decimalPlaces, bool trimTrailingZeros,
+                                   const char postfix[], const char prefix[], char *outValue, uint16_t outValueLen,
                                    uint8_t pageIdx, uint8_t *pageCount) {
     char bufferUI[200];
     MEMZERO(outValue, outValueLen);
@@ -217,8 +212,7 @@ parser_error_t _toStringCompactInt(const compactInt_t *c,
         const uint16_t bcdOutLen = sizeof(bcdOut);
 
         bignumLittleEndian_to_bcd(bcdOut, bcdOutLen, c->ptr + 1, c->len - 1);
-        if (!bignumLittleEndian_bcdprint(bufferUI, sizeof(bufferUI), bcdOut, bcdOutLen))
-            return parser_unexpected_buffer_end;
+        if (!bignumLittleEndian_bcdprint(bufferUI, sizeof(bufferUI), bcdOut, bcdOutLen)) return parser_unexpected_buffer_end;
     }
 
     // Format number
@@ -230,7 +224,7 @@ parser_error_t _toStringCompactInt(const compactInt_t *c,
         return parser_unexpected_buffer_end;
     }
 
-    if(trimTrailingZeros) {
+    if (trimTrailingZeros) {
         number_inplace_trimming(bufferUI, 1);
     }
 
@@ -262,12 +256,14 @@ parser_error_t _readEra(parser_context_t *c, pd_ExtrinsicEra_t *v) {
 
     uint8_t first;
     CHECK_ERROR(_readUInt8(c, &first))
-    if (first == 0) { return parser_ok; }
+    if (first == 0) {
+        return parser_ok;
+    }
 
     v->type = eEraMortal;
     uint64_t encoded = first;
     CHECK_ERROR(_readUInt8(c, &first))
-    encoded += (uint64_t) first << 8u;
+    encoded += (uint64_t)first << 8u;
 
     v->period = 2U << (encoded % (1u << 4u));
     uint64_t quantize_factor = (v->period >> 12u);
@@ -301,19 +297,15 @@ parser_error_t _readCompactBalance(parser_context_t *c, pd_CompactBalance_t *v) 
     return parser_ok;
 }
 
-parser_error_t _toStringCompactIndex(const pd_CompactIndex_t *v,
-                                     char *outValue, uint16_t outValueLen,
-                                     uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t _toStringCompactIndex(const pd_CompactIndex_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
+                                     uint8_t *pageCount) {
     return _toStringCompactInt(&v->index, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
 }
 
-parser_error_t _toStringCompactBalance(const pd_CompactBalance_t *v,
-                                       char *outValue, uint16_t outValueLen,
-                                       uint8_t pageIdx, uint8_t *pageCount) {
-    CHECK_ERROR(_toStringCompactInt(
-            &v->value,
-            COIN_AMOUNT_DECIMAL_PLACES, true, "", COIN_TICKER,
-            outValue, outValueLen, pageIdx, pageCount))
+parser_error_t _toStringCompactBalance(const pd_CompactBalance_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
+                                       uint8_t *pageCount) {
+    CHECK_ERROR(_toStringCompactInt(&v->value, COIN_AMOUNT_DECIMAL_PLACES, true, "", COIN_TICKER, outValue, outValueLen,
+                                    pageIdx, pageCount))
     return parser_ok;
 }
 
@@ -337,19 +329,19 @@ parser_error_t _checkVersions(parser_context_t *c) {
         return parser_unexpected_buffer_end;
     }
 
-    uint8_t *p = (uint8_t *) (c->buffer + c->bufferLen - specOffsetFromBack);
+    uint8_t *p = (uint8_t *)(c->buffer + c->bufferLen - specOffsetFromBack);
     uint32_t specVersion = 0;
-    specVersion += (uint32_t) p[0] << 0u;
-    specVersion += (uint32_t) p[1] << 8u;
-    specVersion += (uint32_t) p[2] << 16u;
-    specVersion += (uint32_t) p[3] << 24u;
+    specVersion += (uint32_t)p[0] << 0u;
+    specVersion += (uint32_t)p[1] << 8u;
+    specVersion += (uint32_t)p[2] << 16u;
+    specVersion += (uint32_t)p[3] << 24u;
 
     p += 4;
     uint32_t transactionVersion = 0;
-    transactionVersion += (uint32_t) p[0] << 0u;
-    transactionVersion += (uint32_t) p[1] << 8u;
-    transactionVersion += (uint32_t) p[2] << 16u;
-    transactionVersion += (uint32_t) p[3] << 24u;
+    transactionVersion += (uint32_t)p[0] << 0u;
+    transactionVersion += (uint32_t)p[1] << 8u;
+    transactionVersion += (uint32_t)p[2] << 16u;
+    transactionVersion += (uint32_t)p[3] << 24u;
 
     if (transactionVersion != SUPPORTED_TX_VERSION_CURRENT) {
         return parser_tx_version_not_supported;
@@ -367,9 +359,7 @@ parser_error_t _checkVersions(parser_context_t *c) {
 
 uint16_t __address_type;
 
-uint16_t _getAddressType() {
-    return __address_type;
-}
+uint16_t _getAddressType() { return __address_type; }
 
 uint16_t _detectAddressType(const parser_context_t *c) {
     char hashstr[65];
@@ -454,12 +444,11 @@ parser_error_t _readAddress(parser_context_t *c, pd_Address_t *v) {
     return parser_ok;
 }
 
-parser_error_t _toStringPubkeyAsAddress(const uint8_t *pubkey,
-                                        char *outValue, uint16_t outValueLen,
-                                        uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t _toStringPubkeyAsAddress(const uint8_t *pubkey, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
+                                        uint8_t *pageCount) {
     char bufferUI[200];
 
-    if (crypto_SS58EncodePubkey((uint8_t *) bufferUI, sizeof(bufferUI), __address_type, pubkey) == 0) {
+    if (crypto_SS58EncodePubkey((uint8_t *)bufferUI, sizeof(bufferUI), __address_type, pubkey) == 0) {
         return parser_no_data;
     }
 
@@ -470,9 +459,8 @@ parser_error_t _toStringPubkeyAsAddress(const uint8_t *pubkey,
     return parser_ok;
 }
 
-parser_error_t _toStringAddress(const pd_Address_t *v,
-                                char *outValue, uint16_t outValueLen,
-                                uint8_t pageIdx, uint8_t *pageCount) {
+parser_error_t _toStringAddress(const pd_Address_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
+                                uint8_t *pageCount) {
     MEMZERO(outValue, outValueLen);
     if (v == NULL) {
         return parser_no_data;
@@ -483,9 +471,7 @@ parser_error_t _toStringAddress(const pd_Address_t *v,
         case eAddressIndex:
             return parser_not_supported;
         case eAddressId: {
-            return _toStringPubkeyAsAddress(v->idPtr,
-                                            outValue, outValueLen,
-                                            pageIdx, pageCount);
+            return _toStringPubkeyAsAddress(v->idPtr, outValue, outValueLen, pageIdx, pageCount);
         }
     }
 

@@ -19,9 +19,10 @@
 extern "C" {
 #endif
 
-#include "substrate_types.h"
 #include <stddef.h>
 #include <stdint.h>
+
+#include "substrate_types.h"
 
 // Versioned types functions for tx version V7
 

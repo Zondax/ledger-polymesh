@@ -1,28 +1,27 @@
 /*******************************************************************************
-*   (c) 2019 Zondax GmbH
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *   (c) 2019 Zondax GmbH
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 
 #include "crypto_helper.h"
+
 #include "base58.h"
 
 #if defined(LEDGER_SPECIFIC)
 #include "cx.h"
 
-cx_err_t ss58hash(const unsigned char *in, unsigned int inLen,
-                   unsigned char *out, unsigned int outLen) {
-
+cx_err_t ss58hash(const unsigned char *in, unsigned int inLen, unsigned char *out, unsigned int outLen) {
     cx_blake2b_t ctx;
     CHECK_CXERROR(cx_blake2b_init_no_throw(&ctx, 512));
     CHECK_CXERROR(cx_hash_no_throw(&ctx.header, 0, SS58_BLAKE_PREFIX, SS58_BLAKE_PREFIX_LEN, NULL, 0));
@@ -33,10 +32,10 @@ cx_err_t ss58hash(const unsigned char *in, unsigned int inLen,
 #else
 
 #include <hexutils.h>
+
 #include "blake2.h"
 
-int ss58hash(const unsigned char *in, unsigned int inLen,
-             unsigned char *out, unsigned int outLen) {
+int ss58hash(const unsigned char *in, unsigned int inLen, unsigned char *out, unsigned int outLen) {
     blake2b_state s;
     blake2b_init(&s, 64);
     blake2b_update(&s, SS58_BLAKE_PREFIX, SS58_BLAKE_PREFIX_LEN);
@@ -58,12 +57,11 @@ uint8_t crypto_SS58CalculatePrefix(uint16_t addressType, uint8_t *prefixBytes) {
         return 2;
     }
 
-    prefixBytes[0] = addressType & 0x3F; // address type
+    prefixBytes[0] = addressType & 0x3F;  // address type
     return 1;
 }
 
-uint16_t crypto_SS58EncodePubkey(uint8_t *buffer, uint16_t buffer_len,
-                                 uint16_t addressType, const uint8_t *pubkey) {
+uint16_t crypto_SS58EncodePubkey(uint8_t *buffer, uint16_t buffer_len, uint16_t addressType, const uint8_t *pubkey) {
     // based on https://docs.substrate.io/v3/advanced/ss58/
     if (buffer == NULL || buffer_len < SS58_ADDRESS_MAX_LEN) {
         return 0;
@@ -81,8 +79,8 @@ uint16_t crypto_SS58EncodePubkey(uint8_t *buffer, uint16_t buffer_len,
         return 0;
     }
 
-    memcpy(unencoded + prefixSize, pubkey, 32);           // account id
-    if (ss58hash((uint8_t *) unencoded, 32 + prefixSize, hash, 64) != CX_OK) {
+    memcpy(unencoded + prefixSize, pubkey, 32);  // account id
+    if (ss58hash((uint8_t *)unencoded, 32 + prefixSize, hash, 64) != CX_OK) {
         MEMZERO(unencoded, sizeof(unencoded));
         return 0;
     }

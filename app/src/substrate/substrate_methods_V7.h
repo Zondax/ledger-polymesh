@@ -22,10 +22,11 @@
 extern "C" {
 #endif
 
-#include "substrate_types.h"
-#include "substrate_types_V7.h"
 #include <stddef.h>
 #include <stdint.h>
+
+#include "substrate_types.h"
+#include "substrate_types_V7.h"
 #ifdef LEDGER_SPECIFIC
 #include "bolos_target.h"
 #endif
@@ -762,7 +763,8 @@ typedef union {
     pd_nft_redeem_nft_V7_t nft_redeem_nft_V7;
     pd_electionprovidermultiphase_submit_unsigned_V7_t electionprovidermultiphase_submit_unsigned_V7;
     pd_electionprovidermultiphase_set_minimum_untrusted_score_V7_t electionprovidermultiphase_set_minimum_untrusted_score_V7;
-    pd_electionprovidermultiphase_set_emergency_election_result_V7_t electionprovidermultiphase_set_emergency_election_result_V7;
+    pd_electionprovidermultiphase_set_emergency_election_result_V7_t
+        electionprovidermultiphase_set_emergency_election_result_V7;
     pd_electionprovidermultiphase_submit_V7_t electionprovidermultiphase_submit_V7;
     pd_electionprovidermultiphase_governance_fallback_V7_t electionprovidermultiphase_governance_fallback_V7;
 #endif
@@ -2084,7 +2086,8 @@ typedef union {
     pd_corporateaction_link_ca_doc_V7_t corporateaction_link_ca_doc_V7;
     pd_corporateaction_remove_ca_V7_t corporateaction_remove_ca_V7;
     pd_corporateaction_change_record_date_V7_t corporateaction_change_record_date_V7;
-    pd_corporateaction_initiate_corporate_action_and_distribute_V7_t corporateaction_initiate_corporate_action_and_distribute_V7;
+    pd_corporateaction_initiate_corporate_action_and_distribute_V7_t
+        corporateaction_initiate_corporate_action_and_distribute_V7;
     pd_corporateballot_attach_ballot_V7_t corporateballot_attach_ballot_V7;
     pd_corporateballot_vote_V7_t corporateballot_vote_V7;
     pd_corporateballot_change_end_V7_t corporateballot_change_end_V7;

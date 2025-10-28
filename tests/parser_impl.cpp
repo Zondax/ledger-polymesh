@@ -1,40 +1,39 @@
 /*******************************************************************************
-*   (c) 2019 Zondax GmbH
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License.
-********************************************************************************/
+ *   (c) 2019 Zondax GmbH
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ********************************************************************************/
 
-#include "gmock/gmock.h"
+#include "parser_impl.h"
+
+#include <hexutils.h>
+#include <parser.h>
+#include <parser_txdef.h>
 
 #include <iostream>
-#include <hexutils.h>
-#include <parser_txdef.h>
-#include <parser.h>
-#include "parser_impl.h"
+
+#include "gmock/gmock.h"
 
 // Test that we can parse SCALE-encoded unsigned integers correctly (uint8_t, uint16_t, uint32_t, uint64_t}
 TEST(SCALE, UIntX) {
     parser_context_t ctx;
     parser_error_t err;
     uint8_t buffer[100];
-    auto bufferLen = parseHexString(
-            buffer,
-            sizeof(buffer),
-            "45"
-            "1234"
-            "12345678"
-            "1234567812345678"
-    );
+    auto bufferLen = parseHexString(buffer, sizeof(buffer),
+                                    "45"
+                                    "1234"
+                                    "12345678"
+                                    "1234567812345678");
 
     parser_init(&ctx, buffer, bufferLen);
 
@@ -178,7 +177,8 @@ TEST(SCALE, BadTX) {
     parser_tx_t tx;
 
     err = _readTx(&ctx, &tx);
-    EXPECT_EQ(err, parser_unexpected_buffer_end) << parser_getErrorDescription(err);;
+    EXPECT_EQ(err, parser_unexpected_buffer_end) << parser_getErrorDescription(err);
+    ;
 }
 
 // Parse simple SCALE-encoded transaction
@@ -186,9 +186,10 @@ TEST(SCALE, TransferTXBadTxVersion) {
     parser_context_t ctx;
     parser_error_t err;
 
-    const auto testTx = "0400ff8d16d62802ca55326ec52bf76a8543b90e2aba5bcf6cd195c0d6fc1ef38fa1b3000600ae11030000c801"
-                        "00003fd7b9eb6a00376e5be61f01abb429ffb0b104be05eaff4d458da48fcd425baf3fd7b9eb6a00376e5be61f"
-                        "01abb429ffb0b104be05eaff4d458da48fcd425baf";
+    const auto testTx =
+        "0400ff8d16d62802ca55326ec52bf76a8543b90e2aba5bcf6cd195c0d6fc1ef38fa1b3000600ae11030000c801"
+        "00003fd7b9eb6a00376e5be61f01abb429ffb0b104be05eaff4d458da48fcd425baf3fd7b9eb6a00376e5be61f"
+        "01abb429ffb0b104be05eaff4d458da48fcd425baf";
 
     uint8_t buffer[500];
     auto bufferLen = parseHexString(buffer, sizeof(buffer), testTx);
@@ -203,14 +204,14 @@ TEST(SCALE, TransferTXBadTxVersion) {
     err = _readTx(&ctx, &tx);
     EXPECT_EQ(err, parser_tx_version_not_supported) << parser_getErrorDescription(err);
 
-}// Parse simple SCALE-encoded transaction
+}  // Parse simple SCALE-encoded transaction
 TEST(SCALE, TransferTXBadSpec) {
     parser_context_t ctx;
     parser_error_t err;
 
-    const auto testTx = "000028a5da57d5038d2400110700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867"
-                        "a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
-
+    const auto testTx =
+        "000028a5da57d5038d2400110700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867"
+        "a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
 
     uint8_t buffer[500];
     auto bufferLen = parseHexString(buffer, sizeof(buffer), testTx);
@@ -225,4 +226,3 @@ TEST(SCALE, TransferTXBadSpec) {
     err = _readTx(&ctx, &tx);
     EXPECT_EQ(err, parser_tx_version_not_supported) << parser_getErrorDescription(err);
 }
-

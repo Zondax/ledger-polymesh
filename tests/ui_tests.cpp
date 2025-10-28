@@ -29,120 +29,112 @@
 using ::testing::TestWithParam;
 
 typedef struct {
-  uint64_t index;
-  std::string name;
-  std::string blob;
-  std::vector<std::string> expected;
-  std::vector<std::string> expected_expert;
+    uint64_t index;
+    std::string name;
+    std::string blob;
+    std::vector<std::string> expected;
+    std::vector<std::string> expected_expert;
 } testcase_t;
 
 class JsonTestsA : public ::testing::TestWithParam<testcase_t> {
- public:
-  struct PrintToStringParamName {
-    template <class ParamType>
-    std::string operator()(
-        const testing::TestParamInfo<ParamType> &info) const {
-      auto p = static_cast<testcase_t>(info.param);
-      std::stringstream ss;
-      ss << p.index << "_" << p.name;
-      return ss.str();
-    }
-  };
+   public:
+    struct PrintToStringParamName {
+        template <class ParamType>
+        std::string operator()(const testing::TestParamInfo<ParamType> &info) const {
+            auto p = static_cast<testcase_t>(info.param);
+            std::stringstream ss;
+            ss << p.index << "_" << p.name;
+            return ss.str();
+        }
+    };
 };
 
 class JsonTestsB : public ::testing::TestWithParam<testcase_t> {
- public:
-  struct PrintToStringParamName {
-    template <class ParamType>
-    std::string operator()(
-        const testing::TestParamInfo<ParamType> &info) const {
-      auto p = static_cast<testcase_t>(info.param);
-      std::stringstream ss;
-      ss << p.index << "_" << p.name;
-      return ss.str();
-    }
-  };
+   public:
+    struct PrintToStringParamName {
+        template <class ParamType>
+        std::string operator()(const testing::TestParamInfo<ParamType> &info) const {
+            auto p = static_cast<testcase_t>(info.param);
+            std::stringstream ss;
+            ss << p.index << "_" << p.name;
+            return ss.str();
+        }
+    };
 };
 
 // Retrieve testcases from json file
 std::vector<testcase_t> GetJsonTestCases(const std::string &jsonFile) {
-  auto answer = std::vector<testcase_t>();
+    auto answer = std::vector<testcase_t>();
 
-  Json::CharReaderBuilder builder;
-  Json::Value obj;
+    Json::CharReaderBuilder builder;
+    Json::Value obj;
 
-  std::string fullPathJsonFile = std::string(TESTVECTORS_DIR) + jsonFile;
+    std::string fullPathJsonFile = std::string(TESTVECTORS_DIR) + jsonFile;
 
-  std::ifstream inFile(fullPathJsonFile);
-  if (!inFile.is_open()) {
+    std::ifstream inFile(fullPathJsonFile);
+    if (!inFile.is_open()) {
+        return answer;
+    }
+
+    // Retrieve all test cases
+    JSONCPP_STRING errs;
+    Json::parseFromStream(builder, inFile, &obj, &errs);
+    std::cout << "Number of testcases: " << obj.size() << std::endl;
+
+    for (int i = 0; i < obj.size(); i++) {
+        auto outputs = std::vector<std::string>();
+        for (auto s : obj[i]["output"]) {
+            outputs.push_back(s.asString());
+        }
+
+        auto outputs_expert = std::vector<std::string>();
+        for (auto s : obj[i]["output_expert"]) {
+            outputs_expert.push_back(s.asString());
+        }
+
+        answer.push_back(testcase_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(), obj[i]["blob"].asString(),
+                                    outputs, outputs_expert});
+    }
+
     return answer;
-  }
-
-  // Retrieve all test cases
-  JSONCPP_STRING errs;
-  Json::parseFromStream(builder, inFile, &obj, &errs);
-  std::cout << "Number of testcases: " << obj.size() << std::endl;
-
-  for (int i = 0; i < obj.size(); i++) {
-    auto outputs = std::vector<std::string>();
-    for (auto s : obj[i]["output"]) {
-      outputs.push_back(s.asString());
-    }
-
-    auto outputs_expert = std::vector<std::string>();
-    for (auto s : obj[i]["output_expert"]) {
-      outputs_expert.push_back(s.asString());
-    }
-
-    answer.push_back(
-        testcase_t{obj[i]["index"].asUInt64(), obj[i]["name"].asString(),
-                   obj[i]["blob"].asString(), outputs, outputs_expert});
-  }
-
-  return answer;
 }
 
 void check_testcase(const testcase_t &tc, bool expert_mode) {
-  app_mode_set_expert(expert_mode);
+    app_mode_set_expert(expert_mode);
 
-  parser_context_t ctx;
-  parser_error_t err;
+    parser_context_t ctx;
+    parser_error_t err;
 
-  uint8_t buffer[5000];
-  uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), tc.blob.c_str());
+    uint8_t buffer[5000];
+    uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), tc.blob.c_str());
 
-  parser_tx_t tx_obj;
-  err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
-  ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
+    parser_tx_t tx_obj;
+    err = parser_parse(&ctx, buffer, bufferLen, &tx_obj);
+    ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
 
-  auto output = dumpUI(&ctx, 39, 39);
+    auto output = dumpUI(&ctx, 39, 39);
 
-  std::cout << std::endl;
-  for (const auto &i : output) {
-    std::cout << i << std::endl;
-  }
-  std::cout << std::endl << std::endl;
-
-  std::vector<std::string> expected =
-      app_mode_expert() ? tc.expected_expert : tc.expected;
-  EXPECT_EQ(output.size(), expected.size());
-  for (size_t i = 0; i < expected.size(); i++) {
-    if (i < output.size()) {
-      EXPECT_THAT(output[i], testing::Eq(expected[i]));
+    std::cout << std::endl;
+    for (const auto &i : output) {
+        std::cout << i << std::endl;
     }
-  }
+    std::cout << std::endl << std::endl;
+
+    std::vector<std::string> expected = app_mode_expert() ? tc.expected_expert : tc.expected;
+    EXPECT_EQ(output.size(), expected.size());
+    for (size_t i = 0; i < expected.size(); i++) {
+        if (i < output.size()) {
+            EXPECT_THAT(output[i], testing::Eq(expected[i]));
+        }
+    }
 }
 
 INSTANTIATE_TEST_SUITE_P
 
-    (JsonTestCasesCurrentTxVer, JsonTestsA,
-     ::testing::ValuesIn(GetJsonTestCases("testcases_current.json")),
+    (JsonTestCasesCurrentTxVer, JsonTestsA, ::testing::ValuesIn(GetJsonTestCases("testcases_current.json")),
      JsonTestsA::PrintToStringParamName());
 
 // Parametric test using current runtime:
-TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Normal) {
-  check_testcase(GetParam(), false);
-}
+TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Normal) { check_testcase(GetParam(), false); }
 
-TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) {
-check_testcase(GetParam(), true); }
+TEST_P(JsonTestsA, CheckUIOutput_CurrentTX_Expert) { check_testcase(GetParam(), true); }
