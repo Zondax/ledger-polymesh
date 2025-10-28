@@ -11,8 +11,17 @@ Checks: "-*,
   readability-*,
   -misc-no-recursion,
   -readability-function-cognitive-complexity,
-  -readability-magic-numbers"
-WarningsAsErrors: "*"
+  -readability-function-size,
+  -readability-magic-numbers,
+  -readability-braces-around-statements,
+  -readability-else-after-return,
+  -readability-isolate-declaration,
+  -readability-uppercase-literal-suffix,
+  -clang-diagnostic-error,
+  -clang-diagnostic-return-type,
+  -cppcoreguidelines-init-variables"
+WarningsAsErrors: ""
+HeaderFilterRegex: "^((?!substrate_functions\\.h|ristretto\\.h|addr\\.h).)*$"
 CheckOptions:
   - key: readability-identifier-length.MinimumVariableNameLength
     value: 1

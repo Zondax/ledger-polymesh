@@ -22,6 +22,9 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
+#include "common/parser_common.h"
+#include "substrate_types.h"
+
 // Common read functions
 
 parser_error_t _readbool(parser_context_t *c, pd_bool_t *v);
