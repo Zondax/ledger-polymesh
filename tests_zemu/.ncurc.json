@@ -1,0 +1,3 @@
+{
+  "reject": ["@zondax/ledger-substrate"]
+}
