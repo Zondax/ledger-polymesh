@@ -19,8 +19,8 @@
 #include "swap.h"
 #include "zxformat.h"
 
-#define DOT_SS58_PREFIX  0
-#define ED25519_ADD_KIND 0
+#define POLYX_SS58_PREFIX 12
+#define ED25519_ADD_KIND  0
 
 void handle_check_address(check_address_parameters_t *params) {
     if (params == NULL || params->address_to_check == NULL || params->address_parameters == NULL ||
@@ -33,14 +33,14 @@ void handle_check_address(check_address_parameters_t *params) {
 
     // address parameters have the following structure
     // address kind (1 byte) | path length (1 byte) | bip44 path (4 * pathLength bytes)
-    // address kind won't be used anymore since Generic Polkadot app only works for ED25519
+    // address kind won't be used anymore since Generic Polymesh app only works for ED25519
     const uint8_t add_kind = *params->address_parameters;
     if (add_kind != ED25519_ADD_KIND) {
         return;
     }
 
     zxerr_t err = crypto_fillAddress_standalone(params->address_parameters + 2, params->address_parameters_length - 2,
-                                                buffer, sizeof(buffer), &replyLen, DOT_SS58_PREFIX);
+                                                buffer, sizeof(buffer), &replyLen, POLYX_SS58_PREFIX);
     if (err != zxerr_ok || replyLen <= PK_LEN_25519) {
         MEMZERO(buffer, sizeof(buffer));
         return;

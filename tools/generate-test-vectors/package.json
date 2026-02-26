@@ -1,0 +1,16 @@
+{
+  "name": "generate-test-vectors",
+  "version": "1.0.0",
+  "description": "Generate Polymesh test vectors for Ledger app unit tests",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate.mjs"
+  },
+  "dependencies": {
+    "@polkadot/api": "^15.8.1",
+    "@polkadot-api/merkleize-metadata": "^1.1.8",
+    "@polkadot/types": "^15.8.1",
+    "@polkadot/util": "^13.4.4",
+    "@polkadot/util-crypto": "^13.4.4"
+  }
+}

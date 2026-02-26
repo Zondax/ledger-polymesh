@@ -7,7 +7,7 @@ Tip:
 Once the app is approved by Ledger, it will be available in their app store (Ledger Live).
 You can get pre-releases in two ways (*THESE ARE UNVETTED DEVELOPMENT RELEASES*):
 
-- You can try here: https://hub.zondax.ch/polkadot
+- You can try here: https://hub.zondax.ch/polymesh
 - Or you can download a sideloading script from releases. (We only recommend this for developers)
 
 # Development

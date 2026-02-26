@@ -29,7 +29,7 @@ endif()
 
 ########################################################
 
-project(ledger-polkadot VERSION 0.0.0)
+project(ledger-polymesh VERSION 0.0.0)
 
 # Include common fuzzing configuration
 include(deps/ledger-zxlib/fuzzing/FuzzingCommon.cmake)
@@ -168,4 +168,13 @@ else()
         add_compile_definitions(TESTVECTORS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/")
         add_test(NAME unittests COMMAND unittests)
         set_tests_properties(unittests PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+    # #############################################################
+    # Capture output utility - populates test vector JSON with parser output
+    add_executable(capture_output ${CMAKE_CURRENT_SOURCE_DIR}/tools/capture-output.cpp)
+    target_link_libraries(capture_output PRIVATE
+            app_lib
+            fmt::fmt
+            nlohmann_json::nlohmann_json)
+
 endif()

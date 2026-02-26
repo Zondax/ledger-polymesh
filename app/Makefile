@@ -40,25 +40,13 @@ VARIANT_VALUES=$(COIN)
 # and SLIP-0044 standards.
 # If your app needs it, you can specify multiple path by using:
 # `PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'"`
-APPPATH = "44'/354'"
+APPPATH = "44'/595'"
 
 
 ifeq ($(COIN),DOT)
 # Main app configuration
-APPNAME = "Polkadot"
+APPNAME = "Polymesh"
 ICON_NAME = icon
-HAVE_SWAP ?= 1
-
-else ifeq ($(COIN),DOT_MIGRATION)
-# Migration app configuration
-APPNAME = "Polkadot Migration"
-DEFINES += POSTPONE_MAIN_SCREEN_INIT
-DEFINES += MIGRATION_APP
-include $(CURDIR)/Makefile.migration
-
-INSTALLER_NAME = migration
-ICON_NAME = migration
-ELF_NAME = migration
 
 else
 define error_message
@@ -109,11 +97,7 @@ ICON_APEX_P = apex_p_icon.png
 # Possibles curves are: secp256k1, secp256r1, ed25519 and bls12381g1
 # If your app needs it, you can specify multiple curves by using:
 # `CURVE_APP_LOAD_PARAMS = <curve1> <curve2>`
-ifeq ($(COIN),DOT)
 CURVE_APP_LOAD_PARAMS = ed25519 secp256k1
-else ifeq ($(COIN),DOT_MIGRATION)
-CURVE_APP_LOAD_PARAMS = ed25519
-endif
 
 INCLUDES_PATH += $(CURDIR)/src/common
 INCLUDES_PATH += $(CURDIR)/src/swap
@@ -162,13 +146,8 @@ endif
 # Add the PRODUCTION_BUILD definition to the compiler flags
 DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
 
-# Display whether swap functionality is enabled or not
-ifdef HAVE_SWAP
-    $(info ************ HAVE_SWAP  = [ENABLED])
-    DEFINES += HAVE_SWAP=$(HAVE_SWAP)
-else
-    $(info ************ HAVE_SWAP  = [DISABLED])
-endif
+# Swap functionality is disabled for Polymesh
+$(info ************ HAVE_SWAP  = [DISABLED])
 
 ########################################
 # Configure devices and permissions
@@ -193,7 +172,7 @@ endif
 
 .PHONY: listvariants
 listvariants:
-	@echo VARIANTS COIN DOT DOT_MIGRATION
+	@echo VARIANTS COIN DOT
 
 .PHONY: version
 version:

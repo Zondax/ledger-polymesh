@@ -1,4 +1,4 @@
-# Polkadot App
+# Polymesh App
 
 ## General structure
 
@@ -108,7 +108,7 @@ The general structure of commands and responses is as follows:
 | P2      | byte (1) | Parameter 2               | 0 - ED25519   <br>2 - ECDSA |
 | L       | byte (1) | Bytes in payload          | 22 bytes          |
 | Path[0] | byte (4) | Derivation Path Data      | 0x80000000 \| 44  |
-| Path[1] | byte (4) | Derivation Path Data      | 0x80000000 \| 354 |
+| Path[1] | byte (4) | Derivation Path Data      | 0x80000000 \| 595 |
 | Path[2] | byte (4) | Derivation Path Data      | ?                 |
 | Path[3] | byte (4) | Derivation Path Data      | ?                 |
 | Path[4] | byte (4) | Derivation Path Data      | ?                 |
@@ -158,7 +158,7 @@ spacing.
 | Field   | Type     | Content                             | Expected          |
 | ------- | -------- | ----------------------------------- | ----------------- |
 | Path[0] | byte (4) | Derivation Path Data                | 0x80000000 \| 44  |
-| Path[1] | byte (4) | Derivation Path Data                | 0x80000000 \| 354 |
+| Path[1] | byte (4) | Derivation Path Data                | 0x80000000 \| 595 |
 | Path[2] | byte (4) | Derivation Path Data                | ?                 |
 | Path[3] | byte (4) | Derivation Path Data                | ?                 |
 | Path[4] | byte (4) | Derivation Path Data                | ?                 |
@@ -211,7 +211,7 @@ All other packets/chunks contain data chunks that are described below
 | Field   | Type     | Content              | Expected          |
 | ------- | -------- | -------------------- | ----------------- |
 | Path[0] | byte (4) | Derivation Path Data | 0x80000000 \| 44  |
-| Path[1] | byte (4) | Derivation Path Data | 0x80000000 \| 354 |
+| Path[1] | byte (4) | Derivation Path Data | 0x80000000 \| 595 |
 | Path[2] | byte (4) | Derivation Path Data | ?                 |
 | Path[3] | byte (4) | Derivation Path Data | ?                 |
 | Path[4] | byte (4) | Derivation Path Data | ?                 |

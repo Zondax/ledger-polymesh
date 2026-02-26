@@ -1,7 +1,6 @@
-# Ledger Polkadot App
+# Ledger Polymesh App
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GithubActions](https://github.com/zondax/ledger-polkadot/actions/workflows/main.yml/badge.svg)](https://github.com/Zondax/ledger-polkadot/blob/main/.github/workflows/main.yaml)
 
 ---
 
@@ -12,40 +11,11 @@ _Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
 ---
 
-This project contains the Polkadot Generic app (<https://polkadot.network/>) for Ledger devices.
+This project contains the Polymesh app (<https://polymesh.network/>) for Ledger Nano S+, Nano X, Flex, Stax, and Apex P.
 
-It provides support for both parachains and relay chains. This app aims to deliver a **unified solution for the entire Polkadot ecosystem**, ensuring top security standards.
+This application is a Polymesh-branded fork of the generic Polkadot Ledger app, using the Polymesh SLIP44 coin type (595) and SS58 prefix (12). It uses the chain-agnostic metadata parsing approach (verifying metadata hash) which is fully compatible with Polymesh as a Polkadot SDK-based chain.
 
-**All calls from any Polkadot SDK** chain, including nested ones, will be supported. However, while all methods will function in a nested call, the transaction may be rejected if there is insufficient RAM. 
-This situation might arise with the Ledger Nano S, which provides limited memory in comparison to the Ledger Nano S+, Nano X, Flex, Stax, and Apex P.
-
-If you were using one of the parachains applications (see the list below), you’ll have to migrate your funds to the Polkadot derivation path. This will enable you to manage your coins directly from the new Polkadot application.
-
-Here is the list of parachains applications:
-- Acala
-- Ajuna
-- Aleph Zero
-- Astar
-- Bifrost
-- Centrifuge
-- Darwinia
-- Edgeware
-- Hydradx
-- Karura
-- Khala
-- Kusama
-- Nodle
-- Parallel
-- Phala
-- Pendulum
-- Polkadex
-- Polymesh
-- Statemine
-- Statemint
-- Unique
-- xx network
-
-For testing purposes you can easily install the application via (<https://hub.zondax.ch/polkadot-new>)
+**Derivation path:** `m/44'/595'/account'/change/address_index`
 
 This repository contains:
 

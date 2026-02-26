@@ -1,0 +1,135 @@
+{
+  "_comment": "Manual parameter overrides for complex Polymesh types. Keys must match camelCase pallet.method names from the Polkadot.js API.",
+
+  "asset.createAsset": [
+    "PolyToken",
+    true,
+    { "EquityCommon": null },
+    [{ "ISIN": "0x555344363931343536373839" }],
+    "SeriesA"
+  ],
+  "asset.createAssetWithCustomType": [
+    "CustomTkn",
+    false,
+    "0x437573746f6d",
+    [{ "CUSIP": "0x303132333435363738" }],
+    null
+  ],
+  "asset.issue": [
+    "0xabcdef0123456789abcdef0123456789",
+    5000000000,
+    { "Default": null }
+  ],
+  "asset.updateIdentifiers": [
+    "0xabcdef0123456789abcdef0123456789",
+    [{ "LEI": "0x3132333435363738393031323334353637383930" }]
+  ],
+
+  "identity.addClaim": [
+    "0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d",
+    { "CustomerDueDiligence": "0x0000000000000000000000000000000000000000000000000000000000000001" },
+    null
+  ],
+  "identity.rotatePrimaryKeyToSecondary": [
+    0,
+    null
+  ],
+  "identity.addSecondaryKeysWithAuthorization": [
+    [],
+    null
+  ],
+  "identity.removeSecondaryKeys": [
+    []
+  ],
+
+  "staking.bond": [
+    7500000000,
+    { "Staked": null }
+  ],
+  "staking.nominate": [
+    ["5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"]
+  ],
+
+  "settlement.affirmInstruction": [
+    0,
+    []
+  ],
+
+  "capitalDistribution.distribute": [
+    { "assetId": "0xabcdef0123456789abcdef0123456789", "localId": 42 },
+    null,
+    "0x11223344556677881122334455667788",
+    2500000000,
+    50000000000,
+    1735689600,
+    null
+  ],
+
+  "complianceManager.addComplianceRequirement": [
+    "0xabcdef0123456789abcdef0123456789",
+    [],
+    []
+  ],
+
+  "checkpoint.createCheckpoint": [
+    "0xabcdef0123456789abcdef0123456789"
+  ],
+
+  "corporateAction.initiateCorporateAction": [
+    "0xabcdef0123456789abcdef0123456789",
+    { "PredictableBenefit": null },
+    1893456000,
+    null,
+    "Annual Dividend",
+    null,
+    null,
+    null
+  ],
+
+  "portfolio.createPortfolio": [
+    "MainPortfolio"
+  ],
+  "portfolio.movePortfolioFunds": [
+    { "did": "0x0000000000000000000000000000000000000000000000000000000000000001", "kind": { "Default": null } },
+    { "did": "0x0000000000000000000000000000000000000000000000000000000000000001", "kind": { "User": 1 } },
+    []
+  ],
+
+  "multiSig.createMultisig": [
+    [],
+    2,
+    null
+  ],
+
+  "statistics.setActiveAssetStats": [
+    "0xabcdef0123456789abcdef0123456789",
+    []
+  ],
+
+  "sto.createFundraiser": [
+    { "did": "0x0000000000000000000000000000000000000000000000000000000000000001", "kind": { "Default": null } },
+    "0xabcdef0123456789abcdef0123456789",
+    { "did": "0x0000000000000000000000000000000000000000000000000000000000000001", "kind": { "Default": null } },
+    "0x11223344556677881122334455667788",
+    [],
+    0,
+    null,
+    0,
+    0,
+    "TestFund"
+  ],
+
+  "externalAgents.createGroup": [
+    "0xabcdef0123456789abcdef0123456789",
+    { "These": [] }
+  ],
+
+  "scheduler.cancelRetry": [
+    [0, 0]
+  ],
+  "scheduler.setRetry": [
+    [0, 0],
+    3,
+    100
+  ]
+}

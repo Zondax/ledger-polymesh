@@ -47,14 +47,11 @@ static void extractHDPath(uint32_t rx, uint32_t offset) {
 
     memcpy(hdPath, G_io_apdu_buffer + offset, sizeof(uint32_t) * HDPATH_LEN_DEFAULT);
 
-// Migration app will be allowed to work in multiple chains
-#ifndef MIGRATION_APP
     const bool valid = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT;
 
     if (!valid) {
         THROW(APDU_CODE_DATA_INVALID);
     }
-#endif
 }
 
 __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {

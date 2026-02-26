@@ -29,7 +29,7 @@ extern "C" {
 
 #define HDPATH_LEN_DEFAULT            5
 #define HDPATH_0_DEFAULT              (0x80000000 | 0x2c)
-#define HDPATH_1_DEFAULT              (0x80000000 | 0x162)
+#define HDPATH_1_DEFAULT              (0x80000000 | 0x253)
 
 #define SK_LEN_25519                  64u
 #define SCALAR_LEN_ED25519            32u
@@ -43,16 +43,10 @@ extern "C" {
 #define SECP256K1_PK_LEN              33u
 #define SECP256K1_ADDRESS_LEN         20u
 
-#ifdef MIGRATION_APP
-#define MENU_MAIN_APP_LINE1 "DOT migration"
-#define MENU_MAIN_APP_LINE2 "Ready"
-#define APPVERSION_LINE1    "DOT migration"
-#else
-#define MENU_MAIN_APP_LINE1 "Polkadot"
-#define MENU_MAIN_APP_LINE2 "Ready"
-#define APPVERSION_LINE1    "Polkadot"
-#endif
-#define APPVERSION_LINE2 "v" APPVERSION
+#define MENU_MAIN_APP_LINE1           "Polymesh"
+#define MENU_MAIN_APP_LINE2           "Ready"
+#define APPVERSION_LINE1              "Polymesh"
+#define APPVERSION_LINE2              "v" APPVERSION
 
 #ifdef __cplusplus
 }

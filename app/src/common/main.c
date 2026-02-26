@@ -17,7 +17,6 @@
 #include <os_io_seproxyhal.h>
 
 #include "app_main.h"
-#include "migration.h"
 #include "view.h"
 
 #ifdef HAVE_NBGL
@@ -112,7 +111,6 @@ __attribute__((section(".boot"))) int main(int arg0) {
             TRY {
                 view_init();
                 app_init();
-                migrationStartMessage();
                 app_main();
             }
             // NOLINTNEXTLINE

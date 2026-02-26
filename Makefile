@@ -40,11 +40,9 @@ default:
 endif
 
 build_all:
-	APP_TESTING=1 PRODUCTION_BUILD=1 COIN=DOT_MIGRATION make
 	APP_TESTING=1 PRODUCTION_BUILD=1 make
 
 test_all:
 	make zemu_install
-	COIN=DOT_MIGRATION make
 	make
 	make zemu_test

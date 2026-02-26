@@ -5,12 +5,13 @@
   "keywords": [
     "Zondax",
     "Ledger",
+    "Polymesh",
     "Polkadot",
     "Substrate"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zondax/ledger-polkadot"
+    "url": "git+https://github.com/Zondax/ledger-polymesh-generic"
   },
   "license": "Apache-2.0",
   "author": "Zondax AG",

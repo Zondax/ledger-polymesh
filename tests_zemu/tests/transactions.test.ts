@@ -15,9 +15,8 @@
  ******************************************************************************* */
 
 import Zemu from '@zondax/zemu'
-import axios from 'axios'
 import { PolkadotGenericApp } from '@zondax/ledger-substrate'
-import { defaultOptions, DOT_SS58_PREFIX, PATH, TEST_TRANSACTIONS, models, TEST_TRANSACTIONS_FAIL, TEST_ISSUES_ED25519, TEST_ISSUES_SECP256K1 } from './common'
+import { defaultOptions, POLYMESH_SS58_PREFIX, PATH, TEST_TRANSACTIONS, models, TEST_TRANSACTIONS_FAIL } from './common'
 
 // @ts-expect-error missing typings
 import ed25519 from 'ed25519-supercop'
@@ -32,12 +31,12 @@ describe.each(TEST_TRANSACTIONS)('Transactions - OK', function (data) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
       const blob = Buffer.from(data.blob.replace('<rootHash>', data.rootHash), 'hex')
       const metadata = Buffer.from(data.metadata, 'hex')
 
-      const { pubKey } = await app.getAddressEd25519(PATH, DOT_SS58_PREFIX)
+      const { pubKey } = await app.getAddressEd25519(PATH, POLYMESH_SS58_PREFIX)
 
       // do not wait here.. we need to navigate
       const signatureRequest = app.signWithMetadataEd25519(PATH, blob, metadata)
@@ -67,7 +66,7 @@ describe.each(TEST_TRANSACTIONS)('Transactions - OK', function (data) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
       const blob = Buffer.from(data.blob.replace('<rootHash>', data.rootHash), 'hex')
       const metadata = Buffer.from(data.metadata, 'hex')
@@ -107,90 +106,12 @@ describe.each(TEST_TRANSACTIONS)('Transactions - OK', function (data) {
   })
 })
 
-describe.each(TEST_TRANSACTIONS)('Transactions - API - OK', function (data) {
-  test.concurrent.each(models)(`Test: ${data.name}`, async function (m) {
-    const sim = new Zemu(m.path)
-    try {
-      await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'roc', 'https://api.zondax.ch/polkadot/transaction/metadata')
-
-      const resp = await axios.post('https://api.zondax.ch/polkadot/node/metadata/hash', { id: 'roc' })
-      const blob = Buffer.from(data.blob.replace('<rootHash>', resp.data.metadataHash), 'hex')
-
-      const { pubKey } = await app.getAddressEd25519(PATH, DOT_SS58_PREFIX)
-
-      // do not wait here.. we need to navigate
-      const signatureRequest = app.signEd25519(PATH, blob)
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-
-      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-${data.name}`)
-
-      const signatureResponse = await signatureRequest
-      console.log(signatureResponse.signature.toString('hex'))
-
-      // Now verify the signature
-      let prehash = blob
-      if (blob.length > 256) {
-        const context = blake2bInit(32)
-        blake2bUpdate(context, blob)
-        prehash = Buffer.from(blake2bFinal(context))
-      }
-      const valid = ed25519.verify(signatureResponse.signature.subarray(1), prehash, pubKey)
-      expect(valid).toEqual(true)
-    } finally {
-      await sim.close()
-    }
-  })
-
-  test.concurrent.each(models)(`Test secp256k1: ${data.name}`, async function (m) {
-    const sim = new Zemu(m.path)
-    try {
-      await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'roc', 'https://api.zondax.ch/polkadot/transaction/metadata')
-
-      const resp = await axios.post('https://api.zondax.ch/polkadot/node/metadata/hash', { id: 'roc' })
-      const blob = Buffer.from(data.blob.replace('<rootHash>', resp.data.metadataHash), 'hex')
-
-      const { pubKey } = await app.getAddressEcdsa(PATH)
-
-      // do not wait here.. we need to navigate
-      const signatureRequest = app.signEcdsa(PATH, blob)
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-
-      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-${data.name}-secp256k1`)
-
-      const signatureResponse = await signatureRequest
-      console.log(signatureResponse)
-
-      let prehash = blob
-      if (blob.length > 256) {
-        const context = blake2bInit(32)
-        blake2bUpdate(context, blob)
-        prehash = Buffer.from(blake2bFinal(context))
-      }
-
-      // Now verify the signature
-      const sha3 = require('js-sha3')
-      const msgHash = Buffer.from(sha3.keccak256(prehash), 'hex')
-
-      const EC = new ec('secp256k1')
-      const signatureDER = PolkadotGenericApp.parseEcdsaSignature(signatureResponse.signature)
-      const valid = EC.verify(msgHash, signatureDER, Buffer.from(pubKey, 'hex'), 'hex')
-      expect(valid).toEqual(true)
-    } finally {
-      await sim.close()
-    }
-  })
-})
-
 describe.each(TEST_TRANSACTIONS_FAIL)('Transactions - FAIL', function (data) {
   test.concurrent.each(models)(`Test: ${data.name} - ${data.description}`, async function (m) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
       const blob = Buffer.from(data.blob, 'hex')
       const metadata = Buffer.from(data.metadata, 'hex')
@@ -204,88 +125,6 @@ describe.each(TEST_TRANSACTIONS_FAIL)('Transactions - FAIL', function (data) {
 
       expect(errorFound).toBeDefined()
       console.log(errorFound)
-    } finally {
-      await sim.close()
-    }
-  })
-})
-
-describe.each(TEST_ISSUES_ED25519)('Transactions - issues', function (data) {
-  test.concurrent.each(models)(`Test: ${data.name}`, async function (m) {
-    const sim = new Zemu(m.path)
-    try {
-      await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
-
-      const blob = Buffer.from(data.blob.replace('<rootHash>', data.rootHash), 'hex')
-      const metadata = Buffer.from(data.metadata, 'hex')
-
-      const { pubKey } = await app.getAddressEd25519(PATH, DOT_SS58_PREFIX)
-
-      // do not wait here.. we need to navigate
-      const signatureRequest = app.signWithMetadataEd25519(PATH, blob, metadata)
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-
-      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-${data.name}`)
-
-      const signatureResponse = await signatureRequest
-      console.log(signatureResponse.signature.toString('hex'))
-
-      // Now verify the signature
-      let prehash = blob
-      if (blob.length > 256) {
-        const context = blake2bInit(32)
-        blake2bUpdate(context, blob)
-        prehash = Buffer.from(blake2bFinal(context))
-      }
-      const valid = ed25519.verify(signatureResponse.signature.subarray(1), prehash, pubKey)
-      expect(valid).toEqual(true)
-    } finally {
-      await sim.close()
-    }
-  })
-})
-
-describe.each(TEST_ISSUES_SECP256K1)('Transactions - issues', function (data) {
-  test.concurrent.each(models)(`Test: ${data.name}`, async function (m) {
-    const sim = new Zemu(m.path)
-    try {
-      await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
-
-      const blob = Buffer.from(data.blob.replace('<rootHash>', data.rootHash), 'hex')
-      const metadata = Buffer.from(data.metadata, 'hex')
-
-      const { pubKey } = await app.getAddressEcdsa(PATH)
-      console.log(pubKey)
-
-      // do not wait here.. we need to navigate
-      const signatureRequest = app.signWithMetadataEcdsa(PATH, blob, metadata)
-      // Wait until we are not in the main menu
-      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-
-      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-${data.name}-secp256k1`)
-
-      const signatureResponse = await signatureRequest
-      console.log(signatureResponse)
-
-      let prehash = blob
-      if (blob.length > 256) {
-        const context = blake2bInit(32)
-        blake2bUpdate(context, blob)
-        prehash = Buffer.from(blake2bFinal(context))
-      }
-
-      // Now verify the signature
-      const sha3 = require('js-sha3')
-      const msgHash = Buffer.from(sha3.keccak256(prehash), 'hex')
-
-      const EC = new ec('secp256k1')
-      const signatureDER = PolkadotGenericApp.parseEcdsaSignature(signatureResponse.signature)
-      const valid = EC.verify(msgHash, signatureDER, Buffer.from(pubKey, 'hex'), 'hex')
-
-      expect(valid).toEqual(true)
     } finally {
       await sim.close()
     }

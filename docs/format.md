@@ -56,7 +56,7 @@ By using the appropriate type, the application ensures that amounts are displaye
 
 ## Address Formatting
 
-In the Polkadot network, several types of accounts can be used, including `AccountId`, `Index`, `Raw`, `Address32`, and `Address20`. 
+In the Polymesh network, several types of accounts can be used, including `AccountId`, `Index`, `Raw`, `Address32`, and `Address20`. 
 Similar to what was explained with Amount, if the app detects that the type is `AccountId32`, it will automatically perform the encoding from public key to address using the `SS58 prefix` sent as part of the short metadata. 
 In these cases, displaying the address instead of the public key will feel more natural and enhance the user experience.
 

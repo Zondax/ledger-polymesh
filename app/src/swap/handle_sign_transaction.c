@@ -111,8 +111,8 @@ parser_error_t check_swap_conditions(parser_tx_t *txObj) {
 
     CHECK_ERROR(parser_getItem(txObj, &uiFields));
 
-    // Check if network is polkadot (Relay Chain) or statemint (Asset Hub Polkadot)
-    if (strncmp("polkadot", tmpValue, 9) != 0 && strncmp("statemint", tmpValue, 10) != 0) {
+    // Check if network is polymesh
+    if (strncmp("polymesh", tmpValue, 9) != 0) {
         ZEMU_LOGF(200, "Swap not enabled on %s network.\n", tmpValue);
         return parser_swap_tx_wrong_method;
     }

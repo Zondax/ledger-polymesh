@@ -35,9 +35,9 @@ vector<string> FindJSONFilesInFolder(const string &folder) {
     return json_files;
 }
 
-INSTANTIATE_TEST_SUITE_P(PolkadotGeneric,
+INSTANTIATE_TEST_SUITE_P(Polymesh,
                          JsonTests,
-                         ::testing::ValuesIn(GetJsonTestCasesGeneric("supported_chains")),
+                         ::testing::ValuesIn(GetJsonTestCasesGeneric("")),
                          JsonTests::PrintToStringParamName());
 
 TEST_P(JsonTests, TransactionsNormal) {

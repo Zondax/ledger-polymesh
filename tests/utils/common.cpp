@@ -106,10 +106,11 @@ vector<TestcaseGeneric_t> GetJsonTestCasesGeneric(const string &dir) {
                 json entries;
                 inFile >> entries;
 
-                cout << "Number of testcases: " << entries.size() << endl;
-                // TestcaseGeneric_t chainTests;
+                // Support both wrapped format (with metadata) and plain array
+                const auto &vectors = entries.is_object() && entries.contains("vectors") ? entries["vectors"] : entries;
+                cout << "Number of testcases: " << vectors.size() << endl;
                 auto tests = TestcaseGeneric_t();
-                for (const auto &entry : entries) {
+                for (const auto &entry : vectors) {
                     auto outputs = vector<string>();
                     for (const auto &s : entry["output"]) {
                         outputs.push_back(s.get<string>());

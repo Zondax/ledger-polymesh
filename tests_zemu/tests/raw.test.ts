@@ -15,7 +15,7 @@
  ******************************************************************************* */
 
 import Zemu from '@zondax/zemu'
-import { defaultOptions, DOT_SS58_PREFIX, PATH, models } from './common'
+import { defaultOptions, POLYMESH_SS58_PREFIX, PATH, models } from './common'
 
 // @ts-expect-error missing typings
 import ed25519 from 'ed25519-supercop'
@@ -42,10 +42,10 @@ describe.each(TESTS)('Raw signing', function (data) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
       const txBlob = Buffer.from(data.text)
-      const responseAddr = await app.getAddressEd25519(PATH, DOT_SS58_PREFIX)
+      const responseAddr = await app.getAddressEd25519(PATH, POLYMESH_SS58_PREFIX)
       const pubKey = responseAddr.pubKey
 
       // do not wait here.. we need to navigate
@@ -76,7 +76,7 @@ describe.each(TESTS)('Raw signing', function (data) {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
       const txBlob = Buffer.from(data.text)
       const responseAddr = await app.getAddressEcdsa(PATH)
@@ -109,7 +109,7 @@ test.concurrent.each(models)('Raw signing - incorrect', async function (m) {
   const sim = new Zemu(m.path)
   try {
     await sim.start({ ...defaultOptions, model: m.name })
-    const app = new PolkadotGenericApp(sim.getTransport(), 'dot')
+    const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
     const txBlob = Buffer.from('<Bytes>Incorrect blob/Bytes>')
 

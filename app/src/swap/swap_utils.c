@@ -20,8 +20,8 @@
 #include "swap.h"
 #include "zxformat.h"
 
-#define DOT_COIN_AMOUNT_DECIMAL_PLACES 10
-#define DOT_COIN_TICKER                "DOT "
+#define POLYX_COIN_AMOUNT_DECIMAL_PLACES 6
+#define POLYX_COIN_TICKER                "POLYX "
 ////////////////////////////////////////////////////////////////
 
 zxerr_t bytesAmountToStringBalance(uint8_t *amount, uint8_t amount_len, char *out, uint8_t out_len) {
@@ -36,12 +36,12 @@ zxerr_t bytesAmountToStringBalance(uint8_t *amount, uint8_t amount_len, char *ou
     bignumBigEndian_bcdprint(out, out_len, tmpBuf, sizeof(tmpBuf));
 
     // Format number.
-    if (!intstr_to_fpstr_inplace(out, out_len, DOT_COIN_AMOUNT_DECIMAL_PLACES)) {
+    if (!intstr_to_fpstr_inplace(out, out_len, POLYX_COIN_AMOUNT_DECIMAL_PLACES)) {
         return zxerr_encoding_failed;
     }
 
     // Add ticker prefix.
-    CHECK_ZXERR(z_str3join(out, out_len, DOT_COIN_TICKER, ""))
+    CHECK_ZXERR(z_str3join(out, out_len, POLYX_COIN_TICKER, ""))
 
     // Trim trailing zeros
     number_inplace_trimming(out, 1);
