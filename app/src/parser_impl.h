@@ -15,6 +15,8 @@
  ********************************************************************************/
 #pragma once
 
+#include <string.h>
+
 #include "parser_common.h"
 
 #ifdef __cplusplus
@@ -96,6 +98,29 @@ typedef struct {
 #define CTX_CHECK_AND_ADVANCE(CTX, SIZE) \
     CTX_CHECK_AVAIL((CTX), (SIZE))       \
     (CTX)->offset += (SIZE);
+
+/**
+ * @brief Increment PrintItem_t.itemCount by delta, rejecting overflow.
+ */
+__Z_INLINE parser_error_t addItemCount(PrintItem_t *printItem, uint8_t delta) {
+    if (printItem == NULL || printItem->itemCount > (uint8_t)(UINT8_MAX - delta)) {
+        return parser_value_out_of_range;
+    }
+    printItem->itemCount += delta;
+    return parser_ok;
+}
+
+/**
+ * @brief Exact-match comparison of a length-prefixed identifier against a C-string constant.
+ *        Rejects prefix matches that would occur with strncmp(id, expected, id->len).
+ */
+__Z_INLINE bool identifier_matches(const Bytes_t *id, const char *expected) {
+    if (id == NULL || id->ptr == NULL || expected == NULL) {
+        return false;
+    }
+    const size_t expLen = strlen(expected);
+    return id->len == expLen && memcmp(id->ptr, expected, expLen) == 0;
+}
 
 /**
  * @brief Checks function input is valid.
