@@ -33,7 +33,10 @@ def get_fuzzer_configs():
         FuzzConfig(name="metadata_parser_variant", max_len=17000),  # Tests metadata_parser_variant functionality
         FuzzConfig(name="metadata_parser_tuple", max_len=17000),  # Tests metadata_parser_variant functionality
         FuzzConfig(name="parser_parse", max_len=17000),  # Tests parser_parse functionality
-        # Add more fuzzers here as needed
+        # zxblake3 caps inputs at 4095 bytes, so a smaller libFuzzer max_len keeps
+        # exploration focused on the in-bounds path rather than the rejection branch.
+        FuzzConfig(name="zxblake3_hash", max_len=4096),  # BLAKE3 wrapper (zxblake3.c)
+        FuzzConfig(name="crypto_helper_ss58", max_len=64),  # SS58 prefix + pubkey encoding
     ]
 
 

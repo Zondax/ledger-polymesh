@@ -77,6 +77,10 @@ tests_tools/target
 fuzz-*.log
 /scan-build
 
+# Local cargo cache (must not be committed)
+app/rust/.cargo/
+app/rust/target/
+
 .DS_Store
 
 # Additional fuzzing artifacts

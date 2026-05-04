@@ -13,8 +13,10 @@
 
 using std::size_t;
 
+namespace {
 char PARSER_KEY[16384];
 char PARSER_VALUE[16384];
+}  // namespace
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
     parser_tx_t txObj = {0};
