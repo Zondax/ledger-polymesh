@@ -34,6 +34,15 @@ project(ledger-polymesh VERSION 0.0.0)
 # Include common fuzzing configuration
 include(deps/ledger-zxlib/fuzzing/FuzzingCommon.cmake)
 
+# Exclude vendored BLAKE2/BLAKE3 from UBSAN instrumentation when fuzzing.
+# Their reference implementations use well-known idioms (counter wraps,
+# sign-bit shifts, signed→size_t conversions) that are not real bugs but
+# otherwise cause libFuzzer to flag every run as a crash.
+if(ENABLE_FUZZING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fuzz/ubsan_ignore.txt")
+    string(APPEND CMAKE_C_FLAGS " -fsanitize-ignorelist=${CMAKE_CURRENT_SOURCE_DIR}/fuzz/ubsan_ignore.txt")
+    string(APPEND CMAKE_CXX_FLAGS " -fsanitize-ignorelist=${CMAKE_CURRENT_SOURCE_DIR}/fuzz/ubsan_ignore.txt")
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 cmake_policy(SET CMP0025 NEW)
 cmake_policy(SET CMP0144 NEW)

@@ -1,18 +1,15 @@
-# UBSAN runtime suppressions for fuzzer runs.
-# Format: <check_kind>:<substring of function/file>
+# Sanitizer ignorelist (compile-time, -fsanitize-ignorelist=).
 #
-# Third-party crypto code uses well-known patterns that trip
-# integer/shift/bounds checks but are not real bugs:
+# Skip UBSAN instrumentation for the vendored BLAKE2/BLAKE3 reference
+# implementations. They rely on well-known idioms that the strict integer
+# checks (-fsanitize=integer / -fsanitize=undefined) flag as undefined
+# behavior but are not real bugs:
 #   - BLAKE2's word counter intentionally wraps (unsigned-integer-overflow).
-#   - BLAKE2's bit-mix shifts touch the sign bit (shift-base).
+#   - BLAKE2's bit-mix shifts touch the sign bit (shift-base / shift-exponent).
 #   - BLAKE3 implicitly converts negative ints to size_t for its length
 #     tracker (implicit-integer-sign-change).
-# Excluding these vendored paths keeps the runs focused on bugs in app
-# code without burying them under known false positives.
+# Without this, libFuzzer treats every run as a crash and any real bug
+# in app code gets buried under the noise.
 
-implicit-integer-sign-change:blake3.c
-unsigned-integer-overflow:blake2b-ref.c
-unsigned-integer-overflow:blake2-impl.h
-signed-integer-overflow:blake2-impl.h
-shift-base:blake2-impl.h
-shift-exponent:blake2-impl.h
+src:*/deps/BLAKE2/*
+src:*/deps/BLAKE3/*
