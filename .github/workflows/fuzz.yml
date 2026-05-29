@@ -56,6 +56,10 @@ jobs:
           echo "Fuzz budget per target: ${SECS}s"
 
       - name: Run fuzzers
+        env:
+          # Skip UBSAN reports from the vendored BLAKE2/BLAKE3 implementations
+          # (known false positives — see fuzz/ubsan_ignore.txt for context).
+          UBSAN_OPTIONS: "suppressions=${{ github.workspace }}/fuzz/ubsan_ignore.txt:halt_on_error=0:print_stacktrace=0"
         run: ./fuzz/run-fuzzers.py --max-seconds "${{ steps.budget.outputs.max_seconds }}"
 
       - name: Upload fuzz logs

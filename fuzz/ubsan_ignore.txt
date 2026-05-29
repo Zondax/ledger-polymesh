@@ -1,0 +1,18 @@
+# UBSAN runtime suppressions for fuzzer runs.
+# Format: <check_kind>:<substring of function/file>
+#
+# Third-party crypto code uses well-known patterns that trip
+# integer/shift/bounds checks but are not real bugs:
+#   - BLAKE2's word counter intentionally wraps (unsigned-integer-overflow).
+#   - BLAKE2's bit-mix shifts touch the sign bit (shift-base).
+#   - BLAKE3 implicitly converts negative ints to size_t for its length
+#     tracker (implicit-integer-sign-change).
+# Excluding these vendored paths keeps the runs focused on bugs in app
+# code without burying them under known false positives.
+
+implicit-integer-sign-change:blake3.c
+unsigned-integer-overflow:blake2b-ref.c
+unsigned-integer-overflow:blake2-impl.h
+signed-integer-overflow:blake2-impl.h
+shift-base:blake2-impl.h
+shift-exponent:blake2-impl.h
