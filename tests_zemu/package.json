@@ -22,7 +22,7 @@
     "format:check": "FORCE_COLOR=1 prettier --check .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "yarn clean && jest --maxConcurrency 2 standard.test.ts",
+    "test": "yarn clean && jest --maxConcurrency 2",
     "try": "node try.mjs",
     "upgrade": "bunx npm-check-updates -i"
   },

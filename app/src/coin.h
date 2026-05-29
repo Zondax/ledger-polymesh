@@ -43,10 +43,14 @@ extern "C" {
 #define SECP256K1_PK_LEN              33u
 #define SECP256K1_ADDRESS_LEN         20u
 
-#define MENU_MAIN_APP_LINE1           "Polymesh"
-#define MENU_MAIN_APP_LINE2           "Ready"
-#define APPVERSION_LINE1              "Polymesh"
-#define APPVERSION_LINE2              "v" APPVERSION
+// Polymesh SS58 prefix, used as the default for signing flows
+// when no per-transaction prefix is available (e.g. INS_SIGN_RAW).
+#define POLYMESH_SS58_PREFIX_DEFAULT 12u
+
+#define MENU_MAIN_APP_LINE1          "Polymesh"
+#define MENU_MAIN_APP_LINE2          "Ready"
+#define APPVERSION_LINE1             "Polymesh"
+#define APPVERSION_LINE2             "v" APPVERSION
 
 #ifdef __cplusplus
 }
