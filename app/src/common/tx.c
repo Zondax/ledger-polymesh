@@ -162,7 +162,7 @@ zxerr_t tx_getNumItems(uint8_t *num_items) {
     if (err != parser_ok) {
         return zxerr_no_data;
     }
-    // +1 for the signer address shown at the top of the review.
+    // +1 for the signer address appended as the last item of the review.
     if (*num_items == UINT8_MAX) {
         return zxerr_out_of_bounds;
     }

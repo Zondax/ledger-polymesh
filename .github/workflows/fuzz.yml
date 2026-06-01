@@ -11,8 +11,6 @@ on:
   push:
     branches:
       - main
-      # TEMP: allow testing the workflow from the feature branch before merging.
-      - audit/show-signer-address-and-ci-fuzzer
   schedule:
     # Saturdays at 13:00 UTC, mirroring LedgerHQ/app-boilerplate.
     - cron: '0 13 * * 6'
@@ -48,7 +46,7 @@ jobs:
           case "${EVENT_NAME}" in
             workflow_dispatch) SECS="${INPUT_SECS:-60}" ;;
             pull_request)      SECS=120  ;;  # ~2 min/target, fast PR feedback
-            push)              SECS=60   ;;  # TEMP: 60s/target while validating the workflow on the audit branch (restore to 300 before merging)
+            push)              SECS=300  ;;  # 5 min/target on main
             schedule)          SECS=1800 ;;  # 30 min/target weekly deep run
             *)                 SECS=120  ;;
           esac
