@@ -18,6 +18,8 @@
 
 #include <string.h>
 
+#include "actions.h"
+#include "addr.h"
 #include "apdu_codes.h"
 #include "app_main.h"
 #include "buffering.h"
@@ -29,8 +31,6 @@
 #ifdef HAVE_SWAP
 #include "swap.h"
 #endif
-
-extern uint16_t blobLen;
 
 #if defined(LEDGER_SPECIFIC)
 #define RAM_BUFFER_SIZE   16384  // 16 KiB
@@ -140,12 +140,33 @@ const char *tx_parse() {
     return NULL;
 }
 
+// Loads the signer address into G_io_apdu_buffer (via app_fill_address) and then delegates to
+// addr_getItem(0, ...) to render it. The outKey is overridden to "Signer" so it is clear this
+// is the key that will sign the transaction (not an address field of the payload).
+static zxerr_t tx_render_signer_item(char *outKey,
+                                     uint16_t outKeyLen,
+                                     char *outVal,
+                                     uint16_t outValLen,
+                                     uint8_t pageIdx,
+                                     uint8_t *pageCount,
+                                     uint16_t ss58prefix) {
+    CHECK_ZXERR(app_fill_address(ss58prefix, scheme))
+    CHECK_ZXERR(addr_getItem(0, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+    snprintf(outKey, outKeyLen, "Signer");
+    return zxerr_ok;
+}
+
 zxerr_t tx_getNumItems(uint8_t *num_items) {
     parser_error_t err = parser_getNumItems(&tx_obj, num_items);
 
     if (err != parser_ok) {
         return zxerr_no_data;
     }
+    // +1 for the signer address appended as the last item of the review.
+    if (*num_items == UINT8_MAX) {
+        return zxerr_out_of_bounds;
+    }
+    (*num_items)++;
     return zxerr_ok;
 }
 
@@ -164,6 +185,18 @@ zxerr_t tx_getItem(int8_t displayIdx,
 
     if (displayIdx < 0 || displayIdx >= numItems) {
         return zxerr_no_data;
+    }
+
+    MEMZERO(outKey, outKeyLen);
+    MEMZERO(outVal, outValLen);
+
+    // Signer address is appended as the last item, preserving the order of all
+    // existing parser-driven fields. The SS58 prefix is taken from the parsed
+    // transaction metadata so the displayed address matches the network the user
+    // is actually signing for.
+    if (displayIdx == (int8_t)(numItems - 1)) {
+        return tx_render_signer_item(outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount,
+                                     tx_obj.metadata.shortMetadata.extraInfo.base58prefix);
     }
 
     ui_field_t uiFields = {.displayIdx = displayIdx,
@@ -189,7 +222,8 @@ zxerr_t tx_getItem(int8_t displayIdx,
 }
 
 zxerr_t tx_raw_getNumItems(uint8_t *num_items) {
-    *num_items = 2;
+    // "Signer" + "Sign and Verify" + payload.
+    *num_items = 3;
     return zxerr_ok;
 }
 
@@ -215,23 +249,29 @@ zxerr_t tx_raw_getItem(int8_t displayIdx,
         snprintf(outVal, outValLen, "Arbitrary text");
         return zxerr_ok;
     }
-    const uint8_t *buf = tx_get_buffer();
-    const uint16_t bufLen = tx_get_buffer_length();
-    if (buf == NULL) {
-        return zxerr_no_data;
+
+    if (displayIdx == 1) {
+        const uint8_t *buf = tx_get_buffer();
+        const uint16_t bufLen = tx_get_buffer_length();
+        if (buf == NULL) {
+            return zxerr_no_data;
+        }
+
+        bool allPrintable = true;
+        for (uint16_t i = 0; i < bufLen; i++) {
+            allPrintable &= IS_PRINTABLE(buf[i]);
+        }
+        if (allPrintable) {
+            snprintf(outKey, outKeyLen, "Payload");
+            pageStringExt(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
+        } else {
+            snprintf(outKey, outKeyLen, "Payload (hex)");
+            pageStringHex(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
+        }
+        return zxerr_ok;
     }
 
-    bool allPrintable = true;
-    for (uint16_t i = 0; i < bufLen; i++) {
-        allPrintable &= IS_PRINTABLE(buf[i]);
-    }
-    if (allPrintable) {
-        snprintf(outKey, outKeyLen, "Payload");
-        pageStringExt(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
-    } else {
-        snprintf(outKey, outKeyLen, "Payload (hex)");
-        pageStringHex(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
-    }
-
-    return zxerr_ok;
+    // displayIdx == 2: signer address appended last. Raw signing has no per-transaction
+    // metadata; use the Polymesh default prefix.
+    return tx_render_signer_item(outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount, POLYMESH_SS58_PREFIX_DEFAULT);
 }

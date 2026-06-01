@@ -21,7 +21,7 @@
 #include "swap_utils.h"
 #include "zxformat.h"
 
-#define POLYX_SS58_PREFIX      12
+#define POLYX_SS58_PREFIX      POLYMESH_SS58_PREFIX_DEFAULT
 #define ED25519_ADD_KIND       0
 #define ADDRESS_PARAMS_MIN_LEN (1u + 1u + sizeof(uint32_t) * HDPATH_LEN_DEFAULT)
 
