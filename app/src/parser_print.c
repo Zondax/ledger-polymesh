@@ -62,16 +62,24 @@ static parser_error_t printUnsignedItem(ui_field_t *uiFields, PrintItem_t *print
         // remove trailing zeros
         number_inplace_trimming(bufUi, 1);
 
-        // we add 2 for a ' ' between unit and number and null terminator
-        if (sizeof(bufUi) < strnlen(bufUi, sizeof(bufUi)) + printItem->unit.len + 2) {
+        const size_t numChars = strnlen(bufUi, sizeof(bufUi));
+
+        // we add 2 for a ' ' between unit and number and null terminator.
+        // unit.len is a uint64_t, so bound it before narrowing: checking the sum
+        // directly could wrap and let an oversized unit through.
+        if (printItem->unit.len > sizeof(bufUi) - 2) {
+            return parser_error_dummy;
+        }
+        const size_t unitLen = (size_t)printItem->unit.len;
+        if (numChars > sizeof(bufUi) - unitLen - 2) {
             return parser_error_dummy;
         }
 
         // using memmove in the same memory region is safe!
         // we already checked that we have space for it
-        memmove(bufUi + printItem->unit.len + 1, bufUi, strnlen(bufUi, sizeof(bufUi)));
-        memmove(bufUi, printItem->unit.ptr, printItem->unit.len);
-        bufUi[printItem->unit.len] = ' ';
+        memmove(bufUi + unitLen + 1, bufUi, numChars);
+        memmove(bufUi, printItem->unit.ptr, unitLen);
+        bufUi[unitLen] = ' ';
     }
 
     const uint16_t numLen = strnlen(bufUi, sizeof(bufUi));
@@ -206,16 +214,24 @@ static parser_error_t printCompactItem(ui_field_t *uiFields, PrintItem_t *printI
         // remove trailing zeros
         number_inplace_trimming(bufUi, 1);
 
-        // we add 2 for a ' ' between unit and number and null terminator
-        if (sizeof(bufUi) < strnlen(bufUi, sizeof(bufUi)) + printItem->unit.len + 2) {
+        const size_t numChars = strnlen(bufUi, sizeof(bufUi));
+
+        // we add 2 for a ' ' between unit and number and null terminator.
+        // unit.len is a uint64_t, so bound it before narrowing: checking the sum
+        // directly could wrap and let an oversized unit through.
+        if (printItem->unit.len > sizeof(bufUi) - 2) {
+            return parser_error_dummy;
+        }
+        const size_t unitLen = (size_t)printItem->unit.len;
+        if (numChars > sizeof(bufUi) - unitLen - 2) {
             return parser_error_dummy;
         }
 
         // using memmove in the same memory region is safe!
         // we already checked that we have space for it
-        memmove(bufUi + printItem->unit.len + 1, bufUi, strnlen(bufUi, sizeof(bufUi)));
-        memmove(bufUi, printItem->unit.ptr, printItem->unit.len);
-        bufUi[printItem->unit.len] = ' ';
+        memmove(bufUi + unitLen + 1, bufUi, numChars);
+        memmove(bufUi, printItem->unit.ptr, unitLen);
+        bufUi[unitLen] = ' ';
     }
 
     const uint16_t numLen = strnlen(bufUi, sizeof(bufUi));

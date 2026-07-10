@@ -27,7 +27,7 @@ endif
 include $(BOLOS_SDK)/Makefile.defines
 
 ifndef COIN
-COIN=DOT
+COIN=POLYX
 endif
 $(info COIN  = [$(COIN)])
 VARIANT_PARAM=COIN
@@ -43,7 +43,7 @@ VARIANT_VALUES=$(COIN)
 APPPATH = "44'/595'"
 
 
-ifeq ($(COIN),DOT)
+ifeq ($(COIN),POLYX)
 # Main app configuration
 APPNAME = "Polymesh"
 ICON_NAME = icon
@@ -172,7 +172,7 @@ endif
 
 .PHONY: listvariants
 listvariants:
-	@echo VARIANTS COIN DOT
+	@echo VARIANTS COIN POLYX
 
 .PHONY: version
 version:
