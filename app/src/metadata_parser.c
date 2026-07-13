@@ -75,7 +75,7 @@ static parser_error_t checkBalanceEncoding(Field_t *field, PrintItem_t *printIte
                                   "ExtendedBalance", "PalletBalanceOf<T>", "T::Balance"};
 
     if (field == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     if (!field->typeName.hasBytes) {

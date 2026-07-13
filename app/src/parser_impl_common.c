@@ -29,9 +29,20 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "display_idx_out_of_range";
         case parser_display_page_out_of_range:
             return "display_page_out_of_range";
+        case parser_unexpected_error:
+            return "Unexpected error";
+        case parser_running_out_of_stack:
+            return "Running out of stack";
+        case parser_indices_not_ordered:
+            return "Indices not ordered";
+        // Metadata specific
+        case parser_wrong_entry_type:
+            return "Wrong entry type";
         case parser_wrong_metadata_digest:
             return "wrong metadata digest";
         // Coin specific
+        case parser_unexpected_address_type:
+            return "Unexpected address type";
         case parser_spec_not_supported:
             return "Spec version not supported";
         case parser_tx_version_not_supported:

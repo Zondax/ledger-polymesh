@@ -30,7 +30,7 @@
  */
 static parser_error_t printUnsignedItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     char bufUi[100] = {0};
@@ -43,7 +43,7 @@ static parser_error_t printUnsignedItem(ui_field_t *uiFields, PrintItem_t *print
         }
         const char *printReturn = uint64_to_str(bufUi, sizeof(bufUi), value);
         if (printReturn != NULL) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
     } else {
         // it's u128 or u256, up to 78 chars in decimal
@@ -68,11 +68,11 @@ static parser_error_t printUnsignedItem(ui_field_t *uiFields, PrintItem_t *print
         // unit.len is a uint64_t, so bound it before narrowing: checking the sum
         // directly could wrap and let an oversized unit through.
         if (printItem->unit.len > sizeof(bufUi) - 2) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
         const size_t unitLen = (size_t)printItem->unit.len;
         if (numChars > sizeof(bufUi) - unitLen - 2) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
 
         // using memmove in the same memory region is safe!
@@ -97,7 +97,7 @@ static parser_error_t printUnsignedItem(ui_field_t *uiFields, PrintItem_t *print
  */
 static parser_error_t printSignedItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     // it's up to i256, up to 79 chars in decimal
@@ -157,11 +157,11 @@ static parser_error_t printSignedItem(ui_field_t *uiFields, PrintItem_t *printIt
  */
 static parser_error_t printBoolItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     if (printItem->item.val.len != 1) {
-        return parser_error_dummy;
+        return parser_unexpected_value;
     }
 
     snprintf(uiFields->outVal, uiFields->outValLen, *printItem->item.val.ptr ? "True" : "False");
@@ -178,7 +178,7 @@ static parser_error_t printBoolItem(ui_field_t *uiFields, PrintItem_t *printItem
  */
 static parser_error_t printCompactItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     // we can't parse anything larger than 256 bits
@@ -195,7 +195,7 @@ static parser_error_t printCompactItem(ui_field_t *uiFields, PrintItem_t *printI
         CHECK_ERROR(_getValue(&cmpInt, &value));
         const char *printReturn = uint64_to_str(bufUi, sizeof(bufUi), value);
         if (printReturn != NULL) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
     } else {
         // is bigint, up to 256 bytes, up to 77 chars in decimal
@@ -220,11 +220,11 @@ static parser_error_t printCompactItem(ui_field_t *uiFields, PrintItem_t *printI
         // unit.len is a uint64_t, so bound it before narrowing: checking the sum
         // directly could wrap and let an oversized unit through.
         if (printItem->unit.len > sizeof(bufUi) - 2) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
         const size_t unitLen = (size_t)printItem->unit.len;
         if (numChars > sizeof(bufUi) - unitLen - 2) {
-            return parser_error_dummy;
+            return parser_unexpected_buffer_end;
         }
 
         // using memmove in the same memory region is safe!
@@ -249,7 +249,7 @@ static parser_error_t printCompactItem(ui_field_t *uiFields, PrintItem_t *printI
  */
 static parser_error_t printStringItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     bool allPrintable = true;
@@ -279,7 +279,7 @@ static parser_error_t printStringItem(ui_field_t *uiFields, PrintItem_t *printIt
  */
 static parser_error_t printHexStringItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     const uint16_t keyStrLen = strnlen(uiFields->outKey, uiFields->outKeyLen);
@@ -299,7 +299,7 @@ static parser_error_t printHexStringItem(ui_field_t *uiFields, PrintItem_t *prin
  */
 static parser_error_t printRawBalanceItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     // Prepend "Raw " to key to indicate this is an unformatted balance
@@ -322,7 +322,7 @@ static parser_error_t printRawBalanceItem(ui_field_t *uiFields, PrintItem_t *pri
  */
 static parser_error_t printCompactRawBalanceItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     // Prepend "Raw " to key to indicate this is an unformatted balance
@@ -345,11 +345,11 @@ static parser_error_t printCompactRawBalanceItem(ui_field_t *uiFields, PrintItem
  */
 static parser_error_t printAddressItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     if (printItem->item.val.len != 32) {
-        return parser_error_dummy;
+        return parser_unexpected_value;
     }
 
     // not going to be more than ~50 chars
@@ -373,11 +373,11 @@ static parser_error_t printAddressItem(ui_field_t *uiFields, PrintItem_t *printI
  */
 static parser_error_t printVoteItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     if (printItem->item.val.len != 1) {
-        return parser_error_dummy;
+        return parser_unexpected_value;
     }
 
     const uint8_t vote = *printItem->item.val.ptr;
@@ -402,7 +402,7 @@ static parser_error_t printVoteItem(ui_field_t *uiFields, PrintItem_t *printItem
  */
 parser_error_t printGenericItem(ui_field_t *uiFields, PrintItem_t *printItem) {
     if (uiFields == NULL || printItem == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     switch (printItem->item.valEnc) {
@@ -453,7 +453,7 @@ parser_error_t printGenericItem(ui_field_t *uiFields, PrintItem_t *printItem) {
             break;
 
         case EncNoEncoding:
-            return parser_error_dummy;
+            return parser_print_not_supported;
     }
 
     return parser_ok;
