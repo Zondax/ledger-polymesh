@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,219 +13,266 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
-
 #include "parser.h"
 
 #include <stdio.h>
-#include <zxformat.h>
-#include <zxmacros.h>
 
 #include "app_mode.h"
-#include "coin.h"
-#include "substrate_dispatch.h"
+#include "bignum.h"
+#include "metadata_parser.h"
+#include "metadata_proof.h"
+#include "metadata_reader.h"
+#include "parser_common.h"
+#include "parser_impl.h"
+#include "parser_print.h"
+#include "parser_strings.h"
+#include "scale_helper.h"
+#include "view.h"
 
-#define FIELD_FIXED_TOTAL_COUNT 7
+#define TMP_BUFFER_SIZE 39U
 
-#define FIELD_METHOD 0
-#define FIELD_NETWORK 1
-#define FIELD_NONCE 2
-#define FIELD_TIP 3
-#define FIELD_ERA_PHASE 4
-#define FIELD_ERA_PERIOD 5
-#define FIELD_BLOCK_HASH 6
-
-#define EXPERT_FIELDS_TOTAL_COUNT 5
-
-parser_error_t parser_parse(parser_context_t *ctx, const uint8_t *data, size_t dataLen, parser_tx_t *tx_obj) {
-    CHECK_PARSER_ERR(parser_init(ctx, data, dataLen))
-    ctx->tx_obj = tx_obj;
-    ctx->tx_obj->nestCallIdx.slotIdx = 0;
-    ctx->tx_obj->nestCallIdx._lenBuffer = 0;
-    ctx->tx_obj->nestCallIdx._ptr = NULL;
-    ctx->tx_obj->nestCallIdx._nextPtr = NULL;
-    ctx->tx_obj->nestCallIdx.isTail = true;
-    parser_error_t err = _readTx(ctx, ctx->tx_obj);
-    CTX_CHECK_AVAIL(ctx, 0)
-
-    return err;
-}
-
-__Z_INLINE bool parser_show_expert_fields() { return app_mode_expert(); }
-
-bool parser_show_tip(const parser_context_t *ctx) {
-    if (ctx->tx_obj->tip.value.len <= 4) {
-        uint64_t v = 0;
-        _getValue(&ctx->tx_obj->tip.value, &v);
-        if (v == 0) {
-            return false;
-        }
+static parser_error_t parser_init(parser_tx_t *txObj, const uint8_t *inputBuffer, uint16_t bufferLen, uint16_t blobLen) {
+    if (txObj == NULL || inputBuffer == NULL || bufferLen < blobLen || bufferLen == 0) {
+        return parser_init_context_empty;
     }
-    return true;
+
+    MEMZERO(txObj, sizeof(*txObj));
+
+    txObj->blob.blobBuf.buffer = inputBuffer;
+    txObj->blob.blobBuf.bufferLen = blobLen;
+    txObj->metadata.metadataBuf.buffer = inputBuffer + blobLen;
+    txObj->metadata.metadataBuf.bufferLen = bufferLen - blobLen;
+    txObj->checkMetadataDigest.hasBytes = false;
+
+    return parser_ok;
 }
 
-parser_error_t parser_validate(const parser_context_t *ctx) {
+parser_error_t parser_parse(parser_tx_t *txObj, const uint8_t *inputBuffer, uint16_t bufferLen, uint16_t blobLen) {
+    // Initialize txObj with input params
+    CHECK_ERROR(parser_init(txObj, inputBuffer, bufferLen, blobLen));
+
+    // Parse metadata
+    CHECK_ERROR(metadata_read(txObj));
+
+    // Get root hash
+    CHECK_ERROR(getMetadataDigest(&txObj->metadata, txObj->metadataDigest));
+
+    // Parse transaction blob
+    CHECK_ERROR(transaction_parse(txObj));
+
+    // Verify that the used metadata is good
+    CHECK_ERROR(verifyMetadata(txObj));
+
+    return parser_ok;
+}
+
+parser_error_t parser_validate(parser_tx_t *txObj) {
+    uint8_t numItems = 0;
+    CHECK_ERROR(parser_getNumItems(txObj, &numItems));
+
+    // These temporal buffers won't be used to display the information.
+    // This step will verify that every element can be retrieved
+    char tmpKey[TMP_BUFFER_SIZE] = {0};
+    char tmpVal[TMP_BUFFER_SIZE] = {0};
+    uint8_t pageCount = 0;
+
+    ui_field_t uiFields = {.displayIdx = 0,
+                           .outKey = tmpKey,
+                           .outKeyLen = sizeof(tmpKey),
+                           .outVal = tmpVal,
+                           .outValLen = sizeof(tmpVal),
+                           .pageIdx = 0,
+                           .pageCount = &pageCount};
+
     // Iterate through all items to check that all can be shown and are valid
-    uint8_t numItems = 0;
-    CHECK_PARSER_ERR(parser_getNumItems(ctx, &numItems))
-
-    char tmpKey[40];
-    char tmpVal[40];
-
     for (uint8_t idx = 0; idx < numItems; idx++) {
-        uint8_t pageCount = 0;
-        CHECK_PARSER_ERR(parser_getItem(ctx, idx, tmpKey, sizeof(tmpKey), tmpVal, sizeof(tmpVal), 0, &pageCount))
+        uiFields.displayIdx = idx;
+        CHECK_ERROR(parser_getItem(txObj, &uiFields));
     }
 
     return parser_ok;
 }
 
-parser_error_t parser_getNumItems(const parser_context_t *ctx, uint8_t *num_items) {
-    uint8_t methodArgCount =
-        _getMethod_NumItems(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx, ctx->tx_obj->callIndex.idx);
-
-    uint8_t total = FIELD_FIXED_TOTAL_COUNT;
-    if (!parser_show_tip(ctx)) {
-        total -= 1;
-    }
-    if (!parser_show_expert_fields()) {
-        total -= EXPERT_FIELDS_TOTAL_COUNT;
-
-        for (uint8_t argIdx = 0; argIdx < methodArgCount; argIdx++) {
-            bool isArgExpert = _getMethod_ItemIsExpert(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx,
-                                                       ctx->tx_obj->callIndex.idx, argIdx);
-            if (isArgExpert) {
-                methodArgCount--;
-            }
-        }
-    }
-
-    *num_items = total + methodArgCount;
-    return parser_ok;
-}
-
-parser_error_t parser_getItem(const parser_context_t *ctx, uint8_t displayIdx, char *outKey, uint16_t outKeyLen,
-                              char *outVal, uint16_t outValLen, uint8_t pageIdx, uint8_t *pageCount) {
-    MEMZERO(outKey, outKeyLen);
-    MEMZERO(outVal, outValLen);
-    snprintf(outKey, outKeyLen, "?");
-    snprintf(outVal, outValLen, "?");
-    *pageCount = 1;
-
-    uint8_t numItems = 0;
-    CHECK_PARSER_ERR(parser_getNumItems(ctx, &numItems))
-    CHECK_APP_CANARY()
-
-    if (displayIdx >= numItems) {
+parser_error_t parser_getNumItems(parser_tx_t *txObj, uint8_t *numItems) {
+    if (txObj == NULL || numItems == NULL) {
         return parser_no_data;
     }
 
-    parser_error_t err = parser_unexpected_error;
-    if (displayIdx == FIELD_METHOD) {
-        snprintf(outKey, outKeyLen, "%s",
-                 _getMethod_ModuleName(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx));
-        snprintf(
-            outVal, outValLen, "%s",
-            _getMethod_Name(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx, ctx->tx_obj->callIndex.idx));
+    // if we're in normal mode we want to show only method items + tip (if exists)
+    // if we're in expert mode we want to show everything
+    uint16_t items = txObj->blob.totalMethodItems;
+    items++;  // chain name
+    items += app_mode_expert() ? txObj->blob.totalSigExtItems : txObj->blob.tipItems;
+
+    if (items > UINT8_MAX) {
+        return parser_value_out_of_range;
+    }
+    *numItems = (uint8_t)items;
+
+    return parser_ok;
+}
+
+parser_error_t parser_getItem(parser_tx_t *txObj, ui_field_t *uiFields) {
+    MEMZERO(uiFields->outKey, uiFields->outKeyLen);
+    MEMZERO(uiFields->outVal, uiFields->outValLen);
+    snprintf(uiFields->outKey, uiFields->outKeyLen, "?");
+    snprintf(uiFields->outVal, uiFields->outValLen, "?");
+    *uiFields->pageCount = 1;
+
+    uint8_t numItems = 0;
+    CHECK_ERROR(parser_getNumItems(txObj, &numItems));
+    CHECK_APP_CANARY()
+
+    if (uiFields->displayIdx >= numItems) {
+        return parser_no_data;
+    }
+
+    if (uiFields->displayIdx == 0) {
+        snprintf(uiFields->outKey, uiFields->outKeyLen, "Chain");
+        snprintf(uiFields->outVal, uiFields->outValLen, "%.*s", (int)txObj->metadata.shortMetadata.extraInfo.specName.len,
+                 txObj->metadata.shortMetadata.extraInfo.specName.ptr);
         return parser_ok;
     }
 
-    // VARIABLE ARGUMENTS
-    uint8_t methodArgCount =
-        _getMethod_NumItems(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx, ctx->tx_obj->callIndex.idx);
-    // Adjust offset when displayIdx > 0
-    uint8_t argIdx = displayIdx - 1;
+    RegistryEntry_t tmpEntry = {0};
+    PrintItem_t printItem = {0};
+    printItem.base58prefix = txObj->metadata.shortMetadata.extraInfo.base58prefix;
+    printItem.decimals = txObj->metadata.shortMetadata.extraInfo.decimals;
+    printItem.unit = txObj->metadata.shortMetadata.extraInfo.unit;
+    printItem.printing = true;
 
-    if (!parser_show_expert_fields()) {
-        // Search for the next non expert item
-        while ((argIdx < methodArgCount) &&
-               _getMethod_ItemIsExpert(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx,
-                                       ctx->tx_obj->callIndex.idx, argIdx)) {
-            argIdx++;
-            displayIdx++;
-        }
+    parser_context_t *blobBuf = &txObj->blob.blobBuf;
+    parser_context_t *metadataBuf = &txObj->metadata.metadataBuf;
+
+    if (uiFields->displayIdx <= txObj->blob.totalMethodItems) {
+        // we need to reset blob offset to continue
+        blobBuf->offset = 0;
+        printItem.target = uiFields->displayIdx;
+
+        CHECK_ERROR(parseMetadataEntry(blobBuf, metadataBuf, txObj->metadata.palletEntry.typeId, &tmpEntry, &printItem));
+        snprintf(uiFields->outKey, uiFields->outKeyLen, "%.*s", (int)printItem.item.key.len, printItem.item.key.ptr);
+        CHECK_ERROR(printGenericItem(uiFields, &printItem));
+        return parser_ok;
     }
 
-    if (argIdx < methodArgCount) {
-        snprintf(outKey, outKeyLen, "%s",
-                 _getMethod_ItemName(ctx->tx_obj->transactionVersion, ctx->tx_obj->callIndex.moduleIdx,
-                                     ctx->tx_obj->callIndex.idx, argIdx));
+    printItem.target = uiFields->displayIdx - txObj->blob.totalMethodItems;
+    blobBuf->offset = txObj->blob.sigExtStartOffset;
+    const uint32_t sigExtEntries = txObj->metadata.shortMetadata.extrinsic.signedExtensions.len;
+    parser_context_t *signedExtensions = &txObj->metadata.shortMetadata.extrinsic.signedExtensions.ctx;
+    signedExtensions->offset = 0;
+    SignedExtension_t tmpExtension = {0};
 
-        return _getMethod_ItemValue(ctx->tx_obj->transactionVersion, &ctx->tx_obj->method, ctx->tx_obj->callIndex.moduleIdx,
-                                    ctx->tx_obj->callIndex.idx, argIdx, outVal, outValLen, pageIdx, pageCount);
-    } else {
-        // CONTINUE WITH FIXED ARGUMENTS
-        displayIdx -= methodArgCount;
-        if (displayIdx == FIELD_NETWORK) {
-#if !defined(LEDGER_SPECIFIC)
-            if (parser_show_expert_fields()) {
-                snprintf(outKey, outKeyLen, "Chain");
-                snprintf(outVal, outValLen, COIN_NAME);
-                return parser_ok;
-            }
-#else
-            if (_getAddressType() == PK_ADDRESS_TYPE) {
-                if (parser_show_expert_fields()) {
-                    snprintf(outKey, outKeyLen, "Chain");
-                    snprintf(outVal, outValLen, COIN_NAME);
+    if (app_mode_expert()) {
+        for (uint32_t i = 0; i < sigExtEntries; i++) {
+            CHECK_ERROR(readSignedExtension(signedExtensions, &tmpExtension));
+
+            // we have custom logic for Era
+            if (identifier_matches(&tmpExtension.identifier, STR_ERA)) {
+                pd_ExtrinsicEra_t tmpEra = {0};
+                CHECK_ERROR(_readEra(blobBuf, &tmpEra));
+
+                if (printItem.itemCount + 1 == printItem.target) {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "Mortality");
+                    snprintf(uiFields->outVal, uiFields->outValLen, tmpEra.isMortal ? "Mortal" : "Immortal");
                     return parser_ok;
                 }
-            } else {
-                snprintf(outKey, outKeyLen, "Genesis Hash");
-                return _toStringHash(&ctx->tx_obj->genesisHash, outVal, outValLen, pageIdx, pageCount);
+
+                if (tmpEra.isMortal) {
+                    if (printItem.itemCount + 2 == printItem.target) {
+                        snprintf(uiFields->outKey, uiFields->outKeyLen, "Era Period");
+                        snprintf(uiFields->outVal, uiFields->outValLen, "%d", tmpEra.period);
+                        return parser_ok;
+                    }
+
+                    if (printItem.itemCount + 3 == printItem.target) {
+                        snprintf(uiFields->outKey, uiFields->outKeyLen, "Era Phase");
+                        snprintf(uiFields->outVal, uiFields->outValLen, "%d", tmpEra.phase);
+                        return parser_ok;
+                    }
+                }
+
+                CHECK_ERROR(addItemCount(&printItem, tmpEra.isMortal ? 3 : 1));
+                continue;
             }
-#endif
+
+            CHECK_ERROR(parseTypeRef(blobBuf, metadataBuf, &tmpEntry, &tmpExtension.includedInExtrinsic, &printItem));
+
+            if (printItem.itemCount == printItem.target && printItem.item.valEnc != EncNoEncoding) {
+                if (identifier_matches(&tmpExtension.identifier, STR_TIP)) {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "Tip");
+                } else if (identifier_matches(&tmpExtension.identifier, STR_TIP_WITH_ASSETID)) {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "Tip");
+
+                    if (printItem.item.valEnc == EncBalance) {
+                        printItem.item.valEnc = EncUnsigned;
+                    } else if (printItem.item.valEnc == EncCompactBalance) {
+                        printItem.item.valEnc = EncCompact;
+                    } else {
+                        // here we're on AssetId part
+                        snprintf(uiFields->outKey, uiFields->outKeyLen, "Tip Asset Id");
+                    }
+                } else {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "%.*s", (int)tmpExtension.identifier.len,
+                             tmpExtension.identifier.ptr);
+                }
+
+                CHECK_ERROR(printGenericItem(uiFields, &printItem));
+                return parser_ok;
+            }
         }
 
-        if (!parser_show_expert_fields()) {
-            displayIdx++;
-        }
+        signedExtensions->offset = 0;
 
-        if (displayIdx == FIELD_NONCE && parser_show_expert_fields()) {
-            snprintf(outKey, outKeyLen, "Nonce");
-            return _toStringCompactIndex(&ctx->tx_obj->nonce, outVal, outValLen, pageIdx, pageCount);
-        }
+        for (uint32_t i = 0; i < sigExtEntries; i++) {
+            printItem.item.valEnc = EncNoEncoding;
+            CHECK_ERROR(readSignedExtension(signedExtensions, &tmpExtension));
+            CHECK_ERROR(parseTypeRef(blobBuf, metadataBuf, &tmpEntry, &tmpExtension.includedInSignedData, &printItem));
 
-        if (!parser_show_expert_fields()) {
-            displayIdx++;
-        }
+            if (printItem.itemCount == printItem.target && printItem.item.valEnc != EncNoEncoding) {
+                // we have custom title in case of era and tip
+                if (identifier_matches(&tmpExtension.identifier, STR_ERA)) {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "Mortality Block");
+                } else {
+                    snprintf(uiFields->outKey, uiFields->outKeyLen, "%.*s", (int)tmpExtension.identifier.len,
+                             tmpExtension.identifier.ptr);
+                }
 
-        if (displayIdx == FIELD_TIP && parser_show_tip(ctx)) {
-            snprintf(outKey, outKeyLen, "Tip");
-            err = _toStringCompactBalance(&ctx->tx_obj->tip, outVal, outValLen, pageIdx, pageCount);
-            if (err != parser_ok) return err;
-            number_inplace_trimming(outVal, 1);
-            return err;
+                CHECK_ERROR(printGenericItem(uiFields, &printItem));
+                return parser_ok;
+            }
         }
+    } else {  // only print tip
+        for (uint32_t i = 0; i < sigExtEntries; i++) {
+            printItem.printing = false;
+            CHECK_ERROR(readSignedExtension(signedExtensions, &tmpExtension));
 
-        if (!parser_show_tip(ctx)) {
-            displayIdx++;
+            if (identifier_matches(&tmpExtension.identifier, STR_TIP) ||
+                identifier_matches(&tmpExtension.identifier, STR_TIP_WITH_ASSETID)) {
+                printItem.printing = true;
+                printItem.itemCount = 0;
+            }
+
+            CHECK_ERROR(parseTypeRef(blobBuf, metadataBuf, &tmpEntry, &tmpExtension.includedInExtrinsic, &printItem));
+
+            if (printItem.printing && printItem.itemCount == printItem.target && printItem.item.valEnc != EncNoEncoding) {
+                snprintf(uiFields->outKey, uiFields->outKeyLen, "Tip");
+
+                if (identifier_matches(&tmpExtension.identifier, STR_TIP_WITH_ASSETID)) {
+                    if (printItem.item.valEnc == EncBalance) {
+                        printItem.item.valEnc = EncUnsigned;
+                    } else if (printItem.item.valEnc == EncCompactBalance) {
+                        printItem.item.valEnc = EncCompact;
+                    } else {
+                        // here we're on AssetId part
+                        snprintf(uiFields->outKey, uiFields->outKeyLen, "Tip Asset Id");
+                    }
+                }
+
+                CHECK_ERROR(printGenericItem(uiFields, &printItem));
+                return parser_ok;
+            }
         }
-
-        if (displayIdx == FIELD_ERA_PHASE && parser_show_expert_fields()) {
-            snprintf(outKey, outKeyLen, "Era Phase");
-            uint64_to_str(outVal, outValLen, ctx->tx_obj->era.phase);
-            return parser_ok;
-        }
-
-        if (!parser_show_expert_fields()) {
-            displayIdx++;
-        }
-
-        if (displayIdx == FIELD_ERA_PERIOD && parser_show_expert_fields()) {
-            snprintf(outKey, outKeyLen, "Era Period");
-            uint64_to_str(outVal, outValLen, ctx->tx_obj->era.period);
-            return parser_ok;
-        }
-
-        if (!parser_show_expert_fields()) {
-            displayIdx++;
-        }
-
-        if (displayIdx == FIELD_BLOCK_HASH && parser_show_expert_fields()) {
-            snprintf(outKey, outKeyLen, "Block");
-            return _toStringHash(&ctx->tx_obj->blockHash, outVal, outValLen, pageIdx, pageCount);
-        }
-
-        return parser_no_data;
     }
+
+    return parser_no_data;
 }

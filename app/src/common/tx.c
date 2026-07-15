@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 Zondax GmbH
+ *  (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,15 +18,24 @@
 
 #include <string.h>
 
+#include "actions.h"
+#include "addr.h"
 #include "apdu_codes.h"
 #include "app_main.h"
 #include "buffering.h"
 #include "parser.h"
+#include "view.h"
 #include "zxformat.h"
 #include "zxmacros.h"
 
-#define RAM_BUFFER_SIZE 8192
-#define FLASH_BUFFER_SIZE 16384
+#ifdef HAVE_SWAP
+#include "swap.h"
+#endif
+
+#if defined(LEDGER_SPECIFIC)
+#define RAM_BUFFER_SIZE   16384  // 16 KiB
+#define FLASH_BUFFER_SIZE 16384  // 16 KiB
+#endif
 
 // Ram
 uint8_t ram_buffer[RAM_BUFFER_SIZE];
@@ -36,23 +45,32 @@ typedef struct {
     uint8_t buffer[FLASH_BUFFER_SIZE];
 } storage_t;
 
+#if defined(LEDGER_SPECIFIC)
 storage_t NV_CONST N_appdata_impl __attribute__((aligned(64)));
 #define N_appdata (*(NV_VOLATILE storage_t *)PIC(&N_appdata_impl))
+#endif
 
 static parser_tx_t tx_obj;
-static parser_context_t ctx_parsed_tx;
 
 void tx_initialize() {
     buffering_init(ram_buffer, sizeof(ram_buffer), (uint8_t *)N_appdata.buffer, sizeof(((storage_t *)0)->buffer));
 }
 
-void tx_reset() { buffering_reset(); }
+void tx_reset() {
+    buffering_reset();
+}
 
-uint32_t tx_append(unsigned char *buffer, uint32_t length) { return buffering_append(buffer, length); }
+uint32_t tx_append(unsigned char *buffer, uint32_t length) {
+    return buffering_append(buffer, length);
+}
 
-uint32_t tx_get_buffer_length() { return buffering_get_buffer()->pos; }
+uint16_t tx_get_buffer_length() {
+    return buffering_get_buffer()->pos;
+}
 
-uint8_t *tx_get_buffer() { return buffering_get_buffer()->data; }
+uint8_t *tx_get_buffer() {
+    return buffering_get_buffer()->data;
+}
 
 const char *tx_raw_parse() {
     const char prefix[] = "<Bytes>";
@@ -62,7 +80,14 @@ const char *tx_raw_parse() {
 
     const uint8_t *data = tx_get_buffer();
     const size_t dataLen = tx_get_buffer_length();
-    if (data == NULL) return parser_getErrorDescription(parser_no_data);
+    if (data == NULL) {
+        return parser_getErrorDescription(parser_no_data);
+    }
+
+    // Check the actual buffered payload
+    if (dataLen != blobLen) {
+        return parser_getErrorDescription(parser_unexpected_value);
+    }
 
     // we need to have, at least, prefix and postfix
     if (dataLen < prefixLen + postfixLen) {
@@ -79,33 +104,80 @@ const char *tx_raw_parse() {
 }
 
 const char *tx_parse() {
-    uint8_t err = parser_parse(&ctx_parsed_tx, tx_get_buffer(), tx_get_buffer_length(), &tx_obj);
+    parser_error_t err = parser_parse(&tx_obj, tx_get_buffer(), tx_get_buffer_length(), blobLen);
 
     if (err != parser_ok) {
         return parser_getErrorDescription(err);
     }
 
-    err = parser_validate(&ctx_parsed_tx);
+    err = parser_validate(&tx_obj);
     CHECK_APP_CANARY()
 
     if (err != parser_ok) {
         return parser_getErrorDescription(err);
     }
 
+#ifdef HAVE_SWAP
+    // If in swap mode, compare swap tx parameters with stored info.
+    if (G_swap_state.called_from_swap) {
+        if (G_swap_state.should_exit == 1) {
+            // Safety against trying to make the app sign multiple TX
+            // This panic quit is a failsafe that should never trigger, as the app is supposed to
+            // exit after the first send when started in swap mode
+            os_sched_exit(-1);
+        } else {
+            // We will quit the app after this transaction, whether it succeeds or fails
+            G_swap_state.should_exit = 1;
+        }
+        err = check_swap_conditions(&tx_obj);
+        CHECK_APP_CANARY()
+        if (err != parser_ok) {
+            return parser_getErrorDescription(err);
+        }
+    }
+#endif
+
     return NULL;
 }
 
+// Loads the signer address into G_io_apdu_buffer (via app_fill_address) and then delegates to
+// addr_getItem(0, ...) to render it. The outKey is overridden to "Signer" so it is clear this
+// is the key that will sign the transaction (not an address field of the payload).
+static zxerr_t tx_render_signer_item(char *outKey,
+                                     uint16_t outKeyLen,
+                                     char *outVal,
+                                     uint16_t outValLen,
+                                     uint8_t pageIdx,
+                                     uint8_t *pageCount,
+                                     uint16_t ss58prefix) {
+    CHECK_ZXERR(app_fill_address(ss58prefix, scheme))
+    CHECK_ZXERR(addr_getItem(0, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount))
+    snprintf(outKey, outKeyLen, "Signer");
+    return zxerr_ok;
+}
+
 zxerr_t tx_getNumItems(uint8_t *num_items) {
-    parser_error_t err = parser_getNumItems(&ctx_parsed_tx, num_items);
+    parser_error_t err = parser_getNumItems(&tx_obj, num_items);
 
     if (err != parser_ok) {
         return zxerr_no_data;
     }
-
+    // +1 for the signer address appended as the last item of the review.
+    if (*num_items == UINT8_MAX) {
+        return zxerr_out_of_bounds;
+    }
+    (*num_items)++;
     return zxerr_ok;
 }
 
-zxerr_t tx_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen, uint8_t pageIdx,
+// NOLINTNEXTLINE(readability-non-const-parameter): it can't be const, clang-tidy bug
+zxerr_t tx_getItem(int8_t displayIdx,
+                   char *outKey,
+                   uint16_t outKeyLen,
+                   char *outVal,
+                   uint16_t outValLen,
+                   uint8_t pageIdx,
+                   // NOLINTNEXTLINE(readability-non-const-parameter)
                    uint8_t *pageCount) {
     uint8_t numItems = 0;
 
@@ -115,31 +187,61 @@ zxerr_t tx_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *ou
         return zxerr_no_data;
     }
 
-    parser_error_t err =
-        parser_getItem(&ctx_parsed_tx, displayIdx, outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount);
+    MEMZERO(outKey, outKeyLen);
+    MEMZERO(outVal, outValLen);
+
+    // Signer address is appended as the last item, preserving the order of all
+    // existing parser-driven fields. The SS58 prefix is taken from the parsed
+    // transaction metadata so the displayed address matches the network the user
+    // is actually signing for.
+    if (displayIdx == (int8_t)(numItems - 1)) {
+        return tx_render_signer_item(outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount,
+                                     tx_obj.metadata.shortMetadata.extraInfo.base58prefix);
+    }
+
+    ui_field_t uiFields = {.displayIdx = displayIdx,
+                           .outKey = outKey,
+                           .outKeyLen = outKeyLen,
+                           .outVal = outVal,
+                           .outValLen = outValLen,
+                           .pageIdx = pageIdx,
+                           .pageCount = pageCount};
+
+    const parser_error_t err = parser_getItem(&tx_obj, &uiFields);
 
     // Convert error codes
-    if (err == parser_no_data || err == parser_display_idx_out_of_range || err == parser_display_page_out_of_range)
+    if (err == parser_no_data || err == parser_display_idx_out_of_range || err == parser_display_page_out_of_range) {
         return zxerr_no_data;
+    }
 
-    if (err != parser_ok) return zxerr_unknown;
+    if (err != parser_ok) {
+        return zxerr_unknown;
+    }
 
     return zxerr_ok;
 }
 
 zxerr_t tx_raw_getNumItems(uint8_t *num_items) {
-    *num_items = 2;
+    // "Signer" + "Sign and Verify" + payload.
+    *num_items = 3;
     return zxerr_ok;
 }
 
-zxerr_t tx_raw_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outVal, uint16_t outValLen,
-                       uint8_t pageIdx, uint8_t *pageCount) {
+zxerr_t tx_raw_getItem(int8_t displayIdx,
+                       char *outKey,
+                       uint16_t outKeyLen,
+                       char *outVal,
+                       uint16_t outValLen,
+                       uint8_t pageIdx,
+                       uint8_t *pageCount) {
     MEMZERO(outKey, outKeyLen);
     MEMZERO(outVal, outValLen);
 
     uint8_t numItems = 0;
     CHECK_ZXERR(tx_raw_getNumItems(&numItems))
-    if (displayIdx < 0 || displayIdx >= numItems) return zxerr_no_data;
+    if (displayIdx < 0 || displayIdx >= numItems) {
+        return zxerr_no_data;
+    }
 
     if (displayIdx == 0) {
         *pageCount = 1;
@@ -147,21 +249,29 @@ zxerr_t tx_raw_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char
         snprintf(outVal, outValLen, "Arbitrary text");
         return zxerr_ok;
     }
-    const uint8_t *buf = tx_get_buffer();
-    const uint16_t bufLen = tx_get_buffer_length();
-    if (buf == NULL) return zxerr_no_data;
 
-    bool allPrintable = true;
-    for (uint16_t i = 0; i < bufLen; i++) {
-        allPrintable &= IS_PRINTABLE(buf[i]);
-    }
-    if (allPrintable) {
-        snprintf(outKey, outKeyLen, "Payload");
-        pageStringExt(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
-    } else {
-        snprintf(outKey, outKeyLen, "Payload (hex)");
-        pageStringHex(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
+    if (displayIdx == 1) {
+        const uint8_t *buf = tx_get_buffer();
+        const uint16_t bufLen = tx_get_buffer_length();
+        if (buf == NULL) {
+            return zxerr_no_data;
+        }
+
+        bool allPrintable = true;
+        for (uint16_t i = 0; i < bufLen; i++) {
+            allPrintable &= IS_PRINTABLE(buf[i]);
+        }
+        if (allPrintable) {
+            snprintf(outKey, outKeyLen, "Payload");
+            pageStringExt(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
+        } else {
+            snprintf(outKey, outKeyLen, "Payload (hex)");
+            pageStringHex(outVal, outValLen, (const char *)buf, bufLen, pageIdx, pageCount);
+        }
+        return zxerr_ok;
     }
 
-    return zxerr_ok;
+    // displayIdx == 2: signer address appended last. Raw signing has no per-transaction
+    // metadata; use the Polymesh default prefix.
+    return tx_render_signer_item(outKey, outKeyLen, outVal, outValLen, pageIdx, pageCount, POLYMESH_SS58_PREFIX_DEFAULT);
 }

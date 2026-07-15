@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,9 +13,43 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  ********************************************************************************/
+#pragma once
+
+#include <gtest/gtest.h>
+
 #include <string>
 #include <vector>
 
-#include "parser_impl.h"
+#include "parser_common.h"
 
-std::vector<std::string> dumpUI(parser_context_t *ctx, uint16_t maxKeyLen, uint16_t maxValueLen);
+using namespace std;
+
+typedef struct {
+    string filename;
+    uint64_t index;
+    string name;
+    string blob;
+    string metadata;
+    string digest;
+    vector<string> expected;
+    vector<string> expected_expert;
+} TestcaseGeneric_t;
+
+class JsonTests : public ::testing::TestWithParam<TestcaseGeneric_t> {
+   public:
+    struct PrintToStringParamName {
+        template <class ParamType>
+        string operator()(const testing::TestParamInfo<ParamType> &info) const {
+            auto p = static_cast<TestcaseGeneric_t>(info.param);
+            stringstream ss;
+            ss << p.filename << "_" << p.index << "_" << p.name;
+            return ss.str();
+        }
+    };
+};
+
+vector<string> genericDumpUI(parser_tx_t *txObj);
+
+vector<TestcaseGeneric_t> GetJsonTestCasesGeneric(const string &dir);
+
+void check_testcase_generic(const TestcaseGeneric_t &testcase, bool expertMode);

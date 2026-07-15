@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 Zondax GmbH
+ *  (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,33 +19,70 @@
 extern "C" {
 #endif
 
-#include <stddef.h>
-#include <stdint.h>
+#include "blake3.h"
+#include "metadata_types.h"
 
-#include "substrate_methods.h"
-
-#if defined(LEDGER_SPECIFIC)
-#define MAX_CALL_NESTING_SIZE 6
-#define MAX_CALL_VEC_SIZE 6
-#else
-#define MAX_CALL_NESTING_SIZE 2
-#define MAX_CALL_VEC_SIZE 5
-#endif
+// Check what will be stored in ShortRegistry struct
+typedef struct {
+    uint32_t entries;
+    parser_context_t registry;
+} ShortRegistry_t;
 
 typedef struct {
-    pd_CallIndex_t callIndex;
-    pd_Method_t method;
+    uint32_t entries;
+    parser_context_t indices;
+} MerkleIndices_t;
 
-    pd_ExtrinsicEra_t era;
-    pd_CompactIndex_t nonce;
-    pd_CompactBalance_t tip;
+typedef struct {
+    uint32_t entries;
+    parser_context_t lemmas;
+} MerkleLemmas_t;
+
+typedef struct {
+    parser_context_t ctx;
+    uint8_t version;
+    TypeRef_t addressType;
+    TypeRef_t callType;
+    TypeRef_t signatureType;
+    Vector_t signedExtensions;
+} ExtrinsicMetadata_t;
+
+typedef struct {
+    parser_context_t ctx;
     uint32_t specVersion;
-    uint32_t transactionVersion;
+    Bytes_t specName;
+    uint16_t base58prefix;
+    uint8_t decimals;
+    Bytes_t unit;  // tokenSymbol
+} ExtraInfo_t;
 
-    pd_Hash_t genesisHash;
-    pd_Hash_t blockHash;
+typedef struct {
+    ShortRegistry_t shortRegistry;
+    MerkleIndices_t indices;
+    MerkleLemmas_t lemmas;
+    ExtrinsicMetadata_t extrinsic;
+    ExtraInfo_t extraInfo;
+} ShortMetadata_t;
 
-    pd_NestCallIdx_t nestCallIdx;
+typedef struct {
+    ShortMetadata_t shortMetadata;
+    RegistryEntry_t palletEntry;
+    parser_context_t metadataBuf;
+} Metadata_t;
+
+typedef struct {
+    uint8_t totalMethodItems;
+    uint8_t tipItems;
+    uint8_t totalSigExtItems;
+    parser_context_t blobBuf;
+    uint16_t sigExtStartOffset;
+} Blob_t;
+
+typedef struct {
+    Metadata_t metadata;
+    Blob_t blob;
+    uint8_t metadataDigest[BLAKE3_OUT_LEN];
+    OptBytes_t checkMetadataDigest;
 } parser_tx_t;
 
 #ifdef __cplusplus

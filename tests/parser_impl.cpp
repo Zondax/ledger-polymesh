@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2019 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,19 +23,19 @@
 #include <iostream>
 
 #include "gmock/gmock.h"
+#define TEST_BUFFER_SIZE 100
 
 // Test that we can parse SCALE-encoded unsigned integers correctly (uint8_t, uint16_t, uint32_t, uint64_t}
 TEST(SCALE, UIntX) {
-    parser_context_t ctx;
-    parser_error_t err;
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer),
-                                    "45"
-                                    "1234"
-                                    "12345678"
-                                    "1234567812345678");
+    parser_error_t err = parser_unexpected_error;
+    uint8_t buffer[TEST_BUFFER_SIZE] = {0};
+    const uint16_t bufferLen = parseHexString(buffer, sizeof(buffer),
+                                              "45"
+                                              "1234"
+                                              "12345678"
+                                              "1234567812345678");
 
-    parser_init(&ctx, buffer, bufferLen);
+    parser_context_t ctx = {.buffer = buffer, .bufferLen = bufferLen, .offset = 0};
 
     uint8_t v8 = 0;
     err = _readUInt8(&ctx, &v8);
@@ -60,68 +60,66 @@ TEST(SCALE, UIntX) {
 
 // Parse SCALE-encoded booleans
 TEST(SCALE, Bool) {
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), "000102");
-    parser_context_t ctx;
+    uint8_t buffer[TEST_BUFFER_SIZE];
+    uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), "000102");
 
-    parser_init(&ctx, buffer, bufferLen);
+    parser_context_t ctx = {.buffer = buffer, .bufferLen = bufferLen, .offset = 0};
 
-    pd_bool_t value = bool_true;
-    parser_error_t err;
+    bool value = false;
+    parser_error_t err = parser_unexpected_value;
 
-    err = _readBool(&ctx, &value);
+    err = readBool(&ctx, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
-    EXPECT_EQ(value, bool_false);
+    EXPECT_EQ(value, false);
 
-    err = _readBool(&ctx, &value);
+    err = readBool(&ctx, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
-    EXPECT_EQ(value, bool_true);
+    EXPECT_EQ(value, true);
 
-    err = _readBool(&ctx, &value);
+    err = readBool(&ctx, &value);
     EXPECT_EQ(err, parser_unexpected_value);
 }
 
 // Parse SCALE-encoded Compact numbers
 TEST(SCALE, Compact) {
-    parser_context_t ctx;
-    parser_error_t err;
+    parser_error_t err = parser_unexpected_error;
 
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), "0004a815010100");
-    parser_init(&ctx, buffer, bufferLen);
+    uint8_t buffer[TEST_BUFFER_SIZE] = {0};
+    uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), "0004a815010100");
+    parser_context_t ctx = {.buffer = buffer, .bufferLen = bufferLen, .offset = 0};
 
-    compactInt_t cvalue;
+    CompactInt_t cvalue;
     uint64_t value;
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 1);
     err = _getValue(&cvalue, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(value, 0);
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 1);
     err = _getValue(&cvalue, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(value, 1);
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 1);
     err = _getValue(&cvalue, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(value, 42);
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 2);
     err = _getValue(&cvalue, &value);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(value, 69);
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 2);
     err = _getValue(&cvalue, &value);
@@ -130,17 +128,16 @@ TEST(SCALE, Compact) {
 
 // Parse SCALE-encoded Compact numbers. Reproducing old known bug
 TEST(SCALE, Compact2) {
-    parser_context_t ctx;
-    parser_error_t err;
+    parser_error_t err = parser_unexpected_error;
 
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), "e5c0");
-    parser_init(&ctx, buffer, bufferLen);
+    uint8_t buffer[TEST_BUFFER_SIZE];
+    uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), "e5c0");
+    parser_context_t ctx = {.buffer = buffer, .bufferLen = bufferLen, .offset = 0};
 
-    compactInt_t cvalue;
+    CompactInt_t cvalue;
     uint64_t value;
 
-    err = _readCompactInt(&ctx, &cvalue);
+    err = readCompactInt(&ctx, &cvalue);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
     EXPECT_EQ(cvalue.len, 2);
     err = _getValue(&cvalue, &value);
@@ -150,79 +147,16 @@ TEST(SCALE, Compact2) {
 
 // Parse SCALE-encoded mortal era objects
 TEST(SCALE, MortalEra) {
-    parser_context_t ctx;
-    parser_error_t err;
+    parser_error_t err = parser_unexpected_error;
 
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), "0100");
-    parser_init(&ctx, buffer, bufferLen);
+    uint8_t buffer[TEST_BUFFER_SIZE] = {0};
+    uint16_t bufferLen = parseHexString(buffer, sizeof(buffer), "0100");
+    parser_context_t ctx = {.buffer = buffer, .bufferLen = bufferLen, .offset = 0};
 
-    pd_ExtrinsicEra_t v;
+    pd_ExtrinsicEra_t v = {0};
     err = _readEra(&ctx, &v);
     EXPECT_EQ(err, parser_ok) << parser_getErrorDescription(err);
+    EXPECT_EQ(v.isMortal, 1);
     EXPECT_EQ(v.phase, 0);
     EXPECT_EQ(v.period, 4);
-}
-
-// Confirm bad transactions are rejected with an error message
-TEST(SCALE, BadTX) {
-    parser_context_t ctx;
-    parser_error_t err;
-
-    uint8_t buffer[100];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), "0102030405060708091011");
-
-    parser_init(&ctx, buffer, bufferLen);
-
-    parser_tx_t tx;
-
-    err = _readTx(&ctx, &tx);
-    EXPECT_EQ(err, parser_unexpected_buffer_end) << parser_getErrorDescription(err);
-    ;
-}
-
-// Parse simple SCALE-encoded transaction
-TEST(SCALE, TransferTXBadTxVersion) {
-    parser_context_t ctx;
-    parser_error_t err;
-
-    const auto testTx =
-        "0400ff8d16d62802ca55326ec52bf76a8543b90e2aba5bcf6cd195c0d6fc1ef38fa1b3000600ae11030000c801"
-        "00003fd7b9eb6a00376e5be61f01abb429ffb0b104be05eaff4d458da48fcd425baf3fd7b9eb6a00376e5be61f"
-        "01abb429ffb0b104be05eaff4d458da48fcd425baf";
-
-    uint8_t buffer[500];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), testTx);
-
-    parser_init(&ctx, buffer, bufferLen);
-
-    parser_tx_t tx;
-    uint64_t tmp;
-    char tmpBuffer[100];
-    uint8_t pageCount = 0;
-
-    err = _readTx(&ctx, &tx);
-    EXPECT_EQ(err, parser_tx_version_not_supported) << parser_getErrorDescription(err);
-
-}  // Parse simple SCALE-encoded transaction
-TEST(SCALE, TransferTXBadSpec) {
-    parser_context_t ctx;
-    parser_error_t err;
-
-    const auto testTx =
-        "000028a5da57d5038d2400110700000500000012fddc9e2128b3fe571e4e5427addcb87fcaf08493867"
-        "a68dd6ae44b406b39c712fddc9e2128b3fe571e4e5427addcb87fcaf08493867a68dd6ae44b406b39c7";
-
-    uint8_t buffer[500];
-    auto bufferLen = parseHexString(buffer, sizeof(buffer), testTx);
-
-    parser_init(&ctx, buffer, bufferLen);
-
-    parser_tx_t tx;
-    uint64_t tmp;
-    char tmpBuffer[100];
-    uint8_t pageCount = 0;
-
-    err = _readTx(&ctx, &tx);
-    EXPECT_EQ(err, parser_tx_version_not_supported) << parser_getErrorDescription(err);
 }

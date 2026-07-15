@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 Zondax GmbH
+ *  (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ uint32_t tx_append(unsigned char *buffer, uint32_t length);
 
 /// Returns size of the raw json transaction buffer
 /// \return
-uint32_t tx_get_buffer_length();
+uint16_t tx_get_buffer_length();
 
 /// Returns the raw json transaction buffer
 /// \return
@@ -50,10 +50,20 @@ const char *tx_raw_parse();
 zxerr_t tx_getNumItems(uint8_t *num_items);
 
 /// Gets an specific item from the transaction (including paging)
-zxerr_t tx_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outValue, uint16_t outValueLen,
-                   uint8_t pageIdx, uint8_t *pageCount);
+zxerr_t tx_getItem(int8_t displayIdx,
+                   char *outKey,
+                   uint16_t outKeyLen,
+                   char *outVal,
+                   uint16_t outValLen,
+                   uint8_t pageIdx,
+                   uint8_t *pageCount);
 
 zxerr_t tx_raw_getNumItems(uint8_t *num_items);
 
-zxerr_t tx_raw_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outValue, uint16_t outValueLen,
-                       uint8_t pageIdx, uint8_t *pageCount);
+zxerr_t tx_raw_getItem(int8_t displayIdx,
+                       char *outKey,
+                       uint16_t outKeyLen,
+                       char *outVal,
+                       uint16_t outValLen,
+                       uint8_t pageIdx,
+                       uint8_t *pageCount);

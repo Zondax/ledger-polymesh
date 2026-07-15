@@ -1,5 +1,5 @@
 #*******************************************************************************
-#*   (c) 2019 - 2023 Zondax AG
+#*   (c) 2019 - 2024 Zondax AG
 #*
 #*  Licensed under the Apache License, Version 2.0 (the "License");
 #*  you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@
 # BOLOS_SDK IS  DEFINED	 	We use the plain Makefile for Ledger
 # BOLOS_SDK NOT DEFINED		We use a containerized build approach
 
-#TESTS_JS_PACKAGE = "@zondax/ledger-substrate"
-#TESTS_JS_DIR = $(CURDIR)/../ledger-substrate-js
-
 ifeq ($(BOLOS_SDK),)
 # In this case, there is not predefined SDK and we run dockerized
 # When not using the SDK, we override and build the XL complete app
@@ -32,8 +29,8 @@ ifeq ($(SKIP_NANOS), 0)
 $(error "NanoS device is not supported")
 endif
 
+$(info ************ COIN  = [$(COIN)])
 include $(CURDIR)/deps/ledger-zxlib/dockerized_build.mk
-
 else
 default:
 	$(MAKE) -C app
@@ -41,6 +38,9 @@ default:
 	$(info "Calling app Makefile for target $@")
 	COIN=$(COIN) $(MAKE) -C app $@
 endif
+
+build_all:
+	APP_TESTING=1 PRODUCTION_BUILD=1 make
 
 test_all:
 	make zemu_install

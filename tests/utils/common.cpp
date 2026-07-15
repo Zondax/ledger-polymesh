@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,34 +15,56 @@
  ********************************************************************************/
 #include "common.h"
 
-#include <parser.h>
+#include <app_mode.h>
+#include <hexutils.h>
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
 
-std::vector<std::string> dumpUI(parser_context_t *ctx, uint16_t maxKeyLen, uint16_t maxValueLen) {
-    auto answer = std::vector<std::string>();
+#include "gmock/gmock.h"
+#include "parser.h"
 
-    uint8_t numItems;
-    parser_error_t err = parser_getNumItems(ctx, &numItems);
+using json = nlohmann::json;
+
+#define MAX_KEY_LEN 39U
+#define MAX_VAL_LEN 39U
+
+using namespace std;
+
+vector<string> genericDumpUI(parser_tx_t *txObj) {
+    auto answer = vector<string>();
+
+    uint8_t numItems = 0;
+    parser_error_t err = parser_getNumItems(txObj, &numItems);
     if (err != parser_ok) {
         return answer;
     }
 
-    for (uint16_t idx = 0; idx < numItems; idx++) {
-        char keyBuffer[1000];
-        char valueBuffer[1000];
-        uint8_t pageIdx = 0;
+    for (uint8_t idx = 0; idx < numItems; idx++) {
+        char keyBuffer[MAX_KEY_LEN] = {0};
+        char valueBuffer[MAX_VAL_LEN] = {0};
         uint8_t pageCount = 1;
 
-        while (pageIdx < pageCount) {
-            std::stringstream ss;
+        ui_field_t uiFields = {.displayIdx = idx,
+                               .outKey = keyBuffer,
+                               .outKeyLen = sizeof(keyBuffer),
+                               .outVal = valueBuffer,
+                               .outValLen = sizeof(valueBuffer),
+                               .pageIdx = 0,
+                               .pageCount = &pageCount};
 
-            err = parser_getItem(ctx, idx, keyBuffer, maxKeyLen, valueBuffer, maxValueLen, pageIdx, &pageCount);
+        while (uiFields.pageIdx < *uiFields.pageCount) {
+            stringstream ss;
 
-            ss << idx << " | " << keyBuffer;
+            err = parser_getItem(txObj, &uiFields);
+
+            ss << (int)idx << " | " << keyBuffer;
             if (pageCount > 1) {
-                ss << " [" << (int)pageIdx + 1 << "/" << (int)pageCount << "]";
+                ss << " [" << (int)uiFields.pageIdx + 1 << "/" << (int)*uiFields.pageCount << "]";
             }
             ss << " : ";
 
@@ -54,9 +76,104 @@ std::vector<std::string> dumpUI(parser_context_t *ctx, uint16_t maxKeyLen, uint1
 
             answer.push_back(ss.str());
 
-            pageIdx++;
+            uiFields.pageIdx++;
         }
     }
 
     return answer;
+}
+
+vector<TestcaseGeneric_t> GetJsonTestCasesGeneric(const string &dir) {
+    vector<string> json_files;
+    const string fullPath = string(TESTVECTORS_DIR) + dir;
+    for (const auto &entry : filesystem::directory_iterator(fullPath)) {
+        if (entry.path().extension() == ".json") {
+            json_files.push_back(entry.path().string());
+        }
+    }
+    auto answer = vector<TestcaseGeneric_t>();
+
+    for (const auto &filename : json_files) {
+        ifstream inFile(filename);
+
+        // for filename we want the last entry of the path without `.json`
+        const size_t slashPos = filename.find_last_of('/');
+        string filenameShort = filename.substr(slashPos + 1, filename.length() - slashPos - 6);
+        replace(filenameShort.begin(), filenameShort.end(), '-', '_');
+        replace(filenameShort.begin(), filenameShort.end(), '.', '_');
+        if (inFile.is_open()) {
+            try {
+                json entries;
+                inFile >> entries;
+
+                // Support both wrapped format (with metadata) and plain array
+                const auto &vectors = entries.is_object() && entries.contains("vectors") ? entries["vectors"] : entries;
+                cout << "Number of testcases: " << vectors.size() << endl;
+                auto tests = TestcaseGeneric_t();
+                for (const auto &entry : vectors) {
+                    auto outputs = vector<string>();
+                    for (const auto &s : entry["output"]) {
+                        outputs.push_back(s.get<string>());
+                    }
+
+                    auto outputs_expert = vector<string>();
+                    for (const auto &s : entry["output_expert"]) {
+                        outputs_expert.push_back(s.get<string>());
+                    }
+                    answer.push_back(TestcaseGeneric_t{filenameShort, entry["index"].get<uint64_t>(),
+                                                       entry["name"].get<string>(), entry["blob"].get<string>(),
+                                                       entry["metadata"].get<string>(), entry["digest"].get<string>(),
+                                                       outputs, outputs_expert});
+                }
+            } catch (const json::exception &e) {
+                cerr << "Failed to parse JSON: " << e.what() << endl;
+            }
+            inFile.close();
+        }
+    }
+
+    return answer;
+}
+
+void check_testcase_generic(const TestcaseGeneric_t &testcase, bool expertMode) {
+    app_mode_set_expert(static_cast<uint8_t>(expertMode));
+
+    uint8_t inputBuffer[16384] = {0};
+
+    // Parse blob
+    const uint16_t blobLen = parseHexString(inputBuffer, sizeof(inputBuffer), testcase.blob.c_str());
+    ASSERT_NE(blobLen, 0);
+
+    // Parse short metadata
+    const uint16_t metadataLen =
+        parseHexString(inputBuffer + blobLen, sizeof(inputBuffer) - blobLen, testcase.metadata.c_str());
+    ASSERT_NE(metadataLen, 0);
+
+    parser_tx_t txObj = {0};
+    const parser_error_t err = parser_parse(&txObj, inputBuffer, (blobLen + metadataLen), blobLen);
+    ASSERT_EQ(err, parser_ok) << parser_getErrorDescription(err);
+
+    uint8_t digest[32 + 1] = {0};
+    parseHexString(digest, sizeof(digest), testcase.digest.c_str());
+    EXPECT_EQ(memcmp(digest, txObj.metadataDigest, sizeof(txObj.metadataDigest)), 0);
+
+    auto output = genericDumpUI(&txObj);
+
+    cout << endl;
+    for (const auto &i : output) {
+        cout << i << endl;
+    }
+    cout << endl << endl;
+
+    const vector<string> expected = app_mode_expert() ? testcase.expected_expert : testcase.expected;
+    EXPECT_EQ(expected.empty(), false) << "Expected values are empty";
+    EXPECT_EQ(output.size(), expected.size());
+
+    auto expectedLine = expected.begin();
+    for (const auto &outputLine : output) {
+        if (expectedLine != expected.end()) {
+            EXPECT_THAT(outputLine, testing::Eq(*expectedLine));
+            expectedLine++;
+        }
+    }
 }

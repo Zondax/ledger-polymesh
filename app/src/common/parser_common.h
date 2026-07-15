@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2024  Zondax AG
+ *  (c) 2018 - 2024  Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ extern "C" {
 #include <stdint.h>
 
 #include "parser_txdef.h"
+#include "zxmacros.h"
 
-#define CHECK_PARSER_ERR(__CALL)              \
+#define CHECK_ERROR(__CALL)                   \
     {                                         \
         parser_error_t __err = __CALL;        \
-        CHECK_APP_CANARY()                    \
+        CHECK_APP_CANARY();                   \
         if (__err != parser_ok) return __err; \
     }
 
@@ -39,6 +40,16 @@ typedef enum {
     parser_display_idx_out_of_range,
     parser_display_page_out_of_range,
     parser_unexpected_error,
+    // Metadata specific
+    parser_wrong_entry_type,
+    parser_wrong_metadata_digest,
+
+    // Blob specific
+
+    //
+    parser_running_out_of_stack,
+    parser_indices_not_ordered,
+
     // Coin specific
     parser_unexpected_address_type,
     parser_spec_not_supported,
@@ -56,19 +67,13 @@ typedef enum {
     parser_tx_nesting_not_supported,
     parser_tx_nesting_limit_reached,
     parser_tx_call_vec_too_large,
+
     // Swap specific
     parser_swap_tx_wrong_method,
     parser_swap_tx_wrong_method_args_num,
     parser_swap_tx_wrong_dest_addr,
     parser_swap_tx_wrong_amount,
 } parser_error_t;
-
-typedef struct {
-    const uint8_t *buffer;
-    uint16_t bufferLen;
-    uint16_t offset;
-    parser_tx_t *tx_obj;
-} parser_context_t;
 
 #ifdef __cplusplus
 }

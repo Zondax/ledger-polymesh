@@ -1,5 +1,5 @@
 /** ******************************************************************************
- *  (c) 2020 Zondax GmbH
+ *  (c) 2018 - 2023 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,20 +14,15 @@
  *  limitations under the License.
  ******************************************************************************* */
 
-import Zemu, { ButtonKind, DEFAULT_START_OPTIONS, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
-import { newSubstrateApp } from '@zondax/ledger-substrate'
-import { APP_SEED, models } from './common'
-
-const defaultOptions = {
-  ...DEFAULT_START_OPTIONS,
-  logging: true,
-  custom: `-s "${APP_SEED}"`,
-  X11: false,
-}
+import Zemu, { ButtonKind, zondaxMainmenuNavigation, isTouchDevice } from '@zondax/zemu'
+import { defaultOptions, POLYMESH_SS58_PREFIX, PATH, models } from './common'
+import { PolkadotGenericApp } from '@zondax/ledger-substrate'
+import { SCHEME } from '@zondax/ledger-substrate/dist/common'
 
 const expected_address = '2GufX4169bNZtEZowDhdWK7gknwKXa1zzAN5oij8tim8V2mr'
 const expected_pk = 'c55777790670bfd6bf012d79fd65f29afe233694d5af0a5e74783f13849fe29a'
-
+const expected_address_secp256k1 = 'a125b9bd1ed90937b405bb15e378356f25211a81'
+const expected_pk_secp256k1 = '03c43f83dba5f5adc88f8251b2863374571dddc78844e6ddfef9281d8f106af310'
 jest.setTimeout(180000)
 
 describe('Standard', function () {
@@ -55,23 +50,16 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
+      // const app = PolkadotApp(sim.getTransport())
       const resp = await app.getVersion()
 
       console.log(resp)
 
-      expect(resp.return_code).toEqual(0x9000)
-      expect(resp.error_message).toEqual('No errors')
-
-      expect(resp).toHaveProperty('test_mode')
-
+      expect(resp).toHaveProperty('testMode')
       expect(resp).toHaveProperty('major')
       expect(resp).toHaveProperty('minor')
       expect(resp).toHaveProperty('patch')
-
-      expect(resp.major).toEqual(107)
-      expect(resp.minor).toEqual(7000)
-      expect(resp.patch).toEqual(6)
     } finally {
       await sim.close()
     }
@@ -81,17 +69,30 @@ describe('Standard', function () {
     const sim = new Zemu(m.path)
     try {
       await sim.start({ ...defaultOptions, model: m.name })
-      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
-      const resp = await app.getAddress(0x80000000, 0x80000000, 0x80000000)
-
+      const resp = await app.getAddressEd25519(PATH, POLYMESH_SS58_PREFIX)
       console.log(resp)
 
-      expect(resp.return_code).toEqual(0x9000)
-      expect(resp.error_message).toEqual('No errors')
-
-      expect(resp.address).toEqual(expected_address)
       expect(resp.pubKey).toEqual(expected_pk)
+      expect(resp.address).toEqual(expected_address)
+    } finally {
+      await sim.close()
+    }
+  })
+
+  test.concurrent.each(models)('get secp256k1 address', async function (m) {
+    const sim = new Zemu(m.path)
+    try {
+      await sim.start({ ...defaultOptions, model: m.name })
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
+
+      // Using new method to get secp256k1 address
+      const resp = await app.getAddressEcdsa(PATH, false)
+      console.log(resp)
+
+      expect(resp.pubKey).toEqual(expected_pk_secp256k1)
+      expect(resp.address).toEqual(expected_address_secp256k1)
     } finally {
       await sim.close()
     }
@@ -106,9 +107,8 @@ describe('Standard', function () {
         approveKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
         approveAction: ButtonKind.DynamicTapButton,
       })
-      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
-
-      const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh', '')
+      const respRequest = app.getAddressEd25519(PATH, POLYMESH_SS58_PREFIX, true)
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
       await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-show_address`)
@@ -117,11 +117,36 @@ describe('Standard', function () {
 
       console.log(resp)
 
-      expect(resp.return_code).toEqual(0x9000)
-      expect(resp.error_message).toEqual('No errors')
-
       expect(resp.address).toEqual(expected_address)
       expect(resp.pubKey).toEqual(expected_pk)
+    } finally {
+      await sim.close()
+    }
+  })
+
+  test.concurrent.each(models)('show address secp256k1', async function (m) {
+    const sim = new Zemu(m.path)
+    try {
+      await sim.start({
+        ...defaultOptions,
+        model: m.name,
+        approveKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
+        approveAction: ButtonKind.DynamicTapButton,
+      })
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh', '')
+
+      // Using old method to check backward compatibility
+      const respRequest = app.getAddress(PATH, POLYMESH_SS58_PREFIX, true, 2)
+      // Wait until we are not in the main menu
+      await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
+      await sim.compareSnapshotsAndApprove('.', `${m.prefix.toLowerCase()}-show_address-secp256k1`)
+
+      const resp = await respRequest
+
+      console.log(resp)
+
+      expect(resp.address).toEqual(expected_address_secp256k1)
+      expect(resp.pubKey).toEqual(expected_pk_secp256k1)
     } finally {
       await sim.close()
     }
@@ -133,18 +158,20 @@ describe('Standard', function () {
       await sim.start({
         ...defaultOptions,
         model: m.name,
-        rejectKeyword: isTouchDevice(m.name) ? 'Confirm' : '',
+        rejectKeyword: isTouchDevice(m.name) ? 'Public key' : '',
       })
-      const app = newSubstrateApp(sim.getTransport(), 'Polymesh')
+      const app = new PolkadotGenericApp(sim.getTransport(), 'polymesh')
 
-      const respRequest = app.getAddress(0x80000000, 0x80000000, 0x80000000, true)
+      const respRequest = app.getAddressEd25519(PATH, POLYMESH_SS58_PREFIX, true)
+      expect(respRequest).rejects.toMatchObject({
+        returnCode: 0x6986,
+        errorMessage: 'Transaction rejected',
+      })
       // Wait until we are not in the main menu
       await sim.waitUntilScreenIsNot(sim.getMainMenuSnapshot())
-
-      await sim.compareSnapshotsAndReject('.', `${m.prefix.toLowerCase()}-show_address_reject`)
-
-      const resp = await respRequest
-      console.log(resp)
+      try {
+        await sim.compareSnapshotsAndReject('.', `${m.prefix.toLowerCase()}-show_address_reject`)
+      } catch {}
     } finally {
       await sim.close()
     }

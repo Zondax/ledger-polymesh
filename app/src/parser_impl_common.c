@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2024  Zondax AG
+ *  (c) 2018 - 2024  Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,33 +14,7 @@
  *  limitations under the License.
  ********************************************************************************/
 
-#include <zxformat.h>
-#include <zxmacros.h>
-
-#include "bignum.h"
-#include "coin.h"
-#include "crypto_helper.h"
 #include "parser_impl.h"
-#include "parser_txdef.h"
-#include "substrate_dispatch.h"
-#include "substrate_types.h"
-
-parser_error_t parser_init_context(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
-    if (ctx == NULL || bufferSize == 0 || buffer == NULL) {
-        // Not available, use defaults
-        return parser_init_context_empty;
-    }
-
-    ctx->offset = 0;
-    ctx->buffer = buffer;
-    ctx->bufferLen = bufferSize;
-    return parser_ok;
-}
-
-parser_error_t parser_init(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize) {
-    CHECK_PARSER_ERR(parser_init_context(ctx, buffer, bufferSize))
-    return parser_ok;
-}
 
 const char *parser_getErrorDescription(parser_error_t err) {
     switch (err) {
@@ -55,7 +29,20 @@ const char *parser_getErrorDescription(parser_error_t err) {
             return "display_idx_out_of_range";
         case parser_display_page_out_of_range:
             return "display_page_out_of_range";
+        case parser_unexpected_error:
+            return "Unexpected error";
+        case parser_running_out_of_stack:
+            return "Running out of stack";
+        case parser_indices_not_ordered:
+            return "Indices not ordered";
+        // Metadata specific
+        case parser_wrong_entry_type:
+            return "Wrong entry type";
+        case parser_wrong_metadata_digest:
+            return "wrong metadata digest";
         // Coin specific
+        case parser_unexpected_address_type:
+            return "Unexpected address type";
         case parser_spec_not_supported:
             return "Spec version not supported";
         case parser_tx_version_not_supported:
@@ -108,51 +95,46 @@ GEN_DEF_READFIX_UNSIGNED(32)
 
 GEN_DEF_READFIX_UNSIGNED(64)
 
-parser_error_t _readBool(parser_context_t *c, pd_bool_t *v) {
-    CHECK_INPUT()
+parser_error_t readBool(parser_context_t *ctx, bool *val) {
+    CHECK_INPUT(val);
 
-    const uint8_t p = *(c->buffer + c->offset);
-    CTX_CHECK_AND_ADVANCE(c, 1)
+    const uint8_t byte = *(ctx->buffer + ctx->offset);
+    CTX_CHECK_AND_ADVANCE(ctx, 1)
 
-    switch (p) {
-        case 0x00:
-            *v = bool_false;
-            break;
-        case 0x01:
-            *v = bool_true;
-            break;
-        default:
-            return parser_unexpected_value;
+    if (byte > 0x01U) {
+        return parser_unexpected_value;
     }
+
+    *val = (byte == 0x01U) ? true : false;
     return parser_ok;
 }
 
-parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v) {
-    CHECK_INPUT()
+parser_error_t readCompactInt(parser_context_t *ctx, CompactInt_t *val) {
+    CHECK_INPUT(val);
 
-    v->ptr = c->buffer + c->offset;
-    const uint8_t mode = *v->ptr & 0x03u;  // get mode from two least significant bits
+    val->ptr = ctx->buffer + ctx->offset;
+    const uint8_t mode = *val->ptr & 0x03U;  // get mode from two least significant bits
 
-    uint64_t tmp = 0;
+    uint64_t tmp = {0};
     switch (mode) {
         case 0:  // single byte
-            v->len = 1;
-            CTX_CHECK_AND_ADVANCE(c, v->len)
-            _getValue(v, &tmp);
+            val->len = 1;
+            CTX_CHECK_AND_ADVANCE(ctx, val->len)
+            _getValue(val, &tmp);
             break;
         case 1:  // 2-byte
-            v->len = 2;
-            CTX_CHECK_AND_ADVANCE(c, v->len)
-            _getValue(v, &tmp);
+            val->len = 2;
+            CTX_CHECK_AND_ADVANCE(ctx, val->len)
+            _getValue(val, &tmp);
             break;
         case 2:  // 4-byte
-            v->len = 4;
-            CTX_CHECK_AND_ADVANCE(c, v->len)
-            _getValue(v, &tmp);
+            val->len = 4;
+            CTX_CHECK_AND_ADVANCE(ctx, val->len)
+            _getValue(val, &tmp);
             break;
         case 3:  // bigint
-            v->len = (*v->ptr >> 2u) + 4 + 1;
-            CTX_CHECK_AND_ADVANCE(c, v->len)
+            val->len = (*val->ptr >> 2U) + 4 + 1;
+            CTX_CHECK_AND_ADVANCE(ctx, val->len)
             break;
         default:
             // this is actually impossible
@@ -162,318 +144,69 @@ parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v) {
     return parser_ok;
 }
 
-parser_error_t _getValue(const compactInt_t *c, uint64_t *v) {
-    *v = 0;
+parser_error_t _getValue(const CompactInt_t *compact, uint64_t *value) {
+    if (compact == NULL || value == NULL) {
+        return parser_no_data;
+    }
+    *value = 0;
 
-    switch (c->len) {
+    switch (compact->len) {
         case 1:
-            *v = (*c->ptr) >> 2u;
+            *value = (*compact->ptr) >> 2U;
             break;
         case 2:
-            *v = (*c->ptr) >> 2u;
-            *v += *(c->ptr + 1) << 6u;
-            if (*v < 64) {
+            *value = (*compact->ptr) >> 2U;
+            *value += *(compact->ptr + 1) << 6U;
+            if (*value < 64U) {
                 return parser_value_out_of_range;
             }
             break;
         case 4:
-            *v = (*c->ptr) >> 2u;
-            *v += *(c->ptr + 1) << 6u;
-            *v += *(c->ptr + 2) << (8u + 6u);
-            *v += *(c->ptr + 3) << (16u + 6u);
-            if (*v < 16383) {
+            *value = (*compact->ptr) >> 2U;
+            *value += *(compact->ptr + 1) << 6U;
+            *value += *(compact->ptr + 2) << (8U + 6U);
+            *value += *(compact->ptr + 3) << (16U + 6U);
+            if (*value < 16383U) {
                 return parser_value_out_of_range;
             }
             break;
         default:
             return parser_value_out_of_range;
     }
-
     return parser_ok;
 }
 
-parser_error_t _toStringCompactInt(const compactInt_t *c, uint8_t decimalPlaces, bool trimTrailingZeros,
-                                   const char postfix[], const char prefix[], char *outValue, uint16_t outValueLen,
-                                   uint8_t pageIdx, uint8_t *pageCount) {
-    char bufferUI[200];
-    MEMZERO(outValue, outValueLen);
-    MEMZERO(bufferUI, sizeof(bufferUI));
-    *pageCount = 1;
+// inspiration from
+// https://github.com/paritytech/polkadot-sdk/blob/0d3c67d96beda62b729e8328c5755358ac244246/substrate/primitives/runtime/src/generic/era.rs
+parser_error_t _readEra(parser_context_t *ctx, pd_ExtrinsicEra_t *era) {
+    CHECK_INPUT(ctx);
 
-    if (c->len <= 4) {
-        uint64_t v = 0;
-        _getValue(c, &v);
-        if (uint64_to_str(bufferUI, sizeof(bufferUI), v) != NULL) {
-            return parser_unexpected_value;
-        }
-    } else {
-        // This is longer number
-        uint8_t bcdOut[100];
-        const uint16_t bcdOutLen = sizeof(bcdOut);
-
-        bignumLittleEndian_to_bcd(bcdOut, bcdOutLen, c->ptr + 1, c->len - 1);
-        if (!bignumLittleEndian_bcdprint(bufferUI, sizeof(bufferUI), bcdOut, bcdOutLen)) return parser_unexpected_buffer_end;
-    }
-
-    // Format number
-    if (intstr_to_fpstr_inplace(bufferUI, sizeof(bufferUI), decimalPlaces) == 0) {
-        return parser_unexpected_value;
-    }
-
-    if (z_str3join(bufferUI, sizeof(bufferUI), prefix, postfix) != zxerr_ok) {
-        return parser_unexpected_buffer_end;
-    }
-
-    if (trimTrailingZeros) {
-        number_inplace_trimming(bufferUI, 1);
-    }
-
-    pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
-
-    return parser_ok;
-}
-
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-
-parser_error_t _readCallIndex(parser_context_t *c, pd_CallIndex_t *v) {
-    CHECK_INPUT()
-
-    CHECK_ERROR(_readUInt8(c, &v->moduleIdx))
-    CHECK_ERROR(_readUInt8(c, &v->idx))
-    return parser_ok;
-}
-
-parser_error_t _readEra(parser_context_t *c, pd_ExtrinsicEra_t *v) {
-    CHECK_INPUT()
-    //  https://github.com/paritytech/substrate/blob/fc3adc87dc806237eb7371c1d21055eea1702be0/core/sr-primitives/src/generic/era.rs#L117
-
-    v->type = eEraImmortal;
-    v->period = 0;
-    v->phase = 0;
+    era->isMortal = 0;
+    era->period = 0;
+    era->phase = 0;
 
     uint8_t first = 0;
-    CHECK_ERROR(_readUInt8(c, &first))
+    CHECK_ERROR(_readUInt8(ctx, &first));
     if (first == 0) {
         return parser_ok;
     }
 
-    v->type = eEraMortal;
-    uint64_t encoded = first;
-    CHECK_ERROR(_readUInt8(c, &first))
-    encoded += (uint64_t)first << 8u;
+    era->isMortal = 1;
+    uint16_t encoded = (uint16_t)first;
+    CHECK_ERROR(_readUInt8(ctx, &first));
+    encoded += (uint16_t)first << 8;
 
-    v->period = 2U << (encoded % (1u << 4u));
-    uint64_t quantize_factor = (v->period >> 12u);
+    // we're sure it does not overflow u32 (at max is 2^16)
+    era->period = (uint32_t)(2U << (encoded % (1U << 4U)));
+    // at max is 2^4
+    uint8_t quantize_factor = (uint8_t)(era->period >> 12U);
     quantize_factor = (quantize_factor == 0 ? 1 : quantize_factor);
 
-    v->phase = (encoded >> 4u) * quantize_factor;
+    era->phase = (uint16_t)((encoded >> 4U) * quantize_factor);
 
-    if (v->period >= 4 && v->phase < v->period) {
+    if (era->period >= 4 && era->phase < era->period) {
         return parser_ok;
     }
 
     return parser_unexpected_value;
-}
-
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-
-parser_error_t _readCompactIndex(parser_context_t *c, pd_CompactIndex_t *v) {
-    CHECK_INPUT()
-    CHECK_ERROR(_readCompactInt(c, &v->index))
-    return parser_ok;
-}
-
-parser_error_t _readCompactBalance(parser_context_t *c, pd_CompactBalance_t *v) {
-    CHECK_INPUT()
-    CHECK_ERROR(_readCompactInt(c, &v->value))
-    return parser_ok;
-}
-
-parser_error_t _toStringCompactIndex(const pd_CompactIndex_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                     uint8_t *pageCount) {
-    return _toStringCompactInt(&v->index, 0, false, "", "", outValue, outValueLen, pageIdx, pageCount);
-}
-
-parser_error_t _toStringCompactBalance(const pd_CompactBalance_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                       uint8_t *pageCount) {
-    CHECK_ERROR(_toStringCompactInt(&v->value, COIN_AMOUNT_DECIMAL_PLACES, true, "", COIN_TICKER, outValue, outValueLen,
-                                    pageIdx, pageCount))
-    return parser_ok;
-}
-
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-
-parser_error_t _checkVersions(parser_context_t *c) {
-    // Methods are not length delimited so in order to retrieve the specVersion
-    // it is necessary to parse from the back.
-    // The transaction is expect to end in
-    // [4 bytes] specVersion
-    // [4 bytes] transactionVersion
-    // [32 bytes] genesisHash
-    // [32 bytes] blockHash
-    const uint16_t specOffsetFromBack = 4 + 4 + 32 + 32;
-    if (c->bufferLen < specOffsetFromBack) {
-        return parser_unexpected_buffer_end;
-    }
-
-    uint8_t *p = (uint8_t *)(c->buffer + c->bufferLen - specOffsetFromBack);
-    uint32_t specVersion = 0;
-    specVersion += (uint32_t)p[0] << 0u;
-    specVersion += (uint32_t)p[1] << 8u;
-    specVersion += (uint32_t)p[2] << 16u;
-    specVersion += (uint32_t)p[3] << 24u;
-
-    p += 4;
-    uint32_t transactionVersion = 0;
-    transactionVersion += (uint32_t)p[0] << 0u;
-    transactionVersion += (uint32_t)p[1] << 8u;
-    transactionVersion += (uint32_t)p[2] << 16u;
-    transactionVersion += (uint32_t)p[3] << 24u;
-
-    if (transactionVersion != SUPPORTED_TX_VERSION_CURRENT) {
-        return parser_tx_version_not_supported;
-    }
-
-    if (specVersion < SUPPORTED_MINIMUM_SPEC_VERSION) {
-        return parser_spec_not_supported;
-    }
-
-    c->tx_obj->specVersion = specVersion;
-    c->tx_obj->transactionVersion = transactionVersion;
-
-    return parser_ok;
-}
-
-uint16_t __address_type;
-
-uint16_t _getAddressType() { return __address_type; }
-
-uint16_t _detectAddressType(const parser_context_t *c) {
-    char hashstr[65];
-    uint8_t pc = 0;
-
-    if (c->tx_obj->genesisHash._ptr != NULL) {
-        _toStringHash(&c->tx_obj->genesisHash, hashstr, 65, 0, &pc);
-
-        // Compare with known genesis hashes
-        if (strcmp(hashstr, COIN_GENESIS_HASH) == 0) {
-            return PK_ADDRESS_TYPE;
-        }
-    }
-
-    return 42;
-}
-
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-
-parser_error_t _readAddress(parser_context_t *c, pd_Address_t *v) {
-    CHECK_INPUT()
-    // Based on
-    // https://github.com/paritytech/substrate/blob/fc3adc87dc806237eb7371c1d21055eea1702be0/srml/indices/src/address.rs#L66
-
-    uint8_t tmp = 0;
-    CHECK_ERROR(_readUInt8(c, &tmp))
-
-    switch (tmp) {
-        case 0xFF: {
-            v->type = eAddressId;
-            v->idPtr = c->buffer + c->offset;
-            CTX_CHECK_AND_ADVANCE(c, 32)
-            break;
-        }
-        case 0xFE: {
-            compactInt_t ci;
-            CHECK_ERROR(_readCompactInt(c, &ci))
-
-            v->type = eAddressIndex;
-            CHECK_ERROR(_getValue(&ci, &v->idx))
-
-            if (v->idx <= 0xffffffffu) {
-                return parser_unexpected_value;
-            }
-            break;
-        }
-        case 0xFD: {
-            uint32_t tmpval = 0;
-            CHECK_ERROR(_readUInt32(c, &tmpval))
-            v->type = eAddressIndex;
-            v->idx = tmpval;
-            if (v->idx <= 0xFFFF) {
-                return parser_unexpected_value;
-            }
-            break;
-        }
-        case 0xFC: {
-            uint16_t tmpval = 0;
-            CHECK_ERROR(_readUInt16(c, &tmpval))
-            v->type = eAddressIndex;
-            v->idx = tmpval;
-            if (v->idx <= 0xEF) {
-                return parser_unexpected_value;
-            }
-            break;
-        }
-        default:
-            if (tmp <= 0xEF) {
-                v->type = eAddressIndex;
-                v->idx = tmp;
-                return parser_ok;
-            }
-
-            return parser_unexpected_value;
-    }
-
-    return parser_ok;
-}
-
-parser_error_t _toStringPubkeyAsAddress(const uint8_t *pubkey, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                        uint8_t *pageCount) {
-    char bufferUI[200];
-
-    if (crypto_SS58EncodePubkey((uint8_t *)bufferUI, sizeof(bufferUI), __address_type, pubkey) == 0) {
-        return parser_no_data;
-    }
-
-    pageString(outValue, outValueLen, bufferUI, pageIdx, pageCount);
-    if (pageIdx >= *pageCount) {
-        return parser_no_data;
-    }
-    return parser_ok;
-}
-
-parser_error_t _toStringAddress(const pd_Address_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                uint8_t *pageCount) {
-    MEMZERO(outValue, outValueLen);
-    if (v == NULL) {
-        return parser_no_data;
-    }
-
-    *pageCount = 1;
-    switch (v->type) {
-        case eAddressIndex:
-            return parser_not_supported;
-        case eAddressId: {
-            return _toStringPubkeyAsAddress(v->idPtr, outValue, outValueLen, pageIdx, pageCount);
-        }
-    }
-
-    return parser_ok;
 }

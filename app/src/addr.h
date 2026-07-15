@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2020 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,18 +17,34 @@
 #pragma once
 
 #include <stdint.h>
-#include <zxerror.h>
 
+#include "zxerror.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @brief Address type
+ * enum 1 was reserved for sr25519 which is not supported
+ */
+typedef enum {
+    ed25519 = 0,
+    secp256k1 = 2,
+} scheme_type_e;
+
+extern scheme_type_e scheme;
 
 /// Return the number of items in the address view
 zxerr_t addr_getNumItems(uint8_t *num_items);
 
 /// Gets an specific item from the address view (including paging)
-zxerr_t addr_getItem(int8_t displayIdx, char *outKey, uint16_t outKeyLen, char *outValue, uint16_t outValueLen,
-                     uint8_t pageIdx, uint8_t *pageCount);
+zxerr_t addr_getItem(int8_t displayIdx,
+                     char *outKey,
+                     uint16_t outKeyLen,
+                     char *outValue,
+                     uint16_t outValueLen,
+                     uint8_t pageIdx,
+                     uint8_t *pageCount);
 
 #ifdef __cplusplus
 }

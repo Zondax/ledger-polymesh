@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ extern "C" {
 #include "coin.h"
 #include "zxerror.h"
 
-#define SS58_BLAKE_PREFIX (const unsigned char *)"SS58PRE"
-#define SS58_BLAKE_PREFIX_LEN 7
 #define SS58_ADDRESS_MAX_LEN 60u
 
 uint8_t crypto_SS58CalculatePrefix(uint16_t addressType, uint8_t *prefixBytes);

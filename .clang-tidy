@@ -1,26 +1,20 @@
 Checks: "-*,
   clang-diagnostic-*,
   clang-analyzer-*,
+  -clang-analyzer-core.BitwiseShift,
   cppcoreguidelines-init-variables,
   google-runtime-int,
   google-readability-avoid-underscore-in-googletest-name,
   misc-*,
   -misc-include-cleaner,
   performance-*,
+  -performance-no-int-to-ptr,
   portability-*,
   readability-*,
   -misc-no-recursion,
   -readability-function-cognitive-complexity,
-  -readability-function-size,
-  -readability-magic-numbers,
-  -readability-braces-around-statements,
-  -readability-else-after-return,
-  -readability-isolate-declaration,
-  -readability-uppercase-literal-suffix,
-  -clang-diagnostic-error,
-  -clang-diagnostic-return-type"
-WarningsAsErrors: ""
-HeaderFilterRegex: "^((?!substrate_functions\\.h|ristretto\\.h|addr\\.h).)*$"
+  -readability-magic-numbers"
+WarningsAsErrors: "*"
 CheckOptions:
   - key: readability-identifier-length.MinimumVariableNameLength
     value: 1

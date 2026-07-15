@@ -1,0 +1,15 @@
+# Sanitizer ignorelist (compile-time, -fsanitize-ignorelist=).
+#
+# Skip UBSAN instrumentation for the vendored BLAKE2/BLAKE3 reference
+# implementations. They rely on well-known idioms that the strict integer
+# checks (-fsanitize=integer / -fsanitize=undefined) flag as undefined
+# behavior but are not real bugs:
+#   - BLAKE2's word counter intentionally wraps (unsigned-integer-overflow).
+#   - BLAKE2's bit-mix shifts touch the sign bit (shift-base / shift-exponent).
+#   - BLAKE3 implicitly converts negative ints to size_t for its length
+#     tracker (implicit-integer-sign-change).
+# Without this, libFuzzer treats every run as a crash and any real bug
+# in app code gets buried under the noise.
+
+src:*/deps/BLAKE2/*
+src:*/deps/BLAKE3/*

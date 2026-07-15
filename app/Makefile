@@ -26,8 +26,37 @@ endif
 # Upload targets to configure the devices 
 include $(BOLOS_SDK)/Makefile.defines
 
-# Application name
+ifndef COIN
+COIN=POLYX
+endif
+$(info COIN  = [$(COIN)])
+VARIANT_PARAM=COIN
+VARIANT_VALUES=$(COIN)
+
+# Application allowed derivation paths.
+# You should request a specific path for your app.
+# This serve as an isolation mechanism.
+# Most application will have to request a path according to the BIP-0044
+# and SLIP-0044 standards.
+# If your app needs it, you can specify multiple path by using:
+# `PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'"`
+APPPATH = "44'/595'"
+
+
+ifeq ($(COIN),POLYX)
+# Main app configuration
 APPNAME = "Polymesh"
+ICON_NAME = icon
+
+else
+define error_message
+COIN value not supported: [$(COIN)]
+endef
+$(error "$(error_message)")
+endif
+
+$(info PATHS LIST = $(APPPATH))
+PATH_APP_LOAD_PARAMS = $(APPPATH)
 
 # Application version
 include $(CURDIR)/Makefile.version
@@ -35,9 +64,29 @@ APPVERSION = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
 
 # Application source files
 APP_SOURCE_PATH += src
+DEFINES += BLAKE3_NO_SSE2 BLAKE3_NO_SSE41 BLAKE3_NO_AVX2 BLAKE3_NO_AVX512 BLAKE3_USE_NEON=0
+BLAKE3_DIR := ../deps/BLAKE3/c
+INCLUDES_PATH += $(BLAKE3_DIR)
+APP_SOURCE_FILES += $(BLAKE3_DIR)/blake3.c $(BLAKE3_DIR)/blake3_dispatch.c $(BLAKE3_DIR)/blake3_portable.c
 
 # Application icons following guidelines:
 # https://developers.ledger.com/docs/embedded-app/design-requirements/#device-icon
+
+DEFAULT_NANOS_ICON = nanos_$(ICON_NAME).gif
+DEFAULT_NBGL_ICON_32 = stax_$(ICON_NAME).gif
+DEFAULT_NBGL_ICON_64 = stax_$(ICON_NAME)_64.gif
+DEFAULT_NBGL_ICON_48 = apex_p_$(ICON_NAME)_48.png
+
+copy_icon:
+	cp $(DEFAULT_NANOS_ICON) glyphs/icon_app.gif
+	cp $(DEFAULT_NBGL_ICON_32) glyphs/icon_stax_32.gif
+	cp $(DEFAULT_NBGL_ICON_64) glyphs/icon_stax_64.gif
+	cp $(DEFAULT_NBGL_ICON_48) glyphs/icon_apex_p_48.png
+
+all: copy_icon
+
+
+ICON_NANOS = nanos_icon.gif
 ICON_NANOX = nanox_icon.gif
 ICON_NANOSP = nanox_icon.gif
 ICON_STAX = stax_icon.gif
@@ -48,35 +97,11 @@ ICON_APEX_P = apex_p_icon.png
 # Possibles curves are: secp256k1, secp256r1, ed25519 and bls12381g1
 # If your app needs it, you can specify multiple curves by using:
 # `CURVE_APP_LOAD_PARAMS = <curve1> <curve2>`
-CURVE_APP_LOAD_PARAMS = ed25519
-
-# Application allowed derivation paths.
-# You should request a specific path for your app.
-# This serve as an isolation mechanism.
-# Most application will have to request a path according to the BIP-0044
-# and SLIP-0044 standards.
-# If your app needs it, you can specify multiple path by using:
-# `PATH_APP_LOAD_PARAMS = "44'/1'" "45'/1'"`
-
-APPPATH = "44'/595'"
-$(info PATHS LIST = $(APPPATH))
-PATH_APP_LOAD_PARAMS = $(APPPATH)
-
-# Setting to allow building variant applications
-# - <VARIANT_PARAM> is the name of the parameter which should be set
-#   to specify the variant that should be build.
-# - <VARIANT_VALUES> a list of variant that can be build using this app code.
-#   * It must at least contains one value.
-#   * Values can be the app ticker or anything else but should be unique.
-ifeq ($(COIN),)
-    COIN=POLYX
-endif
-$(info COIN  = [$(COIN)])
-VARIANT_PARAM=COIN
-VARIANT_VALUES=$(COIN)
+CURVE_APP_LOAD_PARAMS = ed25519 secp256k1
 
 INCLUDES_PATH += $(CURDIR)/src/common
-INCLUDES_PATH += $(CURDIR)/../deps/ledger-zxlib/include
+INCLUDES_PATH += $(CURDIR)/src/swap
+INCLUDES_PATH += ../deps/ledger-zxlib/include
 
 ########################################
 # Application communication interfaces #
@@ -110,24 +135,21 @@ ENABLE_NBGL_QRCODE = 1
 ########################################
 # Set the default value for PRODUCTION_BUILD to 0 if not already defined
 PRODUCTION_BUILD ?= 1
+
 # Display whether this is a production build or for internal use
 ifeq ($(PRODUCTION_BUILD), 1)
     $(info ************ PRODUCTION_BUILD  = [PRODUCTION BUILD])
 else
     $(info ************ PRODUCTION_BUILD  = [INTERNAL USE])
 endif
- # Add the PRODUCTION_BUILD definition to the compiler flags
+
+# Add the PRODUCTION_BUILD definition to the compiler flags
 DEFINES += PRODUCTION_BUILD=$(PRODUCTION_BUILD)
 
-# Display whether swap functionality is enabled or not
-ifeq ($(ENABLE_SWAP), 1)
-    $(info ************ HAVE_SWAP  = [ENABLED])
-else
-    $(info ************ HAVE_SWAP  = [DISABLED])
-endif
+# Swap functionality is disabled for Polymesh
+$(info ************ HAVE_SWAP  = [DISABLED])
 
 ########################################
-
 # Configure devices and permissions
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.devices
 # Create installer script
@@ -137,11 +159,20 @@ include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.app_testing
 # Call standard app flags
 include $(CURDIR)/../deps/ledger-zxlib/makefiles/Makefile.platform
 
+# Use small buffers for NanoX
+ifeq ($(TARGET_NAME), TARGET_NANOX)
+CFLAGS += -DZXLIB_LIGHT_MODE
+endif
+
 $(info TARGET_NAME  = [$(TARGET_NAME)])
 $(info ICONNAME  = [$(ICONNAME)])
 ifeq ($(ICONNAME),)
 $(error ICONNAME is not set)
 endif
+
+.PHONY: listvariants
+listvariants:
+	@echo VARIANTS COIN POLYX
 
 .PHONY: version
 version:

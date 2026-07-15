@@ -1,0 +1,75 @@
+name: Fuzz
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_seconds:
+        description: 'libFuzzer budget per target, in seconds'
+        required: false
+        default: '60'
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    # Saturdays at 13:00 UTC, mirroring LedgerHQ/app-boilerplate.
+    - cron: '0 13 * * 6'
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    name: Build and run libFuzzer targets
+    runs-on: ${{ github.repository_owner == 'zondax' && 'zondax-runners' || 'ubuntu-latest' }}
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang clang-tidy cmake ninja-build python3 llvm
+
+      - name: Build fuzz targets
+        run: make fuzz_build
+
+      - name: Determine fuzz budget per target
+        id: budget
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SECS: ${{ github.event.inputs.max_seconds }}
+        run: |
+          case "${EVENT_NAME}" in
+            workflow_dispatch) SECS="${INPUT_SECS:-60}" ;;
+            pull_request)      SECS=120  ;;  # ~2 min/target, fast PR feedback
+            push)              SECS=300  ;;  # 5 min/target on main
+            schedule)          SECS=1800 ;;  # 30 min/target weekly deep run
+            *)                 SECS=120  ;;
+          esac
+          echo "max_seconds=${SECS}" >> "${GITHUB_OUTPUT}"
+          echo "Fuzz budget per target: ${SECS}s"
+
+      - name: Run fuzzers
+        run: ./fuzz/run-fuzzers.py --max-seconds "${{ steps.budget.outputs.max_seconds }}"
+
+      - name: Upload fuzz logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-logs-${{ github.event_name }}-${{ github.run_attempt }}
+          path: fuzz/logs
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Upload fuzz corpora
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-corpora-${{ github.event_name }}-${{ github.run_attempt }}
+          path: fuzz/corpora
+          if-no-files-found: ignore
+          retention-days: 30

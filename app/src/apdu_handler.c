@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2018, 2019 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *   (c) 2016 Ledger
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,9 +30,17 @@
 #include "view.h"
 #include "zxmacros.h"
 
-static bool tx_initialized = false;
+#ifdef HAVE_SWAP
+#include "swap.h"
+#endif
 
-void extractHDPath(uint32_t rx, uint32_t offset) {
+static bool tx_initialized = false;
+uint16_t blobLen = 0;
+scheme_type_e scheme = ed25519;
+
+bool review_pending = false;
+
+static void extractHDPath(uint32_t rx, uint32_t offset) {
     tx_initialized = false;
 
     if ((rx - offset) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT) {
@@ -41,20 +49,19 @@ void extractHDPath(uint32_t rx, uint32_t offset) {
 
     memcpy(hdPath, G_io_apdu_buffer + offset, sizeof(uint32_t) * HDPATH_LEN_DEFAULT);
 
-    const bool mainnet = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT;
+    const bool valid = hdPath[0] == HDPATH_0_DEFAULT && hdPath[1] == HDPATH_1_DEFAULT;
 
-    if (!mainnet) {
+    if (!valid) {
         THROW(APDU_CODE_DATA_INVALID);
     }
 }
 
 __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
     const uint8_t payloadType = G_io_apdu_buffer[OFFSET_PAYLOAD_TYPE];
-#ifndef SUPPORT_SR25519
-    if (G_io_apdu_buffer[OFFSET_P2] != 0) {
+    if (G_io_apdu_buffer[OFFSET_P2] != ed25519 && G_io_apdu_buffer[OFFSET_P2] != secp256k1) {
         THROW(APDU_CODE_INVALIDP1P2);
     }
-#endif
+
     if (rx < OFFSET_DATA) {
         THROW(APDU_CODE_WRONG_LENGTH);
     }
@@ -65,6 +72,13 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
             tx_initialize();
             tx_reset();
             extractHDPath(rx, OFFSET_DATA);
+
+            // check if we have blobLen available
+            if ((rx - OFFSET_DATA) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT + sizeof(uint16_t)) {
+                THROW(APDU_CODE_WRONG_LENGTH);
+            }
+            // read blobLen, right after hdPath
+            memcpy(&blobLen, G_io_apdu_buffer + OFFSET_DATA + (sizeof(uint32_t) * HDPATH_LEN_DEFAULT), sizeof(uint16_t));
             tx_initialized = true;
             return false;
         case P1_ADD:
@@ -90,6 +104,7 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
     }
 
     THROW(APDU_CODE_INVALIDP1P2);
+    // NOLINTNEXTLINE: we don't need to return a value after throwing
 }
 
 __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile uint32_t *tx) {
@@ -108,7 +123,9 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
     G_io_apdu_buffer[5] = (PATCH_VERSION >> 8) & 0xFF;
     G_io_apdu_buffer[6] = (PATCH_VERSION >> 0) & 0xFF;
 
-    G_io_apdu_buffer[7] = !IS_UX_ALLOWED;
+    // sdk won't pass the apdu message if device is locked
+    // keeping it for backwards compatibility
+    G_io_apdu_buffer[7] = 0;
 
     G_io_apdu_buffer[8] = (TARGET_ID >> 24) & 0xFF;
     G_io_apdu_buffer[9] = (TARGET_ID >> 16) & 0xFF;
@@ -120,19 +137,41 @@ __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile 
 }
 
 __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
+    uint16_t ss58prefix = 0;
     extractHDPath(rx, OFFSET_DATA);
 
-    const uint8_t requireConfirmation = G_io_apdu_buffer[OFFSET_P1];
-    const uint8_t addr_type = G_io_apdu_buffer[OFFSET_P2];
-    const key_kind_e key_type = get_key_type(addr_type);
+    // Get address type from P2
+    scheme = G_io_apdu_buffer[OFFSET_P2];
+    if (scheme != ed25519 && scheme != secp256k1) {
+        THROW(APDU_CODE_INVALIDP1P2);
+    }
 
-    zxerr_t zxerr = app_fill_address(key_type);
+    if (scheme == ed25519) {
+        // check if we have ss58prefix available
+        if ((rx - OFFSET_DATA) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT + sizeof(uint16_t)) {
+            THROW(APDU_CODE_WRONG_LENGTH);
+        }
+
+        // read ss58prefix, right after hdPath
+        memcpy(&ss58prefix, G_io_apdu_buffer + OFFSET_DATA + (sizeof(uint32_t) * HDPATH_LEN_DEFAULT), sizeof(uint16_t));
+    } else {
+        if ((rx - OFFSET_DATA) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT) {
+            THROW(APDU_CODE_WRONG_LENGTH);
+        }
+        ss58prefix = 0;
+    }
+
+    const uint8_t requireConfirmation = G_io_apdu_buffer[OFFSET_P1];
+
+    const zxerr_t zxerr = app_fill_address(ss58prefix, scheme);
+
     if (zxerr != zxerr_ok) {
         *tx = 0;
         THROW(APDU_CODE_DATA_INVALID);
     }
     if (requireConfirmation) {
         view_review_init(addr_getItem, addr_getNumItems, app_reply_address);
+        set_review_pending(true);
         view_review_show(REVIEW_ADDRESS);
         *flags |= IO_ASYNCH_REPLY;
         return;
@@ -146,11 +185,9 @@ __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint
     if (!process_chunk(tx, rx)) {
         THROW(APDU_CODE_OK);
     }
-    if (app_mode_secret()) {
-        app_mode_set_secret(false);
-    }
-    const uint8_t addr_type = G_io_apdu_buffer[OFFSET_P2];
-    const key_kind_e key_type = get_key_type(addr_type);
+
+    // Get the scheme from P2
+    scheme = G_io_apdu_buffer[OFFSET_P2];
 
     *tx = 0;
     const char *error_msg = tx_parse();
@@ -161,30 +198,26 @@ __Z_INLINE void handleSign(volatile uint32_t *flags, volatile uint32_t *tx, uint
         *tx += (error_msg_length);
         THROW(APDU_CODE_DATA_INVALID);
     }
-    switch (key_type) {
-        case key_ed25519: {
-            view_review_init(tx_getItem, tx_getNumItems, app_sign_ed25519);
-            view_review_show(REVIEW_TXN);
-            *flags |= IO_ASYNCH_REPLY;
-            break;
-        }
-#ifdef SUPPORT_SR25519
-        case key_sr25519: {
-            zxerr_t err = app_sign_sr25519();
-            if (err != zxerr_ok) {
-                *tx = 0;
-                THROW(APDU_CODE_DATA_INVALID);
-            }
-            view_review_init(tx_getItem, tx_getNumItems, app_return_sr25519);
-            view_review_show(REVIEW_TXN);
-            *flags |= IO_ASYNCH_REPLY;
-            break;
-        }
-#endif
-        default: {
-            THROW(APDU_CODE_DATA_INVALID);
-        }
+
+#ifdef HAVE_SWAP
+    if (G_swap_state.called_from_swap && G_swap_state.should_exit && error_msg == NULL) {
+        // Call app_sign_ed25519 without going through UI display, the UI validation was done in
+        // Exchange app already
+        app_sign_ed25519();
+        // Go back to Exchange and report our success to display the modal
+        finalize_exchange_sign_transaction(true);
+        // Unreachable
     }
+#endif
+
+    if (scheme == ed25519) {
+        view_review_init(tx_getItem, tx_getNumItems, app_sign_ed25519);
+    } else {
+        view_review_init(tx_getItem, tx_getNumItems, app_sign_secp256k1);
+    }
+    set_review_pending(true);
+    view_review_show(REVIEW_TXN);
+    *flags |= IO_ASYNCH_REPLY;
 }
 
 __Z_INLINE void handleSignRaw(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
@@ -192,11 +225,9 @@ __Z_INLINE void handleSignRaw(volatile uint32_t *flags, volatile uint32_t *tx, u
     if (!process_chunk(tx, rx)) {
         THROW(APDU_CODE_OK);
     }
-    if (app_mode_secret()) {
-        app_mode_set_secret(false);
-    }
-    const uint8_t addr_type = G_io_apdu_buffer[OFFSET_P2];
-    const key_kind_e key_type = get_key_type(addr_type);
+
+    // Get the scheme from P2
+    scheme = G_io_apdu_buffer[OFFSET_P2];
 
     *tx = 0;
     const char *error_msg = tx_raw_parse();
@@ -207,35 +238,16 @@ __Z_INLINE void handleSignRaw(volatile uint32_t *flags, volatile uint32_t *tx, u
         *tx += (error_msg_length);
         THROW(APDU_CODE_DATA_INVALID);
     }
-    switch (key_type) {
-        case key_ed25519: {
-            view_review_init(tx_raw_getItem, tx_raw_getNumItems, app_sign_ed25519);
-            view_review_show(REVIEW_TXN);
-            *flags |= IO_ASYNCH_REPLY;
-            break;
-        }
-#ifdef SUPPORT_SR25519
-        case key_sr25519: {
-            zxerr_t err = app_sign_sr25519();
-            if (err != zxerr_ok) {
-                *tx = 0;
-                THROW(APDU_CODE_DATA_INVALID);
-            }
-            view_review_init(tx_raw_getItem, tx_raw_getNumItems, app_return_sr25519);
-            view_review_show(REVIEW_TXN);
-            *flags |= IO_ASYNCH_REPLY;
-            break;
-        }
-#endif
-        default: {
-            THROW(APDU_CODE_DATA_INVALID);
-        }
-    }
-}
 
-#if defined(APP_TESTING)
-void handleTest(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) { THROW(APDU_CODE_OK); }
-#endif
+    if (scheme == ed25519) {
+        view_review_init(tx_raw_getItem, tx_raw_getNumItems, app_sign_ed25519);
+    } else {
+        view_review_init(tx_raw_getItem, tx_raw_getNumItems, app_sign_secp256k1);
+    }
+    set_review_pending(true);
+    view_review_show(REVIEW_MSG);
+    *flags |= IO_ASYNCH_REPLY;
+}
 
 void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
     volatile uint16_t sw = 0;
@@ -248,6 +260,10 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
 
             if (rx < APDU_MIN_LENGTH) {
                 THROW(APDU_CODE_WRONG_LENGTH);
+            }
+
+            if (is_review_pending()) {
+                THROW(APDU_CODE_COMMAND_NOT_ALLOWED);
             }
 
             switch (G_io_apdu_buffer[OFFSET_INS]) {
@@ -273,18 +289,15 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
                     break;
                 }
 
-#if defined(APP_TESTING)
-                case INS_TEST: {
-                    handleTest(flags, tx, rx);
-                    THROW(APDU_CODE_OK);
-                    break;
-                }
-#endif
                 default:
                     THROW(APDU_CODE_INS_NOT_SUPPORTED);
             }
         }
-        CATCH(EXCEPTION_IO_RESET) { THROW(EXCEPTION_IO_RESET); }
+        CATCH(EXCEPTION_IO_RESET) {
+            set_review_pending(false);
+            THROW(EXCEPTION_IO_RESET);
+        }
+        // NOLINTNEXTLINE(readability-identifier-length): `e` is descriptive
         CATCH_OTHER(e) {
             switch (e & 0xF000) {
                 case 0x6000:
@@ -299,7 +312,18 @@ void handleApdu(volatile uint32_t *flags, volatile uint32_t *tx, uint32_t rx) {
             G_io_apdu_buffer[*tx + 1] = sw & 0xFF;
             *tx += 2;
         }
-        FINALLY {}
+        FINALLY {
+#ifdef HAVE_SWAP
+            if (G_swap_state.called_from_swap && G_swap_state.should_exit) {
+                // Swap checking failed, send reply now and exit, don't wait next cycle
+                if (sw != 0) {
+                    io_exchange(CHANNEL_APDU | IO_RETURN_AFTER_TX, *tx);
+                }
+                // Go back to exchange and report our status
+                finalize_exchange_sign_transaction(sw == 0);
+            }
+#endif
+        }
     }
     END_TRY;
 }

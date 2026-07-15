@@ -68,4 +68,5 @@ typings/
 TODO\.md
 
 \dist
-\tests/snapshots-tmp
+snapshots-tmp
+.yalc/

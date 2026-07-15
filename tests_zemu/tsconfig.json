@@ -4,9 +4,11 @@
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["jest", "node"]
   },
   "exclude": ["node_modules", "./dist/**"]
 }

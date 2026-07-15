@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 #include "crypto_helper.h"
 
 #include "base58.h"
+
+const unsigned char SS58_BLAKE_PREFIX[] = "SS58PRE";
+#define SS58_BLAKE_PREFIX_LEN 7
 
 #if defined(LEDGER_SPECIFIC)
 #include "cx.h"

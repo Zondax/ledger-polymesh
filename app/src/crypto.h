@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   (c) 2019 Zondax GmbH
+ *   (c) 2018 - 2024 Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,28 +24,26 @@ extern "C" {
 #include <stdbool.h>
 #include <zxmacros.h>
 
+#include "addr.h"
 #include "coin.h"
 #include "zxerror.h"
 
-#define PREFIX_SIGNATURE_TYPE_ED25519 0
-#define PREFIX_SIGNATURE_TYPE_SR25519 1
-#define PREFIX_SIGNATURE_TYPE_EDCSA 2
-#define MIN_BUFFER_LENGTH 235
-#define START_BUFFER 33
-
 extern uint32_t hdPath[HDPATH_LEN_DEFAULT];
 
-zxerr_t crypto_fillAddress(key_kind_e addressKind, uint8_t *buffer, uint16_t bufferLen, uint16_t *addrResponseLen);
+zxerr_t crypto_fillAddress(
+    uint8_t *buffer, uint16_t bufferLen, uint16_t *addrResponseLen, uint16_t ss58prefix, scheme_type_e address_scheme);
+
+zxerr_t crypto_fillAddress_standalone(uint8_t *params,
+                                      uint8_t paramsSize,
+                                      uint8_t *buffer,
+                                      uint16_t bufferLen,
+                                      uint16_t *addrResponseLen,
+                                      uint16_t ss58prefix);
 
 zxerr_t crypto_sign_ed25519(uint8_t *signature, uint16_t signatureMaxlen, const uint8_t *message, uint16_t messageLen);
 
-#ifdef SUPPORT_SR25519
-void zeroize_sr25519_signdata(void);
-
-zxerr_t copy_sr25519_signdata(uint8_t *buffer, uint16_t bufferLen);
-
-zxerr_t crypto_sign_sr25519(const uint8_t *message, size_t messageLen);
-#endif
+zxerr_t crypto_sign_secp256k1(
+    uint8_t *output, uint16_t outputLen, const uint8_t *message, uint16_t messageLen, uint16_t *sigSize);
 
 #ifdef __cplusplus
 }

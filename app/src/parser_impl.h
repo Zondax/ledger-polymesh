@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  (c) 2019 - 2024  Zondax AG
+ *  (c) 2018 - 2024  Zondax AG
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,79 +15,135 @@
  ********************************************************************************/
 #pragma once
 
-#include <zxmacros.h>
+#include <string.h>
 
 #include "parser_common.h"
-#include "zxtypes.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
+/**
+ * @enum UiEncoding_e
+ * @brief Enumeration of possible UI encodings.
+ */
+typedef enum {
+    EncNoEncoding = 0,     ///< No encoding
+    EncUnsigned,           ///< Unsigned integer encoding
+    EncSigned,             ///< Signed integer encoding
+    EncBool,               ///< Boolean encoding
+    EncCompact,            ///< Compact encoding
+    EncString,             ///< String encoding
+    EncHexString,          ///< Hexadecimal string encoding
+    EncAddress,            ///< Address encoding
+    EncBalance,            ///< Balance encoding
+    EncCompactBalance,     ///< Compact balance encoding
+    EncVote,               ///< Vote encoding
+    EncEmptyVec,           ///< Empty vector encoding
+    EncRawBalance,         ///< Raw balance encoding (no decimal formatting)
+    EncCompactRawBalance,  ///< Compact raw balance encoding (no decimal formatting)
+} UiEncoding_e;
 
-// Checks that there are at least SIZE bytes available in the buffer
+/**
+ * @struct UiItem_t
+ * @brief Structure representing a UI item.
+ */
+typedef struct {
+    Bytes_t key;          ///< Key of the UI item
+    Bytes_t val;          ///< Value of the UI item
+    UiEncoding_e valEnc;  ///< Encoding of the value
+} UiItem_t;
+
+/**
+ * @struct PrintItem_t
+ * @brief Structure representing a print item.
+ */
+typedef struct {
+    uint8_t itemCount;      ///< Number of items
+    bool printing;          ///< Printing flag
+    uint8_t target;         ///< Target identifier
+    UiItem_t item;          ///< UI item
+    uint16_t base58prefix;  ///< Base58 prefix
+    uint8_t decimals;       ///< Number of decimals
+    Bytes_t unit;           ///< Unit of measurement
+    Bytes_t palletName;     ///< Current pallet name (for context-aware formatting)
+} PrintItem_t;
+
+/**
+ * @struct pd_ExtrinsicEra_t
+ * @brief Structure representing an extrinsic era.
+ */
+typedef struct {
+    uint8_t isMortal;  ///< Mortality flag
+    uint32_t period;   ///< Period of the era
+    uint16_t phase;    ///< Phase of the era
+} pd_ExtrinsicEra_t;
+
+/**
+ * @brief Checks that there are at least SIZE bytes available in the buffer.
+ * @param CTX Context
+ * @param SIZE Size to check
+ * @return parser_error_t Error code
+ */
 #define CTX_CHECK_AVAIL(CTX, SIZE)                                      \
     if ((CTX) == NULL || ((CTX)->offset + (SIZE)) > (CTX)->bufferLen) { \
         return parser_unexpected_buffer_end;                            \
     }
 
+/**
+ * @brief Checks availability and advances the context offset.
+ * @param CTX Context
+ * @param SIZE Size to advance
+ */
 #define CTX_CHECK_AND_ADVANCE(CTX, SIZE) \
     CTX_CHECK_AVAIL((CTX), (SIZE))       \
     (CTX)->offset += (SIZE);
 
-// Checks function input is valid
-#define CHECK_INPUT()          \
-    if (v == NULL) {           \
+/**
+ * @brief Increment PrintItem_t.itemCount by delta, rejecting overflow.
+ */
+__Z_INLINE parser_error_t addItemCount(PrintItem_t *printItem, uint8_t delta) {
+    if (printItem == NULL || printItem->itemCount > (uint8_t)(UINT8_MAX - delta)) {
+        return parser_value_out_of_range;
+    }
+    printItem->itemCount += delta;
+    return parser_ok;
+}
+
+/**
+ * @brief Exact-match comparison of a length-prefixed identifier against a C-string constant.
+ *        Rejects prefix matches that would occur with strncmp(id, expected, id->len).
+ */
+__Z_INLINE bool identifier_matches(const Bytes_t *id, const char *expected) {
+    if (id == NULL || id->ptr == NULL || expected == NULL) {
+        return false;
+    }
+    const size_t expLen = strlen(expected);
+    return id->len == expLen && memcmp(id->ptr, expected, expLen) == 0;
+}
+
+/**
+ * @brief Checks function input is valid.
+ * @param INPUT Input to check
+ * @return parser_error_t Error code
+ */
+#define CHECK_INPUT(INPUT)     \
+    if (INPUT == NULL) {       \
         return parser_no_data; \
     }                          \
-    CTX_CHECK_AVAIL(c, 1)  // Checks that there is something available in the buffer
+    CTX_CHECK_AVAIL(ctx, 1)  // Checks that there is something available in the buffer
 
-#define CLEAN_AND_CHECK()           \
-    MEMZERO(outValue, outValueLen); \
-    if (v == NULL) {                \
-        *pageCount = 0;             \
-        return parser_no_data;      \
-    }
-
-#define GEN_DEF_READARRAY(SIZE)      \
-    v->_ptr = c->buffer + c->offset; \
-    CTX_CHECK_AND_ADVANCE(c, SIZE)   \
-    return parser_ok;
-
-#define GEN_DEF_TOSTRING_ARRAY(SIZE)                                              \
-    CLEAN_AND_CHECK();                                                            \
-    if ((SIZE) == 0) {                                                            \
-        *pageCount = 1;                                                           \
-        snprintf(outValue, outValueLen, "Empty");                                 \
-        return parser_ok;                                                         \
-    }                                                                             \
-    if (v->_ptr == NULL || outValueLen == 0) return parser_unexpected_buffer_end; \
-    const uint16_t outLenNormalized = (outValueLen - 1) / 2;                      \
-    if (outLenNormalized == 0) return parser_unexpected_buffer_end;               \
-    *pageCount = (SIZE) / outLenNormalized;                                       \
-    if ((SIZE) % outLenNormalized != 0) *pageCount += 1;                          \
-    const uint16_t pageOffset = pageIdx * outLenNormalized;                       \
-    uint16_t loopmax = outLenNormalized;                                          \
-    if (loopmax > (SIZE) - pageOffset) loopmax = (SIZE) - pageOffset;             \
-    for (uint16_t i = 0; i < loopmax; i++) {                                      \
-        const uint16_t offset = i << 1u;                                          \
-        const uint8_t *c = v->_ptr + pageOffset;                                  \
-        snprintf(outValue + offset, outValueLen - offset, "%02x", c[i]);          \
-    }                                                                             \
-    return parser_ok;
-
-#define GEN_DEF_TOSTRING_ENUM(NAME)            \
-    (*pageCount)++;                            \
-    if (pageIdx == 0) {                        \
-        snprintf(outValue, outValueLen, NAME); \
-        return parser_ok;                      \
-    }                                          \
-    pageIdx--;
-
+/**
+ * @brief Generates a function declaration for reading fixed-size unsigned integers.
+ * @param BITS Number of bits
+ */
 #define GEN_DEC_READFIX_UNSIGNED(BITS) parser_error_t _readUInt##BITS(parser_context_t *ctx, uint##BITS##_t *value)
+
+/**
+ * @brief Generates a function definition for reading fixed-size unsigned integers.
+ * @param BITS Number of bits
+ * @return parser_error_t Error code
+ */
 #define GEN_DEF_READFIX_UNSIGNED(BITS)                                              \
     parser_error_t _readUInt##BITS(parser_context_t *ctx, uint##BITS##_t *value) {  \
         if (value == NULL) return parser_no_data;                                   \
@@ -104,111 +160,51 @@ GEN_DEC_READFIX_UNSIGNED(16);
 GEN_DEC_READFIX_UNSIGNED(32);
 GEN_DEC_READFIX_UNSIGNED(64);
 
-#define GEN_DEF_READVECTOR(TYPE)                                                \
-    pd_##TYPE##_t dummy;                                                        \
-    compactInt_t clen;                                                          \
-    CHECK_PARSER_ERR(_readCompactInt(c, &clen));                                \
-    CHECK_PARSER_ERR(_getValue(&clen, &v->_len));                               \
-    v->_ptr = c->buffer + c->offset;                                            \
-    v->_lenBuffer = c->offset;                                                  \
-    for (uint64_t i = 0; i < v->_len; i++) CHECK_ERROR(_read##TYPE(c, &dummy)); \
-    v->_lenBuffer = c->offset - v->_lenBuffer;                                  \
-    return parser_ok;
+/**
+ * @brief Reads a boolean value from the context.
+ * @param ctx Parser context
+ * @param val Pointer to store the boolean value
+ * @return parser_error_t Error code
+ */
+parser_error_t readBool(parser_context_t *ctx, bool *val);
 
-#define GEN_DEF_READVECTOR_VERSION(TYPE, VERSION)                                            \
-    pd_##TYPE##_V##VERSION##_t dummy;                                                        \
-    compactInt_t clen;                                                                       \
-    CHECK_PARSER_ERR(_readCompactInt(c, &clen));                                             \
-    CHECK_PARSER_ERR(_getValue(&clen, &v->_len));                                            \
-    v->_ptr = c->buffer + c->offset;                                                         \
-    v->_lenBuffer = c->offset;                                                               \
-    for (uint64_t i = 0; i < v->_len; i++) CHECK_ERROR(_read##TYPE##_V##VERSION(c, &dummy)); \
-    v->_lenBuffer = c->offset - v->_lenBuffer;                                               \
-    return parser_ok;
+/**
+ * @brief Reads a compact integer from the context.
+ * @param ctx Parser context
+ * @param val Pointer to store the compact integer
+ * @return parser_error_t Error code
+ */
+parser_error_t readCompactInt(parser_context_t *ctx, CompactInt_t *val);
 
-#define GEN_DEF_READVECTOR_ITEM(VEC, TYPE, INDEX, VALUE)                                         \
-    parser_context_t ctx;                                                                        \
-    parser_init(&ctx, (VEC)._ptr, (VEC)._lenBuffer);                                             \
-    compactInt_t clen;                                                                           \
-    CHECK_PARSER_ERR(_readCompactInt(&ctx, &clen));                                              \
-    if ((INDEX) >= (VEC)._len) return parser_no_data;                                            \
-    for (uint64_t i = 0; i < (VEC)._len; i++) CHECK_PARSER_ERR(_read_cro_##TYPE(&ctx, &(VALUE));  \
-    return parser_ok;
+/**
+ * @brief Gets the value from a compact integer.
+ * @param compact Pointer to the compact integer
+ * @param value Pointer to store the value
+ * @return parser_error_t Error code
+ */
+parser_error_t _getValue(const CompactInt_t *compact, uint64_t *value);
 
-#define GEN_DEF_TOSTRING_VECTOR(TYPE)                                                                \
-    CLEAN_AND_CHECK()                                                                                \
-    /* count number of pages, then output specific */                                                \
-    *pageCount = 0;                                                                                  \
-    pd_##TYPE##_t tmp;                                                                               \
-    parser_context_t ctx;                                                                            \
-    uint8_t chunkPageCount = 0;                                                                      \
-    uint16_t currentPage, currentTotalPage = 0;                                                      \
-    if (v->_len == 0) {                                                                              \
-        *pageCount = 1;                                                                              \
-        snprintf(outValue, outValueLen, "<Empty>");                                                  \
-        return parser_ok;                                                                            \
-    }                                                                                                \
-    /* We need to do it twice because there is no memory to keep intermediate results*/              \
-    /* First count*/                                                                                 \
-    parser_init(&ctx, v->_ptr, v->_lenBuffer);                                                       \
-    for (uint64_t i = 0; i < v->_len; i++) {                                                         \
-        CHECK_ERROR(_read##TYPE(&ctx, &tmp));                                                        \
-        CHECK_ERROR(_toString##TYPE(&tmp, outValue, outValueLen, 0, &chunkPageCount));               \
-        (*pageCount) += chunkPageCount;                                                              \
-    }                                                                                                \
-    /* Then iterate until we can print the corresponding chunk*/                                     \
-    parser_init(&ctx, v->_ptr, v->_lenBuffer);                                                       \
-    for (uint64_t i = 0; i < v->_len; i++) {                                                         \
-        CHECK_ERROR(_read##TYPE(&ctx, &tmp));                                                        \
-        chunkPageCount = 1;                                                                          \
-        currentPage = 0;                                                                             \
-        while (currentPage < chunkPageCount) {                                                       \
-            CHECK_ERROR(_toString##TYPE(&tmp, outValue, outValueLen, currentPage, &chunkPageCount)); \
-            if (currentTotalPage == pageIdx) {                                                       \
-                return parser_ok;                                                                    \
-            }                                                                                        \
-            currentPage++;                                                                           \
-            currentTotalPage++;                                                                      \
-        }                                                                                            \
-    };                                                                                               \
-    return parser_print_not_supported;
+/**
+ * @brief Parses a transaction.
+ * @param txObj Pointer to the transaction object
+ * @return parser_error_t Error code
+ */
+parser_error_t transaction_parse(parser_tx_t *txObj);
 
-parser_error_t parser_init(parser_context_t *ctx, const uint8_t *buffer, uint16_t bufferSize);
+/**
+ * @brief Verifies the metadata of a transaction.
+ * @param txObj Pointer to the transaction object
+ * @return parser_error_t Error code
+ */
+parser_error_t verifyMetadata(parser_tx_t *txObj);
 
-parser_error_t _readBool(parser_context_t *c, pd_bool_t *value);
-
-parser_error_t _readCompactInt(parser_context_t *c, compactInt_t *v);
-
-parser_error_t _readCompactBalance(parser_context_t *c, pd_CompactBalance_t *v);
-
-parser_error_t _getValue(const compactInt_t *c, uint64_t *v);
-
-parser_error_t _readCallIndex(parser_context_t *c, pd_CallIndex_t *v);
-
-parser_error_t _readEra(parser_context_t *c, pd_ExtrinsicEra_t *v);
-
-parser_error_t _readTx(parser_context_t *c, parser_tx_t *v);
-
-parser_error_t _checkVersions(parser_context_t *c);
-
-uint16_t _getAddressType();
-
-parser_error_t _readCompactIndex(parser_context_t *c, pd_CompactIndex_t *v);
-
-uint16_t _detectAddressType(const parser_context_t *c);
-
-parser_error_t _toStringCompactInt(const compactInt_t *c, uint8_t decimalPlaces, bool trimTrailingZeros,
-                                   const char postfix[], const char prefix[], char *outValue, uint16_t outValueLen,
-                                   uint8_t pageIdx, uint8_t *pageCount);
-
-parser_error_t _toStringCompactIndex(const pd_CompactIndex_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                     uint8_t *pageCount);
-
-parser_error_t _toStringPubkeyAsAddress(const uint8_t *pubkey, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                        uint8_t *pageCount);
-
-parser_error_t _toStringCompactBalance(const pd_CompactBalance_t *v, char *outValue, uint16_t outValueLen, uint8_t pageIdx,
-                                       uint8_t *pageCount);
+/**
+ * @brief Reads an extrinsic era from the context.
+ * @param ctx Parser context
+ * @param era Pointer to store the extrinsic era
+ * @return parser_error_t Error code
+ */
+parser_error_t _readEra(parser_context_t *ctx, pd_ExtrinsicEra_t *era);
 
 #ifdef __cplusplus
 }
