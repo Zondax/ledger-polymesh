@@ -309,7 +309,7 @@ parser_error_t readType(parser_context_t *ctx, RegistryEntry_t *entry) {
  */
 static parser_error_t readShortRegistry(parser_context_t *ctx, ShortRegistry_t *registry) {
     if (ctx == NULL || registry == NULL) {
-        return parser_error_dummy;
+        return parser_unexpected_error;
     }
 
     CHECK_ERROR(readCompactU32(ctx, &registry->entries));

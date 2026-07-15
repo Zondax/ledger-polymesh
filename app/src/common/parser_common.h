@@ -46,9 +46,6 @@ typedef enum {
 
     // Blob specific
 
-    // Dummy errors
-    parser_error_dummy,
-
     //
     parser_running_out_of_stack,
     parser_indices_not_ordered,
