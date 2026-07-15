@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zondax/ledger-polymesh-generic"
+    "url": "git+https://github.com/Zondax/ledger-polymesh"
   },
   "license": "Apache-2.0",
   "author": "Zondax AG",
