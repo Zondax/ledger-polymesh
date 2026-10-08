@@ -38,7 +38,7 @@ static bool tx_initialized = false;
 uint16_t blobLen = 0;
 scheme_type_e scheme = ed25519;
 
-bool review_pending = false;
+bool g_review_pending = false;
 
 static void extractHDPath(uint32_t rx, uint32_t offset) {
     tx_initialized = false;
@@ -74,7 +74,7 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
             extractHDPath(rx, OFFSET_DATA);
 
             // check if we have blobLen available
-            if ((rx - OFFSET_DATA) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT + sizeof(uint16_t)) {
+            if ((rx - OFFSET_DATA) < (sizeof(uint32_t) * HDPATH_LEN_DEFAULT) + sizeof(uint16_t)) {
                 THROW(APDU_CODE_WRONG_LENGTH);
             }
             // read blobLen, right after hdPath
@@ -110,7 +110,7 @@ __Z_INLINE bool process_chunk(__Z_UNUSED volatile uint32_t *tx, uint32_t rx) {
 __Z_INLINE void handle_getversion(__Z_UNUSED volatile uint32_t *flags, volatile uint32_t *tx) {
     G_io_apdu_buffer[0] = 0;
 
-#if defined(APP_TESTING)
+#ifdef APP_TESTING
     G_io_apdu_buffer[0] = 0x01;
 #endif
 
@@ -148,7 +148,7 @@ __Z_INLINE void handleGetAddr(volatile uint32_t *flags, volatile uint32_t *tx, u
 
     if (scheme == ed25519) {
         // check if we have ss58prefix available
-        if ((rx - OFFSET_DATA) < sizeof(uint32_t) * HDPATH_LEN_DEFAULT + sizeof(uint16_t)) {
+        if ((rx - OFFSET_DATA) < (sizeof(uint32_t) * HDPATH_LEN_DEFAULT) + sizeof(uint16_t)) {
             THROW(APDU_CODE_WRONG_LENGTH);
         }
 
